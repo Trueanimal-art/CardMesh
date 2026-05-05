@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 042f8d8e1acb4df59df46af5bb0950c2, type: 3}
+  m_Name: Food
+  m_EditorClassIdentifier: 
+  associationId: food
+  displayName: Столовая
+  cards:
+  - {fileID: 11400000, guid: 6e64830c6c65405b94e62dfd18fd2c10, type: 2}
+  - {fileID: 11400000, guid: e1a2451d5e94408ead8f714a3ed55385, type: 2}
+  - {fileID: 11400000, guid: 706d6c9607134d9fbe92ad5fd17e2cb2, type: 2}
+  - {fileID: 11400000, guid: c3f9b7c1518e4d1d87f0bdb6b45c3474, type: 2}
+  - {fileID: 11400000, guid: d69b1fdd94354c0eb581e552be3481a8, type: 2}

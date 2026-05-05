@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8feb6c34a7073a345b620100e28f9bd2, type: 3}
+  m_Name: Level_1
+  m_EditorClassIdentifier: 
+  levelName: РЈСЂРѕРІРµРЅСЊ 1
+  movesCount: 100
+  columnsCount: 6
+  columns:
+  - cardsInColumn:
+    - {fileID: 11400000, guid: 9b3626c9172d41e5906df65a5f8080b1, type: 2}
+    - {fileID: 11400000, guid: 40363ee6a7a448eb8d3d77b52543f7b5, type: 2}
+    - {fileID: 11400000, guid: 2df78494c5f64b11ab3f22be53d37e99, type: 2}
+    - {fileID: 11400000, guid: 7ad60446cab6425c9f789e7aec5ee5a6, type: 2}
+  - cardsInColumn:
+    - {fileID: 11400000, guid: 0c3be7d8832847ff9e9e30f0c0eebf5a, type: 2}
+    - {fileID: 11400000, guid: 62ae3e4e69064633b8e12b271ab95b44, type: 2}
+    - {fileID: 11400000, guid: 0d42d7dbb5e44817a7e8dd1c08b3ac4c, type: 2}
+  - cardsInColumn:
+    - {fileID: 11400000, guid: a418d0b7c38e48699e70d54cb202ca0d, type: 2}
+  - cardsInColumn:
+    - {fileID: 11400000, guid: e1a2451d5e94408ead8f714a3ed55385, type: 2}
+    - {fileID: 11400000, guid: 706d6c9607134d9fbe92ad5fd17e2cb2, type: 2}
+  - cardsInColumn:
+    - {fileID: 11400000, guid: c3f9b7c1518e4d1d87f0bdb6b45c3474, type: 2}
+  - cardsInColumn:
+    - {fileID: 11400000, guid: d69b1fdd94354c0eb581e552be3481a8, type: 2}
+  stockCards:
+  - {fileID: 11400000, guid: d46617f40ff2439ab8bd82f323c9b3df, type: 2}
+  - {fileID: 11400000, guid: 260cfacfe3b949fab62ce5f6a4ffdc50, type: 2}

@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 042f8d8e1acb4df59df46af5bb0950c2, type: 3}
+  m_Name: Time
+  m_EditorClassIdentifier: 
+  associationId: time
+  displayName: Часы
+  cards:
+  - {fileID: 11400000, guid: 0c3be7d8832847ff9e9e30f0c0eebf5a, type: 2}
+  - {fileID: 11400000, guid: 62ae3e4e69064633b8e12b271ab95b44, type: 2}
+  - {fileID: 11400000, guid: 0d42d7dbb5e44817a7e8dd1c08b3ac4c, type: 2}
+  - {fileID: 11400000, guid: a418d0b7c38e48699e70d54cb202ca0d, type: 2}
+  - {fileID: 11400000, guid: 260cfacfe3b949fab62ce5f6a4ffdc50, type: 2}

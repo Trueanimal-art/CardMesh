@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 042f8d8e1acb4df59df46af5bb0950c2, type: 3}
+  m_Name: Cup
+  m_EditorClassIdentifier: 
+  associationId: cup
+  displayName: Чашка
+  cards:
+  - {fileID: 11400000, guid: 9b3626c9172d41e5906df65a5f8080b1, type: 2}
+  - {fileID: 11400000, guid: 40363ee6a7a448eb8d3d77b52543f7b5, type: 2}
+  - {fileID: 11400000, guid: 2df78494c5f64b11ab3f22be53d37e99, type: 2}
+  - {fileID: 11400000, guid: 7ad60446cab6425c9f789e7aec5ee5a6, type: 2}
+  - {fileID: 11400000, guid: d46617f40ff2439ab8bd82f323c9b3df, type: 2}
