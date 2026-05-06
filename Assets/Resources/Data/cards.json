@@ -1,0 +1,704 @@
+{
+  "goldCards": [
+    {
+      "id": "business",
+      "title": "Бизнес",
+      "cards": [
+        { "id": "business_product", "title": "Продукт", "imageKey": null },
+        { "id": "business_client", "title": "Клиент", "imageKey": null },
+        { "id": "business_brand", "title": "Бренд", "imageKey": null },
+        { "id": "business_sale", "title": "Продажа", "imageKey": null },
+        { "id": "business_team", "title": "Команда", "imageKey": null },
+        { "id": "business_office", "title": "Офис", "imageKey": null },
+        { "id": "business_contract", "title": "Договор", "imageKey": null },
+        { "id": "business_market", "title": "Рынок", "imageKey": null }
+      ]
+    },
+    {
+      "id": "cup",
+      "title": "Чашка",
+      "cards": [
+        { "id": "cup_cup", "title": "Чашка", "imageKey": null },
+        { "id": "cup_mug", "title": "Кружка", "imageKey": null },
+        { "id": "cup_coffee", "title": "Кофе", "imageKey": null },
+        { "id": "cup_drink", "title": "Напиток", "imageKey": null },
+        { "id": "cup_tea", "title": "Чай", "imageKey": null },
+        { "id": "cup_handle", "title": "Ручка", "imageKey": null },
+        { "id": "cup_saucer", "title": "Блюдце", "imageKey": null },
+        { "id": "cup_thermos", "title": "Термос", "imageKey": null }
+      ]
+    },
+    {
+      "id": "food",
+      "title": "Еда",
+      "cards": [
+        { "id": "food_food", "title": "Еда", "imageKey": null },
+        { "id": "food_plate", "title": "Тарелка", "imageKey": null },
+        { "id": "food_lunch", "title": "Обед", "imageKey": null },
+        { "id": "food_canteen", "title": "Столовая", "imageKey": null },
+        { "id": "food_soup", "title": "Суп", "imageKey": null },
+        { "id": "food_bread", "title": "Хлеб", "imageKey": null },
+        { "id": "food_fruit", "title": "Фрукт", "imageKey": null },
+        { "id": "food_salad", "title": "Салат", "imageKey": null }
+      ]
+    },
+    {
+      "id": "time",
+      "title": "Время",
+      "cards": [
+        { "id": "time_time", "title": "Время", "imageKey": null },
+        { "id": "time_clock", "title": "Часы", "imageKey": null },
+        { "id": "time_alarm", "title": "Будильник", "imageKey": null },
+        { "id": "time_minutes", "title": "Минуты", "imageKey": null },
+        { "id": "time_day", "title": "День", "imageKey": null },
+        { "id": "time_night", "title": "Ночь", "imageKey": null },
+        { "id": "time_week", "title": "Неделя", "imageKey": null },
+        { "id": "time_hour", "title": "Час", "imageKey": null }
+      ]
+    },
+    {
+      "id": "travel",
+      "title": "Путешествие",
+      "cards": [
+        { "id": "travel_ticket", "title": "Билет", "imageKey": null },
+        { "id": "travel_hotel", "title": "Отель", "imageKey": null },
+        { "id": "travel_route", "title": "Маршрут", "imageKey": null },
+        { "id": "travel_suitcase", "title": "Чемодан", "imageKey": null },
+        { "id": "travel_train", "title": "Поезд", "imageKey": null },
+        { "id": "travel_plane", "title": "Самолет", "imageKey": null },
+        { "id": "travel_map", "title": "Карта", "imageKey": null },
+        { "id": "travel_passport", "title": "Паспорт", "imageKey": null }
+      ]
+    },
+    {
+      "id": "music",
+      "title": "Музыка",
+      "cards": [
+        { "id": "music_song", "title": "Песня", "imageKey": null },
+        { "id": "music_rhythm", "title": "Ритм", "imageKey": null },
+        { "id": "music_melody", "title": "Мелодия", "imageKey": null },
+        { "id": "music_guitar", "title": "Гитара", "imageKey": null },
+        { "id": "music_piano", "title": "Пианино", "imageKey": null },
+        { "id": "music_note", "title": "Нота", "imageKey": null },
+        { "id": "music_concert", "title": "Концерт", "imageKey": null },
+        { "id": "music_band", "title": "Группа", "imageKey": null }
+      ]
+    },
+    {
+      "id": "sport",
+      "title": "Спорт",
+      "cards": [
+        { "id": "sport_ball", "title": "Мяч", "imageKey": null },
+        { "id": "sport_coach", "title": "Тренер", "imageKey": null },
+        { "id": "sport_team", "title": "Команда", "imageKey": null },
+        { "id": "sport_match", "title": "Матч", "imageKey": null },
+        { "id": "sport_field", "title": "Поле", "imageKey": null },
+        { "id": "sport_medal", "title": "Медаль", "imageKey": null },
+        { "id": "sport_race", "title": "Гонка", "imageKey": null },
+        { "id": "sport_player", "title": "Игрок", "imageKey": null }
+      ]
+    },
+    {
+      "id": "nature",
+      "title": "Природа",
+      "cards": [
+        { "id": "nature_tree", "title": "Дерево", "imageKey": null },
+        { "id": "nature_river", "title": "Река", "imageKey": null },
+        { "id": "nature_mountain", "title": "Гора", "imageKey": null },
+        { "id": "nature_stone", "title": "Камень", "imageKey": null },
+        { "id": "nature_leaf", "title": "Лист", "imageKey": null },
+        { "id": "nature_cloud", "title": "Облако", "imageKey": null },
+        { "id": "nature_meadow", "title": "Луг", "imageKey": null },
+        { "id": "nature_sky", "title": "Небо", "imageKey": null }
+      ]
+    },
+    {
+      "id": "weather",
+      "title": "Погода",
+      "cards": [
+        { "id": "weather_sun", "title": "Солнце", "imageKey": null },
+        { "id": "weather_rain", "title": "Дождь", "imageKey": null },
+        { "id": "weather_snow", "title": "Снег", "imageKey": null },
+        { "id": "weather_wind", "title": "Ветер", "imageKey": null },
+        { "id": "weather_storm", "title": "Гроза", "imageKey": null },
+        { "id": "weather_fog", "title": "Туман", "imageKey": null },
+        { "id": "weather_frost", "title": "Мороз", "imageKey": null },
+        { "id": "weather_heat", "title": "Жара", "imageKey": null }
+      ]
+    },
+    {
+      "id": "city",
+      "title": "Город",
+      "cards": [
+        { "id": "city_street", "title": "Улица", "imageKey": null },
+        { "id": "city_park", "title": "Парк", "imageKey": null },
+        { "id": "city_bridge", "title": "Мост", "imageKey": null },
+        { "id": "city_square", "title": "Площадь", "imageKey": null },
+        { "id": "city_subway", "title": "Метро", "imageKey": null },
+        { "id": "city_cafe", "title": "Кафе", "imageKey": null },
+        { "id": "city_tower", "title": "Башня", "imageKey": null },
+        { "id": "city_traffic", "title": "Пробка", "imageKey": null }
+      ]
+    },
+    {
+      "id": "home",
+      "title": "Дом",
+      "cards": [
+        { "id": "home_sofa", "title": "Диван", "imageKey": null },
+        { "id": "home_lamp", "title": "Лампа", "imageKey": null },
+        { "id": "home_window", "title": "Окно", "imageKey": null },
+        { "id": "home_door", "title": "Дверь", "imageKey": null },
+        { "id": "home_carpet", "title": "Ковер", "imageKey": null },
+        { "id": "home_shelf", "title": "Полка", "imageKey": null },
+        { "id": "home_pillow", "title": "Подушка", "imageKey": null },
+        { "id": "home_key", "title": "Ключ", "imageKey": null }
+      ]
+    },
+    {
+      "id": "kitchen",
+      "title": "Кухня",
+      "cards": [
+        { "id": "kitchen_stove", "title": "Плита", "imageKey": null },
+        { "id": "kitchen_spoon", "title": "Ложка", "imageKey": null },
+        { "id": "kitchen_fork", "title": "Вилка", "imageKey": null },
+        { "id": "kitchen_knife", "title": "Нож", "imageKey": null },
+        { "id": "kitchen_pan", "title": "Сковорода", "imageKey": null },
+        { "id": "kitchen_kettle", "title": "Чайник", "imageKey": null },
+        { "id": "kitchen_fridge", "title": "Холодильник", "imageKey": null },
+        { "id": "kitchen_oven", "title": "Духовка", "imageKey": null }
+      ]
+    },
+    {
+      "id": "school",
+      "title": "Школа",
+      "cards": [
+        { "id": "school_class", "title": "Класс", "imageKey": null },
+        { "id": "school_teacher", "title": "Учитель", "imageKey": null },
+        { "id": "school_desk", "title": "Парта", "imageKey": null },
+        { "id": "school_board", "title": "Доска", "imageKey": null },
+        { "id": "school_lesson", "title": "Урок", "imageKey": null },
+        { "id": "school_bell", "title": "Звонок", "imageKey": null },
+        { "id": "school_notebook", "title": "Тетрадь", "imageKey": null },
+        { "id": "school_marker", "title": "Маркер", "imageKey": null }
+      ]
+    },
+    {
+      "id": "books",
+      "title": "Книги",
+      "cards": [
+        { "id": "books_novel", "title": "Роман", "imageKey": null },
+        { "id": "books_page", "title": "Страница", "imageKey": null },
+        { "id": "books_cover", "title": "Обложка", "imageKey": null },
+        { "id": "books_reader", "title": "Читатель", "imageKey": null },
+        { "id": "books_shelf", "title": "Полка", "imageKey": null },
+        { "id": "books_author", "title": "Автор", "imageKey": null },
+        { "id": "books_chapter", "title": "Глава", "imageKey": null },
+        { "id": "books_bookmark", "title": "Закладка", "imageKey": null }
+      ]
+    },
+    {
+      "id": "art",
+      "title": "Искусство",
+      "cards": [
+        { "id": "art_paint", "title": "Краска", "imageKey": null },
+        { "id": "art_brush", "title": "Кисть", "imageKey": null },
+        { "id": "art_canvas", "title": "Холст", "imageKey": null },
+        { "id": "art_frame", "title": "Рама", "imageKey": null },
+        { "id": "art_sketch", "title": "Эскиз", "imageKey": null },
+        { "id": "art_gallery", "title": "Галерея", "imageKey": null },
+        { "id": "art_statue", "title": "Статуя", "imageKey": null },
+        { "id": "art_color", "title": "Цвет", "imageKey": null }
+      ]
+    },
+    {
+      "id": "cinema",
+      "title": "Кино",
+      "cards": [
+        { "id": "cinema_film", "title": "Фильм", "imageKey": null },
+        { "id": "cinema_actor", "title": "Актер", "imageKey": null },
+        { "id": "cinema_scene", "title": "Сцена", "imageKey": null },
+        { "id": "cinema_screen", "title": "Экран", "imageKey": null },
+        { "id": "cinema_ticket", "title": "Билет", "imageKey": null },
+        { "id": "cinema_popcorn", "title": "Попкорн", "imageKey": null },
+        { "id": "cinema_trailer", "title": "Трейлер", "imageKey": null },
+        { "id": "cinema_camera", "title": "Камера", "imageKey": null }
+      ]
+    },
+    {
+      "id": "family",
+      "title": "Семья",
+      "cards": [
+        { "id": "family_mother", "title": "Мама", "imageKey": null },
+        { "id": "family_father", "title": "Папа", "imageKey": null },
+        { "id": "family_child", "title": "Ребенок", "imageKey": null },
+        { "id": "family_sister", "title": "Сестра", "imageKey": null },
+        { "id": "family_brother", "title": "Брат", "imageKey": null },
+        { "id": "family_dinner", "title": "Ужин", "imageKey": null },
+        { "id": "family_home", "title": "Дом", "imageKey": null },
+        { "id": "family_album", "title": "Альбом", "imageKey": null }
+      ]
+    },
+    {
+      "id": "pets",
+      "title": "Питомцы",
+      "cards": [
+        { "id": "pets_dog", "title": "Собака", "imageKey": null },
+        { "id": "pets_cat", "title": "Кошка", "imageKey": null },
+        { "id": "pets_bowl", "title": "Миска", "imageKey": null },
+        { "id": "pets_leash", "title": "Поводок", "imageKey": null },
+        { "id": "pets_toy", "title": "Игрушка", "imageKey": null },
+        { "id": "pets_tail", "title": "Хвост", "imageKey": null },
+        { "id": "pets_paw", "title": "Лапа", "imageKey": null },
+        { "id": "pets_vet", "title": "Ветеринар", "imageKey": null }
+      ]
+    },
+    {
+      "id": "garden",
+      "title": "Сад",
+      "cards": [
+        { "id": "garden_bench", "title": "Скамья", "imageKey": null },
+        { "id": "garden_shovel", "title": "Лопата", "imageKey": null },
+        { "id": "garden_seed", "title": "Семя", "imageKey": null },
+        { "id": "garden_soil", "title": "Почва", "imageKey": null },
+        { "id": "garden_bush", "title": "Куст", "imageKey": null },
+        { "id": "garden_hose", "title": "Шланг", "imageKey": null },
+        { "id": "garden_apple", "title": "Яблоко", "imageKey": null },
+        { "id": "garden_path", "title": "Тропинка", "imageKey": null }
+      ]
+    },
+    {
+      "id": "transport",
+      "title": "Транспорт",
+      "cards": [
+        { "id": "transport_bus", "title": "Автобус", "imageKey": null },
+        { "id": "transport_taxi", "title": "Такси", "imageKey": null },
+        { "id": "transport_wheel", "title": "Колесо", "imageKey": null },
+        { "id": "transport_driver", "title": "Водитель", "imageKey": null },
+        { "id": "transport_route", "title": "Маршрут", "imageKey": null },
+        { "id": "transport_station", "title": "Станция", "imageKey": null },
+        { "id": "transport_road", "title": "Дорога", "imageKey": null },
+        { "id": "transport_stop", "title": "Остановка", "imageKey": null }
+      ]
+    },
+    {
+      "id": "sea",
+      "title": "Море",
+      "cards": [
+        { "id": "sea_wave", "title": "Волна", "imageKey": null },
+        { "id": "sea_shell", "title": "Ракушка", "imageKey": null },
+        { "id": "sea_beach", "title": "Пляж", "imageKey": null },
+        { "id": "sea_boat", "title": "Лодка", "imageKey": null },
+        { "id": "sea_sail", "title": "Парус", "imageKey": null },
+        { "id": "sea_island", "title": "Остров", "imageKey": null },
+        { "id": "sea_fish", "title": "Рыба", "imageKey": null },
+        { "id": "sea_lighthouse", "title": "Маяк", "imageKey": null }
+      ]
+    },
+    {
+      "id": "space",
+      "title": "Космос",
+      "cards": [
+        { "id": "space_star", "title": "Звезда", "imageKey": null },
+        { "id": "space_planet", "title": "Планета", "imageKey": null },
+        { "id": "space_rocket", "title": "Ракета", "imageKey": null },
+        { "id": "space_moon", "title": "Луна", "imageKey": null },
+        { "id": "space_orbit", "title": "Орбита", "imageKey": null },
+        { "id": "space_comet", "title": "Комета", "imageKey": null },
+        { "id": "space_astronaut", "title": "Астронавт", "imageKey": null },
+        { "id": "space_galaxy", "title": "Галактика", "imageKey": null }
+      ]
+    },
+    {
+      "id": "colors",
+      "title": "Цвета",
+      "cards": [
+        { "id": "colors_red", "title": "Красный", "imageKey": null },
+        { "id": "colors_blue", "title": "Синий", "imageKey": null },
+        { "id": "colors_green", "title": "Зеленый", "imageKey": null },
+        { "id": "colors_yellow", "title": "Желтый", "imageKey": null },
+        { "id": "colors_white", "title": "Белый", "imageKey": null },
+        { "id": "colors_black", "title": "Черный", "imageKey": null },
+        { "id": "colors_orange", "title": "Оранжевый", "imageKey": null },
+        { "id": "colors_pink", "title": "Розовый", "imageKey": null }
+      ]
+    },
+    {
+      "id": "shapes",
+      "title": "Фигуры",
+      "cards": [
+        { "id": "shapes_circle", "title": "Круг", "imageKey": null },
+        { "id": "shapes_square", "title": "Квадрат", "imageKey": null },
+        { "id": "shapes_triangle", "title": "Треугольник", "imageKey": null },
+        { "id": "shapes_line", "title": "Линия", "imageKey": null },
+        { "id": "shapes_oval", "title": "Овал", "imageKey": null },
+        { "id": "shapes_cube", "title": "Куб", "imageKey": null },
+        { "id": "shapes_star", "title": "Звезда", "imageKey": null },
+        { "id": "shapes_ring", "title": "Кольцо", "imageKey": null }
+      ]
+    },
+    {
+      "id": "clothes",
+      "title": "Одежда",
+      "cards": [
+        { "id": "clothes_shirt", "title": "Рубашка", "imageKey": null },
+        { "id": "clothes_coat", "title": "Пальто", "imageKey": null },
+        { "id": "clothes_hat", "title": "Шапка", "imageKey": null },
+        { "id": "clothes_scarf", "title": "Шарф", "imageKey": null },
+        { "id": "clothes_dress", "title": "Платье", "imageKey": null },
+        { "id": "clothes_jeans", "title": "Джинсы", "imageKey": null },
+        { "id": "clothes_glove", "title": "Перчатка", "imageKey": null },
+        { "id": "clothes_belt", "title": "Ремень", "imageKey": null }
+      ]
+    },
+    {
+      "id": "shoes",
+      "title": "Обувь",
+      "cards": [
+        { "id": "shoes_boot", "title": "Ботинок", "imageKey": null },
+        { "id": "shoes_sneaker", "title": "Кроссовок", "imageKey": null },
+        { "id": "shoes_sandal", "title": "Сандал", "imageKey": null },
+        { "id": "shoes_lace", "title": "Шнурок", "imageKey": null },
+        { "id": "shoes_heel", "title": "Каблук", "imageKey": null },
+        { "id": "shoes_sole", "title": "Подошва", "imageKey": null },
+        { "id": "shoes_pair", "title": "Пара", "imageKey": null },
+        { "id": "shoes_size", "title": "Размер", "imageKey": null }
+      ]
+    },
+    {
+      "id": "health",
+      "title": "Здоровье",
+      "cards": [
+        { "id": "health_doctor", "title": "Врач", "imageKey": null },
+        { "id": "health_clinic", "title": "Клиника", "imageKey": null },
+        { "id": "health_pill", "title": "Таблетка", "imageKey": null },
+        { "id": "health_rest", "title": "Отдых", "imageKey": null },
+        { "id": "health_water", "title": "Вода", "imageKey": null },
+        { "id": "health_sleep", "title": "Сон", "imageKey": null },
+        { "id": "health_pulse", "title": "Пульс", "imageKey": null },
+        { "id": "health_care", "title": "Забота", "imageKey": null }
+      ]
+    },
+    {
+      "id": "body",
+      "title": "Тело",
+      "cards": [
+        { "id": "body_hand", "title": "Рука", "imageKey": null },
+        { "id": "body_foot", "title": "Нога", "imageKey": null },
+        { "id": "body_eye", "title": "Глаз", "imageKey": null },
+        { "id": "body_ear", "title": "Ухо", "imageKey": null },
+        { "id": "body_heart", "title": "Сердце", "imageKey": null },
+        { "id": "body_back", "title": "Спина", "imageKey": null },
+        { "id": "body_finger", "title": "Палец", "imageKey": null },
+        { "id": "body_smile", "title": "Улыбка", "imageKey": null }
+      ]
+    },
+    {
+      "id": "work",
+      "title": "Работа",
+      "cards": [
+        { "id": "work_task", "title": "Задача", "imageKey": null },
+        { "id": "work_salary", "title": "Зарплата", "imageKey": null },
+        { "id": "work_shift", "title": "Смена", "imageKey": null },
+        { "id": "work_manager", "title": "Менеджер", "imageKey": null },
+        { "id": "work_report", "title": "Отчет", "imageKey": null },
+        { "id": "work_call", "title": "Звонок", "imageKey": null },
+        { "id": "work_desk", "title": "Стол", "imageKey": null },
+        { "id": "work_break", "title": "Перерыв", "imageKey": null }
+      ]
+    },
+    {
+      "id": "office",
+      "title": "Офис",
+      "cards": [
+        { "id": "office_chair", "title": "Стул", "imageKey": null },
+        { "id": "office_printer", "title": "Принтер", "imageKey": null },
+        { "id": "office_paper", "title": "Бумага", "imageKey": null },
+        { "id": "office_folder", "title": "Папка", "imageKey": null },
+        { "id": "office_pen", "title": "Ручка", "imageKey": null },
+        { "id": "office_coffee", "title": "Кофе", "imageKey": null },
+        { "id": "office_badge", "title": "Бейдж", "imageKey": null },
+        { "id": "office_screen", "title": "Экран", "imageKey": null }
+      ]
+    },
+    {
+      "id": "technology",
+      "title": "Технологии",
+      "cards": [
+        { "id": "technology_robot", "title": "Робот", "imageKey": null },
+        { "id": "technology_sensor", "title": "Датчик", "imageKey": null },
+        { "id": "technology_chip", "title": "Чип", "imageKey": null },
+        { "id": "technology_code", "title": "Код", "imageKey": null },
+        { "id": "technology_drone", "title": "Дрон", "imageKey": null },
+        { "id": "technology_laser", "title": "Лазер", "imageKey": null },
+        { "id": "technology_server", "title": "Сервер", "imageKey": null },
+        { "id": "technology_battery", "title": "Батарея", "imageKey": null }
+      ]
+    },
+    {
+      "id": "internet",
+      "title": "Интернет",
+      "cards": [
+        { "id": "internet_site", "title": "Сайт", "imageKey": null },
+        { "id": "internet_link", "title": "Ссылка", "imageKey": null },
+        { "id": "internet_search", "title": "Поиск", "imageKey": null },
+        { "id": "internet_mail", "title": "Почта", "imageKey": null },
+        { "id": "internet_video", "title": "Видео", "imageKey": null },
+        { "id": "internet_blog", "title": "Блог", "imageKey": null },
+        { "id": "internet_cloud", "title": "Облако", "imageKey": null },
+        { "id": "internet_chat", "title": "Чат", "imageKey": null }
+      ]
+    },
+    {
+      "id": "phone",
+      "title": "Телефон",
+      "cards": [
+        { "id": "phone_call", "title": "Звонок", "imageKey": null },
+        { "id": "phone_screen", "title": "Экран", "imageKey": null },
+        { "id": "phone_case", "title": "Чехол", "imageKey": null },
+        { "id": "phone_app", "title": "Приложение", "imageKey": null },
+        { "id": "phone_charge", "title": "Зарядка", "imageKey": null },
+        { "id": "phone_contact", "title": "Контакт", "imageKey": null },
+        { "id": "phone_message", "title": "Сообщение", "imageKey": null },
+        { "id": "phone_camera", "title": "Камера", "imageKey": null }
+      ]
+    },
+    {
+      "id": "photo",
+      "title": "Фото",
+      "cards": [
+        { "id": "photo_lens", "title": "Объектив", "imageKey": null },
+        { "id": "photo_flash", "title": "Вспышка", "imageKey": null },
+        { "id": "photo_album", "title": "Альбом", "imageKey": null },
+        { "id": "photo_portrait", "title": "Портрет", "imageKey": null },
+        { "id": "photo_frame", "title": "Рамка", "imageKey": null },
+        { "id": "photo_shot", "title": "Кадр", "imageKey": null },
+        { "id": "photo_focus", "title": "Фокус", "imageKey": null },
+        { "id": "photo_studio", "title": "Студия", "imageKey": null }
+      ]
+    },
+    {
+      "id": "holidays",
+      "title": "Праздник",
+      "cards": [
+        { "id": "holidays_cake", "title": "Торт", "imageKey": null },
+        { "id": "holidays_gift", "title": "Подарок", "imageKey": null },
+        { "id": "holidays_candle", "title": "Свеча", "imageKey": null },
+        { "id": "holidays_guest", "title": "Гость", "imageKey": null },
+        { "id": "holidays_music", "title": "Музыка", "imageKey": null },
+        { "id": "holidays_table", "title": "Стол", "imageKey": null },
+        { "id": "holidays_card", "title": "Открытка", "imageKey": null },
+        { "id": "holidays_balloon", "title": "Шарик", "imageKey": null }
+      ]
+    },
+    {
+      "id": "winter",
+      "title": "Зима",
+      "cards": [
+        { "id": "winter_snow", "title": "Снег", "imageKey": null },
+        { "id": "winter_ski", "title": "Лыжи", "imageKey": null },
+        { "id": "winter_scarf", "title": "Шарф", "imageKey": null },
+        { "id": "winter_ice", "title": "Лед", "imageKey": null },
+        { "id": "winter_mitten", "title": "Варежка", "imageKey": null },
+        { "id": "winter_pine", "title": "Елка", "imageKey": null },
+        { "id": "winter_cocoa", "title": "Какао", "imageKey": null },
+        { "id": "winter_sleigh", "title": "Санки", "imageKey": null }
+      ]
+    },
+    {
+      "id": "summer",
+      "title": "Лето",
+      "cards": [
+        { "id": "summer_sun", "title": "Солнце", "imageKey": null },
+        { "id": "summer_beach", "title": "Пляж", "imageKey": null },
+        { "id": "summer_hat", "title": "Панама", "imageKey": null },
+        { "id": "summer_lake", "title": "Озеро", "imageKey": null },
+        { "id": "summer_berry", "title": "Ягода", "imageKey": null },
+        { "id": "summer_picnic", "title": "Пикник", "imageKey": null },
+        { "id": "summer_fan", "title": "Вентилятор", "imageKey": null },
+        { "id": "summer_sandals", "title": "Сандалии", "imageKey": null }
+      ]
+    },
+    {
+      "id": "breakfast",
+      "title": "Завтрак",
+      "cards": [
+        { "id": "breakfast_toast", "title": "Тост", "imageKey": null },
+        { "id": "breakfast_porridge", "title": "Каша", "imageKey": null },
+        { "id": "breakfast_egg", "title": "Яйцо", "imageKey": null },
+        { "id": "breakfast_jam", "title": "Джем", "imageKey": null },
+        { "id": "breakfast_cereal", "title": "Хлопья", "imageKey": null },
+        { "id": "breakfast_yogurt", "title": "Йогурт", "imageKey": null },
+        { "id": "breakfast_tea", "title": "Чай", "imageKey": null },
+        { "id": "breakfast_butter", "title": "Масло", "imageKey": null }
+      ]
+    },
+    {
+      "id": "dessert",
+      "title": "Десерт",
+      "cards": [
+        { "id": "dessert_cake", "title": "Торт", "imageKey": null },
+        { "id": "dessert_cookie", "title": "Печенье", "imageKey": null },
+        { "id": "dessert_candy", "title": "Конфета", "imageKey": null },
+        { "id": "dessert_pie", "title": "Пирог", "imageKey": null },
+        { "id": "dessert_cream", "title": "Крем", "imageKey": null },
+        { "id": "dessert_icecream", "title": "Мороженое", "imageKey": null },
+        { "id": "dessert_waffle", "title": "Вафля", "imageKey": null },
+        { "id": "dessert_honey", "title": "Мед", "imageKey": null }
+      ]
+    },
+    {
+      "id": "drinks",
+      "title": "Напитки",
+      "cards": [
+        { "id": "drinks_juice", "title": "Сок", "imageKey": null },
+        { "id": "drinks_tea", "title": "Чай", "imageKey": null },
+        { "id": "drinks_coffee", "title": "Кофе", "imageKey": null },
+        { "id": "drinks_water", "title": "Вода", "imageKey": null },
+        { "id": "drinks_cocoa", "title": "Какао", "imageKey": null },
+        { "id": "drinks_milk", "title": "Молоко", "imageKey": null },
+        { "id": "drinks_lemonade", "title": "Лимонад", "imageKey": null },
+        { "id": "drinks_smoothie", "title": "Смузи", "imageKey": null }
+      ]
+    },
+    {
+      "id": "farm",
+      "title": "Ферма",
+      "cards": [
+        { "id": "farm_barn", "title": "Амбар", "imageKey": null },
+        { "id": "farm_tractor", "title": "Трактор", "imageKey": null },
+        { "id": "farm_field", "title": "Поле", "imageKey": null },
+        { "id": "farm_hay", "title": "Сено", "imageKey": null },
+        { "id": "farm_cow", "title": "Корова", "imageKey": null },
+        { "id": "farm_chicken", "title": "Курица", "imageKey": null },
+        { "id": "farm_grain", "title": "Зерно", "imageKey": null },
+        { "id": "farm_fence", "title": "Забор", "imageKey": null }
+      ]
+    },
+    {
+      "id": "forest",
+      "title": "Лес",
+      "cards": [
+        { "id": "forest_pine", "title": "Сосна", "imageKey": null },
+        { "id": "forest_mushroom", "title": "Гриб", "imageKey": null },
+        { "id": "forest_fox", "title": "Лиса", "imageKey": null },
+        { "id": "forest_owl", "title": "Сова", "imageKey": null },
+        { "id": "forest_fern", "title": "Папоротник", "imageKey": null },
+        { "id": "forest_stump", "title": "Пень", "imageKey": null },
+        { "id": "forest_berry", "title": "Ягода", "imageKey": null },
+        { "id": "forest_path", "title": "Тропа", "imageKey": null }
+      ]
+    },
+    {
+      "id": "flowers",
+      "title": "Цветы",
+      "cards": [
+        { "id": "flowers_rose", "title": "Роза", "imageKey": null },
+        { "id": "flowers_tulip", "title": "Тюльпан", "imageKey": null },
+        { "id": "flowers_lily", "title": "Лилия", "imageKey": null },
+        { "id": "flowers_peony", "title": "Пион", "imageKey": null },
+        { "id": "flowers_bouquet", "title": "Букет", "imageKey": null },
+        { "id": "flowers_petal", "title": "Лепесток", "imageKey": null },
+        { "id": "flowers_stem", "title": "Стебель", "imageKey": null },
+        { "id": "flowers_vase", "title": "Ваза", "imageKey": null }
+      ]
+    },
+    {
+      "id": "insects",
+      "title": "Насекомые",
+      "cards": [
+        { "id": "insects_bee", "title": "Пчела", "imageKey": null },
+        { "id": "insects_ant", "title": "Муравей", "imageKey": null },
+        { "id": "insects_butterfly", "title": "Бабочка", "imageKey": null },
+        { "id": "insects_beetle", "title": "Жук", "imageKey": null },
+        { "id": "insects_wing", "title": "Крыло", "imageKey": null },
+        { "id": "insects_hive", "title": "Улей", "imageKey": null },
+        { "id": "insects_cocoon", "title": "Кокон", "imageKey": null },
+        { "id": "insects_ladybug", "title": "Божья коровка", "imageKey": null }
+      ]
+    },
+    {
+      "id": "emotions",
+      "title": "Эмоции",
+      "cards": [
+        { "id": "emotions_joy", "title": "Радость", "imageKey": null },
+        { "id": "emotions_calm", "title": "Спокойствие", "imageKey": null },
+        { "id": "emotions_surprise", "title": "Удивление", "imageKey": null },
+        { "id": "emotions_interest", "title": "Интерес", "imageKey": null },
+        { "id": "emotions_hope", "title": "Надежда", "imageKey": null },
+        { "id": "emotions_trust", "title": "Доверие", "imageKey": null },
+        { "id": "emotions_pride", "title": "Гордость", "imageKey": null },
+        { "id": "emotions_warmth", "title": "Тепло", "imageKey": null }
+      ]
+    },
+    {
+      "id": "friendship",
+      "title": "Дружба",
+      "cards": [
+        { "id": "friendship_friend", "title": "Друг", "imageKey": null },
+        { "id": "friendship_chat", "title": "Общение", "imageKey": null },
+        { "id": "friendship_walk", "title": "Прогулка", "imageKey": null },
+        { "id": "friendship_smile", "title": "Улыбка", "imageKey": null },
+        { "id": "friendship_help", "title": "Помощь", "imageKey": null },
+        { "id": "friendship_team", "title": "Команда", "imageKey": null },
+        { "id": "friendship_secret", "title": "Секрет", "imageKey": null },
+        { "id": "friendship_memory", "title": "Воспоминание", "imageKey": null }
+      ]
+    },
+    {
+      "id": "hobbies",
+      "title": "Хобби",
+      "cards": [
+        { "id": "hobbies_drawing", "title": "Рисование", "imageKey": null },
+        { "id": "hobbies_knitting", "title": "Вязание", "imageKey": null },
+        { "id": "hobbies_chess", "title": "Шахматы", "imageKey": null },
+        { "id": "hobbies_puzzle", "title": "Пазл", "imageKey": null },
+        { "id": "hobbies_dance", "title": "Танец", "imageKey": null },
+        { "id": "hobbies_baking", "title": "Выпечка", "imageKey": null },
+        { "id": "hobbies_reading", "title": "Чтение", "imageKey": null },
+        { "id": "hobbies_music", "title": "Музыка", "imageKey": null }
+      ]
+    },
+    {
+      "id": "camping",
+      "title": "Поход",
+      "cards": [
+        { "id": "camping_tent", "title": "Палатка", "imageKey": null },
+        { "id": "camping_fire", "title": "Костер", "imageKey": null },
+        { "id": "camping_map", "title": "Карта", "imageKey": null },
+        { "id": "camping_compass", "title": "Компас", "imageKey": null },
+        { "id": "camping_backpack", "title": "Рюкзак", "imageKey": null },
+        { "id": "camping_lantern", "title": "Фонарь", "imageKey": null },
+        { "id": "camping_trail", "title": "Тропа", "imageKey": null },
+        { "id": "camping_mug", "title": "Кружка", "imageKey": null }
+      ]
+    },
+    {
+      "id": "toys",
+      "title": "Игрушки",
+      "cards": [
+        { "id": "toys_doll", "title": "Кукла", "imageKey": null },
+        { "id": "toys_blocks", "title": "Кубики", "imageKey": null },
+        { "id": "toys_train", "title": "Поезд", "imageKey": null },
+        { "id": "toys_puzzle", "title": "Пазл", "imageKey": null },
+        { "id": "toys_ball", "title": "Мяч", "imageKey": null },
+        { "id": "toys_robot", "title": "Робот", "imageKey": null },
+        { "id": "toys_kite", "title": "Воздушный змей", "imageKey": null },
+        { "id": "toys_car", "title": "Машинка", "imageKey": null }
+      ]
+    },
+    {
+      "id": "tools",
+      "title": "Инструменты",
+      "cards": [
+        { "id": "tools_hammer", "title": "Молоток", "imageKey": null },
+        { "id": "tools_saw", "title": "Пила", "imageKey": null },
+        { "id": "tools_drill", "title": "Дрель", "imageKey": null },
+        { "id": "tools_wrench", "title": "Ключ", "imageKey": null },
+        { "id": "tools_nail", "title": "Гвоздь", "imageKey": null },
+        { "id": "tools_pliers", "title": "Клещи", "imageKey": null },
+        { "id": "tools_ruler", "title": "Линейка", "imageKey": null },
+        { "id": "tools_level", "title": "Уровень", "imageKey": null }
+      ]
+    }
+  ]
+}

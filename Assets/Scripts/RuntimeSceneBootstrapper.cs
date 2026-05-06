@@ -1,8 +1,10 @@
 using System.Collections.Generic;
+using System.Reflection;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using UnityEngine.TextCore.LowLevel;
 using UnityEngine.UI;
 
 namespace SolitaireAssociations
@@ -10,6 +12,13 @@ namespace SolitaireAssociations
     public static class RuntimeSceneBootstrapper
     {
         private const string DefaultLevelResourcePath = "Levels/Level_1";
+        private const string CyrillicValidationSample = "АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюя";
+        private const string RuntimeFontResourcePath = "Fonts/Roboto-Bold";
+        private const string CyrillicValidationSampleSafe =
+            "\u0410\u0411\u0412\u0413\u0414\u0415\u0416\u0417\u0418\u0419\u041A\u041B\u041C\u041D\u041E\u041F\u0420\u0421\u0422\u0423\u0424\u0425\u0426\u0427\u0428\u0429\u042A\u042B\u042C\u042D\u042E\u042F" +
+            "\u0430\u0431\u0432\u0433\u0434\u0435\u0436\u0437\u0438\u0439\u043A\u043B\u043C\u043D\u043E\u043F\u0440\u0441\u0442\u0443\u0444\u0445\u0446\u0447\u0448\u0449\u044A\u044B\u044C\u044D\u044E\u044F";
+
+        private static TMP_FontAsset cachedRuntimeFontAsset;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void EnsurePrototypeScene()
@@ -41,6 +50,12 @@ namespace SolitaireAssociations
                 gameRoot.AddComponent<StubPlatformService>();
             }
 
+            CardDatabase cardDatabase = gameManager.GetComponent<CardDatabase>();
+            if (cardDatabase == null)
+            {
+                cardDatabase = gameManager.gameObject.AddComponent<CardDatabase>();
+            }
+
             if (gameManager.AssignedLevelDefinition == null)
             {
                 gameManager.SetLevelDefinition(Resources.Load<LevelDefinition>(DefaultLevelResourcePath));
@@ -63,6 +78,7 @@ namespace SolitaireAssociations
             }
 
             TMP_FontAsset fontAsset = LoadRuntimeFont();
+            ApplyRuntimeFontToScene(sceneRefs.SafeAreaRoot != null ? sceneRefs.SafeAreaRoot : gameManager.transform, fontAsset);
             CardView cardPrefab = CreateCardPrefab(sceneRefs.SafeAreaRoot != null ? sceneRefs.SafeAreaRoot : gameManager.transform, fontAsset);
 
             UIManager uiManager = gameManager.GetComponent<UIManager>();
@@ -90,6 +106,7 @@ namespace SolitaireAssociations
                 BuildGoalSlots(sceneRefs),
                 BuildDrawSlot(sceneRefs),
                 null,
+                cardDatabase,
                 gameManager.AssignedLevelDefinition,
                 sceneRefs);
 
@@ -117,7 +134,8 @@ namespace SolitaireAssociations
                 column.ConfigureComponents(
                     columnRef.Root.GetComponent<Image>(),
                     columnRef.Root.GetComponent<LayoutElement>(),
-                    columnRef.CardsStackRoot);
+                    columnRef.CardsStackRoot,
+                    columnRef.CrownSlot as RectTransform);
                 columns.Add(column);
             }
 
@@ -156,6 +174,7 @@ namespace SolitaireAssociations
         {
             RectTransform deckCardBack = sceneRefs.DeckCardBack;
             EnsureRaycastGraphic(deckCardBack.gameObject);
+            Transform drawCardsRoot = deckCardBack.parent != null ? deckCardBack.parent : deckCardBack;
 
             DrawSlot drawSlot = deckCardBack.GetComponent<DrawSlot>();
             if (drawSlot == null)
@@ -167,7 +186,7 @@ namespace SolitaireAssociations
                 deckCardBack.GetComponent<Image>(),
                 deckCardBack.GetComponent<LayoutElement>(),
                 sceneRefs.DeckCounter,
-                deckCardBack);
+                drawCardsRoot);
 
             return drawSlot;
         }
@@ -262,7 +281,7 @@ namespace SolitaireAssociations
             footerLabel.raycastTarget = false;
 
             CardView cardView = cardRoot.gameObject.AddComponent<CardView>();
-            cardView.ConfigureComponents(backgroundImage, outline, layoutElement, canvasGroup, titleLabel, footerLabel, iconImage);
+            cardView.ConfigureComponents(backgroundImage, outline, layoutElement, canvasGroup, titleRoot, titleLabel, footerRoot, footerLabel, iconImage);
             return cardView;
         }
 
@@ -278,12 +297,114 @@ namespace SolitaireAssociations
 
         private static TMP_FontAsset LoadRuntimeFont()
         {
-            if (TMP_Settings.defaultFontAsset != null)
+            if (cachedRuntimeFontAsset != null)
             {
-                return TMP_Settings.defaultFontAsset;
+                return cachedRuntimeFontAsset;
             }
 
-            return Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
+            TMP_FontAsset runtimeFontAsset = CreateCyrillicRuntimeFontAsset();
+            if (runtimeFontAsset != null)
+            {
+                cachedRuntimeFontAsset = runtimeFontAsset;
+                return cachedRuntimeFontAsset;
+            }
+
+            TMP_FontAsset defaultFontAsset = TMP_Settings.defaultFontAsset;
+            cachedRuntimeFontAsset = defaultFontAsset != null
+                ? defaultFontAsset
+                : Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
+
+            return cachedRuntimeFontAsset;
+        }
+
+        private static bool HasRequiredCharacters(TMP_FontAsset fontAsset)
+        {
+            if (fontAsset == null)
+            {
+                return false;
+            }
+
+            return fontAsset.HasCharacters(CyrillicValidationSampleSafe);
+        }
+
+        private static TMP_FontAsset CreateCyrillicRuntimeFontAsset()
+        {
+            Font sourceFont = Resources.Load<Font>(RuntimeFontResourcePath);
+            if (sourceFont == null)
+            {
+                sourceFont = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            }
+
+            if (sourceFont == null)
+            {
+                Debug.LogWarning("RuntimeSceneBootstrapper: failed to locate a runtime font with Cyrillic support.");
+                return null;
+            }
+
+            TMP_FontAsset fontAsset = TMP_FontAsset.CreateFontAsset(
+                sourceFont,
+                90,
+                9,
+                GlyphRenderMode.SDFAA,
+                1024,
+                1024,
+                AtlasPopulationMode.Dynamic,
+                true);
+
+            if (fontAsset == null)
+            {
+                Debug.LogWarning($"RuntimeSceneBootstrapper: failed to create TMP font asset from '{sourceFont.name}'.");
+                return null;
+            }
+
+            fontAsset.name = $"Runtime_{sourceFont.name}_Cyrillic";
+            WarmUpCyrillicGlyphs(fontAsset);
+
+            if (!HasRequiredCharacters(fontAsset))
+            {
+                Debug.LogWarning($"RuntimeSceneBootstrapper: runtime font '{sourceFont.name}' still misses some Cyrillic glyphs.");
+            }
+
+            return fontAsset;
+        }
+
+        private static void ApplyRuntimeFontToScene(Transform root, TMP_FontAsset fontAsset)
+        {
+            if (root == null || fontAsset == null)
+            {
+                return;
+            }
+
+            foreach (TMP_Text textComponent in root.GetComponentsInChildren<TMP_Text>(true))
+            {
+                if (textComponent == null)
+                {
+                    continue;
+                }
+
+                textComponent.font = fontAsset;
+                textComponent.fontSharedMaterial = fontAsset.material;
+            }
+        }
+
+        private static void WarmUpCyrillicGlyphs(TMP_FontAsset fontAsset)
+        {
+            if (fontAsset == null)
+            {
+                return;
+            }
+
+            MethodInfo tryAddCharactersMethod = typeof(TMP_FontAsset).GetMethod(
+                "TryAddCharacters",
+                BindingFlags.Instance | BindingFlags.Public,
+                null,
+                new[] { typeof(string) },
+                null);
+
+            if (tryAddCharactersMethod != null)
+            {
+                tryAddCharactersMethod.Invoke(fontAsset, new object[] { CyrillicValidationSampleSafe });
+            }
         }
 
         private static RectTransform CreateRect(

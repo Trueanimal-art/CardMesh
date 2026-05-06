@@ -10,6 +10,7 @@ namespace SolitaireAssociations
         [SerializeField] private Image backgroundImage;
         [SerializeField] private LayoutElement layoutElement;
         [SerializeField] private Transform cardsRoot;
+        [SerializeField] private CardVisualConfig visualConfig;
 
         private readonly List<CardView> cards = new();
 
@@ -20,6 +21,7 @@ namespace SolitaireAssociations
         public CardView GoalCard => cards.Count > 0 ? cards[0] : null;
         public int RegularCardsCount => Mathf.Max(0, cards.Count - 1);
         public Transform CardsRoot => cardsRoot != null ? cardsRoot : transform;
+        public RectTransform DropAreaRect => CardsRoot as RectTransform;
 
         public void ConfigureComponents(Image targetBackgroundImage, LayoutElement targetLayoutElement, Transform targetCardsRoot)
         {
@@ -31,6 +33,12 @@ namespace SolitaireAssociations
         public void Initialize(GameManager owner)
         {
             gameManager = owner;
+        }
+
+        public void SetVisualConfig(CardVisualConfig config)
+        {
+            visualConfig = config;
+            ApplySlotVisual();
         }
 
         public void ApplyLayout(ColumnLayoutProfile profile)
@@ -47,8 +55,7 @@ namespace SolitaireAssociations
 
             if (backgroundImage != null)
             {
-                backgroundImage.enabled = true;
-                backgroundImage.color = new Color(0.25f, 0.32f, 0.28f, 0.35f);
+                ApplySlotVisual();
             }
 
             RefreshLayout();
@@ -113,20 +120,21 @@ namespace SolitaireAssociations
 
         public void RefreshLayout()
         {
+            int visibleCardIndex = cards.Count > 1 ? cards.Count - 1 : 0;
             for (int index = 0; index < cards.Count; index++)
             {
                 CardView cardView = cards[index];
-                bool isGoalCard = index == 0;
+                bool isVisibleCard = index == visibleCardIndex;
                 RectTransform cardRect = cardView.RectTransform;
                 cardRect.SetParent(CardsRoot, false);
                 cardRect.anchorMin = new Vector2(0.5f, 0.5f);
                 cardRect.anchorMax = new Vector2(0.5f, 0.5f);
                 cardRect.pivot = new Vector2(0.5f, 0.5f);
                 cardRect.anchoredPosition = Vector2.zero;
-                cardRect.SetSiblingIndex(isGoalCard ? cards.Count - 1 : index - 1);
+                cardRect.SetSiblingIndex(isVisibleCard ? cards.Count - 1 : index);
                 cardView.SetSize(cardSize);
                 cardView.SetFaceUp(true);
-                cardView.SetVisible(isGoalCard);
+                cardView.SetVisible(isVisibleCard);
             }
         }
 
@@ -149,6 +157,23 @@ namespace SolitaireAssociations
             }
 
             return RectTransformUtility.RectangleContainsScreenPoint(dropArea, eventData.position, eventData.pressEventCamera);
+        }
+
+        private void ApplySlotVisual()
+        {
+            if (backgroundImage == null)
+            {
+                return;
+            }
+
+            Sprite slotSprite = visualConfig != null ? visualConfig.GoalSlotEmblemSprite : null;
+            backgroundImage.enabled = true;
+            backgroundImage.sprite = slotSprite;
+            backgroundImage.color = slotSprite != null
+                ? visualConfig.GoalSlotColor
+                : new Color(0.25f, 0.32f, 0.28f, 0.35f);
+            backgroundImage.type = Image.Type.Simple;
+            backgroundImage.preserveAspect = false;
         }
     }
 }

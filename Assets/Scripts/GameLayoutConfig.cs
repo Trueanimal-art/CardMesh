@@ -41,13 +41,6 @@ namespace SolitaireAssociations
                 cardSize = new Vector2(132f, 192f),
                 columnSpacing = 16f,
                 verticalOffset = 28f
-            },
-            new ColumnLayoutProfile
-            {
-                columnCount = 6,
-                cardSize = new Vector2(128f, 186f),
-                columnSpacing = 12f,
-                verticalOffset = 26f
             }
         };
 
@@ -63,6 +56,8 @@ namespace SolitaireAssociations
 
         public ColumnLayoutProfile GetProfile(int targetColumnCount)
         {
+            targetColumnCount = Mathf.Clamp(targetColumnCount, 3, 5);
+
             if (columnProfiles == null || columnProfiles.Count == 0)
             {
                 return new ColumnLayoutProfile

@@ -7,9 +7,12 @@ namespace SolitaireAssociations
 {
     public sealed class CardColumn : MonoBehaviour, ICardContainer, IDropHandler
     {
+        private const float FaceDownOffsetFactor = 0.65f;
+
         [SerializeField] private Image backgroundImage;
         [SerializeField] private LayoutElement layoutElement;
         [SerializeField] private Transform cardsRoot;
+        [SerializeField] private RectTransform blockedDropArea;
 
         private readonly List<CardView> cards = new();
 
@@ -20,12 +23,19 @@ namespace SolitaireAssociations
         public int CardCount => cards.Count;
         public CardView TopCard => cards.Count > 0 ? cards[^1] : null;
         public Transform CardsRoot => cardsRoot != null ? cardsRoot : transform;
+        public RectTransform DropAreaRect => CardsRoot as RectTransform;
+        public RectTransform BlockedDropAreaRect => blockedDropArea;
 
-        public void ConfigureComponents(Image targetBackgroundImage, LayoutElement targetLayoutElement, Transform targetCardsRoot)
+        public void ConfigureComponents(
+            Image targetBackgroundImage,
+            LayoutElement targetLayoutElement,
+            Transform targetCardsRoot,
+            RectTransform targetBlockedDropArea)
         {
             backgroundImage = targetBackgroundImage;
             layoutElement = targetLayoutElement;
             cardsRoot = targetCardsRoot;
+            blockedDropArea = targetBlockedDropArea;
         }
 
         public void Initialize(GameManager owner)
@@ -75,6 +85,29 @@ namespace SolitaireAssociations
             RefreshLayout();
         }
 
+        public void AddCards(IEnumerable<CardView> cardViews)
+        {
+            if (cardViews == null)
+            {
+                return;
+            }
+
+            foreach (CardView cardView in cardViews)
+            {
+                if (cardView == null)
+                {
+                    continue;
+                }
+
+                cards.Add(cardView);
+                cardView.BindToContainer(this);
+                cardView.transform.SetParent(CardsRoot, false);
+                cardView.SetSize(cardSize);
+            }
+
+            RefreshLayout();
+        }
+
         public void RemoveCard(CardView cardView)
         {
             if (cardView == null)
@@ -84,6 +117,53 @@ namespace SolitaireAssociations
 
             cards.Remove(cardView);
             RefreshLayout();
+        }
+
+        public List<CardView> RemoveStackStartingAt(CardView firstCard)
+        {
+            List<CardView> stack = GetMovableStack(firstCard);
+            if (stack.Count == 0)
+            {
+                return stack;
+            }
+
+            foreach (CardView cardView in stack)
+            {
+                cards.Remove(cardView);
+            }
+
+            RefreshLayout();
+            return stack;
+        }
+
+        public List<CardView> GetMovableStack(CardView firstCard)
+        {
+            List<CardView> stack = new();
+            int firstIndex = cards.IndexOf(firstCard);
+            if (firstIndex < 0)
+            {
+                return stack;
+            }
+
+            for (int index = firstIndex; index < cards.Count; index++)
+            {
+                CardView cardView = cards[index];
+                if (cardView == null || !cardView.IsFaceUp || cardView.Data == null || cardView.Data.IsGold)
+                {
+                    stack.Clear();
+                    return stack;
+                }
+
+                if (index > firstIndex && cardView.Data.AssociationId != firstCard.Data.AssociationId)
+                {
+                    stack.Clear();
+                    return stack;
+                }
+
+                stack.Add(cardView);
+            }
+
+            return stack;
         }
 
         public CardView GetCardAt(int index)
@@ -123,9 +203,26 @@ namespace SolitaireAssociations
             RefreshLayout();
         }
 
+        public void RevealOnlyTopCard()
+        {
+            for (int index = 0; index < cards.Count; index++)
+            {
+                CardView card = cards[index];
+                if (card == null)
+                {
+                    continue;
+                }
+
+                card.SetFaceUp(index == cards.Count - 1);
+                card.SetVisible(true);
+            }
+
+            RefreshLayout();
+        }
+
         public void RefreshLayout()
         {
-            bool keepCardUnderGoldFaceUp = cards.Count >= 2 && cards[^1].Data.IsGold;
+            float currentOffset = 0f;
 
             for (int index = 0; index < cards.Count; index++)
             {
@@ -135,13 +232,14 @@ namespace SolitaireAssociations
                 cardRect.anchorMin = new Vector2(0.5f, 1f);
                 cardRect.anchorMax = new Vector2(0.5f, 1f);
                 cardRect.pivot = new Vector2(0.5f, 1f);
-                cardRect.anchoredPosition = new Vector2(0f, -(index * verticalOffset));
+                cardRect.anchoredPosition = new Vector2(0f, -currentOffset);
                 cardRect.SetSiblingIndex(index);
                 card.SetSize(cardSize);
                 bool isTopCard = index == cards.Count - 1;
-                bool isCardUnderGold = keepCardUnderGoldFaceUp && index == cards.Count - 2;
-                bool shouldStayFaceUp = card.IsFaceUp;
-                card.SetFaceUp(isTopCard || isCardUnderGold || shouldStayFaceUp);
+                bool shouldFaceUp = isTopCard || card.IsFaceUp;
+                card.SetFaceUp(shouldFaceUp);
+                card.SetVisible(true);
+                currentOffset += shouldFaceUp ? verticalOffset : verticalOffset * FaceDownOffsetFactor;
             }
         }
 
@@ -159,6 +257,12 @@ namespace SolitaireAssociations
         {
             RectTransform dropArea = CardsRoot as RectTransform;
             if (dropArea == null || eventData == null)
+            {
+                return false;
+            }
+
+            if (blockedDropArea != null
+                && RectTransformUtility.RectangleContainsScreenPoint(blockedDropArea, eventData.position, eventData.pressEventCamera))
             {
                 return false;
             }
