@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace SolitaireAssociations
 {
-    public sealed class CardColumn : MonoBehaviour, ICardContainer, IDropHandler
+    public sealed class CardColumn : MonoBehaviour, ICardContainer, IDropHandler, IPointerEnterHandler, IPointerExitHandler
     {
         private const float FaceDownOffsetFactor = 0.65f;
 
@@ -19,6 +19,8 @@ namespace SolitaireAssociations
         private GameManager gameManager;
         private Vector2 cardSize;
         private float verticalOffset;
+        private Color storedBackgroundColor;
+        private bool hasStoredBackgroundColor;
 
         public int CardCount => cards.Count;
         public CardView TopCard => cards.Count > 0 ? cards[^1] : null;
@@ -245,12 +247,27 @@ namespace SolitaireAssociations
 
         public void OnDrop(PointerEventData eventData)
         {
+            SetHighlight(false);
+
             if (!IsPointerOverDropArea(eventData))
             {
                 return;
             }
 
             gameManager?.TryMoveDraggedCardTo(this);
+        }
+
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            if (gameManager != null && gameManager.CanDropDraggedCardTo(this))
+            {
+                SetHighlight(true);
+            }
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            SetHighlight(false);
         }
 
         private bool IsPointerOverDropArea(PointerEventData eventData)
@@ -268,6 +285,34 @@ namespace SolitaireAssociations
             }
 
             return RectTransformUtility.RectangleContainsScreenPoint(dropArea, eventData.position, eventData.pressEventCamera);
+        }
+
+        private void SetHighlight(bool value)
+        {
+            if (backgroundImage == null)
+            {
+                return;
+            }
+
+            if (value)
+            {
+                if (!hasStoredBackgroundColor)
+                {
+                    storedBackgroundColor = backgroundImage.color;
+                    hasStoredBackgroundColor = true;
+                }
+
+                backgroundImage.color = gameManager != null ? gameManager.HighlightColor : new Color(1f, 0.92f, 0.34f, 0.45f);
+                return;
+            }
+
+            if (!hasStoredBackgroundColor)
+            {
+                return;
+            }
+
+            backgroundImage.color = storedBackgroundColor;
+            hasStoredBackgroundColor = false;
         }
     }
 }

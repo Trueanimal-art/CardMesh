@@ -30,7 +30,7 @@ namespace SolitaireAssociations
             }
 
             GameManager gameManager = Object.FindFirstObjectByType<GameManager>();
-            if (gameManager != null && gameManager.HasPresentationBindings)
+            if (gameManager != null && gameManager.HasPresentationBindings && gameManager.AssignedLevelDefinition != null)
             {
                 return;
             }
@@ -38,7 +38,7 @@ namespace SolitaireAssociations
             BindManualScene(gameManager);
         }
 
-        private static void BindManualScene(GameManager existingGameManager)
+        public static void BindManualScene(GameManager existingGameManager)
         {
             EnsureEventSystem();
 
@@ -86,6 +86,8 @@ namespace SolitaireAssociations
             {
                 uiManager = gameManager.gameObject.AddComponent<UIManager>();
             }
+
+            EnsureWinScreen(sceneRefs.SafeAreaRoot != null ? sceneRefs.SafeAreaRoot : gameManager.transform, fontAsset);
 
             PlatformService platformService = gameManager.GetComponent<PlatformService>();
             if (platformService == null)
@@ -283,6 +285,143 @@ namespace SolitaireAssociations
             CardView cardView = cardRoot.gameObject.AddComponent<CardView>();
             cardView.ConfigureComponents(backgroundImage, outline, layoutElement, canvasGroup, titleRoot, titleLabel, footerRoot, footerLabel, iconImage);
             return cardView;
+        }
+
+        private static WinScreenView EnsureWinScreen(Transform parent, TMP_FontAsset fontAsset)
+        {
+            WinScreenView existingWinScreen = Object.FindFirstObjectByType<WinScreenView>(FindObjectsInactive.Include);
+            if (existingWinScreen != null)
+            {
+                return existingWinScreen;
+            }
+
+            RectTransform root = CreateRect(
+                "WinScreen",
+                parent,
+                Vector2.zero,
+                Vector2.one,
+                new Vector2(0.5f, 0.5f),
+                Vector2.zero,
+                Vector2.zero);
+            root.offsetMin = Vector2.zero;
+            root.offsetMax = Vector2.zero;
+
+            CanvasGroup canvasGroup = root.gameObject.AddComponent<CanvasGroup>();
+            Image overlay = root.gameObject.AddComponent<Image>();
+            overlay.color = new Color(0.05f, 0.12f, 0.08f, 0.58f);
+
+            RectTransform panel = CreateRect(
+                "Panel",
+                root,
+                new Vector2(0.5f, 0.5f),
+                new Vector2(0.5f, 0.5f),
+                new Vector2(0.5f, 0.5f),
+                new Vector2(520f, 300f),
+                Vector2.zero);
+            Image panelImage = panel.gameObject.AddComponent<Image>();
+            panelImage.color = new Color(1f, 0.95f, 0.78f, 0.98f);
+            Shadow panelShadow = panel.gameObject.AddComponent<Shadow>();
+            panelShadow.effectColor = new Color(0.08f, 0.05f, 0.01f, 0.35f);
+            panelShadow.effectDistance = new Vector2(0f, -10f);
+
+            TextMeshProUGUI titleText = CreateWinText(
+                "Title",
+                panel,
+                fontAsset,
+                new Vector2(0.5f, 1f),
+                new Vector2(0.5f, 1f),
+                new Vector2(0.5f, 1f),
+                new Vector2(460f, 70f),
+                new Vector2(0f, -36f),
+                42f,
+                new Color(0.23f, 0.18f, 0.08f, 1f));
+            titleText.text = "\u0423\u0440\u043e\u0432\u0435\u043d\u044c \u043f\u0440\u043e\u0439\u0434\u0435\u043d";
+
+            TextMeshProUGUI movesText = CreateWinText(
+                "Moves",
+                panel,
+                fontAsset,
+                new Vector2(0.5f, 0.5f),
+                new Vector2(0.5f, 0.5f),
+                new Vector2(0.5f, 0.5f),
+                new Vector2(360f, 48f),
+                new Vector2(0f, 24f),
+                30f,
+                new Color(0.37f, 0.29f, 0.14f, 1f));
+
+            Button retryButton = CreateWinButton(panel, fontAsset, "\u041f\u043e\u0432\u0442\u043e\u0440\u0438\u0442\u044c", new Vector2(-120f, -92f));
+            Button menuButton = CreateWinButton(panel, fontAsset, "\u0412 \u043c\u0435\u043d\u044e", new Vector2(120f, -92f));
+
+            WinScreenView winScreen = root.gameObject.AddComponent<WinScreenView>();
+            winScreen.ConfigureComponents(canvasGroup, panel, titleText, movesText, retryButton, menuButton);
+            root.gameObject.SetActive(false);
+            return winScreen;
+        }
+
+        private static TextMeshProUGUI CreateWinText(
+            string name,
+            Transform parent,
+            TMP_FontAsset fontAsset,
+            Vector2 anchorMin,
+            Vector2 anchorMax,
+            Vector2 pivot,
+            Vector2 size,
+            Vector2 position,
+            float fontSize,
+            Color color)
+        {
+            RectTransform textRoot = CreateRect(name, parent, anchorMin, anchorMax, pivot, size, position);
+            TextMeshProUGUI text = textRoot.gameObject.AddComponent<TextMeshProUGUI>();
+            text.font = fontAsset;
+            text.fontSize = fontSize;
+            text.fontStyle = FontStyles.Bold;
+            text.enableAutoSizing = true;
+            text.fontSizeMin = Mathf.Max(16f, fontSize - 12f);
+            text.fontSizeMax = fontSize;
+            text.alignment = TextAlignmentOptions.Center;
+            text.color = color;
+            text.raycastTarget = false;
+            return text;
+        }
+
+        private static Button CreateWinButton(Transform parent, TMP_FontAsset fontAsset, string label, Vector2 position)
+        {
+            RectTransform buttonRoot = CreateRect(
+                label,
+                parent,
+                new Vector2(0.5f, 0f),
+                new Vector2(0.5f, 0f),
+                new Vector2(0.5f, 0.5f),
+                new Vector2(190f, 62f),
+                position);
+            Image image = buttonRoot.gameObject.AddComponent<Image>();
+            image.sprite = Resources.GetBuiltinResource<Sprite>("UI/Skin/UISprite.psd");
+            image.type = Image.Type.Sliced;
+            image.color = new Color(1f, 0.64f, 0.08f, 1f);
+
+            Button button = buttonRoot.gameObject.AddComponent<Button>();
+            button.targetGraphic = image;
+
+            Shadow shadow = buttonRoot.gameObject.AddComponent<Shadow>();
+            shadow.effectColor = new Color(0.19f, 0.1f, 0f, 0.3f);
+            shadow.effectDistance = new Vector2(0f, -5f);
+
+            TextMeshProUGUI buttonText = CreateWinText(
+                "Text",
+                buttonRoot,
+                fontAsset,
+                Vector2.zero,
+                Vector2.one,
+                new Vector2(0.5f, 0.5f),
+                Vector2.zero,
+                Vector2.zero,
+                24f,
+                new Color(0.22f, 0.18f, 0.08f, 1f));
+            buttonText.rectTransform.offsetMin = Vector2.zero;
+            buttonText.rectTransform.offsetMax = Vector2.zero;
+            buttonText.text = label;
+
+            return button;
         }
 
         private static void EnsureEventSystem()

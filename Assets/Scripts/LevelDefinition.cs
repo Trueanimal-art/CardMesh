@@ -76,6 +76,26 @@ namespace SolitaireAssociations
             int randomIndex = UnityEngine.Random.Range(0, availableLayouts.Count);
             return availableLayouts[randomIndex];
         }
+
+        public LevelLayoutConfig GetLayoutForColumns(int columnsCount, int variantIndex)
+        {
+            List<LevelLayoutConfig> availableLayouts = new();
+            foreach (LevelLayoutConfig layout in layouts)
+            {
+                if (layout != null && layout.ColumnsCount == columnsCount)
+                {
+                    availableLayouts.Add(layout);
+                }
+            }
+
+            if (availableLayouts.Count == 0)
+            {
+                return GetActiveLayout();
+            }
+
+            int safeIndex = Mathf.Abs(variantIndex) % availableLayouts.Count;
+            return availableLayouts[safeIndex];
+        }
     }
 
     [Serializable]

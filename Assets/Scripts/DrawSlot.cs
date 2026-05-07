@@ -120,11 +120,16 @@ namespace SolitaireAssociations
                 return false;
             }
 
+            Vector3 startPosition = backgroundImage != null
+                ? backgroundImage.rectTransform.position
+                : transform.position;
+
             nextCard.gameObject.SetActive(true);
             nextCard.BindToContainer(this);
             revealedCards.Add(nextCard);
 
             RefreshLayout();
+            nextCard.AnimateFromWorldPosition(startPosition, gameManager != null ? gameManager.MoveDuration : 0f);
             RefreshCounter();
             return true;
         }

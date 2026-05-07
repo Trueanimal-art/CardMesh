@@ -117,6 +117,11 @@ namespace SolitaireAssociations
                 return;
             }
 
+            if (button.GetComponent<UIJuicyButton>() == null)
+            {
+                button.gameObject.AddComponent<UIJuicyButton>();
+            }
+
             button.onClick.RemoveAllListeners();
             button.onClick.AddListener(() => Debug.Log($"UIManager: {buttonName} clicked."));
         }

@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -39,6 +40,7 @@ namespace SolitaireAssociations
 
         private GameManager gameManager;
         private RectTransform dragLayer;
+        private Coroutine feedbackCoroutine;
         private bool isFaceUp = true;
         private bool useRevealHistoryLayout;
 
@@ -145,6 +147,27 @@ namespace SolitaireAssociations
 
             useRevealHistoryLayout = value;
             RefreshVisual();
+        }
+
+        public void AnimateFromWorldPosition(Vector3 startWorldPosition, float duration)
+        {
+            if (!isActiveAndEnabled || RectTransform == null || duration <= 0f)
+            {
+                return;
+            }
+
+            Vector3 targetWorldPosition = RectTransform.position;
+            StartFeedbackCoroutine(AnimateWorldPosition(startWorldPosition, targetWorldPosition, duration));
+        }
+
+        public void PlayShake(float duration, float strength)
+        {
+            if (!isActiveAndEnabled || RectTransform == null || duration <= 0f || strength <= 0f)
+            {
+                return;
+            }
+
+            StartFeedbackCoroutine(Shake(duration, strength));
         }
 
         public void RefreshVisual()
@@ -407,6 +430,53 @@ namespace SolitaireAssociations
         public void OnEndDrag(PointerEventData eventData)
         {
             gameManager?.EndDrag(this, eventData);
+        }
+
+        private void StartFeedbackCoroutine(IEnumerator routine)
+        {
+            if (feedbackCoroutine != null)
+            {
+                StopCoroutine(feedbackCoroutine);
+            }
+
+            feedbackCoroutine = StartCoroutine(routine);
+        }
+
+        private IEnumerator AnimateWorldPosition(Vector3 startWorldPosition, Vector3 targetWorldPosition, float duration)
+        {
+            RectTransform.position = startWorldPosition;
+            float elapsed = 0f;
+
+            while (elapsed < duration)
+            {
+                elapsed += Time.deltaTime;
+                float progress = Mathf.Clamp01(elapsed / duration);
+                float easedProgress = 1f - Mathf.Pow(1f - progress, 3f);
+                RectTransform.position = Vector3.LerpUnclamped(startWorldPosition, targetWorldPosition, easedProgress);
+                yield return null;
+            }
+
+            RectTransform.position = targetWorldPosition;
+            feedbackCoroutine = null;
+        }
+
+        private IEnumerator Shake(float duration, float strength)
+        {
+            Vector2 originalPosition = RectTransform.anchoredPosition;
+            float elapsed = 0f;
+
+            while (elapsed < duration)
+            {
+                elapsed += Time.deltaTime;
+                float progress = Mathf.Clamp01(elapsed / duration);
+                float fade = 1f - progress;
+                float offsetX = Mathf.Sin(progress * Mathf.PI * 8f) * strength * fade;
+                RectTransform.anchoredPosition = originalPosition + new Vector2(offsetX, 0f);
+                yield return null;
+            }
+
+            RectTransform.anchoredPosition = originalPosition;
+            feedbackCoroutine = null;
         }
     }
 }

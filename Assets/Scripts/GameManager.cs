@@ -1,7 +1,9 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace SolitaireAssociations
@@ -43,6 +45,15 @@ namespace SolitaireAssociations
         [SerializeField] private CardDatabase cardDatabase;
         [SerializeField] private LevelDefinition levelDefinition;
         [SerializeField] private SolitaireSceneRefs sceneRefs;
+        [SerializeField] private LevelProgressionManager progressionManager;
+        [SerializeField] private WinScreenView winScreenView;
+
+        [Header("Feedback")]
+        [SerializeField, Min(0f)] private float moveDuration = 0.18f;
+        [SerializeField, Min(0f)] private float shakeDuration = 0.18f;
+        [SerializeField, Min(0f)] private float shakeStrength = 16f;
+        [SerializeField] private Color highlightColor = new(1f, 0.92f, 0.34f, 0.45f);
+        [SerializeField, Min(0.5f)] private float levelCompleteDelay = 1.75f;
 
         private readonly Dictionary<string, CardData> cardsById = new();
         private readonly Dictionary<string, CardData> goalCardsByAssociation = new();
@@ -59,8 +70,13 @@ namespace SolitaireAssociations
         private int remainingMoves;
         private bool levelFinished;
         private bool dependenciesInitialized;
+        private Coroutine levelCompleteRoutine;
 
         public LevelDefinition AssignedLevelDefinition => levelDefinition;
+        public float MoveDuration => moveDuration;
+        public float ShakeDuration => shakeDuration;
+        public float ShakeStrength => shakeStrength;
+        public Color HighlightColor => highlightColor;
         public bool HasPresentationBindings =>
             uiManager != null &&
             dragLayer != null &&
@@ -82,6 +98,11 @@ namespace SolitaireAssociations
 
         private void Start()
         {
+            if (!HasPresentationBindings)
+            {
+                RuntimeSceneBootstrapper.BindManualScene(this);
+            }
+
             if (HasPresentationBindings && levelDefinition != null)
             {
                 RestartLevel();
@@ -243,6 +264,7 @@ namespace SolitaireAssociations
                 if (!TryResolveLooseDrop(cardView, screenPoint, eventCamera) && cardView.Container != null)
                 {
                     cardView.Container.RefreshLayout();
+                    PlayInvalidMoveFeedback(cardView);
                 }
             }
 
@@ -263,6 +285,11 @@ namespace SolitaireAssociations
             return TryMoveDraggedCardToInternal(targetGoalSlot);
         }
 
+        public bool CanDropDraggedCardTo(ICardContainer targetContainer)
+        {
+            return draggedCard != null && CanMoveCard(draggedCard, targetContainer);
+        }
+
         public void RestartLevel()
         {
             if (levelDefinition == null)
@@ -276,8 +303,17 @@ namespace SolitaireAssociations
             levelFinished = false;
             draggedCard = null;
             dragWasResolved = false;
+            if (levelCompleteRoutine != null)
+            {
+                StopCoroutine(levelCompleteRoutine);
+                levelCompleteRoutine = null;
+            }
 
-            if (!LevelGenerator.TryGenerate(levelDefinition, cardDatabase, out generatedLevelData))
+            winScreenView?.HideInstant();
+
+            int? targetColumnsCount = progressionManager != null ? progressionManager.CurrentTargetColumns : null;
+            int layoutVariantIndex = progressionManager != null ? progressionManager.CurrentLayoutVariantIndex : 0;
+            if (!LevelGenerator.TryGenerate(levelDefinition, cardDatabase, targetColumnsCount, layoutVariantIndex, out generatedLevelData))
             {
                 Debug.LogError("GameManager: failed to generate level from config.");
                 return;
@@ -537,6 +573,8 @@ namespace SolitaireAssociations
                 return;
             }
 
+            Dictionary<CardView, Vector3> startPositions = CaptureMoveStartPositions(cardView);
+
             if (sourceContainer is CardColumn sourceColumn && targetContainer is CardColumn targetColumn)
             {
                 List<CardView> movingStack = sourceColumn.RemoveStackStartingAt(cardView);
@@ -556,6 +594,7 @@ namespace SolitaireAssociations
                 targetContainer.AddCard(cardView);
             }
 
+            PlayMoveAnimations(startPositions);
             remainingMoves = Mathf.Max(0, remainingMoves - 1);
 
             platformService?.TrackEvent("card_move");
@@ -613,6 +652,119 @@ namespace SolitaireAssociations
             }
 
             return cardView.Container == null || cardView.Container.IsTopCard(cardView);
+        }
+
+        private Dictionary<CardView, Vector3> CaptureMoveStartPositions(CardView cardView)
+        {
+            Dictionary<CardView, Vector3> positions = new();
+
+            if (draggedStack.Count > 0)
+            {
+                foreach (CardView stackCard in draggedStack)
+                {
+                    if (stackCard != null)
+                    {
+                        positions[stackCard] = stackCard.RectTransform.position;
+                    }
+                }
+
+                return positions;
+            }
+
+            if (cardView != null)
+            {
+                positions[cardView] = cardView.RectTransform.position;
+            }
+
+            return positions;
+        }
+
+        private void PlayMoveAnimations(Dictionary<CardView, Vector3> startPositions)
+        {
+            foreach (KeyValuePair<CardView, Vector3> entry in startPositions)
+            {
+                if (entry.Key != null)
+                {
+                    entry.Key.AnimateFromWorldPosition(entry.Value, moveDuration);
+                }
+            }
+        }
+
+        private void PlayInvalidMoveFeedback(CardView cardView)
+        {
+            cardView?.PlayShake(shakeDuration, shakeStrength);
+        }
+
+        private void CompleteLevel()
+        {
+            if (levelFinished)
+            {
+                return;
+            }
+
+            levelFinished = true;
+            uiManager.ShowStatus("\u0423\u0440\u043e\u0432\u0435\u043d\u044c \u043f\u0440\u043e\u0439\u0434\u0435\u043d", new Color(0.76f, 0.96f, 0.74f, 1f));
+            winScreenView?.Show(GetUsedMovesCount());
+            platformService?.TrackEvent("level_win");
+
+            if (levelCompleteRoutine != null)
+            {
+                StopCoroutine(levelCompleteRoutine);
+            }
+
+            levelCompleteRoutine = StartCoroutine(AdvanceToNextLevelAfterDelay());
+        }
+
+        private IEnumerator AdvanceToNextLevelAfterDelay()
+        {
+            yield return new WaitForSeconds(levelCompleteDelay);
+            progressionManager?.AdvanceToNextLevel();
+            levelCompleteRoutine = null;
+            RestartLevel();
+        }
+
+        private void RetryCurrentLevel()
+        {
+            if (levelCompleteRoutine != null)
+            {
+                StopCoroutine(levelCompleteRoutine);
+                levelCompleteRoutine = null;
+            }
+
+            RestartLevel();
+        }
+
+        private void ReturnToMainMenu()
+        {
+            if (levelCompleteRoutine != null)
+            {
+                StopCoroutine(levelCompleteRoutine);
+                levelCompleteRoutine = null;
+            }
+
+            if (Application.CanStreamedLevelBeLoaded("MainMenu"))
+            {
+                SceneManager.LoadScene("MainMenu");
+                return;
+            }
+
+            if (Application.CanStreamedLevelBeLoaded("Assets/MainMenu.unity"))
+            {
+                SceneManager.LoadScene("Assets/MainMenu.unity");
+                return;
+            }
+
+            Debug.LogWarning("GameManager: MainMenu scene is not in Build Settings.");
+        }
+
+        private int GetUsedMovesCount()
+        {
+            if (generatedLevelData == null)
+            {
+                return 0;
+            }
+
+            return Mathf.Max(0, generatedLevelData.ReferenceMoves - remainingMoves);
         }
 
         private void FinishDragVisual()
@@ -799,9 +951,7 @@ namespace SolitaireAssociations
 
             if (completedAssociations.Count == objectiveOrder.Count && objectiveOrder.Count > 0)
             {
-                levelFinished = true;
-                uiManager.ShowStatus("Победа!", new Color(0.76f, 0.96f, 0.74f, 1f));
-                platformService?.TrackEvent("level_win");
+                CompleteLevel();
             }
             else if (consumeMove && remainingMoves <= 0)
             {
@@ -938,6 +1088,22 @@ namespace SolitaireAssociations
             {
                 cardDatabase = GetComponent<CardDatabase>();
             }
+
+            if (progressionManager == null)
+            {
+                progressionManager = GetComponent<LevelProgressionManager>();
+                if (progressionManager == null)
+                {
+                    progressionManager = gameObject.AddComponent<LevelProgressionManager>();
+                }
+            }
+
+            if (winScreenView == null)
+            {
+                winScreenView = FindFirstObjectByType<WinScreenView>(FindObjectsInactive.Include);
+            }
+
+            winScreenView?.Configure(RetryCurrentLevel, ReturnToMainMenu);
 
             cardDatabase?.Load();
             platformService?.Initialize();

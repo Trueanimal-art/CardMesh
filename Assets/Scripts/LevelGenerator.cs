@@ -7,6 +7,16 @@ namespace SolitaireAssociations
     {
         public static bool TryGenerate(LevelDefinition levelDefinition, CardDatabase cardDatabase, out GeneratedLevelData generatedLevelData)
         {
+            return TryGenerate(levelDefinition, cardDatabase, null, 0, out generatedLevelData);
+        }
+
+        public static bool TryGenerate(
+            LevelDefinition levelDefinition,
+            CardDatabase cardDatabase,
+            int? targetColumnsCount,
+            int layoutVariantIndex,
+            out GeneratedLevelData generatedLevelData)
+        {
             generatedLevelData = null;
 
             if (levelDefinition == null)
@@ -21,7 +31,9 @@ namespace SolitaireAssociations
                 return false;
             }
 
-            LevelLayoutConfig layout = levelDefinition.GetRandomLayout();
+            LevelLayoutConfig layout = targetColumnsCount.HasValue
+                ? levelDefinition.GetLayoutForColumns(targetColumnsCount.Value, layoutVariantIndex)
+                : levelDefinition.GetRandomLayout();
             if (layout == null)
             {
                 Debug.LogWarning($"LevelGenerator: no layout found in '{levelDefinition.name}'.");
