@@ -47,6 +47,7 @@ namespace SolitaireAssociations
         [SerializeField] private SolitaireSceneRefs sceneRefs;
         [SerializeField] private LevelProgressionManager progressionManager;
         [SerializeField] private WinScreenView winScreenView;
+        [SerializeField] private CoinsManager coinsManager;
 
         [Header("Feedback")]
         [SerializeField, Min(0f)] private float moveDuration = 0.18f;
@@ -93,6 +94,11 @@ namespace SolitaireAssociations
 
         private void Awake()
         {
+            if (SceneManager.GetActiveScene().name == "Main")
+            {
+                RuntimeSceneBootstrapper.ResetMainScenePlayState();
+            }
+
             InitializeDependencies();
         }
 
@@ -153,7 +159,7 @@ namespace SolitaireAssociations
 
         public void DrawNextStockCard()
         {
-            if (levelFinished || drawSlot == null || drawSlot.QueuedCardsCount <= 0)
+            if (levelFinished || drawSlot == null || !drawSlot.HasDrawableCards)
             {
                 return;
             }
@@ -207,6 +213,7 @@ namespace SolitaireAssociations
 
             draggedStackOffsets.Clear();
             Vector3 anchorPosition = cardView.RectTransform.position;
+            ICardContainer sourceContainer = cardView.Container;
 
             foreach (CardView stackCard in draggedStack)
             {
@@ -217,9 +224,14 @@ namespace SolitaireAssociations
 
                 draggedStackOffsets[stackCard] = stackCard.RectTransform.position - anchorPosition;
                 stackCard.SetRaycastBlocks(false);
+                stackCard.SetDragDetached(true);
+                stackCard.SetRevealHistoryLayout(false);
+                stackCard.SetDraggingVisual(true);
                 stackCard.transform.SetParent(dragLayer, true);
                 stackCard.transform.SetAsLastSibling();
             }
+
+            sourceContainer?.RefreshLayout();
         }
 
         public void UpdateDragVisual(CardView cardView, PointerEventData eventData)
@@ -254,6 +266,7 @@ namespace SolitaireAssociations
                 return;
             }
 
+            bool resolved = dragWasResolved;
             if (!dragWasResolved)
             {
                 Vector2 screenPoint = eventData != null
@@ -261,14 +274,16 @@ namespace SolitaireAssociations
                     : RectTransformUtility.WorldToScreenPoint(null, cardView.RectTransform.position);
                 Camera eventCamera = eventData != null ? eventData.pressEventCamera : null;
 
-                if (!TryResolveLooseDrop(cardView, screenPoint, eventCamera) && cardView.Container != null)
-                {
-                    cardView.Container.RefreshLayout();
-                    PlayInvalidMoveFeedback(cardView);
-                }
+                resolved = TryResolveLooseDrop(cardView, screenPoint, eventCamera);
             }
 
             FinishDragVisual();
+            if (!resolved && cardView.Container != null)
+            {
+                cardView.Container.RefreshLayout();
+                PlayInvalidMoveFeedback(cardView);
+            }
+
             draggedCard = null;
             dragWasResolved = false;
             draggedStack.Clear();
@@ -313,7 +328,8 @@ namespace SolitaireAssociations
 
             int? targetColumnsCount = progressionManager != null ? progressionManager.CurrentTargetColumns : null;
             int layoutVariantIndex = progressionManager != null ? progressionManager.CurrentLayoutVariantIndex : 0;
-            if (!LevelGenerator.TryGenerate(levelDefinition, cardDatabase, targetColumnsCount, layoutVariantIndex, out generatedLevelData))
+            int levelSeed = progressionManager != null ? progressionManager.GetOrCreateSeedForCurrentLevel() : Random.Range(1, int.MaxValue);
+            if (!LevelGenerator.TryGenerate(levelDefinition, cardDatabase, targetColumnsCount, layoutVariantIndex, levelSeed, out generatedLevelData))
             {
                 Debug.LogError("GameManager: failed to generate level from config.");
                 return;
@@ -329,7 +345,13 @@ namespace SolitaireAssociations
             CreateStartingCards();
 
             uiManager.Initialize(this, BuildObjectiveStates());
+            if (coinsManager != null)
+            {
+                uiManager.UpdateCoins(coinsManager.CurrentCoins);
+            }
+
             ResolveBoardState(false);
+            Debug.Log($"GameManager: Started level {progressionManager?.CurrentLevelNumber ?? 1} with seed {levelSeed}.");
             platformService?.TrackEvent("level_restart");
         }
 
@@ -341,7 +363,7 @@ namespace SolitaireAssociations
                     ? levelDefinition.ColumnsCount
                     : 4;
             int visibleColumnsCount = Mathf.Clamp(configuredColumnsCount, 3, 5);
-            ColumnLayoutProfile profile = layoutConfig.GetProfile(visibleColumnsCount);
+            ColumnLayoutProfile profile = NormalizeGameplayProfile(layoutConfig.GetProfile(visibleColumnsCount), visibleColumnsCount);
 
             if (columnsLayoutGroup != null)
             {
@@ -392,6 +414,36 @@ namespace SolitaireAssociations
 
             drawSlot?.ApplyLayout(profile);
             Debug.Log($"GameManager: Activated {activatedColumns}/{columns.Count} columns.");
+        }
+
+        private static ColumnLayoutProfile NormalizeGameplayProfile(ColumnLayoutProfile profile, int visibleColumnsCount)
+        {
+            Vector2 targetCardSize = visibleColumnsCount switch
+            {
+                3 => new Vector2(196f, 286f),
+                4 => new Vector2(186f, 272f),
+                _ => new Vector2(170f, 248f)
+            };
+
+            float targetSpacing = visibleColumnsCount switch
+            {
+                3 => 112f,
+                4 => 76f,
+                _ => 48f
+            };
+
+            float targetVerticalOffset = visibleColumnsCount switch
+            {
+                3 => 48f,
+                4 => 44f,
+                _ => 40f
+            };
+
+            profile.columnCount = visibleColumnsCount;
+            profile.cardSize = targetCardSize;
+            profile.columnSpacing = Mathf.Max(profile.columnSpacing, targetSpacing);
+            profile.verticalOffset = targetVerticalOffset;
+            return profile;
         }
 
         private bool BuildLevelData()
@@ -501,6 +553,7 @@ namespace SolitaireAssociations
                 }
 
                 List<string> columnDefinition = generatedLevelData.Columns[columnIndex];
+                List<CardView> columnCards = new();
                 foreach (string cardId in columnDefinition)
                 {
                     if (string.IsNullOrWhiteSpace(cardId) || !cardsById.TryGetValue(cardId, out CardData cardData))
@@ -517,11 +570,12 @@ namespace SolitaireAssociations
                     cardView.SetVisualConfig(visualConfig);
                     cardView.Setup(cardData, this, dragLayer);
                     cardView.SetFaceUp(false);
-                    activeColumns[columnIndex].AddCard(cardView);
+                    columnCards.Add(cardView);
                     spawnedCards.Add(cardView);
                     Debug.Log($"GameManager: Spawned card '{cardData.Id}' into {SolitaireSceneRefs.GetPath(cardsRoot)}.");
                 }
 
+                activeColumns[columnIndex].AddCards(columnCards);
                 activeColumns[columnIndex].RevealOnlyTopCard();
             }
 
@@ -574,6 +628,13 @@ namespace SolitaireAssociations
             }
 
             Dictionary<CardView, Vector3> startPositions = CaptureMoveStartPositions(cardView);
+            foreach (CardView stackCard in draggedStack)
+            {
+                if (stackCard != null)
+                {
+                    stackCard.SetDragDetached(false);
+                }
+            }
 
             if (sourceContainer is CardColumn sourceColumn && targetContainer is CardColumn targetColumn)
             {
@@ -588,6 +649,19 @@ namespace SolitaireAssociations
                     targetContainer.AddCard(cardView);
                 }
             }
+            else if (sourceContainer is CardColumn goalSourceColumn && targetContainer is GoalSlot targetGoalSlot)
+            {
+                List<CardView> movingStack = goalSourceColumn.RemoveStackStartingAt(cardView);
+                if (movingStack.Count > 0)
+                {
+                    targetGoalSlot.AddCards(movingStack);
+                }
+                else
+                {
+                    sourceContainer.RemoveCard(cardView);
+                    targetContainer.AddCard(cardView);
+                }
+            }
             else
             {
                 sourceContainer.RemoveCard(cardView);
@@ -595,6 +669,17 @@ namespace SolitaireAssociations
             }
 
             PlayMoveAnimations(startPositions);
+            global::MusicPlayer.Instance?.PlayCardDrop();
+            if (targetContainer is GoalSlot acceptedGoalSlot)
+            {
+                foreach (CardView stackCard in draggedStack.Count > 0 ? draggedStack : new List<CardView> { cardView })
+                {
+                    stackCard?.PlayAcceptedFeedback();
+                }
+
+                acceptedGoalSlot.PlayAcceptFeedback((cardView.Data != null && cardView.Data.IsGold) || draggedStack.Count > 1);
+            }
+
             remainingMoves = Mathf.Max(0, remainingMoves - 1);
 
             platformService?.TrackEvent("card_move");
@@ -646,12 +731,16 @@ namespace SolitaireAssociations
                 return true;
             }
 
-            if (draggedStack.Count > 1)
+            List<CardView> stack = draggedStack.Count > 0
+                ? draggedStack
+                : BuildDragStack(cardView);
+
+            if (targetContainer is GoalSlot targetGoalSlot)
             {
-                return false;
+                return targetGoalSlot.CanAcceptStack(stack);
             }
 
-            return cardView.Container == null || cardView.Container.IsTopCard(cardView);
+            return stack.Count == 1 && (cardView.Container == null || cardView.Container.IsTopCard(cardView));
         }
 
         private Dictionary<CardView, Vector3> CaptureMoveStartPositions(CardView cardView)
@@ -704,6 +793,7 @@ namespace SolitaireAssociations
 
             levelFinished = true;
             uiManager.ShowStatus("\u0423\u0440\u043e\u0432\u0435\u043d\u044c \u043f\u0440\u043e\u0439\u0434\u0435\u043d", new Color(0.76f, 0.96f, 0.74f, 1f));
+            global::MusicPlayer.Instance?.PlayWin();
             winScreenView?.Show(GetUsedMovesCount());
             platformService?.TrackEvent("level_win");
 
@@ -771,7 +861,14 @@ namespace SolitaireAssociations
         {
             foreach (CardView stackCard in draggedStack)
             {
-                stackCard?.SetRaycastBlocks(true);
+                if (stackCard == null)
+                {
+                    continue;
+                }
+
+                stackCard.SetDragDetached(false);
+                stackCard.SetRaycastBlocks(stackCard.Container is not GoalSlot);
+                stackCard.SetDraggingVisual(false);
             }
         }
 
@@ -935,7 +1032,15 @@ namespace SolitaireAssociations
                         continue;
                     }
 
-                    completedAssociations.Add(goalCardView.Data.AssociationId);
+                    bool wasNewCompletion = completedAssociations.Add(goalCardView.Data.AssociationId);
+                    int coinsAward = wasNewCompletion ? AwardGoldCategoryCoins() : 0;
+                    if (wasNewCompletion)
+                    {
+                        goalSlot.PlayCompleteFeedback();
+                        global::MusicPlayer.Instance?.PlayCardComplete();
+                        uiManager.PlayGoalCompletedFeedback(goalSlot.transform as RectTransform, coinsAward);
+                    }
+
                     RemoveResolvedGoalSlot(goalSlot);
                     removedAny = true;
                     platformService?.TrackEvent($"goal_complete_{goalCardView.Data.AssociationId}");
@@ -957,6 +1062,7 @@ namespace SolitaireAssociations
             {
                 levelFinished = true;
                 uiManager.ShowStatus("Ходы закончились", new Color(1f, 0.76f, 0.68f, 1f));
+                global::MusicPlayer.Instance?.PlayLose();
                 platformService?.TrackEvent("level_lose");
             }
         }
@@ -1028,11 +1134,28 @@ namespace SolitaireAssociations
             uiManager.UpdateGoalsSummary(completedAssociations.Count, objectiveOrder.Count);
             uiManager.UpdateProgress(BuildObjectiveStates());
             uiManager.UpdateDeckCounter(drawSlot != null ? drawSlot.QueuedCardsCount : 0);
+            if (coinsManager != null)
+            {
+                uiManager.UpdateCoins(coinsManager.CurrentCoins);
+            }
 
             if (!levelFinished)
             {
                 uiManager.ShowStatus(string.Empty, new Color(1f, 1f, 1f, 0f));
             }
+        }
+
+        private int AwardGoldCategoryCoins()
+        {
+            if (coinsManager == null)
+            {
+                return 0;
+            }
+
+            int award = coinsManager.AddGoldCategoryReward();
+            uiManager.PlayCoinsAward(coinsManager.CurrentCoins, award);
+            platformService?.TrackEvent("coins_awarded_gold_category");
+            return award;
         }
 
         private List<CardColumn> GetActiveColumns()
@@ -1095,6 +1218,15 @@ namespace SolitaireAssociations
                 if (progressionManager == null)
                 {
                     progressionManager = gameObject.AddComponent<LevelProgressionManager>();
+                }
+            }
+
+            if (coinsManager == null)
+            {
+                coinsManager = GetComponent<CoinsManager>();
+                if (coinsManager == null)
+                {
+                    coinsManager = gameObject.AddComponent<CoinsManager>();
                 }
             }
 

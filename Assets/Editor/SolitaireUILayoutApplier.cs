@@ -49,13 +49,13 @@ namespace SolitaireAssociations.Editor
         private const float AdBannerHeight = 64f;
 
         private const float ColumnSpacing = 12f;
-        private const float ColumnWidth = 132f;
+        private const float ColumnWidth = 196f;
         private const float ColumnHeight = 500f;
         private const float CrownLabelWidth = 156f;
         private const float CrownLabelHeight = 34f;
-        private const float CrownSlotWidth = 132f;
-        private const float CrownSlotHeight = 192f;
-        private const float CardsStackWidth = 132f;
+        private const float CrownSlotWidth = 196f;
+        private const float CrownSlotHeight = 286f;
+        private const float CardsStackWidth = 196f;
         private const float CardsStackHeight = 312f;
 
         [MenuItem("Tools/Solitaire/Apply UI Layout")]
@@ -208,7 +208,7 @@ namespace SolitaireAssociations.Editor
 
             if (deckCardBack != null)
             {
-                SetAnchored(deckCardBack, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(136f, 188f), Vector2.zero, "DeckCardBack");
+                SetAnchored(deckCardBack, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(CrownSlotWidth, CrownSlotHeight), Vector2.zero, "DeckCardBack");
                 ApplyImageColor(deckCardBack.gameObject, new Color(0.2f, 0.62f, 0.98f, 1f), "DeckCardBack");
             }
 

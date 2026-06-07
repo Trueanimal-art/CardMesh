@@ -1009,7 +1009,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 73e1618032fc4318a62fe60829e80c62, type: 3}
+  m_Sprite: {fileID: 21300000, guid: aa0e773ddc254401da7ba85aeb7dda5b, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1814,7 +1814,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 34
+  m_fontSize: 36
   m_fontSizeBase: 34
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -4862,21 +4862,29 @@ MonoBehaviour:
     reservedBottomSpace: 72
     columnProfiles:
     - columnCount: 3
-      cardSize: {x: 148, y: 216}
-      columnSpacing: 72
-      verticalOffset: 34
+      cardSize: {x: 196, y: 286}
+      columnSpacing: 112
+      verticalOffset: 48
     - columnCount: 4
-      cardSize: {x: 144, y: 210}
-      columnSpacing: 59
-      verticalOffset: 32
+      cardSize: {x: 186, y: 272}
+      columnSpacing: 76
+      verticalOffset: 44
     - columnCount: 5
-      cardSize: {x: 132, y: 192}
-      columnSpacing: 34
-      verticalOffset: 28
+      cardSize: {x: 170, y: 248}
+      columnSpacing: 48
+      verticalOffset: 40
   visualConfig: {fileID: 11400000, guid: a8312cae7fd146fba71c7bd18eff476a, type: 2}
   cardDatabase: {fileID: 0}
   levelDefinition: {fileID: 11400000, guid: 5e136ce184954520b40e4d54d2483cfd, type: 2}
   sceneRefs: {fileID: 0}
+  progressionManager: {fileID: 0}
+  winScreenView: {fileID: 0}
+  coinsManager: {fileID: 0}
+  moveDuration: 0.18
+  shakeDuration: 0.18
+  shakeStrength: 16
+  highlightColor: {r: 1, g: 0.92, b: 0.34, a: 0.45}
+  levelCompleteDelay: 1.75
 --- !u!1 &1746127890
 GameObject:
   m_ObjectHideFlags: 0

@@ -8,6 +8,9 @@ namespace SolitaireAssociations
     public sealed class CardColumn : MonoBehaviour, ICardContainer, IDropHandler, IPointerEnterHandler, IPointerExitHandler
     {
         private const float FaceDownOffsetFactor = 0.65f;
+        private const float StackSpacingMultiplier = 1.2f;
+        private const float MaxVisualStackOffset = 50f;
+        private const float MinReadableStackOffset = 16f;
 
         [SerializeField] private Image backgroundImage;
         [SerializeField] private LayoutElement layoutElement;
@@ -19,8 +22,6 @@ namespace SolitaireAssociations
         private GameManager gameManager;
         private Vector2 cardSize;
         private float verticalOffset;
-        private Color storedBackgroundColor;
-        private bool hasStoredBackgroundColor;
 
         public int CardCount => cards.Count;
         public CardView TopCard => cards.Count > 0 ? cards[^1] : null;
@@ -48,7 +49,7 @@ namespace SolitaireAssociations
         public void ApplyLayout(ColumnLayoutProfile profile)
         {
             cardSize = profile.cardSize;
-            verticalOffset = profile.verticalOffset;
+            verticalOffset = Mathf.Min(profile.verticalOffset * StackSpacingMultiplier, MaxVisualStackOffset);
 
             if (layoutElement != null)
             {
@@ -180,7 +181,7 @@ namespace SolitaireAssociations
 
         public bool CanAccept(CardView movingCard)
         {
-            if (movingCard == null)
+            if (movingCard == null || movingCard.Data == null || movingCard.Data.IsGold)
             {
                 return false;
             }
@@ -224,25 +225,104 @@ namespace SolitaireAssociations
 
         public void RefreshLayout()
         {
+            int topLayoutCardIndex = -1;
+
+            for (int index = cards.Count - 1; index >= 0; index--)
+            {
+                CardView card = cards[index];
+                if (card != null)
+                {
+                    topLayoutCardIndex = index;
+                    break;
+                }
+            }
+
+            float resolvedVerticalOffset = ResolveSafeVerticalOffset(topLayoutCardIndex);
             float currentOffset = 0f;
 
             for (int index = 0; index < cards.Count; index++)
             {
                 CardView card = cards[index];
+                if (card == null || card.IsDragDetached)
+                {
+                    continue;
+                }
+
                 RectTransform cardRect = card.RectTransform;
                 cardRect.SetParent(CardsRoot, false);
                 cardRect.anchorMin = new Vector2(0.5f, 1f);
                 cardRect.anchorMax = new Vector2(0.5f, 1f);
                 cardRect.pivot = new Vector2(0.5f, 1f);
+                cardRect.localScale = Vector3.one;
                 cardRect.anchoredPosition = new Vector2(0f, -currentOffset);
                 cardRect.SetSiblingIndex(index);
                 card.SetSize(cardSize);
-                bool isTopCard = index == cards.Count - 1;
+                bool isTopCard = index == topLayoutCardIndex;
                 bool shouldFaceUp = isTopCard || card.IsFaceUp;
                 card.SetFaceUp(shouldFaceUp);
+                card.SetRevealHistoryLayout(shouldFaceUp && !isTopCard, resolvedVerticalOffset, shouldFaceUp && !isTopCard);
                 card.SetVisible(true);
-                currentOffset += shouldFaceUp ? verticalOffset : verticalOffset * FaceDownOffsetFactor;
+                card.SetRaycastBlocks(true);
+                currentOffset += shouldFaceUp ? resolvedVerticalOffset : resolvedVerticalOffset * FaceDownOffsetFactor;
             }
+        }
+
+        private float ResolveSafeVerticalOffset(int topLayoutCardIndex)
+        {
+            if (cards.Count <= 1)
+            {
+                return verticalOffset;
+            }
+
+            float availableHeight = ResolveAvailableStackHeight();
+            float offsetBudget = Mathf.Max(0f, availableHeight - cardSize.y);
+            if (offsetBudget <= 0f)
+            {
+                return 0f;
+            }
+
+            float weightedSteps = 0f;
+            for (int index = 0; index < cards.Count - 1; index++)
+            {
+                CardView card = cards[index];
+                if (card == null || card.IsDragDetached)
+                {
+                    continue;
+                }
+
+                bool shouldFaceUp = index == topLayoutCardIndex || card.IsFaceUp;
+                weightedSteps += shouldFaceUp ? 1f : FaceDownOffsetFactor;
+            }
+
+            if (weightedSteps <= 0f)
+            {
+                return verticalOffset;
+            }
+
+            float safeOffset = offsetBudget / weightedSteps;
+            if (safeOffset < MinReadableStackOffset)
+            {
+                return Mathf.Max(6f, safeOffset);
+            }
+
+            return Mathf.Min(safeOffset, verticalOffset);
+        }
+
+        private float ResolveAvailableStackHeight()
+        {
+            RectTransform rootRect = CardsRoot as RectTransform;
+            if (rootRect != null && rootRect.rect.height > cardSize.y)
+            {
+                return rootRect.rect.height;
+            }
+
+            RectTransform ownRect = transform as RectTransform;
+            if (ownRect != null && ownRect.rect.height > cardSize.y)
+            {
+                return ownRect.rect.height;
+            }
+
+            return cardSize.y + (verticalOffset * 5f);
         }
 
         public void OnDrop(PointerEventData eventData)
@@ -289,30 +369,6 @@ namespace SolitaireAssociations
 
         private void SetHighlight(bool value)
         {
-            if (backgroundImage == null)
-            {
-                return;
-            }
-
-            if (value)
-            {
-                if (!hasStoredBackgroundColor)
-                {
-                    storedBackgroundColor = backgroundImage.color;
-                    hasStoredBackgroundColor = true;
-                }
-
-                backgroundImage.color = gameManager != null ? gameManager.HighlightColor : new Color(1f, 0.92f, 0.34f, 0.45f);
-                return;
-            }
-
-            if (!hasStoredBackgroundColor)
-            {
-                return;
-            }
-
-            backgroundImage.color = storedBackgroundColor;
-            hasStoredBackgroundColor = false;
         }
     }
 }

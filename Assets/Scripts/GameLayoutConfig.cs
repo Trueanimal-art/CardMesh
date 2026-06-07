@@ -24,23 +24,23 @@ namespace SolitaireAssociations
             new ColumnLayoutProfile
             {
                 columnCount = 3,
-                cardSize = new Vector2(148f, 216f),
-                columnSpacing = 34f,
-                verticalOffset = 34f
+                cardSize = new Vector2(196f, 286f),
+                columnSpacing = 112f,
+                verticalOffset = 48f
             },
             new ColumnLayoutProfile
             {
                 columnCount = 4,
-                cardSize = new Vector2(144f, 210f),
-                columnSpacing = 28f,
-                verticalOffset = 32f
+                cardSize = new Vector2(186f, 272f),
+                columnSpacing = 76f,
+                verticalOffset = 44f
             },
             new ColumnLayoutProfile
             {
                 columnCount = 5,
-                cardSize = new Vector2(132f, 192f),
-                columnSpacing = 16f,
-                verticalOffset = 28f
+                cardSize = new Vector2(170f, 248f),
+                columnSpacing = 48f,
+                verticalOffset = 40f
             }
         };
 
@@ -63,9 +63,9 @@ namespace SolitaireAssociations
                 return new ColumnLayoutProfile
                 {
                     columnCount = targetColumnCount,
-                    cardSize = new Vector2(132f, 192f),
-                    columnSpacing = 16f,
-                    verticalOffset = 28f
+                    cardSize = new Vector2(170f, 248f),
+                    columnSpacing = 48f,
+                    verticalOffset = 40f
                 };
             }
 

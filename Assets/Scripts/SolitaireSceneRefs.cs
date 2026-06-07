@@ -9,6 +9,8 @@ namespace SolitaireAssociations
     [Serializable]
     public sealed class ColumnRef
     {
+        private static Sprite plainCategoryLabelSprite;
+
         [SerializeField] private Transform root;
         [SerializeField] private GameObject crownSlotLabelBg;
         [SerializeField] private TMP_Text crownSlotLabelText;
@@ -48,19 +50,47 @@ namespace SolitaireAssociations
                 if (isVisible)
                 {
                     RectTransform labelRect = crownSlotLabelBg.GetComponent<RectTransform>();
+                    RectTransform slotRect = crownSlot as RectTransform;
                     if (labelRect != null)
                     {
+                        const float labelHeight = 48f;
+                        const float cardGap = 10f;
+                        float labelWidth = ResolveGoalLabelWidth(categoryTitle, 196f);
+                        float labelY = -18f;
+
+                        if (slotRect != null)
+                        {
+                            labelWidth = ResolveGoalLabelWidth(categoryTitle, slotRect.rect.width);
+                            float slotTopY = slotRect.anchoredPosition.y + (slotRect.rect.height * 0.5f);
+                            labelY = slotTopY + (labelHeight * 0.5f) + cardGap;
+                        }
+
                         labelRect.anchorMin = new Vector2(0.5f, 1f);
                         labelRect.anchorMax = new Vector2(0.5f, 1f);
                         labelRect.pivot = new Vector2(0.5f, 0.5f);
-                        labelRect.sizeDelta = new Vector2(148f, 28f);
-                        labelRect.anchoredPosition = new Vector2(0f, 16f);
+                        labelRect.sizeDelta = new Vector2(labelWidth, labelHeight);
+                        labelRect.anchoredPosition = new Vector2(0f, labelY);
                     }
 
                     Image labelImage = crownSlotLabelBg.GetComponent<Image>();
-                    if (labelImage != null && labelImage.sprite == null)
+                    if (labelImage != null)
                     {
-                        labelImage.color = new Color(1f, 0.78f, 0.18f, 1f);
+                        labelImage.sprite = GetPlainCategoryLabelSprite();
+                        labelImage.type = Image.Type.Sliced;
+                        labelImage.color = new Color(0.96f, 0.66f, 0.16f, 1f);
+                        labelImage.raycastTarget = false;
+                    }
+
+                    Shadow labelShadow = crownSlotLabelBg.GetComponent<Shadow>();
+                    if (labelShadow != null)
+                    {
+                        labelShadow.enabled = false;
+                    }
+
+                    Outline labelOutline = crownSlotLabelBg.GetComponent<Outline>();
+                    if (labelOutline != null)
+                    {
+                        labelOutline.enabled = false;
                     }
 
                     crownSlotLabelBg.transform.SetAsLastSibling();
@@ -71,19 +101,74 @@ namespace SolitaireAssociations
 
             if (crownSlotLabelText != null)
             {
+                RectTransform textRect = crownSlotLabelText.transform as RectTransform;
+                if (textRect != null)
+                {
+                    textRect.anchorMin = Vector2.zero;
+                    textRect.anchorMax = Vector2.one;
+                    textRect.pivot = new Vector2(0.5f, 0.5f);
+                    textRect.offsetMin = Vector2.zero;
+                    textRect.offsetMax = Vector2.zero;
+                }
+
                 crownSlotLabelText.alignment = TextAlignmentOptions.Center;
                 crownSlotLabelText.enableAutoSizing = true;
-                crownSlotLabelText.fontSizeMin = 11f;
-                crownSlotLabelText.fontSizeMax = 15f;
+                crownSlotLabelText.fontSizeMin = 16f;
+                crownSlotLabelText.fontSizeMax = 23f;
                 crownSlotLabelText.enableWordWrapping = false;
-                crownSlotLabelText.color = new Color(0.36f, 0.23f, 0.06f, 1f);
+                crownSlotLabelText.overflowMode = TextOverflowModes.Ellipsis;
+                crownSlotLabelText.color = new Color(0.28f, 0.18f, 0.05f, 1f);
+                crownSlotLabelText.fontStyle = FontStyles.Bold;
+                crownSlotLabelText.margin = new Vector4(18f, 0f, 18f, 2f);
+                crownSlotLabelText.raycastTarget = false;
                 crownSlotLabelText.text = isVisible ? categoryTitle : string.Empty;
+
+                Shadow shadow = crownSlotLabelText.GetComponent<Shadow>();
+                if (shadow != null)
+                {
+                    shadow.enabled = false;
+                }
+            }
+        }
+
+        private static float ResolveGoalLabelWidth(string categoryTitle, float slotWidth)
+        {
+            int titleLength = string.IsNullOrEmpty(categoryTitle) ? 0 : categoryTitle.Length;
+            float desiredWidth = 120f + (titleLength * 12f);
+            return Mathf.Clamp(desiredWidth, slotWidth + 24f, slotWidth + 72f);
+        }
+
+        private static Sprite GetPlainCategoryLabelSprite()
+        {
+            return plainCategoryLabelSprite != null
+                ? plainCategoryLabelSprite
+                : plainCategoryLabelSprite = CreateRoundedSprite(64, 18);
+        }
+
+        private static Sprite CreateRoundedSprite(int size, int radius)
+        {
+            Texture2D texture = new(size, size, TextureFormat.RGBA32, false);
+            texture.name = "RuntimePlainCategoryLabel";
+            texture.wrapMode = TextureWrapMode.Clamp;
+            texture.filterMode = FilterMode.Bilinear;
+
+            float centerMin = radius - 0.5f;
+            float centerMax = size - radius + 0.5f;
+
+            for (int y = 0; y < size; y++)
+            {
+                for (int x = 0; x < size; x++)
+                {
+                    float nearestX = Mathf.Clamp(x, centerMin, centerMax);
+                    float nearestY = Mathf.Clamp(y, centerMin, centerMax);
+                    float distance = Vector2.Distance(new Vector2(x, y), new Vector2(nearestX, nearestY));
+                    float alpha = Mathf.Clamp01(radius + 0.5f - distance);
+                    texture.SetPixel(x, y, new Color(1f, 1f, 1f, alpha));
+                }
             }
 
-            if (isVisible)
-            {
-                Debug.Log($"SolitaireSceneRefs: Goal label set to '{categoryTitle}'.");
-            }
+            texture.Apply();
+            return Sprite.Create(texture, new Rect(0f, 0f, size, size), new Vector2(0.5f, 0.5f), 100f, 0, SpriteMeshType.FullRect, new Vector4(radius, radius, radius, radius));
         }
     }
 
@@ -91,11 +176,12 @@ namespace SolitaireAssociations
     public sealed class SolitaireSceneRefs : MonoBehaviour
     {
         private const int MaxSupportedColumns = 5;
-        private const float CrownSlotWidth = 148f;
-        private const float CrownSlotHeight = 190f;
-        private const float CrownSlotAnchoredY = -126f;
-        private const float CrownToCardsGap = 6f;
-        private const float CardsStackHeight = 520f;
+        private const float CrownSlotWidth = 196f;
+        private const float CrownSlotHeight = 286f;
+        private const float GameplayColumnWidth = 196f;
+        private const float CrownSlotAnchoredY = -78f;
+        private const float CrownToCardsGap = 14f;
+        private const float CardsStackHeight = 390f;
 
         [Header("Roots")]
         [SerializeField] private RectTransform safeAreaRoot;
@@ -274,6 +360,81 @@ namespace SolitaireAssociations
             {
                 columns = BuildColumns(columnSlotsRoot);
             }
+
+            EnsureCanvasSetup();
+            ApplyReferenceLayout();
+            ApplyPremiumSkin();
+        }
+
+        private void ApplyPremiumSkin()
+        {
+            if (safeAreaRoot == null)
+            {
+                return;
+            }
+
+            StyleImage(FindChildRecursive<Image>(safeAreaRoot, "CoinsPanel"), PremiumUISprites.EmeraldPanel);
+            StyleImage(FindChildRecursive<Image>(safeAreaRoot, "MovesPanel"), PremiumUISprites.EmeraldPanel);
+            StyleImage(menuButton != null ? menuButton.GetComponent<Image>() : null, PremiumUISprites.IconCircle);
+            StyleImage(plusButton != null ? plusButton.GetComponent<Image>() : null, PremiumUISprites.IconCircle);
+            StyleImage(rewardBonusButton != null ? rewardBonusButton.GetComponent<Image>() : null, PremiumUISprites.IconCircle);
+            StyleImage(hintButton != null ? hintButton.GetComponent<Image>() : null, PremiumUISprites.SecondaryButton);
+            StyleImage(undoButton != null ? undoButton.GetComponent<Image>() : null, PremiumUISprites.SecondaryButton);
+            StyleImage(boosterDeckButton != null ? boosterDeckButton.GetComponent<Image>() : null, PremiumUISprites.SecondaryButton);
+
+            StyleButtonText(hintButton, new Color(1f, 0.95f, 0.82f, 1f));
+            StyleButtonText(undoButton, new Color(1f, 0.95f, 0.82f, 1f));
+            StyleButtonText(boosterDeckButton, new Color(1f, 0.95f, 0.82f, 1f));
+
+            if (columns == null)
+            {
+                return;
+            }
+
+            foreach (ColumnRef column in columns)
+            {
+                if (column == null)
+                {
+                    continue;
+                }
+
+                StyleImage(column.CrownSlotLabelBg != null ? column.CrownSlotLabelBg.GetComponent<Image>() : null, PremiumUISprites.CategoryLabel);
+                StyleImage(column.CrownSlot != null ? column.CrownSlot.GetComponent<Image>() : null, PremiumUISprites.CategorySlot);
+
+                if (column.CrownSlotLabelText != null)
+                {
+                    column.CrownSlotLabelText.color = new Color(0.26f, 0.14f, 0.02f, 1f);
+                    column.CrownSlotLabelText.fontStyle = FontStyles.Bold;
+                }
+            }
+        }
+
+        private static void StyleImage(Image image, Sprite sprite)
+        {
+            if (image == null || sprite == null)
+            {
+                return;
+            }
+
+            image.sprite = sprite;
+            image.type = Image.Type.Sliced;
+            image.color = Color.white;
+        }
+
+        private static void StyleButtonText(Button button, Color color)
+        {
+            if (button == null)
+            {
+                return;
+            }
+
+            foreach (TMP_Text text in button.GetComponentsInChildren<TMP_Text>(true))
+            {
+                text.color = color;
+                text.fontStyle = FontStyles.Bold;
+                text.enableWordWrapping = false;
+                text.alignment = TextAlignmentOptions.Center;
+            }
         }
 
         private void ApplyEditorPreviewColumns()
@@ -321,8 +482,8 @@ namespace SolitaireAssociations
             }
 
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution = new Vector2(1080f, 1920f);
-            scaler.matchWidthOrHeight = 1f;
+            scaler.referenceResolution = new Vector2(1920f, 1080f);
+            scaler.matchWidthOrHeight = 0.5f;
         }
 
         private void ApplyReferenceLayout()
@@ -465,7 +626,7 @@ namespace SolitaireAssociations
                 return;
             }
 
-            SetAnchored(deckArea, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 0.5f), new Vector2(180f, 240f), new Vector2(-110f, -320f));
+            SetAnchored(deckArea, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 0.5f), new Vector2(520f, 310f), new Vector2(-440f, -470f));
             Image deckAreaImage = EnsureGraphic<Image>(deckArea.gameObject);
             if (deckAreaImage.sprite == null)
             {
@@ -474,8 +635,8 @@ namespace SolitaireAssociations
 
             if (deckCardBack != null)
             {
-                SetAnchored(deckCardBack, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(148f, 200f), new Vector2(0f, 0f));
-                EnsureLayoutElement(deckCardBack.gameObject, 148f, 200f);
+                SetAnchored(deckCardBack, new Vector2(1f, 0.54f), new Vector2(1f, 0.54f), new Vector2(0.5f, 0.5f), new Vector2(CrownSlotWidth, CrownSlotHeight), new Vector2(-62f, -2f));
+                EnsureLayoutElement(deckCardBack.gameObject, CrownSlotWidth, CrownSlotHeight);
                 Image deckBackImage = EnsureGraphic<Image>(deckCardBack.gameObject);
                 if (deckBackImage.sprite == null)
                 {
@@ -485,7 +646,7 @@ namespace SolitaireAssociations
 
             if (deckCounter != null)
             {
-                SetAnchored((RectTransform)deckCounter.transform, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 0.5f), new Vector2(96f, 52f), new Vector2(-40f, -34f));
+                SetAnchored((RectTransform)deckCounter.transform, new Vector2(1f, 0.54f), new Vector2(1f, 0.54f), new Vector2(0.5f, 0.5f), new Vector2(68f, 44f), new Vector2(-20f, 116f));
                 deckCounter.enableWordWrapping = false;
                 deckCounter.enableAutoSizing = true;
                 deckCounter.fontSizeMin = 22f;
@@ -503,7 +664,7 @@ namespace SolitaireAssociations
                 return;
             }
 
-            StretchToFill(boardArea, 120f, 120f, 470f, 340f);
+            StretchToFill(boardArea, 320f, 560f, 220f, 150f);
             Image boardImage = EnsureGraphic<Image>(boardArea.gameObject);
             if (boardImage.sprite == null)
             {
@@ -512,7 +673,7 @@ namespace SolitaireAssociations
             StretchToFill(columnSlotsRoot, 0f, 0f, 0f, 0f);
 
             HorizontalLayoutGroup layoutGroup = EnsureComponent<HorizontalLayoutGroup>(columnSlotsRoot.gameObject);
-            layoutGroup.spacing = 24f;
+            layoutGroup.spacing = 112f;
             layoutGroup.padding = new RectOffset(0, 0, 0, 0);
             layoutGroup.childAlignment = TextAnchor.UpperCenter;
             layoutGroup.childControlWidth = false;
@@ -533,8 +694,8 @@ namespace SolitaireAssociations
                     continue;
                 }
 
-                EnsureLayoutElement(columnRoot.gameObject, 148f, 760f);
-                SetAnchored(columnRoot, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(148f, 760f), Vector2.zero);
+                EnsureLayoutElement(columnRoot.gameObject, GameplayColumnWidth, 760f);
+                SetAnchored(columnRoot, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(GameplayColumnWidth, 760f), Vector2.zero);
                 Image columnImage = EnsureGraphic<Image>(columnRoot.gameObject);
                 if (columnImage.sprite == null)
                 {
@@ -546,7 +707,7 @@ namespace SolitaireAssociations
                     RectTransform labelBg = column.CrownSlotLabelBg.GetComponent<RectTransform>();
                     if (labelBg != null)
                     {
-                        SetAnchored(labelBg, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 0.5f), new Vector2(132f, 34f), new Vector2(0f, -18f));
+                        SetAnchored(labelBg, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 0.5f), new Vector2(150f, 32f), new Vector2(0f, -18f));
                     }
 
                     Image labelImage = EnsureGraphic<Image>(column.CrownSlotLabelBg);
@@ -586,7 +747,7 @@ namespace SolitaireAssociations
                         new Vector2(0.5f, 1f),
                         new Vector2(0.5f, 1f),
                         new Vector2(0.5f, 1f),
-                        new Vector2(CrownSlotWidth, CardsStackHeight),
+                        new Vector2(GameplayColumnWidth, CardsStackHeight),
                         new Vector2(0f, cardsStackAnchoredY));
                 }
             }
@@ -600,7 +761,7 @@ namespace SolitaireAssociations
                 return;
             }
 
-            SetAnchored(bottomHud, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 210f), new Vector2(0f, 110f));
+            SetAnchored(bottomHud, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 166f), new Vector2(0f, 72f));
             Image bottomHudImage = EnsureGraphic<Image>(bottomHud.gameObject);
             if (bottomHudImage.sprite == null)
             {
@@ -610,7 +771,7 @@ namespace SolitaireAssociations
             RectTransform hintRoot = hintButton != null ? hintButton.GetComponent<RectTransform>() : FindChildRecursive<RectTransform>(bottomHud, "HintButton");
             if (hintRoot != null)
             {
-                SetAnchored(hintRoot, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(170f, 170f), new Vector2(-250f, 0f));
+                SetAnchored(hintRoot, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(210f, 82f), new Vector2(-310f, 0f));
                 Image hintImage = EnsureGraphic<Image>(hintRoot.gameObject);
                 if (hintImage.sprite == null)
                 {
@@ -622,7 +783,7 @@ namespace SolitaireAssociations
             RectTransform undoRoot = undoButton != null ? undoButton.GetComponent<RectTransform>() : FindChildRecursive<RectTransform>(bottomHud, "UndoButton");
             if (undoRoot != null)
             {
-                SetAnchored(undoRoot, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(170f, 170f), Vector2.zero);
+                SetAnchored(undoRoot, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(210f, 82f), Vector2.zero);
                 Image undoImage = EnsureGraphic<Image>(undoRoot.gameObject);
                 if (undoImage.sprite == null)
                 {
@@ -634,7 +795,7 @@ namespace SolitaireAssociations
             RectTransform boosterRoot = boosterDeckButton != null ? boosterDeckButton.GetComponent<RectTransform>() : FindChildRecursive<RectTransform>(bottomHud, "BoosterDeckButton");
             if (boosterRoot != null)
             {
-                SetAnchored(boosterRoot, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(170f, 170f), new Vector2(250f, 0f));
+                SetAnchored(boosterRoot, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(210f, 82f), new Vector2(310f, 0f));
                 Image boosterImage = EnsureGraphic<Image>(boosterRoot.gameObject);
                 if (boosterImage.sprite == null)
                 {

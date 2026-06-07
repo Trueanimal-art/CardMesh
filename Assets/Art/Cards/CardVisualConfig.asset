@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0993d08314634dedb915a9e8ccfa6d44, type: 3}
   m_Name: CardVisualConfig
   m_EditorClassIdentifier: 
-  cardBackSprite: {fileID: 21300000, guid: 245a6949ce004d75a4cf180d6be568cb, type: 3}
+  cardBackSprite: {fileID: 21300000, guid: db454d4ae9fd4c54a380de79836b0fce, type: 3}
   normalCardSprite: {fileID: 21300000, guid: 23038f9cd1cb496dbcf141f0c1befb89, type: 3}
   goldCardSprite: {fileID: 21300000, guid: cbd1e345df46456ca04e5e0e44b6210b, type: 3}
   goalSlotEmblemSprite: {fileID: 21300000, guid: c63ec44dff76430bb74a73240ce09174, type: 3}
@@ -23,8 +23,8 @@ MonoBehaviour:
   goldTextColor: {r: 0.28, g: 0.19, b: 0.07, a: 1}
   normalCardColor: {r: 0.98, g: 0.97, b: 0.94, a: 1}
   goldCardColor: {r: 0.98, g: 0.78, b: 0.22, a: 1}
-  cardBackColor: {r: 0.9, g: 0.47, b: 0.34, a: 1}
+  cardBackColor: {r: 0.08, g: 0.48, b: 0.92, a: 1}
   goalSlotColor: {r: 1, g: 1, b: 1, a: 1}
   normalOutlineColor: {r: 0, g: 0, b: 0, a: 0.12}
   goldOutlineColor: {r: 0.55, g: 0.38, b: 0, a: 0.35}
-  backOutlineColor: {r: 0.77, g: 0.35, b: 0.25, a: 0.45}
+  backOutlineColor: {r: 0.03, g: 0.22, b: 0.52, a: 0.45}

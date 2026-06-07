@@ -17,11 +17,22 @@ public class SoundToggleButton : MonoBehaviour
     private void Awake()
     {
         if (!toggle) toggle = GetComponentInChildren<Toggle>(true);
+        if (!toggle) return;
 
         toggle.onValueChanged.RemoveListener(OnToggleChanged);
         toggle.onValueChanged.AddListener(OnToggleChanged);
 
         // Синхронизируем UI с реальным состоянием музыки
+        SyncFromMusicPlayer();
+    }
+
+    private void OnEnable()
+    {
+        SyncFromMusicPlayer();
+    }
+
+    private void Start()
+    {
         SyncFromMusicPlayer();
     }
 
@@ -51,7 +62,10 @@ public class SoundToggleButton : MonoBehaviour
         bool muted = isOn;
 
         if (MusicPlayer.Instance != null)
-            MusicPlayer.Instance.SetMuted(muted);
+        {
+            if (MusicPlayer.Instance.IsMuted() != muted)
+                MusicPlayer.Instance.ToggleMute();
+        }
 
         ApplyState(muted, updateToggle: false);
     }

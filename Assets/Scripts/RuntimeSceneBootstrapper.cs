@@ -29,6 +29,8 @@ namespace SolitaireAssociations
                 return;
             }
 
+            ResetMainScenePlayState();
+
             GameManager gameManager = Object.FindFirstObjectByType<GameManager>();
             if (gameManager != null && gameManager.HasPresentationBindings && gameManager.AssignedLevelDefinition != null)
             {
@@ -115,6 +117,79 @@ namespace SolitaireAssociations
             Debug.Log($"RuntimeSceneBootstrapper: Bound manual scene refs. Columns={sceneRefs.Columns.Count}.");
         }
 
+        public static void ResetMainScenePlayState()
+        {
+            // Main should not inherit pause state from editor controls, the menu, or a previous popup.
+            Time.timeScale = 1f;
+
+            if (EventSystem.current != null)
+            {
+                EventSystem.current.SetSelectedGameObject(null);
+            }
+
+            foreach (Transform transform in Object.FindObjectsByType<Transform>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            {
+                if (transform != null && transform.name == "PauseSettingsPopup")
+                {
+                    transform.gameObject.SetActive(false);
+                }
+            }
+
+#if UNITY_EDITOR
+            if (UnityEditor.EditorApplication.isPlaying && UnityEditor.EditorApplication.isPaused)
+            {
+                UnityEditor.EditorApplication.isPaused = false;
+            }
+
+            ScheduleEditorPlayStateRecovery();
+#endif
+        }
+
+#if UNITY_EDITOR
+        private static int editorRecoveryTicksRemaining;
+
+        private static void ScheduleEditorPlayStateRecovery()
+        {
+            editorRecoveryTicksRemaining = 8;
+            UnityEditor.EditorApplication.update -= RecoverEditorPlayState;
+            UnityEditor.EditorApplication.update += RecoverEditorPlayState;
+            UnityEditor.EditorApplication.delayCall -= FocusGameView;
+            UnityEditor.EditorApplication.delayCall += FocusGameView;
+        }
+
+        private static void RecoverEditorPlayState()
+        {
+            if (!UnityEditor.EditorApplication.isPlaying)
+            {
+                UnityEditor.EditorApplication.update -= RecoverEditorPlayState;
+                editorRecoveryTicksRemaining = 0;
+                return;
+            }
+
+            if (UnityEditor.EditorApplication.isPaused)
+            {
+                UnityEditor.EditorApplication.isPaused = false;
+            }
+
+            editorRecoveryTicksRemaining--;
+            if (editorRecoveryTicksRemaining <= 0)
+            {
+                UnityEditor.EditorApplication.update -= RecoverEditorPlayState;
+            }
+        }
+
+        private static void FocusGameView()
+        {
+            System.Type gameViewType = System.Type.GetType("UnityEditor.GameView,UnityEditor");
+            if (gameViewType == null)
+            {
+                return;
+            }
+
+            UnityEditor.EditorWindow.GetWindow(gameViewType).Focus();
+        }
+#endif
+
         private static List<CardColumn> BuildColumns(SolitaireSceneRefs sceneRefs)
         {
             List<CardColumn> columns = new();
@@ -162,21 +237,51 @@ namespace SolitaireAssociations
                     goalSlot = columnRef.CrownSlot.gameObject.AddComponent<GoalSlot>();
                 }
 
+                RectTransform goalCardsRoot = EnsureGoalCardsRoot(columnRef.CrownSlot);
+
                 goalSlot.ConfigureComponents(
                     columnRef.CrownSlot.GetComponent<Image>(),
                     columnRef.CrownSlot.GetComponent<LayoutElement>(),
-                    columnRef.CrownSlot);
+                    goalCardsRoot);
                 goalSlots.Add(goalSlot);
             }
 
             return goalSlots;
         }
 
+        private static RectTransform EnsureGoalCardsRoot(Transform crownSlot)
+        {
+            if (crownSlot == null)
+            {
+                return null;
+            }
+
+            RectTransform cardsRoot = crownSlot.Find("GoalCardsRoot") as RectTransform;
+            if (cardsRoot == null)
+            {
+                GameObject rootObject = new("GoalCardsRoot", typeof(RectTransform));
+                cardsRoot = rootObject.GetComponent<RectTransform>();
+                cardsRoot.SetParent(crownSlot, false);
+            }
+
+            RectTransform crownRect = crownSlot as RectTransform;
+            cardsRoot.anchorMin = new Vector2(0.5f, 0.5f);
+            cardsRoot.anchorMax = new Vector2(0.5f, 0.5f);
+            cardsRoot.pivot = new Vector2(0.5f, 0.5f);
+            cardsRoot.sizeDelta = crownRect != null ? crownRect.rect.size : Vector2.zero;
+            cardsRoot.anchoredPosition = Vector2.zero;
+            cardsRoot.localPosition = new Vector3(0f, 0f, cardsRoot.localPosition.z);
+            cardsRoot.localScale = Vector3.one;
+            cardsRoot.localRotation = Quaternion.identity;
+            cardsRoot.SetAsLastSibling();
+            return cardsRoot;
+        }
+
         private static DrawSlot BuildDrawSlot(SolitaireSceneRefs sceneRefs)
         {
             RectTransform deckCardBack = sceneRefs.DeckCardBack;
             EnsureRaycastGraphic(deckCardBack.gameObject);
-            Transform drawCardsRoot = deckCardBack.parent != null ? deckCardBack.parent : deckCardBack;
+            RectTransform drawCardsRoot = EnsureDrawCardsRoot(deckCardBack);
 
             DrawSlot drawSlot = deckCardBack.GetComponent<DrawSlot>();
             if (drawSlot == null)
@@ -190,7 +295,39 @@ namespace SolitaireAssociations
                 sceneRefs.DeckCounter,
                 drawCardsRoot);
 
+            if (sceneRefs.DeckCounter != null)
+            {
+                sceneRefs.DeckCounter.transform.SetAsLastSibling();
+            }
+
             return drawSlot;
+        }
+
+        private static RectTransform EnsureDrawCardsRoot(RectTransform deckCardBack)
+        {
+            if (deckCardBack == null)
+            {
+                return null;
+            }
+
+            Transform parent = deckCardBack.parent != null ? deckCardBack.parent : deckCardBack;
+            RectTransform cardsRoot = parent.Find("DrawCardsRoot") as RectTransform;
+            if (cardsRoot == null)
+            {
+                GameObject rootObject = new("DrawCardsRoot", typeof(RectTransform));
+                cardsRoot = rootObject.GetComponent<RectTransform>();
+                cardsRoot.SetParent(parent, false);
+            }
+
+            cardsRoot.anchorMin = deckCardBack.anchorMin;
+            cardsRoot.anchorMax = deckCardBack.anchorMax;
+            cardsRoot.pivot = new Vector2(0.5f, 0.5f);
+            cardsRoot.sizeDelta = deckCardBack.rect.size;
+            cardsRoot.anchoredPosition = deckCardBack.anchoredPosition;
+            cardsRoot.localScale = Vector3.one;
+            cardsRoot.localRotation = Quaternion.identity;
+            cardsRoot.SetAsLastSibling();
+            return cardsRoot;
         }
 
         private static void EnsureRaycastGraphic(GameObject target)
@@ -213,17 +350,17 @@ namespace SolitaireAssociations
                 new Vector2(0.5f, 0.5f),
                 new Vector2(0.5f, 0.5f),
                 new Vector2(0.5f, 0.5f),
-                new Vector2(150f, 220f),
+                new Vector2(256f, 374f),
                 Vector2.zero);
             cardRoot.gameObject.hideFlags = HideFlags.HideInHierarchy;
             cardRoot.gameObject.SetActive(false);
 
             Image backgroundImage = cardRoot.gameObject.AddComponent<Image>();
             LayoutElement layoutElement = cardRoot.gameObject.AddComponent<LayoutElement>();
-            layoutElement.preferredWidth = 150f;
-            layoutElement.preferredHeight = 220f;
-            layoutElement.minWidth = 150f;
-            layoutElement.minHeight = 220f;
+            layoutElement.preferredWidth = 256f;
+            layoutElement.preferredHeight = 374f;
+            layoutElement.minWidth = 256f;
+            layoutElement.minHeight = 374f;
 
             Outline outline = cardRoot.gameObject.AddComponent<Outline>();
             outline.effectDistance = new Vector2(1.5f, -1.5f);
@@ -237,8 +374,8 @@ namespace SolitaireAssociations
                 new Vector2(1f, 1f),
                 new Vector2(1f, 1f),
                 new Vector2(1f, 1f),
-                new Vector2(30f, 30f),
-                new Vector2(-10f, -10f));
+                new Vector2(40f, 40f),
+                new Vector2(-14f, -14f));
             Image iconImage = iconRoot.gameObject.AddComponent<Image>();
             iconImage.preserveAspect = true;
             iconImage.enabled = false;
@@ -249,15 +386,15 @@ namespace SolitaireAssociations
                 new Vector2(0f, 0f),
                 new Vector2(1f, 1f),
                 new Vector2(0.5f, 0.5f),
-                new Vector2(-24f, -64f),
+                new Vector2(-34f, -92f),
                 Vector2.zero);
             TextMeshProUGUI titleLabel = titleRoot.gameObject.AddComponent<TextMeshProUGUI>();
             titleLabel.font = fontAsset;
-            titleLabel.fontSize = 34f;
+            titleLabel.fontSize = 48f;
             titleLabel.fontStyle = FontStyles.Bold;
             titleLabel.enableAutoSizing = true;
-            titleLabel.fontSizeMin = 18f;
-            titleLabel.fontSizeMax = 34f;
+            titleLabel.fontSizeMin = 24f;
+            titleLabel.fontSizeMax = 48f;
             titleLabel.enableWordWrapping = true;
             titleLabel.alignment = TextAlignmentOptions.Center;
             titleLabel.color = new Color(0.26f, 0.2f, 0.16f, 1f);
@@ -269,15 +406,15 @@ namespace SolitaireAssociations
                 new Vector2(1f, 1f),
                 new Vector2(1f, 1f),
                 new Vector2(1f, 1f),
-                new Vector2(74f, 32f),
-                new Vector2(-10f, -10f));
+                new Vector2(96f, 40f),
+                new Vector2(-14f, -14f));
             TextMeshProUGUI footerLabel = footerRoot.gameObject.AddComponent<TextMeshProUGUI>();
             footerLabel.font = fontAsset;
-            footerLabel.fontSize = 24f;
+            footerLabel.fontSize = 28f;
             footerLabel.fontStyle = FontStyles.Bold;
             footerLabel.enableAutoSizing = true;
-            footerLabel.fontSizeMin = 14f;
-            footerLabel.fontSizeMax = 24f;
+            footerLabel.fontSizeMin = 16f;
+            footerLabel.fontSizeMax = 28f;
             footerLabel.alignment = TextAlignmentOptions.TopRight;
             footerLabel.color = new Color(0.35f, 0.28f, 0.14f, 0.9f);
             footerLabel.raycastTarget = false;
@@ -395,8 +532,8 @@ namespace SolitaireAssociations
                 new Vector2(190f, 62f),
                 position);
             Image image = buttonRoot.gameObject.AddComponent<Image>();
-            image.sprite = Resources.GetBuiltinResource<Sprite>("UI/Skin/UISprite.psd");
-            image.type = Image.Type.Sliced;
+            image.sprite = PremiumUISprites.PrimaryButton;
+            image.type = image.sprite != null ? Image.Type.Sliced : Image.Type.Simple;
             image.color = new Color(1f, 0.64f, 0.08f, 1f);
 
             Button button = buttonRoot.gameObject.AddComponent<Button>();
@@ -468,19 +605,62 @@ namespace SolitaireAssociations
 
         private static TMP_FontAsset CreateCyrillicRuntimeFontAsset()
         {
-            Font sourceFont = Resources.Load<Font>(RuntimeFontResourcePath);
-            if (sourceFont == null)
+            Font resourceFont = Resources.Load<Font>(RuntimeFontResourcePath);
+            Font builtinFont = LoadBuiltinRuntimeFont();
+            TMP_FontAsset fallbackFontAsset = null;
+
+            if (TryCreateRuntimeFontAsset(resourceFont, out TMP_FontAsset resourceFontAsset))
             {
-                sourceFont = Resources.GetBuiltinResource<Font>("Arial.ttf");
+                if (HasRequiredCharacters(resourceFontAsset))
+                {
+                    return resourceFontAsset;
+                }
+
+                fallbackFontAsset = resourceFontAsset;
             }
 
-            if (sourceFont == null)
+            if (builtinFont != null
+                && builtinFont != resourceFont
+                && TryCreateRuntimeFontAsset(builtinFont, out TMP_FontAsset builtinFontAsset))
             {
-                Debug.LogWarning("RuntimeSceneBootstrapper: failed to locate a runtime font with Cyrillic support.");
+                if (HasRequiredCharacters(builtinFontAsset))
+                {
+                    return builtinFontAsset;
+                }
+
+                fallbackFontAsset ??= builtinFontAsset;
+            }
+
+            if (fallbackFontAsset != null)
+            {
+                return fallbackFontAsset;
+            }
+
+            Debug.LogWarning("RuntimeSceneBootstrapper: failed to locate a runtime font with Cyrillic support.");
+            return null;
+        }
+
+        private static Font LoadBuiltinRuntimeFont()
+        {
+            try
+            {
+                return Resources.GetBuiltinResource<Font>("Arial.ttf");
+            }
+            catch (System.ArgumentException)
+            {
                 return null;
             }
+        }
 
-            TMP_FontAsset fontAsset = TMP_FontAsset.CreateFontAsset(
+        private static bool TryCreateRuntimeFontAsset(Font sourceFont, out TMP_FontAsset fontAsset)
+        {
+            fontAsset = null;
+            if (sourceFont == null)
+            {
+                return false;
+            }
+
+            fontAsset = TMP_FontAsset.CreateFontAsset(
                 sourceFont,
                 90,
                 9,
@@ -492,19 +672,12 @@ namespace SolitaireAssociations
 
             if (fontAsset == null)
             {
-                Debug.LogWarning($"RuntimeSceneBootstrapper: failed to create TMP font asset from '{sourceFont.name}'.");
-                return null;
+                return false;
             }
 
             fontAsset.name = $"Runtime_{sourceFont.name}_Cyrillic";
             WarmUpCyrillicGlyphs(fontAsset);
-
-            if (!HasRequiredCharacters(fontAsset))
-            {
-                Debug.LogWarning($"RuntimeSceneBootstrapper: runtime font '{sourceFont.name}' still misses some Cyrillic glyphs.");
-            }
-
-            return fontAsset;
+            return true;
         }
 
         private static void ApplyRuntimeFontToScene(Transform root, TMP_FontAsset fontAsset)

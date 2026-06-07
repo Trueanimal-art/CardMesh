@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 
 namespace SolitaireAssociations
 {
-    public sealed class UIJuicyButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
+    public sealed class UIJuicyButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler, IPointerClickHandler
     {
         [SerializeField] private float hoverScale = 1.04f;
         [SerializeField] private float pressScale = 0.96f;
@@ -36,6 +36,11 @@ namespace SolitaireAssociations
         public void OnPointerUp(PointerEventData eventData)
         {
             AnimateTo(baseScale * hoverScale);
+        }
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            MusicPlayer.Instance?.PlayButtonClick();
         }
 
         private void AnimateTo(Vector3 targetScale)

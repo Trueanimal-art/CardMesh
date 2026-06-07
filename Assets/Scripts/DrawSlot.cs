@@ -9,10 +9,10 @@ namespace SolitaireAssociations
     public sealed class DrawSlot : MonoBehaviour, ICardContainer, IPointerClickHandler
     {
         private const int MaxVisibleRevealedCards = 3;
-        private const float RevealedCardsBaseOffsetXFactor = 1.08f;
-        private const float RevealedCardsBaseOffsetY = 24f;
-        private const float RevealedCardsStepX = 20f;
-        private const float RevealedCardsStepY = -36f;
+        private const float RevealedCardsBaseOffsetXFactor = -1.42f;
+        private const float RevealedCardsBaseOffsetY = -8f;
+        private const float RevealedCardsStepX = 12f;
+        private const float RevealedCardsStepY = -42f;
 
         [SerializeField] private Image backgroundImage;
         [SerializeField] private LayoutElement layoutElement;
@@ -29,6 +29,7 @@ namespace SolitaireAssociations
         public int CardCount => queuedCards.Count + revealedCards.Count;
         public CardView TopCard => revealedCards.Count > 0 ? revealedCards[^1] : null;
         public int QueuedCardsCount => queuedCards.Count;
+        public bool HasDrawableCards => queuedCards.Count > 0 || revealedCards.Count > 0;
         public Transform CardRoot => cardRoot != null ? cardRoot : transform;
 
         public void ConfigureComponents(Image targetBackgroundImage, LayoutElement targetLayoutElement, TMP_Text targetCountLabel, Transform targetCardRoot)
@@ -53,6 +54,13 @@ namespace SolitaireAssociations
         public void ApplyLayout(ColumnLayoutProfile profile)
         {
             cardSize = profile.cardSize;
+
+            if (transform is RectTransform rectTransform)
+            {
+                rectTransform.sizeDelta = cardSize;
+            }
+
+            NormalizeCardRoot();
 
             if (layoutElement != null)
             {
@@ -107,7 +115,12 @@ namespace SolitaireAssociations
         {
             if (queuedCards.Count <= 0)
             {
-                return false;
+                if (revealedCards.Count <= 0)
+                {
+                    return false;
+                }
+
+                RecycleRevealedCardsToStock();
             }
 
             CardView nextCard = queuedCards[0];
@@ -186,7 +199,20 @@ namespace SolitaireAssociations
 
         public void RefreshLayout()
         {
-            int firstVisibleIndex = Mathf.Max(0, revealedCards.Count - MaxVisibleRevealedCards);
+            NormalizeCardRoot();
+
+            List<int> visibleRevealedIndices = new();
+            for (int index = 0; index < revealedCards.Count; index++)
+            {
+                CardView cardView = revealedCards[index];
+                if (cardView != null && !cardView.IsDragDetached)
+                {
+                    visibleRevealedIndices.Add(index);
+                }
+            }
+
+            int firstVisiblePosition = Mathf.Max(0, visibleRevealedIndices.Count - MaxVisibleRevealedCards);
+            int topVisibleIndex = visibleRevealedIndices.Count > 0 ? visibleRevealedIndices[^1] : -1;
             Vector2 basePosition = ResolveBasePosition();
 
             for (int index = 0; index < revealedCards.Count; index++)
@@ -197,7 +223,13 @@ namespace SolitaireAssociations
                     continue;
                 }
 
-                bool isVisible = index >= firstVisibleIndex;
+                if (cardView.IsDragDetached)
+                {
+                    continue;
+                }
+
+                int visiblePosition = visibleRevealedIndices.IndexOf(index);
+                bool isVisible = visiblePosition >= firstVisiblePosition;
                 cardView.gameObject.SetActive(isVisible);
 
                 if (!isVisible)
@@ -206,26 +238,27 @@ namespace SolitaireAssociations
                     continue;
                 }
 
-                int visibleIndex = index - firstVisibleIndex;
-                bool isTopRevealedCard = index == revealedCards.Count - 1;
+                int visibleIndex = visiblePosition - firstVisiblePosition;
+                bool isTopRevealedCard = index == topVisibleIndex;
                 RectTransform cardRect = cardView.RectTransform;
                 cardRect.SetParent(CardRoot, false);
                 cardRect.anchorMin = new Vector2(0.5f, 0.5f);
                 cardRect.anchorMax = new Vector2(0.5f, 0.5f);
                 cardRect.pivot = new Vector2(0.5f, 0.5f);
+                cardRect.localScale = Vector3.one;
                 cardRect.anchoredPosition = new Vector2(
                     basePosition.x + (visibleIndex * RevealedCardsStepX),
                     basePosition.y + (visibleIndex * RevealedCardsStepY));
                 cardRect.SetAsLastSibling();
                 cardView.SetSize(cardSize);
-                cardView.SetRevealHistoryLayout(!isTopRevealedCard);
+                cardView.SetRevealHistoryLayout(!isTopRevealedCard, Mathf.Abs(RevealedCardsStepY) + 8f, !isTopRevealedCard);
                 cardView.SetFaceUp(true);
                 cardView.SetVisible(true);
             }
 
             if (backgroundImage != null)
             {
-                backgroundImage.enabled = queuedCards.Count > 0 || revealedCards.Count == 0;
+                backgroundImage.enabled = HasDrawableCards;
                 ApplyDeckBackVisual();
             }
         }
@@ -240,6 +273,7 @@ namespace SolitaireAssociations
             if (countLabel != null)
             {
                 countLabel.text = queuedCards.Count.ToString();
+                countLabel.transform.SetAsLastSibling();
             }
         }
 
@@ -261,6 +295,37 @@ namespace SolitaireAssociations
             }
 
             return new Vector2(cardSize.x * RevealedCardsBaseOffsetXFactor, RevealedCardsBaseOffsetY);
+        }
+
+        private void NormalizeCardRoot()
+        {
+            if (CardRoot is not RectTransform rootRect)
+            {
+                return;
+            }
+
+            rootRect.localScale = Vector3.one;
+            rootRect.localRotation = Quaternion.identity;
+        }
+
+        private void RecycleRevealedCardsToStock()
+        {
+            foreach (CardView cardView in revealedCards)
+            {
+                if (cardView == null)
+                {
+                    continue;
+                }
+
+                cardView.SetRevealHistoryLayout(false);
+                cardView.BindToContainer(null);
+                cardView.gameObject.SetActive(false);
+                queuedCards.Add(cardView);
+            }
+
+            revealedCards.Clear();
+            RefreshLayout();
+            RefreshCounter();
         }
 
         private void ApplyDeckBackVisual()

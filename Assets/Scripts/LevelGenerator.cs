@@ -17,6 +17,37 @@ namespace SolitaireAssociations
             int layoutVariantIndex,
             out GeneratedLevelData generatedLevelData)
         {
+            return TryGenerateInternal(levelDefinition, cardDatabase, targetColumnsCount, layoutVariantIndex, out generatedLevelData);
+        }
+
+        public static bool TryGenerate(
+            LevelDefinition levelDefinition,
+            CardDatabase cardDatabase,
+            int? targetColumnsCount,
+            int layoutVariantIndex,
+            int seed,
+            out GeneratedLevelData generatedLevelData)
+        {
+            Random.State previousState = Random.state;
+            Random.InitState(seed);
+
+            try
+            {
+                return TryGenerateInternal(levelDefinition, cardDatabase, targetColumnsCount, layoutVariantIndex, out generatedLevelData);
+            }
+            finally
+            {
+                Random.state = previousState;
+            }
+        }
+
+        private static bool TryGenerateInternal(
+            LevelDefinition levelDefinition,
+            CardDatabase cardDatabase,
+            int? targetColumnsCount,
+            int layoutVariantIndex,
+            out GeneratedLevelData generatedLevelData)
+        {
             generatedLevelData = null;
 
             if (levelDefinition == null)
