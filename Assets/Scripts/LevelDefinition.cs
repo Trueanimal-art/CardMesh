@@ -10,10 +10,20 @@ namespace SolitaireAssociations
         [SerializeField] private string levelName = "Уровень";
         [SerializeField] private string defaultLayoutId = "layout_4_cols_v1";
         [SerializeField] private List<LevelLayoutConfig> layouts = new();
+        [Header("Image Cards")]
+        [SerializeField, Min(1)] private int imageCardsStartFromLevel = 30;
+        [SerializeField, Range(0, 100)] private int imageCardPercentage = 25;
 
         public string LevelName => levelName;
         public string DefaultLayoutId => defaultLayoutId;
         public IReadOnlyList<LevelLayoutConfig> Layouts => layouts;
+        public int ImageCardsStartFromLevel => Mathf.Max(1, imageCardsStartFromLevel);
+        public int ImageCardPercentage => Mathf.Clamp(imageCardPercentage, 0, 100);
+
+        public bool ShouldUseImageCards(int levelNumber)
+        {
+            return Mathf.Max(1, levelNumber) >= ImageCardsStartFromLevel && ImageCardPercentage > 0;
+        }
 
         public int MovesCount
         {
@@ -129,6 +139,7 @@ namespace SolitaireAssociations
     public sealed class GeneratedLevelData
     {
         private readonly Dictionary<string, int> goldRequiredCountsById;
+        private readonly HashSet<string> imageCardIds;
 
         public GeneratedLevelData(
             string layoutId,
@@ -136,7 +147,8 @@ namespace SolitaireAssociations
             int referenceMoves,
             List<List<string>> columns,
             List<string> stockCards,
-            Dictionary<string, int> sourceGoldRequiredCountsById)
+            Dictionary<string, int> sourceGoldRequiredCountsById,
+            IEnumerable<string> sourceImageCardIds = null)
         {
             LayoutId = layoutId;
             ColumnsCount = Mathf.Max(1, columnsCount);
@@ -144,6 +156,9 @@ namespace SolitaireAssociations
             Columns = columns ?? new List<List<string>>();
             StockCards = stockCards ?? new List<string>();
             goldRequiredCountsById = sourceGoldRequiredCountsById ?? new Dictionary<string, int>();
+            imageCardIds = sourceImageCardIds != null
+                ? new HashSet<string>(sourceImageCardIds)
+                : new HashSet<string>();
         }
 
         public string LayoutId { get; }
@@ -155,6 +170,11 @@ namespace SolitaireAssociations
         public bool TryGetGoldRequiredCount(string goldCardId, out int requiredCount)
         {
             return goldRequiredCountsById.TryGetValue(goldCardId, out requiredCount);
+        }
+
+        public bool IsImageCard(string cardId)
+        {
+            return !string.IsNullOrWhiteSpace(cardId) && imageCardIds.Contains(cardId);
         }
     }
 }

@@ -12,6 +12,13 @@ namespace SolitaireAssociations
     {
         private const float LooseGoalDropPadding = 84f;
         private const float LooseColumnDropPadding = 76f;
+        private const int HintCost = 900;
+        private const float HintMoveDuration = 0.68f;
+        private const float HintHoldDuration = 0.42f;
+        private const float HintLiftOffset = 42f;
+        private const float HintColumnDropOffset = 58f;
+        private const float HintDeckDuration = 1f;
+        private const int CoinsPerRemainingMove = 2;
 
         public readonly struct ObjectiveState
         {
@@ -31,6 +38,31 @@ namespace SolitaireAssociations
             public bool IsComplete { get; }
         }
 
+        private enum HintKind
+        {
+            MoveToGoal,
+            RevealCard,
+            MoveBetweenColumns,
+            OtherMove,
+            DrawDeck
+        }
+
+        private sealed class HintMove
+        {
+            public HintMove(CardView card, ICardContainer targetContainer, HintKind kind, int priority)
+            {
+                Card = card;
+                TargetContainer = targetContainer;
+                Kind = kind;
+                Priority = priority;
+            }
+
+            public CardView Card { get; }
+            public ICardContainer TargetContainer { get; }
+            public HintKind Kind { get; }
+            public int Priority { get; }
+        }
+
         [SerializeField] private UIManager uiManager;
         [SerializeField] private PlatformService platformService;
         [SerializeField] private RectTransform dragLayer;
@@ -48,6 +80,12 @@ namespace SolitaireAssociations
         [SerializeField] private LevelProgressionManager progressionManager;
         [SerializeField] private WinScreenView winScreenView;
         [SerializeField] private CoinsManager coinsManager;
+        [SerializeField] private LivesManager livesManager;
+        [SerializeField] private PlayerBoostInventory boostInventory;
+        [SerializeField] private ChestChaseManager chestChaseManager;
+
+        [Header("Image Cards")]
+        [SerializeField] private Texture2D imageCardsAtlas;
 
         [Header("Feedback")]
         [SerializeField, Min(0f)] private float moveDuration = 0.18f;
@@ -55,6 +93,8 @@ namespace SolitaireAssociations
         [SerializeField, Min(0f)] private float shakeStrength = 16f;
         [SerializeField] private Color highlightColor = new(1f, 0.92f, 0.34f, 0.45f);
         [SerializeField, Min(0.5f)] private float levelCompleteDelay = 1.75f;
+        [SerializeField, Min(0f)] private float movesBonusDelay = 0.4f;
+        [SerializeField, Min(0.05f)] private float movesBonusStepDuration = 0.12f;
 
         private readonly Dictionary<string, CardData> cardsById = new();
         private readonly Dictionary<string, CardData> goalCardsByAssociation = new();
@@ -64,16 +104,40 @@ namespace SolitaireAssociations
         private readonly Dictionary<CardView, Vector3> draggedStackOffsets = new();
         private readonly List<ObjectiveState> objectiveStates = new();
         private readonly List<string> objectiveOrder = new();
+        private readonly Stack<BoardSnapshot> moveHistory = new();
 
         private CardView draggedCard;
         private GeneratedLevelData generatedLevelData;
         private bool dragWasResolved;
         private int remainingMoves;
+        private int completedUsedMovesCount;
         private bool levelFinished;
+        private bool levelCompletionInProgress;
+        private bool movesBonusAwarded;
         private bool dependenciesInitialized;
+        private bool hintAnimationInProgress;
         private Coroutine levelCompleteRoutine;
+        private Coroutine levelRewardRoutine;
+
+        private sealed class CardSnapshot
+        {
+            public bool IsActive { get; set; }
+            public bool IsFaceUp { get; set; }
+        }
+
+        private sealed class BoardSnapshot
+        {
+            public List<List<CardView>> Columns { get; } = new();
+            public List<List<CardView>> GoalSlots { get; } = new();
+            public List<CardView> QueuedDrawCards { get; set; } = new();
+            public List<CardView> RevealedDrawCards { get; set; } = new();
+            public HashSet<string> CompletedAssociations { get; set; } = new();
+            public Dictionary<CardView, CardSnapshot> CardStates { get; } = new();
+            public int RemainingMoves { get; set; }
+        }
 
         public LevelDefinition AssignedLevelDefinition => levelDefinition;
+        public LivesManager LivesManager => livesManager;
         public float MoveDuration => moveDuration;
         public float ShakeDuration => shakeDuration;
         public float ShakeStrength => shakeStrength;
@@ -164,14 +228,120 @@ namespace SolitaireAssociations
                 return;
             }
 
+            BoardSnapshot snapshot = CaptureBoardSnapshot();
             if (!drawSlot.DrawNextCard())
             {
                 return;
             }
 
+            PushMoveSnapshot(snapshot);
             remainingMoves = Mathf.Max(0, remainingMoves - 1);
             platformService?.TrackEvent("stock_draw");
             ResolveBoardState(true);
+        }
+
+        public void UseHintForTesting()
+        {
+            if (levelFinished)
+            {
+                Debug.Log("Hint: ignored because level is finished.");
+                return;
+            }
+
+            if (hintAnimationInProgress || draggedCard != null)
+            {
+                Debug.Log("Hint: ignored because another hint or drag is active.");
+                return;
+            }
+
+            if (!TrySpendHintCharge())
+            {
+                uiManager?.ShowStatus("Недостаточно подсказок", new Color(1f, 0.82f, 0.52f, 1f));
+                return;
+            }
+
+            Debug.Log("Hint: started.");
+            HintMove hintMove = FindBestHintMove();
+            if (hintMove == null)
+            {
+                Debug.Log("Hint: no moves available, pointing to deck.");
+                StartCoroutine(PlayDeckHintAnimation());
+                return;
+            }
+
+            Debug.Log(BuildHintFoundLog(hintMove));
+            StartCoroutine(PlayMoveHintAnimation(hintMove));
+        }
+
+        private bool CanUseHint()
+        {
+            return coinsManager == null || coinsManager.CurrentCoins >= HintCost;
+        }
+
+        private bool SpendHintCost()
+        {
+            return coinsManager == null || coinsManager.TrySpendCoins(HintCost);
+        }
+
+        private bool TrySpendHintCharge()
+        {
+            // Gameplay consumes chest rewards first; coin fallback keeps the old paid-hint architecture intact.
+            if (boostInventory != null && boostInventory.TrySpendHint())
+            {
+                uiManager?.UpdateHintCount(boostInventory.HintCount);
+                return true;
+            }
+
+            bool spentCoins = SpendHintCost();
+            if (spentCoins && coinsManager != null)
+            {
+                uiManager?.UpdateCoins(coinsManager.CurrentCoins);
+            }
+
+            return spentCoins;
+        }
+
+        public void TryUseUndo()
+        {
+            if (levelFinished)
+            {
+                uiManager?.ShowStatus("Уровень уже завершен", new Color(1f, 0.82f, 0.52f, 1f));
+                return;
+            }
+
+            if (hintAnimationInProgress || draggedCard != null)
+            {
+                uiManager?.ShowStatus("Подождите завершения действия", new Color(1f, 0.82f, 0.52f, 1f));
+                return;
+            }
+
+            if (moveHistory.Count <= 0)
+            {
+                uiManager?.ShowStatus("Нечего отменять", new Color(1f, 0.82f, 0.52f, 1f));
+                return;
+            }
+
+            if (boostInventory == null || boostInventory.UndoCount <= 0)
+            {
+                uiManager?.ShowStatus("Нет отмен ходов", new Color(1f, 0.82f, 0.52f, 1f));
+                return;
+            }
+
+            BoardSnapshot snapshot = moveHistory.Pop();
+            if (!RestoreBoardSnapshot(snapshot))
+            {
+                uiManager?.ShowStatus("Не удалось отменить ход", new Color(1f, 0.82f, 0.52f, 1f));
+                return;
+            }
+
+            if (!boostInventory.TrySpendUndo())
+            {
+                return;
+            }
+
+            uiManager?.UpdateUndoCount(boostInventory.UndoCount);
+            uiManager?.ShowStatus("Ход отменен", new Color(0.76f, 0.96f, 0.74f, 1f));
+            platformService?.TrackEvent("undo_used");
         }
 
         public bool BeginDrag(CardView cardView)
@@ -213,7 +383,6 @@ namespace SolitaireAssociations
 
             draggedStackOffsets.Clear();
             Vector3 anchorPosition = cardView.RectTransform.position;
-            ICardContainer sourceContainer = cardView.Container;
 
             foreach (CardView stackCard in draggedStack)
             {
@@ -230,8 +399,6 @@ namespace SolitaireAssociations
                 stackCard.transform.SetParent(dragLayer, true);
                 stackCard.transform.SetAsLastSibling();
             }
-
-            sourceContainer?.RefreshLayout();
         }
 
         public void UpdateDragVisual(CardView cardView, PointerEventData eventData)
@@ -242,7 +409,7 @@ namespace SolitaireAssociations
             }
 
             Vector3 anchorPosition = eventData != null
-                ? eventData.position
+                ? (Vector3)eventData.position
                 : cardView.RectTransform.position;
 
             foreach (CardView stackCard in draggedStack)
@@ -305,6 +472,160 @@ namespace SolitaireAssociations
             return draggedCard != null && CanMoveCard(draggedCard, targetContainer);
         }
 
+        private HintMove FindBestHintMove()
+        {
+            List<HintMove> candidates = new();
+
+            foreach (CardColumn sourceColumn in GetActiveColumns())
+            {
+                if (sourceColumn == null)
+                {
+                    continue;
+                }
+
+                for (int index = 0; index < sourceColumn.CardCount; index++)
+                {
+                    CardView card = sourceColumn.GetCardAt(index);
+                    AddHintCandidatesForCard(card, sourceColumn, candidates);
+                }
+            }
+
+            CardView drawCard = drawSlot != null ? drawSlot.TopCard : null;
+            AddHintCandidatesForCard(drawCard, null, candidates);
+
+            return candidates
+                .OrderBy(candidate => candidate.Priority)
+                .FirstOrDefault();
+        }
+
+        private void AddHintCandidatesForCard(CardView card, CardColumn sourceColumn, List<HintMove> candidates)
+        {
+            if (!CanUseCardAsHintSource(card))
+            {
+                return;
+            }
+
+            List<CardView> stack = BuildDragStack(card);
+            if (stack.Count == 0)
+            {
+                return;
+            }
+
+            foreach (GoalSlot goalSlot in GetActiveGoalSlots())
+            {
+                if (CanMoveCard(card, goalSlot))
+                {
+                    candidates.Add(new HintMove(card, goalSlot, HintKind.MoveToGoal, 1));
+                }
+            }
+
+            foreach (CardColumn targetColumn in GetActiveColumns())
+            {
+                if (targetColumn == null || !CanMoveCard(card, targetColumn))
+                {
+                    continue;
+                }
+
+                bool revealsCard = sourceColumn != null && MoveRevealsCardOrColumn(sourceColumn, card, stack.Count);
+                candidates.Add(revealsCard
+                    ? new HintMove(card, targetColumn, HintKind.RevealCard, 2)
+                    : new HintMove(card, targetColumn, HintKind.MoveBetweenColumns, 3));
+            }
+        }
+
+        private static bool CanUseCardAsHintSource(CardView card)
+        {
+            return card != null
+                   && card.gameObject.activeInHierarchy
+                   && !card.IsDragDetached
+                   && card.IsFaceUp
+                   && card.Data != null
+                   && card.Container != null
+                   && card.Container is not GoalSlot;
+        }
+
+        private static bool MoveRevealsCardOrColumn(CardColumn sourceColumn, CardView card, int stackCount)
+        {
+            if (sourceColumn == null || card == null)
+            {
+                return false;
+            }
+
+            int cardIndex = -1;
+            for (int index = 0; index < sourceColumn.CardCount; index++)
+            {
+                if (sourceColumn.GetCardAt(index) == card)
+                {
+                    cardIndex = index;
+                    break;
+                }
+            }
+
+            if (cardIndex < 0)
+            {
+                return false;
+            }
+
+            if (stackCount >= sourceColumn.CardCount)
+            {
+                return true;
+            }
+
+            CardView previousCard = cardIndex > 0 ? sourceColumn.GetCardAt(cardIndex - 1) : null;
+            return previousCard != null && !previousCard.IsFaceUp;
+        }
+
+        private static string BuildHintFoundLog(HintMove hintMove)
+        {
+            string cardName = hintMove.Card != null && hintMove.Card.Data != null
+                ? hintMove.Card.Data.DisplayText
+                : "unknown";
+
+            return hintMove.Kind switch
+            {
+                HintKind.MoveToGoal => $"Hint: found move to category for '{cardName}'.",
+                HintKind.RevealCard => $"Hint: found move that reveals a new card for '{cardName}'.",
+                HintKind.MoveBetweenColumns => $"Hint: found move between columns for '{cardName}'.",
+                HintKind.OtherMove => $"Hint: found other available move for '{cardName}'.",
+                _ => $"Hint: found move for '{cardName}'."
+            };
+        }
+
+        private static Vector3 ResolveHintTargetPosition(HintMove hintMove)
+        {
+            if (hintMove == null || hintMove.Card == null || hintMove.TargetContainer == null)
+            {
+                return Vector3.zero;
+            }
+
+            if (hintMove.TargetContainer is GoalSlot goalSlot && goalSlot.DropAreaRect != null)
+            {
+                return goalSlot.DropAreaRect.TransformPoint(goalSlot.DropAreaRect.rect.center);
+            }
+
+            if (hintMove.TargetContainer is CardColumn targetColumn)
+            {
+                CardView topCard = targetColumn.TopCard;
+                if (topCard != null && topCard.RectTransform != null)
+                {
+                    return topCard.RectTransform.position + (Vector3.down * HintColumnDropOffset);
+                }
+
+                RectTransform dropArea = targetColumn.DropAreaRect;
+                if (dropArea != null)
+                {
+                    return dropArea.TransformPoint(dropArea.rect.center);
+                }
+            }
+
+            if (hintMove.TargetContainer is MonoBehaviour targetBehaviour)
+            {
+                return targetBehaviour.transform.position;
+            }
+
+            return hintMove.Card.RectTransform.position;
+        }
+
         public void RestartLevel()
         {
             if (levelDefinition == null)
@@ -314,8 +635,12 @@ namespace SolitaireAssociations
             }
 
             ClearBoard();
+            moveHistory.Clear();
             completedAssociations.Clear();
             levelFinished = false;
+            levelCompletionInProgress = false;
+            movesBonusAwarded = false;
+            completedUsedMovesCount = 0;
             draggedCard = null;
             dragWasResolved = false;
             if (levelCompleteRoutine != null)
@@ -324,12 +649,21 @@ namespace SolitaireAssociations
                 levelCompleteRoutine = null;
             }
 
-            winScreenView?.HideInstant();
+            if (levelRewardRoutine != null)
+            {
+                StopCoroutine(levelRewardRoutine);
+                levelRewardRoutine = null;
+            }
 
-            int? targetColumnsCount = progressionManager != null ? progressionManager.CurrentTargetColumns : null;
+            winScreenView?.HideInstant();
+            uiManager?.SetGameplayButtonsInteractable(true);
+            uiManager?.HideMovesBonusTextInstant();
+
+            int? targetColumnsCount = progressionManager != null ? (int?)progressionManager.CurrentTargetColumns : null;
             int layoutVariantIndex = progressionManager != null ? progressionManager.CurrentLayoutVariantIndex : 0;
+            int currentLevelNumber = progressionManager != null ? progressionManager.CurrentLevelNumber : 1;
             int levelSeed = progressionManager != null ? progressionManager.GetOrCreateSeedForCurrentLevel() : Random.Range(1, int.MaxValue);
-            if (!LevelGenerator.TryGenerate(levelDefinition, cardDatabase, targetColumnsCount, layoutVariantIndex, levelSeed, out generatedLevelData))
+            if (!LevelGenerator.TryGenerate(levelDefinition, cardDatabase, targetColumnsCount, layoutVariantIndex, levelSeed, currentLevelNumber, out generatedLevelData))
             {
                 Debug.LogError("GameManager: failed to generate level from config.");
                 return;
@@ -350,8 +684,14 @@ namespace SolitaireAssociations
                 uiManager.UpdateCoins(coinsManager.CurrentCoins);
             }
 
+            if (boostInventory != null)
+            {
+                uiManager.UpdateHintCount(boostInventory.HintCount);
+                uiManager.UpdateUndoCount(boostInventory.UndoCount);
+            }
+
             ResolveBoardState(false);
-            Debug.Log($"GameManager: Started level {progressionManager?.CurrentLevelNumber ?? 1} with seed {levelSeed}.");
+            Debug.Log($"GameManager: Started level {currentLevelNumber} with seed {levelSeed}.");
             platformService?.TrackEvent("level_restart");
         }
 
@@ -516,9 +856,12 @@ namespace SolitaireAssociations
                 && generatedLevelData.TryGetGoldRequiredCount(cardId, out requiredCountOverride);
 
             CardData cardData;
+            CardType regularCardType = generatedLevelData != null && generatedLevelData.IsImageCard(cardId)
+                ? CardType.Image
+                : CardType.Text;
             bool wasCreated = hasRequiredCountOverride
-                ? cardDatabase.TryCreateCardInstance(cardId, requiredCountOverride, out cardData)
-                : cardDatabase.TryCreateCardInstance(cardId, out cardData);
+                ? cardDatabase.TryCreateCardInstance(cardId, requiredCountOverride, regularCardType, out cardData)
+                : cardDatabase.TryCreateCardInstance(cardId, regularCardType, out cardData);
 
             if (!wasCreated)
             {
@@ -627,6 +970,7 @@ namespace SolitaireAssociations
                 return;
             }
 
+            BoardSnapshot snapshot = CaptureBoardSnapshot();
             Dictionary<CardView, Vector3> startPositions = CaptureMoveStartPositions(cardView);
             foreach (CardView stackCard in draggedStack)
             {
@@ -681,6 +1025,7 @@ namespace SolitaireAssociations
             }
 
             remainingMoves = Mathf.Max(0, remainingMoves - 1);
+            PushMoveSnapshot(snapshot);
 
             platformService?.TrackEvent("card_move");
             ResolveBoardState(true);
@@ -784,17 +1129,224 @@ namespace SolitaireAssociations
             cardView?.PlayShake(shakeDuration, shakeStrength);
         }
 
+        private IEnumerator PlayMoveHintAnimation(HintMove hintMove)
+        {
+            hintAnimationInProgress = true;
+
+            CardView card = hintMove?.Card;
+            if (card == null || card.RectTransform == null)
+            {
+                hintAnimationInProgress = false;
+                Debug.Log("Hint: completed.");
+                yield break;
+            }
+
+            RectTransform cardRect = card.RectTransform;
+            Transform originalParent = cardRect.parent;
+            int originalSiblingIndex = cardRect.GetSiblingIndex();
+            Vector2 originalAnchoredPosition = cardRect.anchoredPosition;
+            Vector3 originalScale = cardRect.localScale;
+            Quaternion originalRotation = cardRect.localRotation;
+            Vector3 startPosition = cardRect.position;
+            Vector3 liftPosition = startPosition + (Vector3.up * HintLiftOffset);
+            Vector3 targetPosition = ResolveHintTargetPosition(hintMove);
+            Transform animationParent = dragLayer != null ? dragLayer : originalParent;
+
+            card.PlayAcceptedFeedback();
+            card.SetRaycastBlocks(false);
+            card.SetDragDetached(true);
+            cardRect.SetParent(animationParent, true);
+            cardRect.SetAsLastSibling();
+
+            float travelDuration = HintMoveDuration * 0.5f;
+            yield return AnimateRectWorld(cardRect, startPosition, liftPosition, travelDuration * 0.45f);
+            yield return AnimateRectWorld(cardRect, liftPosition, targetPosition, travelDuration);
+            yield return new WaitForSeconds(HintHoldDuration);
+            yield return AnimateRectWorld(cardRect, targetPosition, startPosition, travelDuration);
+
+            if (cardRect != null)
+            {
+                cardRect.SetParent(originalParent, false);
+                cardRect.SetSiblingIndex(originalSiblingIndex);
+                cardRect.anchoredPosition = originalAnchoredPosition;
+                cardRect.localScale = originalScale;
+                cardRect.localRotation = originalRotation;
+            }
+
+            card.SetDragDetached(false);
+            card.SetRaycastBlocks(card.Container is not GoalSlot);
+            card.Container?.RefreshLayout();
+            hintAnimationInProgress = false;
+            Debug.Log("Hint: completed.");
+        }
+
+        private IEnumerator PlayDeckHintAnimation()
+        {
+            hintAnimationInProgress = true;
+
+            RectTransform deckRect = drawSlot != null ? drawSlot.transform as RectTransform : null;
+            if (deckRect == null)
+            {
+                hintAnimationInProgress = false;
+                Debug.Log("Hint: completed.");
+                yield break;
+            }
+
+            Vector3 baseScale = deckRect.localScale;
+            Quaternion baseRotation = deckRect.localRotation;
+            float elapsed = 0f;
+
+            while (elapsed < HintDeckDuration)
+            {
+                elapsed += Time.deltaTime;
+                float progress = Mathf.Clamp01(elapsed / HintDeckDuration);
+                float pulse = Mathf.Sin(progress * Mathf.PI);
+                float wiggle = Mathf.Sin(progress * Mathf.PI * 8f) * (1f - progress);
+                deckRect.localScale = baseScale * (1f + (pulse * 0.08f));
+                deckRect.localRotation = baseRotation * Quaternion.Euler(0f, 0f, wiggle * 5f);
+                yield return null;
+            }
+
+            deckRect.localScale = baseScale;
+            deckRect.localRotation = baseRotation;
+            hintAnimationInProgress = false;
+            Debug.Log("Hint: completed.");
+        }
+
+        private static IEnumerator AnimateRectWorld(RectTransform rectTransform, Vector3 from, Vector3 to, float duration)
+        {
+            if (rectTransform == null || duration <= 0f)
+            {
+                yield break;
+            }
+
+            float elapsed = 0f;
+            while (elapsed < duration)
+            {
+                elapsed += Time.deltaTime;
+                float progress = Mathf.Clamp01(elapsed / duration);
+                float eased = progress * progress * (3f - (2f * progress));
+                rectTransform.position = Vector3.LerpUnclamped(from, to, eased);
+                yield return null;
+            }
+
+            rectTransform.position = to;
+        }
+
         private void CompleteLevel()
         {
-            if (levelFinished)
+            if (levelCompletionInProgress || levelFinished)
             {
                 return;
             }
 
             levelFinished = true;
-            uiManager.ShowStatus("\u0423\u0440\u043e\u0432\u0435\u043d\u044c \u043f\u0440\u043e\u0439\u0434\u0435\u043d", new Color(0.76f, 0.96f, 0.74f, 1f));
+            levelCompletionInProgress = true;
+            completedUsedMovesCount = GetUsedMovesCount();
+            SetGameplayInputEnabled(false);
+            uiManager?.SetGameplayButtonsInteractable(false);
+
+            if (levelRewardRoutine != null)
+            {
+                StopCoroutine(levelRewardRoutine);
+            }
+
+            levelRewardRoutine = StartCoroutine(EndLevelRewardSequence());
+        }
+
+        private IEnumerator EndLevelRewardSequence()
+        {
+            uiManager?.ShowStatus(string.Empty, new Color(1f, 1f, 1f, 0f));
+
+            if (movesBonusDelay > 0f)
+            {
+                yield return new WaitForSeconds(movesBonusDelay);
+            }
+
+            yield return ConvertRemainingMovesToCoins();
+            FinishLevelCompletion();
+            levelRewardRoutine = null;
+        }
+
+        private IEnumerator ConvertRemainingMovesToCoins()
+        {
+            if (movesBonusAwarded)
+            {
+                yield break;
+            }
+
+            movesBonusAwarded = true;
+            int movesToConvert = Mathf.Max(0, remainingMoves);
+            int totalBonus = movesToConvert * CoinsPerRemainingMove;
+            if (movesToConvert <= 0 || totalBonus <= 0)
+            {
+                yield break;
+            }
+
+            uiManager?.ShowMovesBonusText(totalBonus);
+            float stepDuration = ResolveMovesBonusStepDuration(movesToConvert);
+
+            for (int index = 0; index < movesToConvert; index++)
+            {
+                remainingMoves = Mathf.Max(0, remainingMoves - 1);
+                uiManager?.UpdateMoves(remainingMoves);
+
+                if (uiManager != null)
+                {
+                    yield return uiManager.PlayMovesBonusCoin(stepDuration);
+                }
+                else if (stepDuration > 0f)
+                {
+                    yield return new WaitForSeconds(stepDuration);
+                }
+
+                int award = coinsManager != null ? coinsManager.AddCoins(CoinsPerRemainingMove) : 0;
+                if (coinsManager != null)
+                {
+                    uiManager?.PlayCoinsAward(coinsManager.CurrentCoins, award);
+                }
+
+                global::MusicPlayer.Instance?.PlayCoin();
+            }
+
+            platformService?.TrackEvent("coins_awarded_moves_bonus");
+            if (uiManager != null)
+            {
+                yield return uiManager.HideMovesBonusText();
+            }
+        }
+
+        private float ResolveMovesBonusStepDuration(int movesToConvert)
+        {
+            float baseDuration = Mathf.Clamp(movesBonusStepDuration, 0.08f, 0.15f);
+            if (movesToConvert <= 0)
+            {
+                return baseDuration;
+            }
+
+            const float maxTotalDuration = 2.2f;
+            return movesToConvert * baseDuration > maxTotalDuration
+                ? Mathf.Max(0.025f, maxTotalDuration / movesToConvert)
+                : baseDuration;
+        }
+
+        private void FinishLevelCompletion()
+        {
+            uiManager?.ShowStatus("\u0423\u0440\u043e\u0432\u0435\u043d\u044c \u043f\u0440\u043e\u0439\u0434\u0435\u043d", new Color(0.76f, 0.96f, 0.74f, 1f));
+            chestChaseManager?.RegisterLevelWon();
+            if (coinsManager != null)
+            {
+                uiManager?.UpdateCoins(coinsManager.CurrentCoins);
+            }
+
+            if (boostInventory != null)
+            {
+                uiManager?.UpdateHintCount(boostInventory.HintCount);
+                uiManager?.UpdateUndoCount(boostInventory.UndoCount);
+            }
+
             global::MusicPlayer.Instance?.PlayWin();
-            winScreenView?.Show(GetUsedMovesCount());
+            winScreenView?.Show(completedUsedMovesCount);
             platformService?.TrackEvent("level_win");
 
             if (levelCompleteRoutine != null)
@@ -803,6 +1355,14 @@ namespace SolitaireAssociations
             }
 
             levelCompleteRoutine = StartCoroutine(AdvanceToNextLevelAfterDelay());
+        }
+
+        private void SetGameplayInputEnabled(bool isEnabled)
+        {
+            foreach (CardView cardView in spawnedCards)
+            {
+                cardView?.SetRaycastBlocks(isEnabled && cardView.Container is not GoalSlot);
+            }
         }
 
         private IEnumerator AdvanceToNextLevelAfterDelay()
@@ -822,6 +1382,23 @@ namespace SolitaireAssociations
             }
 
             RestartLevel();
+        }
+
+        public void RequestRestartWithConfirmation()
+        {
+            uiManager?.ShowRestartConfirmation(TrySpendLifeAndRestart);
+        }
+
+        private bool TrySpendLifeAndRestart()
+        {
+            if (livesManager == null || !livesManager.SpendLife())
+            {
+                uiManager?.ShowLivesEmptyPopup(livesManager);
+                return false;
+            }
+
+            RestartLevel();
+            return true;
         }
 
         private void ReturnToMainMenu()
@@ -1061,8 +1638,10 @@ namespace SolitaireAssociations
             else if (consumeMove && remainingMoves <= 0)
             {
                 levelFinished = true;
+                chestChaseManager?.RegisterLevelLost();
                 uiManager.ShowStatus("Ходы закончились", new Color(1f, 0.76f, 0.68f, 1f));
                 global::MusicPlayer.Instance?.PlayLose();
+                uiManager.ShowLevelFailedPopup(TrySpendLifeAndRestart);
                 platformService?.TrackEvent("level_lose");
             }
         }
@@ -1073,8 +1652,10 @@ namespace SolitaireAssociations
             {
                 CardView topCard = goalSlot.TopCard;
                 goalSlot.RemoveCard(topCard);
-                spawnedCards.Remove(topCard);
-                Destroy(topCard.gameObject);
+                topCard.BindToContainer(null);
+                topCard.SetRaycastBlocks(false);
+                topCard.SetVisible(false);
+                topCard.gameObject.SetActive(false);
             }
         }
 
@@ -1139,6 +1720,12 @@ namespace SolitaireAssociations
                 uiManager.UpdateCoins(coinsManager.CurrentCoins);
             }
 
+            if (boostInventory != null)
+            {
+                uiManager.UpdateHintCount(boostInventory.HintCount);
+                uiManager.UpdateUndoCount(boostInventory.UndoCount);
+            }
+
             if (!levelFinished)
             {
                 uiManager.ShowStatus(string.Empty, new Color(1f, 1f, 1f, 0f));
@@ -1156,6 +1743,127 @@ namespace SolitaireAssociations
             uiManager.PlayCoinsAward(coinsManager.CurrentCoins, award);
             platformService?.TrackEvent("coins_awarded_gold_category");
             return award;
+        }
+
+        private BoardSnapshot CaptureBoardSnapshot()
+        {
+            BoardSnapshot snapshot = new()
+            {
+                RemainingMoves = remainingMoves,
+                CompletedAssociations = new HashSet<string>(completedAssociations),
+                QueuedDrawCards = drawSlot != null ? drawSlot.GetQueuedCardsSnapshot() : new List<CardView>(),
+                RevealedDrawCards = drawSlot != null ? drawSlot.GetRevealedCardsSnapshot() : new List<CardView>()
+            };
+
+            foreach (CardColumn column in columns)
+            {
+                snapshot.Columns.Add(column != null ? column.GetCardsSnapshot() : new List<CardView>());
+            }
+
+            foreach (GoalSlot goalSlot in goalSlots)
+            {
+                snapshot.GoalSlots.Add(goalSlot != null ? goalSlot.GetCardsSnapshot() : new List<CardView>());
+            }
+
+            foreach (CardView cardView in spawnedCards)
+            {
+                if (cardView == null)
+                {
+                    continue;
+                }
+
+                snapshot.CardStates[cardView] = new CardSnapshot
+                {
+                    IsActive = cardView.gameObject.activeSelf,
+                    IsFaceUp = cardView.IsFaceUp
+                };
+            }
+
+            return snapshot;
+        }
+
+        private void PushMoveSnapshot(BoardSnapshot snapshot)
+        {
+            if (snapshot == null)
+            {
+                return;
+            }
+
+            // History is written only after a successful move/draw, so failed drag attempts never consume undo.
+            moveHistory.Push(snapshot);
+        }
+
+        private bool RestoreBoardSnapshot(BoardSnapshot snapshot)
+        {
+            if (snapshot == null)
+            {
+                return false;
+            }
+
+            draggedCard = null;
+            dragWasResolved = false;
+            draggedStack.Clear();
+            draggedStackOffsets.Clear();
+
+            foreach (CardView cardView in spawnedCards)
+            {
+                if (cardView == null)
+                {
+                    continue;
+                }
+
+                cardView.SetDragDetached(false);
+                cardView.SetDraggingVisual(false);
+                cardView.SetRevealHistoryLayout(false);
+                cardView.BindToContainer(null);
+
+                if (snapshot.CardStates.TryGetValue(cardView, out CardSnapshot cardSnapshot))
+                {
+                    cardView.gameObject.SetActive(cardSnapshot.IsActive);
+                    cardView.SetFaceUp(cardSnapshot.IsFaceUp);
+                    cardView.SetVisible(cardSnapshot.IsActive);
+                }
+                else
+                {
+                    cardView.gameObject.SetActive(false);
+                }
+            }
+
+            for (int index = 0; index < columns.Count; index++)
+            {
+                CardColumn column = columns[index];
+                if (column == null)
+                {
+                    continue;
+                }
+
+                column.RestoreCards(index < snapshot.Columns.Count ? snapshot.Columns[index] : null);
+            }
+
+            for (int index = 0; index < goalSlots.Count; index++)
+            {
+                GoalSlot goalSlot = goalSlots[index];
+                if (goalSlot == null)
+                {
+                    continue;
+                }
+
+                goalSlot.RestoreCards(index < snapshot.GoalSlots.Count ? snapshot.GoalSlots[index] : null);
+            }
+
+            drawSlot?.RestoreCards(snapshot.QueuedDrawCards, snapshot.RevealedDrawCards);
+            completedAssociations.Clear();
+            foreach (string associationId in snapshot.CompletedAssociations)
+            {
+                completedAssociations.Add(associationId);
+            }
+
+            remainingMoves = snapshot.RemainingMoves;
+            levelFinished = false;
+            levelCompletionInProgress = false;
+            RefreshGoalProgress();
+            UpdateUi();
+            return true;
         }
 
         private List<CardColumn> GetActiveColumns()
@@ -1230,12 +1938,44 @@ namespace SolitaireAssociations
                 }
             }
 
+            if (livesManager == null)
+            {
+                livesManager = GetComponent<LivesManager>();
+                if (livesManager == null)
+                {
+                    livesManager = gameObject.AddComponent<LivesManager>();
+                }
+            }
+
+            if (boostInventory == null)
+            {
+                boostInventory = GetComponent<PlayerBoostInventory>();
+                if (boostInventory == null)
+                {
+                    boostInventory = gameObject.AddComponent<PlayerBoostInventory>();
+                }
+            }
+
+            if (chestChaseManager == null)
+            {
+                chestChaseManager = GetComponent<ChestChaseManager>();
+                if (chestChaseManager == null)
+                {
+                    chestChaseManager = gameObject.AddComponent<ChestChaseManager>();
+                }
+            }
+
             if (winScreenView == null)
             {
                 winScreenView = FindFirstObjectByType<WinScreenView>(FindObjectsInactive.Include);
             }
 
             winScreenView?.Configure(RetryCurrentLevel, ReturnToMainMenu);
+
+            if (imageCardsAtlas != null)
+            {
+                cardDatabase?.SetImageCardsAtlas(imageCardsAtlas);
+            }
 
             cardDatabase?.Load();
             platformService?.Initialize();

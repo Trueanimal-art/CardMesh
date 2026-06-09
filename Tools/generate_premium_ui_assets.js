@@ -127,6 +127,56 @@ function drawRoundedGradient(width, height, options) {
   writePng(options.file, width, height, pixels);
 }
 
+function drawLayeredActionButton() {
+  const width = 560;
+  const height = 150;
+  const pixels = Buffer.alloc(width * height * 4);
+  const shadow = hex("#352006", 142);
+  const outerStroke = hex("#F2CE69", 245);
+  const innerStroke = hex("#FFF0B2", 176);
+  const bodyTop = hex("#EBC56A", 255);
+  const bodyMid = hex("#D99630", 255);
+  const bodyBottom = hex("#A75F16", 255);
+  const faceTop = hex("#FFF1C8", 255);
+  const faceBottom = hex("#EFC06B", 255);
+
+  for (let py = 0; py < height; py += 1) {
+    for (let px = 0; px < width; px += 1) {
+      const index = (py * width + px) * 4;
+      const shadowDistance = signedDistanceRoundedRect(px + 0.5, py + 0.5, 20, 38, 520, 104, 52);
+      if (shadowDistance <= 0) {
+        blend(pixels, index, shadow);
+      }
+
+      const bodyDistance = signedDistanceRoundedRect(px + 0.5, py + 0.5, 14, 18, 532, 112, 56);
+      if (bodyDistance <= 0) {
+        const t = Math.max(0, Math.min(1, (py - 18) / 112));
+        const fill = t < 0.42 ? mix(bodyTop, bodyMid, t / 0.42) : mix(bodyMid, bodyBottom, (t - 0.42) / 0.58);
+        blend(pixels, index, fill);
+        if (-bodyDistance < 4) {
+          blend(pixels, index, outerStroke);
+        }
+      }
+
+      const faceDistance = signedDistanceRoundedRect(px + 0.5, py + 0.5, 40, 23, 480, 42, 21);
+      if (faceDistance <= 0) {
+        const t = Math.max(0, Math.min(1, (py - 23) / 42));
+        blend(pixels, index, mix(faceTop, faceBottom, t));
+        if (-faceDistance < 2) {
+          blend(pixels, index, innerStroke);
+        }
+      }
+
+      const bevelDistance = signedDistanceRoundedRect(px + 0.5, py + 0.5, 24, 30, 512, 92, 46);
+      if (bevelDistance <= 0 && py > 92) {
+        blend(pixels, index, [110, 58, 12, Math.round(Math.min(1, (py - 92) / 30) * 58)]);
+      }
+    }
+  }
+
+  writePng("button_gameplay_action_gold.png", width, height, pixels);
+}
+
 function drawVignette() {
   const width = 512;
   const height = 512;
@@ -146,6 +196,126 @@ function drawVignette() {
   writePng("vignette_soft.png", width, height, pixels);
 }
 
+function drawSoftCircle(pixels, width, height, cx, cy, radius, color) {
+  for (let y = Math.floor(cy - radius - 3); y <= Math.ceil(cy + radius + 3); y += 1) {
+    if (y < 0 || y >= height) continue;
+    for (let x = Math.floor(cx - radius - 3); x <= Math.ceil(cx + radius + 3); x += 1) {
+      if (x < 0 || x >= width) continue;
+      const distance = Math.hypot(x + 0.5 - cx, y + 0.5 - cy);
+      const alpha = Math.max(0, Math.min(1, radius + 0.8 - distance));
+      if (alpha <= 0) continue;
+      const index = (y * width + x) * 4;
+      blend(pixels, index, [color[0], color[1], color[2], Math.round(color[3] * alpha)]);
+    }
+  }
+}
+
+function drawSoftLine(pixels, width, height, x1, y1, x2, y2, thickness, color) {
+  const minX = Math.floor(Math.min(x1, x2) - thickness - 2);
+  const maxX = Math.ceil(Math.max(x1, x2) + thickness + 2);
+  const minY = Math.floor(Math.min(y1, y2) - thickness - 2);
+  const maxY = Math.ceil(Math.max(y1, y2) + thickness + 2);
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  const lengthSq = dx * dx + dy * dy;
+
+  for (let y = minY; y <= maxY; y += 1) {
+    if (y < 0 || y >= height) continue;
+    for (let x = minX; x <= maxX; x += 1) {
+      if (x < 0 || x >= width) continue;
+      const t = lengthSq <= 0 ? 0 : Math.max(0, Math.min(1, (((x + 0.5 - x1) * dx) + ((y + 0.5 - y1) * dy)) / lengthSq));
+      const px = x1 + dx * t;
+      const py = y1 + dy * t;
+      const distance = Math.hypot(x + 0.5 - px, y + 0.5 - py);
+      const alpha = Math.max(0, Math.min(1, thickness / 2 + 0.9 - distance));
+      if (alpha <= 0) continue;
+      const index = (y * width + x) * 4;
+      blend(pixels, index, [color[0], color[1], color[2], Math.round(color[3] * alpha)]);
+    }
+  }
+}
+
+function drawSolidRoundedRect(pixels, width, height, x, y, w, h, radius, color) {
+  for (let py = Math.floor(y - 2); py <= Math.ceil(y + h + 2); py += 1) {
+    if (py < 0 || py >= height) continue;
+    for (let px = Math.floor(x - 2); px <= Math.ceil(x + w + 2); px += 1) {
+      if (px < 0 || px >= width) continue;
+      const distance = signedDistanceRoundedRect(px + 0.5, py + 0.5, x, y, w, h, radius);
+      const alpha = Math.max(0, Math.min(1, 0.8 - distance));
+      if (alpha <= 0) continue;
+      const index = (py * width + px) * 4;
+      blend(pixels, index, [color[0], color[1], color[2], Math.round(color[3] * alpha)]);
+    }
+  }
+}
+
+function drawIcon(file, painter) {
+  const width = 128;
+  const height = 128;
+  const pixels = Buffer.alloc(width * height * 4);
+  painter(pixels, width, height);
+  writePng(file, width, height, pixels);
+}
+
+drawIcon("icon_hint_bulb.png", (pixels, width, height) => {
+  const cream = [255, 248, 212, 255];
+  const gold = [255, 214, 79, 245];
+  const amber = [177, 101, 9, 235];
+  drawSoftCircle(pixels, width, height, 64, 48, 27, [255, 222, 88, 80]);
+  drawSoftCircle(pixels, width, height, 64, 45, 21, gold);
+  drawSoftCircle(pixels, width, height, 58, 38, 9, cream);
+  drawSoftLine(pixels, width, height, 52, 50, 64, 65, 6, amber);
+  drawSoftLine(pixels, width, height, 76, 50, 64, 65, 6, amber);
+  drawSolidRoundedRect(pixels, width, height, 50, 68, 28, 15, 5, cream);
+  drawSoftLine(pixels, width, height, 54, 88, 74, 88, 6, amber);
+  drawSoftLine(pixels, width, height, 57, 96, 71, 96, 5, amber);
+});
+
+drawIcon("icon_undo_gold.png", (pixels, width, height) => {
+  const cream = [255, 247, 203, 255];
+  const amber = [255, 203, 67, 250];
+  const shadow = [113, 61, 5, 185];
+  drawSoftLine(pixels, width, height, 82, 36, 46, 36, 13, shadow);
+  drawSoftLine(pixels, width, height, 46, 36, 32, 53, 13, shadow);
+  drawSoftLine(pixels, width, height, 46, 36, 32, 19, 13, shadow);
+  for (let i = 0; i < 30; i += 1) {
+    const a = Math.PI * (0.07 + i / 35);
+    const x1 = 82 - Math.cos(a) * 34;
+    const y1 = 68 - Math.sin(a) * 31;
+    const x2 = 82 - Math.cos(a + 0.06) * 34;
+    const y2 = 68 - Math.sin(a + 0.06) * 31;
+    drawSoftLine(pixels, width, height, x1, y1, x2, y2, 13, shadow);
+  }
+  drawSoftLine(pixels, width, height, 84, 40, 48, 40, 10, amber);
+  drawSoftLine(pixels, width, height, 48, 40, 34, 54, 10, amber);
+  drawSoftLine(pixels, width, height, 48, 40, 34, 26, 10, amber);
+  for (let i = 0; i < 30; i += 1) {
+    const a = Math.PI * (0.1 + i / 36);
+    const x1 = 82 - Math.cos(a) * 32;
+    const y1 = 68 - Math.sin(a) * 28;
+    const x2 = 82 - Math.cos(a + 0.06) * 32;
+    const y2 = 68 - Math.sin(a + 0.06) * 28;
+    drawSoftLine(pixels, width, height, x1, y1, x2, y2, 10, amber);
+  }
+  drawSoftLine(pixels, width, height, 78, 42, 50, 42, 4, cream);
+});
+
+drawIcon("icon_booster_rocket.png", (pixels, width, height) => {
+  const cream = [255, 248, 218, 255];
+  const gold = [255, 203, 67, 255];
+  const orange = [238, 102, 18, 245];
+  const emerald = [45, 214, 112, 240];
+  drawSoftCircle(pixels, width, height, 43, 88, 16, [255, 129, 21, 110]);
+  drawSoftLine(pixels, width, height, 51, 74, 32, 102, 11, orange);
+  drawSoftLine(pixels, width, height, 55, 69, 72, 87, 15, [119, 65, 6, 165]);
+  drawSoftLine(pixels, width, height, 50, 72, 86, 36, 22, cream);
+  drawSoftLine(pixels, width, height, 55, 77, 91, 41, 12, gold);
+  drawSoftCircle(pixels, width, height, 87, 36, 15, gold);
+  drawSoftCircle(pixels, width, height, 86, 37, 7, cream);
+  drawSoftLine(pixels, width, height, 48, 78, 34, 82, 13, emerald);
+  drawSoftLine(pixels, width, height, 62, 93, 59, 108, 13, emerald);
+});
+
 drawRoundedGradient(384, 128, {
   file: "button_primary_gold.png",
   x: 18,
@@ -159,6 +329,38 @@ drawRoundedGradient(384, 128, {
   stroke: "#FFE88A",
   strokeW: 4,
   glow: { hex: "#F6B629", alpha: 0.42, sigma: 16 },
+});
+
+drawLayeredActionButton();
+
+drawRoundedGradient(320, 96, {
+  file: "hud_counter_gold.png",
+  x: 10,
+  y: 16,
+  w: 300,
+  h: 64,
+  r: 26,
+  top: "#F6D888",
+  mid: "#DB9D3D",
+  bottom: "#A9631A",
+  stroke: "#F4D57A",
+  strokeA: 236,
+  strokeW: 3,
+});
+
+drawRoundedGradient(232, 140, {
+  file: "hud_panel_cream_gold.png",
+  x: 12,
+  y: 18,
+  w: 208,
+  h: 108,
+  r: 24,
+  top: "#FFF0BE",
+  mid: "#E9C36F",
+  bottom: "#B57420",
+  stroke: "#F2D477",
+  strokeA: 238,
+  strokeW: 3,
 });
 
 drawRoundedGradient(320, 104, {
@@ -325,11 +527,17 @@ TextureImporter:
 
 const metas = {
   "button_primary_gold.png": ["0d84d6184e06421986d0a1f0c381cf64", [68, 44, 68, 44]],
+  "button_gameplay_action_gold.png": ["87713c2de3634b9f85447dd85c61cb68", [84, 60, 84, 60]],
+  "hud_counter_gold.png": ["bb876ab7b37e4a979f0f0e4f180dfa9f", [42, 32, 42, 32]],
+  "hud_panel_cream_gold.png": ["c4e2160de73d44fa8ce87b74e7416ec4", [44, 44, 44, 44]],
   "button_secondary_emerald.png": ["e5d9e1bb56db4c70a286b7fd7194923d", [56, 36, 56, 36]],
   "panel_emerald.png": ["ad4f5b0d6b5b4aa8978bc6ed27a95ca4", [38, 38, 38, 38]],
   "panel_cream_gold.png": ["eabfd50e8f2c4f0fab5adc522a8948b6", [48, 48, 48, 48]],
   "icon_circle_gold.png": ["5af8beb775ab4640a75da851c33c5efe", [48, 48, 48, 48]],
   "icon_circle_emerald.png": ["dd80721141f947ff9979ef41f23ad1c2", [48, 48, 48, 48]],
+  "icon_hint_bulb.png": ["1564c9a86ad04e338518c8a1ad20e9f1", [0, 0, 0, 0]],
+  "icon_undo_gold.png": ["71b1d163a4f94bc8b6bbd7bc40a99aa7", [0, 0, 0, 0]],
+  "icon_booster_rocket.png": ["e87519b73d3d474995dd19fce1b2b254", [0, 0, 0, 0]],
   "category_slot_emerald.png": ["f3cd8df706414221b9b5da79a5c32441", [24, 24, 24, 24]],
   "category_label_gold.png": ["a96bcf1833c84786a97434a26608c01e", [32, 20, 32, 20]],
   "vignette_soft.png": ["0b756c739f314f04b1c01547e1ca34ea", [0, 0, 0, 0]],

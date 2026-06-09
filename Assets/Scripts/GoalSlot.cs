@@ -148,6 +148,40 @@ namespace SolitaireAssociations
             RefreshLayout();
         }
 
+        public List<CardView> GetCardsSnapshot()
+        {
+            return new List<CardView>(cards);
+        }
+
+        public void RestoreCards(IEnumerable<CardView> cardViews)
+        {
+            cards.Clear();
+
+            if (cardViews != null)
+            {
+                foreach (CardView cardView in cardViews)
+                {
+                    if (cardView == null)
+                    {
+                        continue;
+                    }
+
+                    cards.Add(cardView);
+                    cardView.gameObject.SetActive(true);
+                    cardView.BindToContainer(this);
+                    RectTransform cardRect = cardView.RectTransform;
+                    cardRect.SetParent(CardsRoot, false);
+                    cardRect.localScale = Vector3.one;
+                    cardRect.localRotation = Quaternion.identity;
+                    cardView.SetDragDetached(false);
+                    cardView.SetSize(cardSize);
+                    cardView.SetRaycastBlocks(false);
+                }
+            }
+
+            RefreshLayout();
+        }
+
         public bool IsTopCard(CardView cardView)
         {
             return TopCard == cardView;

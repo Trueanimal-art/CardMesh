@@ -11,21 +11,30 @@ namespace SolitaireAssociations
         [SerializeField] private float duration = 0.08f;
 
         private Coroutine scaleRoutine;
+        private Coroutine glowRoutine;
         private Vector3 baseScale = Vector3.one;
+        private CanvasGroup hoverGlow;
 
         private void Awake()
         {
             baseScale = transform.localScale;
+            RefreshGlow();
+            if (hoverGlow != null)
+            {
+                hoverGlow.alpha = 0f;
+            }
         }
 
         public void OnPointerEnter(PointerEventData eventData)
         {
             AnimateTo(baseScale * hoverScale);
+            AnimateGlow(1f);
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
             AnimateTo(baseScale);
+            AnimateGlow(0f);
         }
 
         public void OnPointerDown(PointerEventData eventData)
@@ -59,6 +68,36 @@ namespace SolitaireAssociations
             scaleRoutine = StartCoroutine(ScaleTo(targetScale));
         }
 
+        private void AnimateGlow(float targetAlpha)
+        {
+            if (hoverGlow == null)
+            {
+                RefreshGlow();
+                if (hoverGlow == null)
+                {
+                    return;
+                }
+            }
+
+            if (!isActiveAndEnabled)
+            {
+                hoverGlow.alpha = targetAlpha;
+                return;
+            }
+
+            if (glowRoutine != null)
+            {
+                StopCoroutine(glowRoutine);
+            }
+
+            glowRoutine = StartCoroutine(FadeGlow(targetAlpha));
+        }
+
+        private void RefreshGlow()
+        {
+            hoverGlow = transform.Find("HoverGlow")?.GetComponent<CanvasGroup>();
+        }
+
         private IEnumerator ScaleTo(Vector3 targetScale)
         {
             Vector3 startScale = transform.localScale;
@@ -74,6 +113,23 @@ namespace SolitaireAssociations
 
             transform.localScale = targetScale;
             scaleRoutine = null;
+        }
+
+        private IEnumerator FadeGlow(float targetAlpha)
+        {
+            float startAlpha = hoverGlow.alpha;
+            float elapsed = 0f;
+
+            while (elapsed < duration)
+            {
+                elapsed += Time.unscaledDeltaTime;
+                float progress = Mathf.Clamp01(elapsed / duration);
+                hoverGlow.alpha = Mathf.Lerp(startAlpha, targetAlpha, 1f - Mathf.Pow(1f - progress, 2f));
+                yield return null;
+            }
+
+            hoverGlow.alpha = targetAlpha;
+            glowRoutine = null;
         }
     }
 }

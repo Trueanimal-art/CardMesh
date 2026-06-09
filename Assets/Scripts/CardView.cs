@@ -22,6 +22,8 @@ namespace SolitaireAssociations
         private const float GoldHeaderTopPadding = 10f;
         private const float GoldHeaderHeight = 32f;
         private const float GoldProgressWidth = 46f;
+        private const float ImageCardTitleHeight = 54f;
+        private const float ImageCardTitleSidePadding = 12f;
         private static readonly MethodInfo TryAddCharactersMethod = typeof(TMP_FontAsset).GetMethod(
             "TryAddCharacters",
             BindingFlags.Instance | BindingFlags.Public,
@@ -321,7 +323,7 @@ namespace SolitaireAssociations
                     ? (Data.IsGold ? visualConfig.GoldTextColor : visualConfig.TextColor)
                     : new Color(0.26f, 0.2f, 0.16f, 1f);
                 EnsureTextFontSupports(titleLabel, Data.DisplayText);
-                titleLabel.text = showTitle ? Data.DisplayText : string.Empty;
+                titleLabel.text = showTitle && !Data.IsImageCard ? Data.DisplayText : string.Empty;
             }
 
             if (footerLabel != null)
@@ -352,6 +354,7 @@ namespace SolitaireAssociations
                 bool hasIcon = Data.Icon != null && !useRevealHistoryLayout;
                 iconImage.enabled = hasIcon;
                 iconImage.sprite = Data.Icon;
+                ApplyIconLayout(hasIcon && Data.IsImageCard);
             }
         }
 
@@ -475,11 +478,12 @@ namespace SolitaireAssociations
         private void ApplyTextLayout()
         {
             bool isGoldCard = Data != null && Data.IsGold && !useRevealHistoryLayout;
+            bool isImageCard = Data != null && Data.IsImageCard && Data.Icon != null && !useRevealHistoryLayout;
             bool isGoalSlotCard = Container is GoalSlot && !useRevealHistoryLayout;
 
             if (titleRoot != null)
             {
-                titleRoot.gameObject.SetActive(showTitle && (!useRevealHistoryLayout || showRevealHistoryTitle));
+                titleRoot.gameObject.SetActive(showTitle && !isImageCard && (!useRevealHistoryLayout || showRevealHistoryTitle));
 
                 if (useRevealHistoryLayout)
                 {
@@ -495,6 +499,14 @@ namespace SolitaireAssociations
                     titleRoot.anchorMax = new Vector2(1f, 1f);
                     titleRoot.pivot = new Vector2(0.5f, 0.5f);
                     titleRoot.sizeDelta = new Vector2(-24f, -64f);
+                    titleRoot.anchoredPosition = Vector2.zero;
+                }
+                else if (isImageCard)
+                {
+                    titleRoot.anchorMin = new Vector2(0f, 0f);
+                    titleRoot.anchorMax = new Vector2(1f, 1f);
+                    titleRoot.pivot = new Vector2(0.5f, 0.5f);
+                    titleRoot.sizeDelta = new Vector2(-ImageCardTitleSidePadding * 2f, -ImageCardTitleHeight);
                     titleRoot.anchoredPosition = Vector2.zero;
                 }
                 else
@@ -524,12 +536,12 @@ namespace SolitaireAssociations
                 float peekFontSize = Mathf.Clamp(revealHistoryVisibleHeight * 0.58f, 13f, 19f);
                 titleLabel.fontSizeMax = useRevealHistoryLayout
                     ? Mathf.Min(peekFontSize, fontSizeMax)
-                    : isGoldCard ? Mathf.Min(28f, fontSizeMax) : fontSizeMax;
+                    : isGoldCard ? Mathf.Min(28f, fontSizeMax) : isImageCard ? Mathf.Min(20f, fontSizeMax) : fontSizeMax;
                 titleLabel.fontSizeMin = useRevealHistoryLayout
                     ? Mathf.Min(11f, fontSizeMin)
-                    : isGoldCard ? Mathf.Min(18f, fontSizeMin) : fontSizeMin;
-                titleLabel.enableWordWrapping = !useRevealHistoryLayout && !isGoldCard;
-                titleLabel.overflowMode = useRevealHistoryLayout || isGoldCard
+                    : isGoldCard ? Mathf.Min(18f, fontSizeMin) : isImageCard ? Mathf.Min(11f, fontSizeMin) : fontSizeMin;
+                titleLabel.enableWordWrapping = !useRevealHistoryLayout && !isGoldCard && !isImageCard;
+                titleLabel.overflowMode = useRevealHistoryLayout || isGoldCard || isImageCard
                     ? TextOverflowModes.Ellipsis
                     : TextOverflowModes.Overflow;
             }
@@ -568,6 +580,33 @@ namespace SolitaireAssociations
                     footerLabel.color = new Color(0.35f, 0.25f, 0.11f, 1f);
                 }
             }
+        }
+
+        private void ApplyIconLayout(bool useLargeImageLayout)
+        {
+            if (iconImage == null)
+            {
+                return;
+            }
+
+            RectTransform iconRoot = iconImage.rectTransform;
+            if (useLargeImageLayout)
+            {
+                iconRoot.anchorMin = new Vector2(0.1f, 0.12f);
+                iconRoot.anchorMax = new Vector2(0.9f, 0.88f);
+                iconRoot.pivot = new Vector2(0.5f, 0.5f);
+                iconRoot.offsetMin = Vector2.zero;
+                iconRoot.offsetMax = Vector2.zero;
+                iconImage.preserveAspect = true;
+                return;
+            }
+
+            iconRoot.anchorMin = new Vector2(1f, 1f);
+            iconRoot.anchorMax = new Vector2(1f, 1f);
+            iconRoot.pivot = new Vector2(1f, 1f);
+            iconRoot.sizeDelta = new Vector2(40f, 40f);
+            iconRoot.anchoredPosition = new Vector2(-12f, -12f);
+            iconImage.preserveAspect = true;
         }
 
         private void SetFooterBadgeVisible(bool isVisible)

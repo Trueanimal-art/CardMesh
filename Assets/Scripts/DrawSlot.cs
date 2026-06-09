@@ -179,6 +179,59 @@ namespace SolitaireAssociations
             RefreshCounter();
         }
 
+        public List<CardView> GetQueuedCardsSnapshot()
+        {
+            return new List<CardView>(queuedCards);
+        }
+
+        public List<CardView> GetRevealedCardsSnapshot()
+        {
+            return new List<CardView>(revealedCards);
+        }
+
+        public void RestoreCards(IEnumerable<CardView> queuedSnapshot, IEnumerable<CardView> revealedSnapshot)
+        {
+            queuedCards.Clear();
+            revealedCards.Clear();
+
+            if (queuedSnapshot != null)
+            {
+                foreach (CardView cardView in queuedSnapshot)
+                {
+                    if (cardView == null)
+                    {
+                        continue;
+                    }
+
+                    cardView.SetRevealHistoryLayout(false);
+                    cardView.BindToContainer(null);
+                    cardView.gameObject.SetActive(false);
+                    queuedCards.Add(cardView);
+                }
+            }
+
+            if (revealedSnapshot != null)
+            {
+                foreach (CardView cardView in revealedSnapshot)
+                {
+                    if (cardView == null)
+                    {
+                        continue;
+                    }
+
+                    cardView.gameObject.SetActive(true);
+                    cardView.BindToContainer(this);
+                    cardView.transform.SetParent(CardRoot, false);
+                    cardView.SetDragDetached(false);
+                    cardView.SetSize(cardSize);
+                    revealedCards.Add(cardView);
+                }
+            }
+
+            RefreshLayout();
+            RefreshCounter();
+        }
+
         public bool IsTopCard(CardView cardView)
         {
             return TopCard == cardView;

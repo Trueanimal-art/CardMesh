@@ -3,12 +3,19 @@ using UnityEngine;
 
 namespace SolitaireAssociations
 {
+    public enum CardType
+    {
+        Text = 0,
+        Image = 1
+    }
+
     [Serializable]
     public sealed class CardData
     {
         [SerializeField] private string id = "card_id";
         [SerializeField] private string title = "Новая карта";
         [SerializeField] private string imageKey;
+        [SerializeField] private CardType cardType = CardType.Text;
 
         private string associationId = string.Empty;
         private string associationTitle = string.Empty;
@@ -21,6 +28,8 @@ namespace SolitaireAssociations
         public string Title => title ?? string.Empty;
         public string ImageKey => imageKey;
         public string DisplayText => Title;
+        public CardType CardType => cardType;
+        public bool IsImageCard => cardType == CardType.Image && !isGold;
         public string AssociationId => associationId ?? string.Empty;
         public string AssociationTitle => associationTitle ?? string.Empty;
         public bool IsGold => isGold;
@@ -29,6 +38,11 @@ namespace SolitaireAssociations
         public Sprite Icon => icon;
 
         public static CardData CreateRegularCard(CardData sourceCard, GoldCardData goldCard)
+        {
+            return CreateRegularCard(sourceCard, goldCard, CardType.Text);
+        }
+
+        public static CardData CreateRegularCard(CardData sourceCard, GoldCardData goldCard, CardType sourceCardType)
         {
             if (sourceCard == null || goldCard == null)
             {
@@ -40,6 +54,7 @@ namespace SolitaireAssociations
                 id = sourceCard.Id,
                 title = sourceCard.Title,
                 imageKey = sourceCard.ImageKey,
+                cardType = sourceCardType,
                 associationId = goldCard.Id,
                 associationTitle = goldCard.Title,
                 isGold = false,
@@ -61,6 +76,7 @@ namespace SolitaireAssociations
                 id = sourceGoldCard.Id,
                 title = sourceGoldCard.Title,
                 imageKey = null,
+                cardType = CardType.Text,
                 associationId = sourceGoldCard.Id,
                 associationTitle = sourceGoldCard.Title,
                 isGold = true,
@@ -73,6 +89,11 @@ namespace SolitaireAssociations
         public void SetCurrentCount(int value)
         {
             currentCount = Mathf.Max(0, value);
+        }
+
+        public void SetIcon(Sprite value)
+        {
+            icon = value;
         }
     }
 }

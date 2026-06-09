@@ -23,6 +23,7 @@ public class MusicPlayer : MonoBehaviour
     [SerializeField] private AudioClip cardCompleteClip = null;
     [SerializeField] private AudioClip winClip = null;
     [SerializeField] private AudioClip loseClip = null;
+    [SerializeField] private AudioClip coinClip = null;
 
     private AudioSource _audio;
     private AudioSource _sfxAudio;
@@ -72,6 +73,7 @@ public class MusicPlayer : MonoBehaviour
         }
 
         _sfxAudio = EnsureSfxAudioSource();
+        coinClip ??= CreateCoinPlaceholderClip();
         LoadSavedSettings();
         ApplyAudioSourceSettings();
     }
@@ -162,6 +164,11 @@ public class MusicPlayer : MonoBehaviour
     public void PlayLose()
     {
         PlaySfx(loseClip);
+    }
+
+    public void PlayCoin()
+    {
+        PlaySfx(coinClip);
     }
 
     private void PlayNextTrackIfNeeded()
@@ -316,5 +323,27 @@ public class MusicPlayer : MonoBehaviour
         }
 
         _sfxAudio.PlayOneShot(clip, sfxVolume);
+    }
+
+    private static AudioClip CreateCoinPlaceholderClip()
+    {
+        const int sampleRate = 44100;
+        const float duration = 0.11f;
+        int sampleCount = Mathf.CeilToInt(sampleRate * duration);
+        float[] samples = new float[sampleCount];
+
+        for (int index = 0; index < sampleCount; index++)
+        {
+            float time = index / (float)sampleRate;
+            float progress = time / duration;
+            float envelope = Mathf.Sin(progress * Mathf.PI) * (1f - (progress * 0.35f));
+            float tone = Mathf.Sin(2f * Mathf.PI * 1180f * time) * 0.45f;
+            float sparkle = Mathf.Sin(2f * Mathf.PI * 1760f * time) * 0.18f;
+            samples[index] = (tone + sparkle) * envelope;
+        }
+
+        AudioClip clip = AudioClip.Create("CoinPlaceholder", sampleCount, 1, sampleRate, false);
+        clip.SetData(samples, 0);
+        return clip;
     }
 }

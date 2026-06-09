@@ -182,6 +182,10 @@ namespace SolitaireAssociations
         private const float CrownSlotAnchoredY = -78f;
         private const float CrownToCardsGap = 14f;
         private const float CardsStackHeight = 390f;
+        private const float BoardAreaTopInset = 220f;
+        private const float BoardAreaBottomInset = 260f;
+        private const float BottomHudHeight = 178f;
+        private const float BottomHudBottomInset = 34f;
 
         [Header("Roots")]
         [SerializeField] private RectTransform safeAreaRoot;
@@ -664,7 +668,7 @@ namespace SolitaireAssociations
                 return;
             }
 
-            StretchToFill(boardArea, 320f, 560f, 220f, 150f);
+            StretchToFill(boardArea, 320f, 560f, BoardAreaTopInset, BoardAreaBottomInset);
             Image boardImage = EnsureGraphic<Image>(boardArea.gameObject);
             if (boardImage.sprite == null)
             {
@@ -761,7 +765,7 @@ namespace SolitaireAssociations
                 return;
             }
 
-            SetAnchored(bottomHud, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 166f), new Vector2(0f, 72f));
+            SetAnchored(bottomHud, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, BottomHudHeight), new Vector2(0f, BottomHudBottomInset));
             Image bottomHudImage = EnsureGraphic<Image>(bottomHud.gameObject);
             if (bottomHudImage.sprite == null)
             {

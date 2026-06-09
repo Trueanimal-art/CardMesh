@@ -5,6 +5,8 @@ namespace SolitaireAssociations
 {
     public sealed class CoinsManager : MonoBehaviour
     {
+        private const string CoinsKey = "CardMesh.Coins";
+
         [SerializeField, Min(0)] private int startingCoins;
         [SerializeField, Min(1)] private int rewardPerGoldCategory = 10;
 
@@ -15,7 +17,7 @@ namespace SolitaireAssociations
 
         private void Awake()
         {
-            CurrentCoins = Mathf.Max(0, startingCoins);
+            CurrentCoins = Mathf.Max(0, PlayerPrefs.GetInt(CoinsKey, startingCoins));
         }
 
         public int AddGoldCategoryReward()
@@ -32,8 +34,30 @@ namespace SolitaireAssociations
             }
 
             CurrentCoins += safeAmount;
+            PlayerPrefs.SetInt(CoinsKey, CurrentCoins);
+            PlayerPrefs.Save();
             CoinsChanged?.Invoke(CurrentCoins, safeAmount);
             return safeAmount;
+        }
+
+        public bool TrySpendCoins(int amount)
+        {
+            int safeAmount = Mathf.Max(0, amount);
+            if (safeAmount <= 0)
+            {
+                return true;
+            }
+
+            if (CurrentCoins < safeAmount)
+            {
+                return false;
+            }
+
+            CurrentCoins -= safeAmount;
+            PlayerPrefs.SetInt(CoinsKey, CurrentCoins);
+            PlayerPrefs.Save();
+            CoinsChanged?.Invoke(CurrentCoins, -safeAmount);
+            return true;
         }
     }
 }
