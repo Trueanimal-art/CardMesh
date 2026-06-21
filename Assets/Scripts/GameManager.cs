@@ -83,6 +83,8 @@ namespace SolitaireAssociations
         [SerializeField] private LivesManager livesManager;
         [SerializeField] private PlayerBoostInventory boostInventory;
         [SerializeField] private ChestChaseManager chestChaseManager;
+        [SerializeField] private AdsManager adsManager;
+        [SerializeField, Min(1)] private int rewardedAddMovesAmount = 10;
 
         [Header("Image Cards")]
         [SerializeField] private Texture2D imageCardsAtlas;
@@ -116,6 +118,7 @@ namespace SolitaireAssociations
         private bool movesBonusAwarded;
         private bool dependenciesInitialized;
         private bool hintAnimationInProgress;
+        private bool rewardedAddMovesInProgress;
         private Coroutine levelCompleteRoutine;
         private Coroutine levelRewardRoutine;
 
@@ -152,8 +155,7 @@ namespace SolitaireAssociations
 
         public ColumnLayoutProfile GetLayoutProfileForPreview(int targetColumnCount)
         {
-            layoutConfig ??= GameLayoutConfig.CreateDefault();
-            return layoutConfig.GetProfile(targetColumnCount);
+            return GetGameplayLayoutProfile(targetColumnCount);
         }
 
         private void Awake()
@@ -236,6 +238,7 @@ namespace SolitaireAssociations
 
             PushMoveSnapshot(snapshot);
             remainingMoves = Mathf.Max(0, remainingMoves - 1);
+            uiManager?.UpdateMoves(remainingMoves);
             platformService?.TrackEvent("stock_draw");
             ResolveBoardState(true);
         }
@@ -661,9 +664,14 @@ namespace SolitaireAssociations
 
             int? targetColumnsCount = progressionManager != null ? (int?)progressionManager.CurrentTargetColumns : null;
             int layoutVariantIndex = progressionManager != null ? progressionManager.CurrentLayoutVariantIndex : 0;
+            string targetLayoutId = progressionManager != null ? progressionManager.CurrentLayoutId : string.Empty;
             int currentLevelNumber = progressionManager != null ? progressionManager.CurrentLevelNumber : 1;
             int levelSeed = progressionManager != null ? progressionManager.GetOrCreateSeedForCurrentLevel() : Random.Range(1, int.MaxValue);
-            if (!LevelGenerator.TryGenerate(levelDefinition, cardDatabase, targetColumnsCount, layoutVariantIndex, levelSeed, currentLevelNumber, out generatedLevelData))
+            bool generatedFromManifest = progressionManager != null
+                && progressionManager.TryGetCurrentManifestEntry(out LevelManifestEntry manifestEntry)
+                && LevelManifestDatabase.TryCreateGeneratedLevelData(manifestEntry, out generatedLevelData);
+            if (!generatedFromManifest
+                && !LevelGenerator.TryGenerate(levelDefinition, cardDatabase, targetLayoutId, targetColumnsCount, layoutVariantIndex, levelSeed, currentLevelNumber, out generatedLevelData))
             {
                 Debug.LogError("GameManager: failed to generate level from config.");
                 return;
@@ -690,9 +698,63 @@ namespace SolitaireAssociations
                 uiManager.UpdateUndoCount(boostInventory.UndoCount);
             }
 
+            adsManager?.ResetRestartCounterForLevel(currentLevelNumber);
+
             ResolveBoardState(false);
-            Debug.Log($"GameManager: Started level {currentLevelNumber} with seed {levelSeed}.");
+            LogGeneratedLevelDiagnostics(currentLevelNumber);
+            Debug.Log($"GameManager: Started level {currentLevelNumber} with seed {generatedLevelData.GenerationSeed}.");
             platformService?.TrackEvent("level_restart");
+        }
+
+        private void LogGeneratedLevelDiagnostics(int levelNumber)
+        {
+            if (generatedLevelData == null)
+            {
+                return;
+            }
+
+            int columnCards = 0;
+            int imageCards = 0;
+            int goldCards = 0;
+            foreach (List<string> column in generatedLevelData.Columns)
+            {
+                if (column == null)
+                {
+                    continue;
+                }
+
+                foreach (string cardId in column)
+                {
+                    columnCards++;
+                    if (generatedLevelData.IsImageCard(cardId))
+                    {
+                        imageCards++;
+                    }
+
+                    if (generatedLevelData.TryGetGoldRequiredCount(cardId, out _))
+                    {
+                        goldCards++;
+                    }
+                }
+            }
+
+            foreach (string cardId in generatedLevelData.StockCards)
+            {
+                columnCards++;
+                if (generatedLevelData.IsImageCard(cardId))
+                {
+                    imageCards++;
+                }
+
+                if (generatedLevelData.TryGetGoldRequiredCount(cardId, out _))
+                {
+                    goldCards++;
+                }
+            }
+
+            int textCards = Mathf.Max(0, columnCards - imageCards - goldCards);
+            Debug.Log(
+                $"GameManager: Level generation diagnostics. level={levelNumber}, seed={generatedLevelData.GenerationSeed}, layout={generatedLevelData.LayoutId}, cards={columnCards}, imageCards={imageCards}, textCards={textCards}, goalSlots={generatedLevelData.ColumnsCount}, goldCards={goldCards}, attempts={generatedLevelData.GenerationAttempts}, solverVerified={generatedLevelData.SolverVerified}, solverResult={generatedLevelData.SolverResult}, solverMoves={generatedLevelData.SolverMoves}, solverStates={generatedLevelData.SolverStates}.");
         }
 
         private void ApplyLayout()
@@ -703,7 +765,7 @@ namespace SolitaireAssociations
                     ? levelDefinition.ColumnsCount
                     : 4;
             int visibleColumnsCount = Mathf.Clamp(configuredColumnsCount, 3, 5);
-            ColumnLayoutProfile profile = NormalizeGameplayProfile(layoutConfig.GetProfile(visibleColumnsCount), visibleColumnsCount);
+            ColumnLayoutProfile profile = GetGameplayLayoutProfile(visibleColumnsCount);
 
             if (columnsLayoutGroup != null)
             {
@@ -756,32 +818,21 @@ namespace SolitaireAssociations
             Debug.Log($"GameManager: Activated {activatedColumns}/{columns.Count} columns.");
         }
 
+        public static ColumnLayoutProfile GetGameplayLayoutProfile(int visibleColumnsCount)
+        {
+            visibleColumnsCount = Mathf.Clamp(visibleColumnsCount, 3, 5);
+            return NormalizeGameplayProfile(GameLayoutConfig.CreateDefault().GetProfile(visibleColumnsCount), visibleColumnsCount);
+        }
+
         private static ColumnLayoutProfile NormalizeGameplayProfile(ColumnLayoutProfile profile, int visibleColumnsCount)
         {
-            Vector2 targetCardSize = visibleColumnsCount switch
-            {
-                3 => new Vector2(196f, 286f),
-                4 => new Vector2(186f, 272f),
-                _ => new Vector2(170f, 248f)
-            };
-
-            float targetSpacing = visibleColumnsCount switch
-            {
-                3 => 112f,
-                4 => 76f,
-                _ => 48f
-            };
-
-            float targetVerticalOffset = visibleColumnsCount switch
-            {
-                3 => 48f,
-                4 => 44f,
-                _ => 40f
-            };
+            Vector2 targetCardSize = new(170f, 248f);
+            float targetSpacing = 48f;
+            float targetVerticalOffset = 40f;
 
             profile.columnCount = visibleColumnsCount;
             profile.cardSize = targetCardSize;
-            profile.columnSpacing = Mathf.Max(profile.columnSpacing, targetSpacing);
+            profile.columnSpacing = targetSpacing;
             profile.verticalOffset = targetVerticalOffset;
             return profile;
         }
@@ -867,6 +918,11 @@ namespace SolitaireAssociations
             {
                 Debug.LogWarning($"GameManager: card id '{cardId}' was not found in CardDatabase.");
                 return;
+            }
+
+            if (cardData.IsGold && generatedLevelData != null)
+            {
+                cardData.SetImageGoal(generatedLevelData.IsImageGoal(cardData.AssociationId));
             }
 
             cardsById[cardId] = cardData;
@@ -1025,6 +1081,7 @@ namespace SolitaireAssociations
             }
 
             remainingMoves = Mathf.Max(0, remainingMoves - 1);
+            uiManager?.UpdateMoves(remainingMoves);
             PushMoveSnapshot(snapshot);
 
             platformService?.TrackEvent("card_move");
@@ -1368,6 +1425,26 @@ namespace SolitaireAssociations
         private IEnumerator AdvanceToNextLevelAfterDelay()
         {
             yield return new WaitForSeconds(levelCompleteDelay);
+
+            bool adFlowFinished = false;
+            AdsManager activeAdsManager = ResolveAdsManager();
+            if (activeAdsManager != null)
+            {
+                activeAdsManager.ShowInterstitialIfAllowed(
+                    AdsManager.ReasonLevelComplete,
+                    onCompleted: () => adFlowFinished = true,
+                    onSkippedOrFailed: () => adFlowFinished = true);
+            }
+            else
+            {
+                adFlowFinished = true;
+            }
+
+            while (!adFlowFinished)
+            {
+                yield return null;
+            }
+
             progressionManager?.AdvanceToNextLevel();
             levelCompleteRoutine = null;
             RestartLevel();
@@ -1397,12 +1474,80 @@ namespace SolitaireAssociations
                 return false;
             }
 
-            RestartLevel();
+            AdsManager activeAdsManager = ResolveAdsManager();
+            if (activeAdsManager != null)
+            {
+                activeAdsManager.ShowInterstitialIfAllowed(
+                    AdsManager.ReasonRestart,
+                    onCompleted: RestartLevel,
+                    onSkippedOrFailed: RestartLevel);
+            }
+            else
+            {
+                RestartLevel();
+            }
+
             return true;
+        }
+
+        public void ShowRewardedAddMoves()
+        {
+            if (rewardedAddMovesInProgress)
+            {
+                Debug.Log("[ADS] Rewarded failed");
+                return;
+            }
+
+            if (levelFinished)
+            {
+                uiManager?.ShowStatus("Уровень уже завершен", new Color(1f, 0.82f, 0.52f, 1f));
+                return;
+            }
+
+            AdsManager activeAdsManager = ResolveAdsManager();
+            if (activeAdsManager == null)
+            {
+                Debug.LogWarning("[ADS] Rewarded failed");
+                uiManager?.ShowStatus("Реклама недоступна", new Color(1f, 0.76f, 0.68f, 1f));
+                return;
+            }
+
+            rewardedAddMovesInProgress = true;
+            uiManager?.SetAddMovesButtonInteractable(false);
+            activeAdsManager.ShowRewardedAddMoves(
+                onCompleted: () =>
+                {
+                    AddRewardedMoves();
+                    rewardedAddMovesInProgress = false;
+                    uiManager?.SetAddMovesButtonInteractable(true);
+                },
+                onFailed: () =>
+                {
+                    rewardedAddMovesInProgress = false;
+                    uiManager?.SetAddMovesButtonInteractable(true);
+                    uiManager?.ShowStatus("Реклама не завершена", new Color(1f, 0.76f, 0.68f, 1f));
+                });
+        }
+
+        private void AddRewardedMoves()
+        {
+            int amount = Mathf.Max(1, rewardedAddMovesAmount);
+            remainingMoves += amount;
+            uiManager?.UpdateMoves(remainingMoves);
+            uiManager?.ShowStatus($"+{amount} ходов", new Color(0.76f, 0.96f, 0.74f, 1f));
+            Debug.Log($"[ADS] Rewarded grant: AddMoves +{amount}, moves={remainingMoves}");
+            platformService?.TrackEvent("rewarded_add_moves");
+        }
+
+        public void RequestReturnToMainMenu()
+        {
+            ReturnToMainMenu();
         }
 
         private void ReturnToMainMenu()
         {
+            Time.timeScale = 1f;
+
             if (levelCompleteRoutine != null)
             {
                 StopCoroutine(levelCompleteRoutine);
@@ -1487,7 +1632,7 @@ namespace SolitaireAssociations
                     continue;
                 }
 
-                float score = GetLooseDropScore(goalSlot.DropAreaRect, screenPoint, eventCamera, LooseGoalDropPadding);
+                float score = GetLooseGoalDropScore(goalSlot, screenPoint, eventCamera);
                 if (score >= bestScore)
                 {
                     continue;
@@ -1498,6 +1643,19 @@ namespace SolitaireAssociations
             }
 
             return bestGoalSlot;
+        }
+
+        private static float GetLooseGoalDropScore(GoalSlot goalSlot, Vector2 screenPoint, Camera eventCamera)
+        {
+            if (goalSlot == null)
+            {
+                return float.MaxValue;
+            }
+
+            float cardsRootScore = GetLooseDropScore(goalSlot.DropAreaRect, screenPoint, eventCamera, LooseGoalDropPadding);
+            RectTransform slotRect = goalSlot.transform as RectTransform;
+            float wholeSlotScore = GetLooseDropScore(slotRect, screenPoint, eventCamera, LooseGoalDropPadding * 0.75f);
+            return Mathf.Min(cardsRootScore, wholeSlotScore);
         }
 
         private CardColumn FindBestLooseColumn(CardView cardView, Vector2 screenPoint, Camera eventCamera)
@@ -1965,6 +2123,8 @@ namespace SolitaireAssociations
                 }
             }
 
+            adsManager = ResolveAdsManager();
+
             if (winScreenView == null)
             {
                 winScreenView = FindFirstObjectByType<WinScreenView>(FindObjectsInactive.Include);
@@ -1993,6 +2153,30 @@ namespace SolitaireAssociations
 
             drawSlot?.Initialize(this);
             dependenciesInitialized = true;
+        }
+
+        private AdsManager ResolveAdsManager()
+        {
+            if (adsManager != null)
+            {
+                return adsManager;
+            }
+
+            adsManager = AdsManager.Instance;
+            if (adsManager != null)
+            {
+                return adsManager;
+            }
+
+            adsManager = FindFirstObjectByType<AdsManager>();
+            if (adsManager != null)
+            {
+                return adsManager;
+            }
+
+            GameObject adsRoot = new("AdsManager");
+            adsManager = adsRoot.AddComponent<AdsManager>();
+            return adsManager;
         }
 
         private void ApplyVisualConfig()

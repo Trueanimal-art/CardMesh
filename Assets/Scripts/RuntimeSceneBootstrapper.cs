@@ -52,6 +52,11 @@ namespace SolitaireAssociations
                 gameRoot.AddComponent<StubPlatformService>();
             }
 
+            if (Object.FindFirstObjectByType<AdsManager>() == null)
+            {
+                new GameObject("AdsManager").AddComponent<AdsManager>();
+            }
+
             CardDatabase cardDatabase = gameManager.GetComponent<CardDatabase>();
             if (cardDatabase == null)
             {

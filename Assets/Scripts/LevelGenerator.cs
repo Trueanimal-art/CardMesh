@@ -5,6 +5,8 @@ namespace SolitaireAssociations
 {
     public static class LevelGenerator
     {
+        private const float ImageCardLowerTolerance = 0.8f;
+
         public static bool TryGenerate(LevelDefinition levelDefinition, CardDatabase cardDatabase, out GeneratedLevelData generatedLevelData)
         {
             return TryGenerate(levelDefinition, cardDatabase, null, 0, out generatedLevelData);
@@ -17,7 +19,7 @@ namespace SolitaireAssociations
             int layoutVariantIndex,
             out GeneratedLevelData generatedLevelData)
         {
-            return TryGenerateInternal(levelDefinition, cardDatabase, targetColumnsCount, layoutVariantIndex, 1, out generatedLevelData);
+            return TryGenerateInternal(levelDefinition, cardDatabase, null, targetColumnsCount, layoutVariantIndex, Random.Range(1, int.MaxValue), 1, out generatedLevelData);
         }
 
         public static bool TryGenerate(
@@ -34,6 +36,7 @@ namespace SolitaireAssociations
         public static bool TryGenerate(
             LevelDefinition levelDefinition,
             CardDatabase cardDatabase,
+            string targetLayoutId,
             int? targetColumnsCount,
             int layoutVariantIndex,
             int seed,
@@ -45,7 +48,29 @@ namespace SolitaireAssociations
 
             try
             {
-                return TryGenerateInternal(levelDefinition, cardDatabase, targetColumnsCount, layoutVariantIndex, levelNumber, out generatedLevelData);
+                return TryGenerateInternal(levelDefinition, cardDatabase, targetLayoutId, targetColumnsCount, layoutVariantIndex, seed, levelNumber, out generatedLevelData);
+            }
+            finally
+            {
+                Random.state = previousState;
+            }
+        }
+
+        public static bool TryGenerate(
+            LevelDefinition levelDefinition,
+            CardDatabase cardDatabase,
+            int? targetColumnsCount,
+            int layoutVariantIndex,
+            int seed,
+            int levelNumber,
+            out GeneratedLevelData generatedLevelData)
+        {
+            Random.State previousState = Random.state;
+            Random.InitState(seed);
+
+            try
+            {
+                return TryGenerateInternal(levelDefinition, cardDatabase, null, targetColumnsCount, layoutVariantIndex, seed, levelNumber, out generatedLevelData);
             }
             finally
             {
@@ -56,8 +81,10 @@ namespace SolitaireAssociations
         private static bool TryGenerateInternal(
             LevelDefinition levelDefinition,
             CardDatabase cardDatabase,
+            string targetLayoutId,
             int? targetColumnsCount,
             int layoutVariantIndex,
+            int seed,
             int levelNumber,
             out GeneratedLevelData generatedLevelData)
         {
@@ -75,7 +102,10 @@ namespace SolitaireAssociations
                 return false;
             }
 
-            LevelLayoutConfig layout = targetColumnsCount.HasValue
+            LevelLayoutConfig layout = !string.IsNullOrWhiteSpace(targetLayoutId)
+                ? levelDefinition.GetLayoutById(targetLayoutId)
+                : null;
+            layout ??= targetColumnsCount.HasValue
                 ? levelDefinition.GetLayoutForColumns(targetColumnsCount.Value, layoutVariantIndex)
                 : levelDefinition.GetRandomLayout();
             if (layout == null)
@@ -88,6 +118,11 @@ namespace SolitaireAssociations
             {
                 Debug.LogWarning($"LevelGenerator: layout '{layout.Id}' has invalid columnCardCounts.");
                 return false;
+            }
+
+            if (levelDefinition.GenerationMode == LevelGenerationMode.GuaranteedSolvable)
+            {
+                return TryGenerateGuaranteedSolvable(levelDefinition, cardDatabase, layout, seed, levelNumber, out generatedLevelData);
             }
 
             int expectedTotalCards = layout.DeckCount;
@@ -105,7 +140,10 @@ namespace SolitaireAssociations
 
             List<GoldCardGroup> sortedGroups = new(layout.GoldCardGroups);
             sortedGroups.Sort((left, right) => right.OrdinaryCardsPerGold.CompareTo(left.OrdinaryCardsPerGold));
-            bool shouldPreferImageGoal = levelDefinition.ShouldUseImageCards(levelNumber);
+            int expectedGoldCards = CountGoldCards(sortedGroups);
+            int expectedOrdinaryCards = Mathf.Max(0, expectedTotalCards - expectedGoldCards);
+            int targetImageCardCount = GetTargetImageCardCount(levelDefinition, levelNumber, expectedOrdinaryCards);
+            int preferredImageCardCount = 0;
 
             foreach (GoldCardGroup group in sortedGroups)
             {
@@ -120,7 +158,7 @@ namespace SolitaireAssociations
                         availableGoldCards,
                         group.OrdinaryCardsPerGold,
                         cardDatabase,
-                        shouldPreferImageGoal);
+                        preferredImageCardCount < targetImageCardCount);
                     if (selectedGold == null)
                     {
                         Debug.LogWarning(
@@ -150,9 +188,9 @@ namespace SolitaireAssociations
 
                     selectedGoldCards.Add(new SelectedGoldCard(selectedGold, assignedOrdinaryIds, remainingOrdinaryIds));
                     goldRequiredCountsById[selectedGold.Id] = group.OrdinaryCardsPerGold;
-                    if (shouldPreferImageGoal && GoldCardCanBeImageGoal(selectedGold, cardDatabase))
+                    if (GoldCardCanBeImageGoal(selectedGold, cardDatabase))
                     {
-                        shouldPreferImageGoal = false;
+                        preferredImageCardCount += assignedOrdinaryIds.Count;
                     }
 
                     pool.Add(selectedGold.Id);
@@ -168,7 +206,14 @@ namespace SolitaireAssociations
                 return false;
             }
 
-            HashSet<string> imageCardIds = SelectImageCardIds(levelDefinition, cardDatabase, levelNumber, selectedGoldCards, pool);
+            if (HasDuplicateCardIds(pool, out string duplicateCardId))
+            {
+                Debug.LogWarning(
+                    $"LevelGenerator: layout '{layout.Id}' generated duplicate card id '{duplicateCardId}'. Retrying with another seed.");
+                return false;
+            }
+
+            HashSet<string> imageCardIds = SelectImageCardIds(levelDefinition, cardDatabase, levelNumber, selectedGoldCards, pool, out HashSet<string> imageGoalIds);
             Shuffle(pool);
 
             List<List<string>> columns = new();
@@ -204,7 +249,239 @@ namespace SolitaireAssociations
                 columns,
                 stockCards,
                 goldRequiredCountsById,
-                imageCardIds);
+                imageCardIds,
+                imageGoalIds,
+                seed,
+                1,
+                false,
+                0,
+                0,
+                "legacy_random_unverified");
+            return true;
+        }
+
+        private static bool TryGenerateGuaranteedSolvable(
+            LevelDefinition levelDefinition,
+            CardDatabase cardDatabase,
+            LevelLayoutConfig layout,
+            int seed,
+            int levelNumber,
+            out GeneratedLevelData generatedLevelData)
+        {
+            generatedLevelData = null;
+            int maxAttempts = levelDefinition.MaxGenerationAttempts;
+            for (int attempt = 1; attempt <= maxAttempts; attempt++)
+            {
+                int attemptSeed = seed + (attempt * 7919);
+                Random.InitState(attemptSeed);
+
+                if (!TryBuildSelectedCards(levelDefinition, cardDatabase, layout, levelNumber, out List<SelectedGoldCard> selectedGoldCards, out Dictionary<string, int> goldRequiredCountsById, out List<string> pool))
+                {
+                    continue;
+                }
+
+                HashSet<string> imageCardIds = SelectImageCardIds(levelDefinition, cardDatabase, levelNumber, selectedGoldCards, pool, out HashSet<string> imageGoalIds);
+                if (!TryBuildSolvableDeal(layout, selectedGoldCards, pool, out List<List<string>> columns, out List<string> stockCards, out int solverMoves))
+                {
+                    continue;
+                }
+
+                int totalCards = CountCards(columns) + stockCards.Count;
+                int imageCards = CountCardsInSet(columns, stockCards, imageCardIds);
+                int textCards = Mathf.Max(0, totalCards - imageCards - goldRequiredCountsById.Count);
+                int referenceMoves = Mathf.Max(layout.ReferenceMoves, solverMoves);
+                generatedLevelData = new GeneratedLevelData(
+                    layout.Id,
+                    layout.ColumnsCount,
+                    referenceMoves,
+                    columns,
+                    stockCards,
+                    goldRequiredCountsById,
+                    imageCardIds,
+                    imageGoalIds,
+                    attemptSeed,
+                    attempt,
+                    true,
+                    solverMoves,
+                    0,
+                    "guaranteed_by_construction");
+
+                Debug.Log(
+                    $"LevelGenerator: generated verified level. seed={attemptSeed}, layout={layout.Id}, cards={totalCards}, textCards={textCards}, imageCards={imageCards}, goalSlots={layout.ColumnsCount}, goldCards={goldRequiredCountsById.Count}, attempts={attempt}, solver=guaranteed_by_construction, solutionMoves={solverMoves}.");
+                return true;
+            }
+
+            Debug.LogError(
+                $"LevelGenerator: failed to generate a verified solvable level after {maxAttempts} attempts. layout={layout.Id}, seed={seed}.");
+            return false;
+        }
+
+        private static bool TryBuildSelectedCards(
+            LevelDefinition levelDefinition,
+            CardDatabase cardDatabase,
+            LevelLayoutConfig layout,
+            int levelNumber,
+            out List<SelectedGoldCard> selectedGoldCards,
+            out Dictionary<string, int> goldRequiredCountsById,
+            out List<string> pool)
+        {
+            selectedGoldCards = new List<SelectedGoldCard>();
+            goldRequiredCountsById = new Dictionary<string, int>();
+            pool = new List<string>();
+
+            int expectedTotalCards = layout.DeckCount;
+            foreach (int columnCardCount in layout.ColumnCardCounts)
+            {
+                expectedTotalCards += Mathf.Max(0, columnCardCount);
+            }
+
+            List<GoldCardData> availableGoldCards = new(cardDatabase.GetGoldCards());
+            Shuffle(availableGoldCards);
+
+            List<GoldCardGroup> sortedGroups = new(layout.GoldCardGroups);
+            sortedGroups.Sort((left, right) => right.OrdinaryCardsPerGold.CompareTo(left.OrdinaryCardsPerGold));
+            int expectedGoldCards = CountGoldCards(sortedGroups);
+            int expectedOrdinaryCards = Mathf.Max(0, expectedTotalCards - expectedGoldCards);
+            int targetImageCardCount = GetTargetImageCardCount(levelDefinition, levelNumber, expectedOrdinaryCards);
+            int preferredImageCardCount = 0;
+
+            foreach (GoldCardGroup group in sortedGroups)
+            {
+                if (group == null)
+                {
+                    continue;
+                }
+
+                for (int goldIndex = 0; goldIndex < group.GoldCardsCount; goldIndex++)
+                {
+                    GoldCardData selectedGold = TakeEligibleGoldCard(
+                        availableGoldCards,
+                        group.OrdinaryCardsPerGold,
+                        cardDatabase,
+                        preferredImageCardCount < targetImageCardCount);
+                    if (selectedGold == null)
+                    {
+                        return false;
+                    }
+
+                    List<string> shuffledOrdinaryIds = new();
+                    foreach (CardData ordinaryCard in selectedGold.Cards)
+                    {
+                        if (ordinaryCard != null && !string.IsNullOrWhiteSpace(ordinaryCard.Id))
+                        {
+                            shuffledOrdinaryIds.Add(ordinaryCard.Id);
+                        }
+                    }
+
+                    Shuffle(shuffledOrdinaryIds);
+                    if (shuffledOrdinaryIds.Count < group.OrdinaryCardsPerGold)
+                    {
+                        return false;
+                    }
+
+                    List<string> assignedOrdinaryIds = shuffledOrdinaryIds.GetRange(0, group.OrdinaryCardsPerGold);
+                    List<string> remainingOrdinaryIds = shuffledOrdinaryIds.GetRange(group.OrdinaryCardsPerGold, shuffledOrdinaryIds.Count - group.OrdinaryCardsPerGold);
+
+                    selectedGoldCards.Add(new SelectedGoldCard(selectedGold, assignedOrdinaryIds, remainingOrdinaryIds));
+                    goldRequiredCountsById[selectedGold.Id] = group.OrdinaryCardsPerGold;
+                    if (GoldCardCanBeImageGoal(selectedGold, cardDatabase))
+                    {
+                        preferredImageCardCount += assignedOrdinaryIds.Count;
+                    }
+
+                    pool.Add(selectedGold.Id);
+                    pool.AddRange(assignedOrdinaryIds);
+                }
+            }
+
+            AdjustPoolSize(layout.Id, expectedTotalCards, selectedGoldCards, pool);
+            return pool.Count == expectedTotalCards && !HasDuplicateCardIds(pool, out _);
+        }
+
+        private static bool TryBuildSolvableDeal(
+            LevelLayoutConfig layout,
+            List<SelectedGoldCard> selectedGoldCards,
+            List<string> pool,
+            out List<List<string>> columns,
+            out List<string> stockCards,
+            out int solutionMoves)
+        {
+            columns = new List<List<string>>();
+            stockCards = new List<string>();
+            solutionMoves = 0;
+            if (layout == null || selectedGoldCards == null || pool == null)
+            {
+                return false;
+            }
+
+            HashSet<string> solutionIds = new();
+            List<string> solutionOrder = new();
+            foreach (SelectedGoldCard selectedGoldCard in selectedGoldCards)
+            {
+                if (selectedGoldCard?.GoldCard == null)
+                {
+                    return false;
+                }
+
+                solutionOrder.Add(selectedGoldCard.GoldCard.Id);
+                solutionIds.Add(selectedGoldCard.GoldCard.Id);
+                foreach (string cardId in selectedGoldCard.AssignedOrdinaryIds)
+                {
+                    if (string.IsNullOrWhiteSpace(cardId))
+                    {
+                        continue;
+                    }
+
+                    solutionOrder.Add(cardId);
+                    solutionIds.Add(cardId);
+                }
+            }
+
+            List<string> extras = new();
+            foreach (string cardId in pool)
+            {
+                if (!solutionIds.Contains(cardId))
+                {
+                    extras.Add(cardId);
+                }
+            }
+
+            Shuffle(extras);
+            List<string> dealOrder = new(solutionOrder);
+            dealOrder.AddRange(extras);
+
+            int cursor = 0;
+            int columnSolutionCards = 0;
+            foreach (int columnCardCount in layout.ColumnCardCounts)
+            {
+                int safeCount = Mathf.Max(0, columnCardCount);
+                List<string> column = new();
+                for (int index = 0; index < safeCount && cursor < dealOrder.Count; index++, cursor++)
+                {
+                    column.Add(dealOrder[cursor]);
+                    if (cursor < solutionOrder.Count)
+                    {
+                        columnSolutionCards++;
+                    }
+                }
+
+                column.Reverse();
+                columns.Add(column);
+            }
+
+            while (cursor < dealOrder.Count && stockCards.Count < layout.DeckCount)
+            {
+                stockCards.Add(dealOrder[cursor]);
+                cursor++;
+            }
+
+            if (CountCards(columns) + stockCards.Count != pool.Count)
+            {
+                return false;
+            }
+
+            int stockSolutionCards = Mathf.Max(0, solutionOrder.Count - columnSolutionCards);
+            solutionMoves = columnSolutionCards + (stockSolutionCards * 2);
             return true;
         }
 
@@ -213,9 +490,11 @@ namespace SolitaireAssociations
             CardDatabase cardDatabase,
             int levelNumber,
             List<SelectedGoldCard> selectedGoldCards,
-            List<string> pool)
+            List<string> pool,
+            out HashSet<string> imageGoalIds)
         {
             HashSet<string> imageCardIds = new();
+            imageGoalIds = new HashSet<string>();
             if (levelDefinition == null || cardDatabase == null || !levelDefinition.ShouldUseImageCards(levelNumber))
             {
                 return imageCardIds;
@@ -254,13 +533,9 @@ namespace SolitaireAssociations
                 return imageCardIds;
             }
 
-            Shuffle(imageGoalCandidates);
-            int percentage = levelDefinition.ImageCardPercentage;
-            int targetImageCardCount = Mathf.RoundToInt(totalOrdinaryCards * (percentage / 100f));
-            if (percentage > 0)
-            {
-                targetImageCardCount = Mathf.Max(1, targetImageCardCount);
-            }
+            imageGoalCandidates.Sort((left, right) =>
+                CountPoolCardsForGold(right, poolIds).CompareTo(CountPoolCardsForGold(left, poolIds)));
+            int targetImageCardCount = GetTargetImageCardCount(levelDefinition, levelNumber, totalOrdinaryCards);
 
             int selectedImageCardCount = 0;
             foreach (SelectedGoldCard imageGoalCandidate in imageGoalCandidates)
@@ -271,6 +546,7 @@ namespace SolitaireAssociations
                     continue;
                 }
 
+                imageGoalIds.Add(imageGoalCandidate.GoldCard.Id);
                 selectedImageCardCount += added;
                 if (selectedImageCardCount >= targetImageCardCount)
                 {
@@ -279,6 +555,98 @@ namespace SolitaireAssociations
             }
 
             return imageCardIds;
+        }
+
+        private static int CountGoldCards(IReadOnlyList<GoldCardGroup> groups)
+        {
+            int count = 0;
+            if (groups == null)
+            {
+                return count;
+            }
+
+            foreach (GoldCardGroup group in groups)
+            {
+                if (group != null)
+                {
+                    count += group.GoldCardsCount;
+                }
+            }
+
+            return count;
+        }
+
+        private static int GetTargetImageCardCount(LevelDefinition levelDefinition, int levelNumber, int ordinaryCardCount)
+        {
+            if (levelDefinition == null || ordinaryCardCount <= 0 || !levelDefinition.ShouldUseImageCards(levelNumber))
+            {
+                return 0;
+            }
+
+            int percentage = levelDefinition.ImageCardPercentage;
+            int targetCount = Mathf.RoundToInt(ordinaryCardCount * (percentage / 100f));
+            int toleratedTargetCount = Mathf.CeilToInt(targetCount * ImageCardLowerTolerance);
+            return percentage > 0 ? Mathf.Max(1, toleratedTargetCount) : 0;
+        }
+
+        private static int CountCards(List<List<string>> columns)
+        {
+            int count = 0;
+            if (columns == null)
+            {
+                return count;
+            }
+
+            foreach (List<string> column in columns)
+            {
+                if (column != null)
+                {
+                    count += column.Count;
+                }
+            }
+
+            return count;
+        }
+
+        private static int CountCardsInSet(List<List<string>> columns, List<string> stockCards, HashSet<string> cardIds)
+        {
+            if (cardIds == null || cardIds.Count == 0)
+            {
+                return 0;
+            }
+
+            int count = 0;
+            if (columns != null)
+            {
+                foreach (List<string> column in columns)
+                {
+                    if (column == null)
+                    {
+                        continue;
+                    }
+
+                    foreach (string cardId in column)
+                    {
+                        if (cardIds.Contains(cardId))
+                        {
+                            count++;
+                        }
+                    }
+                }
+            }
+
+            if (stockCards != null)
+            {
+                foreach (string cardId in stockCards)
+                {
+                    if (cardIds.Contains(cardId))
+                    {
+                        count++;
+                    }
+                }
+            }
+
+            return count;
         }
 
         private static HashSet<string> GetGoldIds(List<SelectedGoldCard> selectedGoldCards)
@@ -300,6 +668,32 @@ namespace SolitaireAssociations
             }
 
             return goldIds;
+        }
+
+        private static bool HasDuplicateCardIds(IEnumerable<string> cardIds, out string duplicateCardId)
+        {
+            duplicateCardId = string.Empty;
+            HashSet<string> seen = new();
+            if (cardIds == null)
+            {
+                return false;
+            }
+
+            foreach (string cardId in cardIds)
+            {
+                if (string.IsNullOrWhiteSpace(cardId))
+                {
+                    continue;
+                }
+
+                if (!seen.Add(cardId))
+                {
+                    duplicateCardId = cardId;
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private static void AdjustPoolSize(

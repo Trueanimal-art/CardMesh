@@ -4,11 +4,20 @@ using UnityEngine;
 
 namespace SolitaireAssociations
 {
+    public enum LevelGenerationMode
+    {
+        Random = 0,
+        GuaranteedSolvable = 1
+    }
+
     [CreateAssetMenu(fileName = "LevelDefinition", menuName = "Solitaire Associations/Уровни/Уровень")]
     public sealed class LevelDefinition : ScriptableObject
     {
         [SerializeField] private string levelName = "Уровень";
         [SerializeField] private string defaultLayoutId = "layout_4_cols_v1";
+        [SerializeField] private LevelGenerationMode generationMode = LevelGenerationMode.GuaranteedSolvable;
+        [SerializeField, Min(1)] private int maxGenerationAttempts = 20;
+        [SerializeField, Min(1)] private int solverMaxStates = 120000;
         [SerializeField] private List<LevelLayoutConfig> layouts = new();
         [Header("Image Cards")]
         [SerializeField, Min(1)] private int imageCardsStartFromLevel = 30;
@@ -16,6 +25,9 @@ namespace SolitaireAssociations
 
         public string LevelName => levelName;
         public string DefaultLayoutId => defaultLayoutId;
+        public LevelGenerationMode GenerationMode => generationMode;
+        public int MaxGenerationAttempts => Mathf.Max(1, maxGenerationAttempts);
+        public int SolverMaxStates => Mathf.Max(1, solverMaxStates);
         public IReadOnlyList<LevelLayoutConfig> Layouts => layouts;
         public int ImageCardsStartFromLevel => Mathf.Max(1, imageCardsStartFromLevel);
         public int ImageCardPercentage => Mathf.Clamp(imageCardPercentage, 0, 100);
@@ -106,6 +118,24 @@ namespace SolitaireAssociations
             int safeIndex = Mathf.Abs(variantIndex) % availableLayouts.Count;
             return availableLayouts[safeIndex];
         }
+
+        public LevelLayoutConfig GetLayoutById(string layoutId)
+        {
+            if (string.IsNullOrWhiteSpace(layoutId))
+            {
+                return null;
+            }
+
+            foreach (LevelLayoutConfig layout in layouts)
+            {
+                if (layout != null && string.Equals(layout.Id, layoutId, StringComparison.Ordinal))
+                {
+                    return layout;
+                }
+            }
+
+            return null;
+        }
     }
 
     [Serializable]
@@ -140,6 +170,7 @@ namespace SolitaireAssociations
     {
         private readonly Dictionary<string, int> goldRequiredCountsById;
         private readonly HashSet<string> imageCardIds;
+        private readonly HashSet<string> imageGoalIds;
 
         public GeneratedLevelData(
             string layoutId,
@@ -148,7 +179,14 @@ namespace SolitaireAssociations
             List<List<string>> columns,
             List<string> stockCards,
             Dictionary<string, int> sourceGoldRequiredCountsById,
-            IEnumerable<string> sourceImageCardIds = null)
+            IEnumerable<string> sourceImageCardIds = null,
+            IEnumerable<string> sourceImageGoalIds = null,
+            int generationSeed = 0,
+            int generationAttempts = 1,
+            bool solverVerified = false,
+            int solverMoves = 0,
+            int solverStates = 0,
+            string solverResult = "")
         {
             LayoutId = layoutId;
             ColumnsCount = Mathf.Max(1, columnsCount);
@@ -159,6 +197,15 @@ namespace SolitaireAssociations
             imageCardIds = sourceImageCardIds != null
                 ? new HashSet<string>(sourceImageCardIds)
                 : new HashSet<string>();
+            imageGoalIds = sourceImageGoalIds != null
+                ? new HashSet<string>(sourceImageGoalIds)
+                : new HashSet<string>();
+            GenerationSeed = generationSeed;
+            GenerationAttempts = Mathf.Max(1, generationAttempts);
+            SolverVerified = solverVerified;
+            SolverMoves = Mathf.Max(0, solverMoves);
+            SolverStates = Mathf.Max(0, solverStates);
+            SolverResult = solverResult ?? string.Empty;
         }
 
         public string LayoutId { get; }
@@ -166,6 +213,12 @@ namespace SolitaireAssociations
         public int ReferenceMoves { get; }
         public IReadOnlyList<List<string>> Columns { get; }
         public IReadOnlyList<string> StockCards { get; }
+        public int GenerationSeed { get; }
+        public int GenerationAttempts { get; }
+        public bool SolverVerified { get; }
+        public int SolverMoves { get; }
+        public int SolverStates { get; }
+        public string SolverResult { get; }
 
         public bool TryGetGoldRequiredCount(string goldCardId, out int requiredCount)
         {
@@ -175,6 +228,11 @@ namespace SolitaireAssociations
         public bool IsImageCard(string cardId)
         {
             return !string.IsNullOrWhiteSpace(cardId) && imageCardIds.Contains(cardId);
+        }
+
+        public bool IsImageGoal(string goldCardId)
+        {
+            return !string.IsNullOrWhiteSpace(goldCardId) && imageGoalIds.Contains(goldCardId);
         }
     }
 }

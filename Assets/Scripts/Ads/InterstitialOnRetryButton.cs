@@ -67,7 +67,8 @@ public class InterstitialOnRetryButton : MonoBehaviour
         }
 
         // Если Instance = null, попробуем найти AdsManager в сцене/DDD
-        if (AdsManager.Instance == null)
+        AdsManager adsManager = AdsManager.Instance;
+        if (adsManager == null)
         {
             var found = FindObjectOfType<AdsManager>();
             if (debugLogs) Debug.Log($"[InterstitialOnRetryButton] AdsManager.Instance == null. Found in scene: {(found != null)}");
@@ -79,10 +80,13 @@ public class InterstitialOnRetryButton : MonoBehaviour
                 Proceed();
                 return;
             }
+
+            adsManager = found;
         }
 
-        bool started = AdsManager.Instance.TryShowInterstitialWithResult(
-            onClosedOrShown: () =>
+        bool started = adsManager.ShowInterstitialIfAllowed(
+            AdsManager.ReasonRestart,
+            onCompleted: () =>
             {
                 if (debugLogs) Debug.Log("[InterstitialOnRetryButton] Interstitial closed. Proceed.");
 
@@ -93,20 +97,16 @@ public class InterstitialOnRetryButton : MonoBehaviour
 
                 Proceed();
             },
-            onFail: () =>
+            onSkippedOrFailed: () =>
             {
-                if (debugLogs) Debug.LogWarning("[InterstitialOnRetryButton] Interstitial failed to start. Proceed WITHOUT AD.");
+                if (debugLogs) Debug.LogWarning("[InterstitialOnRetryButton] Interstitial skipped or failed. Proceed WITHOUT AD.");
                 Proceed();
             }
         );
 
-        if (debugLogs) Debug.Log($"[InterstitialOnRetryButton] TryShowInterstitialWithResult -> started={started}");
+        if (debugLogs) Debug.Log($"[InterstitialOnRetryButton] ShowInterstitialIfAllowed -> started={started}");
 
-        if (!started)
-        {
-            // На всякий случай: если started=false и onFail по какой-то причине не вызвался
-            Proceed();
-        }
+        // ShowInterstitialIfAllowed always invokes either onCompleted or onSkippedOrFailed.
     }
 
     private void Proceed()

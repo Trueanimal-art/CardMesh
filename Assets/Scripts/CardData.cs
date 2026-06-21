@@ -20,6 +20,7 @@ namespace SolitaireAssociations
         private string associationId = string.Empty;
         private string associationTitle = string.Empty;
         private bool isGold;
+        private bool isImageGoal;
         private int requiredCount;
         private int currentCount;
         private Sprite icon;
@@ -30,6 +31,7 @@ namespace SolitaireAssociations
         public string DisplayText => Title;
         public CardType CardType => cardType;
         public bool IsImageCard => cardType == CardType.Image && !isGold;
+        public bool IsImageGoal => isGold && isImageGoal;
         public string AssociationId => associationId ?? string.Empty;
         public string AssociationTitle => associationTitle ?? string.Empty;
         public bool IsGold => isGold;
@@ -89,6 +91,11 @@ namespace SolitaireAssociations
         public void SetCurrentCount(int value)
         {
             currentCount = Mathf.Max(0, value);
+        }
+
+        public void SetImageGoal(bool value)
+        {
+            isImageGoal = isGold && value;
         }
 
         public void SetIcon(Sprite value)

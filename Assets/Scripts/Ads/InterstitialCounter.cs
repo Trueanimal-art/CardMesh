@@ -40,18 +40,20 @@ public class InterstitialCounter : MonoBehaviour
         if (runCount < showOn)
             return;
 
-        // Пора показывать interstitial
-        EnsureBridge();
-
         _showInProgress = true;
 
-        bool started = YandexAdsBridge.Instance.ShowInterstitial(() =>
+        AdsManager adsManager = EnsureAdsManager();
+        bool started = adsManager.ShowInterstitialIfAllowed(AdsManager.ReasonLevelComplete, () =>
         {
             // Сбрасываем счетчик ТОЛЬКО после закрытия рекламы
             if (_debugLogs) Debug.Log("[InterstitialCounter] Interstitial closed. Resetting counter.");
             PlayerPrefs.SetInt(_prefsKey, 0);
             PlayerPrefs.Save();
 
+            _showInProgress = false;
+        }, () =>
+        {
+            if (_debugLogs) Debug.LogWarning("[InterstitialCounter] Interstitial skipped or failed. Keeping counter.");
             _showInProgress = false;
         });
 
@@ -70,13 +72,16 @@ public class InterstitialCounter : MonoBehaviour
     // Для совместимости с твоими прошлыми вызовами (если где-то уже зовётся такое имя)
     public void OnQuizFinished_ShowInterstitialIfNeeded() => OnMainQuizFinished_ShowInterstitialIfNeeded();
 
-    private void EnsureBridge()
+    private AdsManager EnsureAdsManager()
     {
-        if (YandexAdsBridge.Instance != null) return;
+        if (AdsManager.Instance != null) return AdsManager.Instance;
 
-        if (_debugLogs) Debug.LogWarning("[InterstitialCounter] YandexAdsBridge.Instance == null. Creating runtime instance.");
-        var go = new GameObject("YandexAdsBridge");
-        go.AddComponent<YandexAdsBridge>();
+        AdsManager found = FindFirstObjectByType<AdsManager>();
+        if (found != null) return found;
+
+        if (_debugLogs) Debug.LogWarning("[InterstitialCounter] AdsManager.Instance == null. Creating runtime instance.");
+        var go = new GameObject("AdsManager");
+        return go.AddComponent<AdsManager>();
     }
 
     // Удобно тестировать в редакторе через контекстное меню

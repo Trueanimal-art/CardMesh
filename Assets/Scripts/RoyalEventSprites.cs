@@ -15,6 +15,7 @@ namespace SolitaireAssociations
         private static Sprite progressFill;
         private static Sprite coinIcon;
         private static Sprite buttonIcon;
+        private static Sprite eventLogo;
         private static Sprite redBadge;
         private static Sprite progressMarker;
 
@@ -27,6 +28,7 @@ namespace SolitaireAssociations
         public static Sprite ProgressFill => progressFill ??= Load("royal_progress_fill");
         public static Sprite CoinIcon => coinIcon ??= Load("royal_icon_coin");
         public static Sprite ButtonIcon => buttonIcon ??= Load("royal_event_button");
+        public static Sprite EventLogo => eventLogo ??= Load("royal_event_logo");
         public static Sprite RedBadge => redBadge ??= Load("royal_badge_red");
         public static Sprite ProgressMarker => progressMarker ??= Load("royal_progress_marker");
 

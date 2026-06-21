@@ -82,6 +82,7 @@ namespace SolitaireAssociations.Editor
             GameObject gameRoot = new("GameRoot");
             gameRoot.AddComponent<StubPlatformService>();
             GameManager gameManager = gameRoot.AddComponent<GameManager>();
+            new GameObject("AdsManager").AddComponent<AdsManager>();
 
             LevelDefinition levelDefinition = AssetDatabase.LoadAssetAtPath<LevelDefinition>(LevelAssetPath);
             SerializedObject serializedObject = new(gameManager);

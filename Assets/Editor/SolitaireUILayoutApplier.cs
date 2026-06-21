@@ -255,12 +255,12 @@ namespace SolitaireAssociations.Editor
             {
                 SetAnchored(boosterDeckButton, new Vector2(0.8f, 0.5f), new Vector2(0.8f, 0.5f), new Vector2(0.5f, 0.5f), BottomButtonSize, Vector2.zero, "BoosterDeckButton");
                 ApplyImageColor(boosterDeckButton.gameObject, new Color(0.46f, 0.65f, 0.98f, 1f), "BoosterDeckButton");
-                SetPrimaryText(boosterDeckButton, "Бустер", "BoosterDeckButton");
+                SetPrimaryText(boosterDeckButton, "+10 ходов", "BoosterDeckButton");
             }
 
             if (badge != null)
             {
-                ConfigureBoosterBadgeAsLabel(badge, "Р‘СѓСЃС‚РµСЂ", "Badge");
+                ConfigureBoosterBadgeAsLabel(badge, "+10 ходов", "Badge");
             }
 
             if (adBanner != null)
@@ -621,7 +621,7 @@ namespace SolitaireAssociations.Editor
                 label = Undo.AddComponent<TextMeshProUGUI>(badgeRect.gameObject);
             }
 
-            SetTextValue(label, "Бустер", $"{undoName}/Label");
+            SetTextValue(label, "+10 ходов", $"{undoName}/Label");
 
             Undo.RecordObject(label, $"Apply {undoName} Label Style");
             label.enableAutoSizing = true;

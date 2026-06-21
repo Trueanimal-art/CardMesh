@@ -8,11 +8,26 @@ using UnityEngine.UI;
 
 namespace SolitaireAssociations
 {
+    [ExecuteAlways]
     public sealed class ChestChasePopup : MonoBehaviour
     {
         private static readonly Color TextDark = new(0.16f, 0.09f, 0.03f, 1f);
         private static readonly Color TextCream = new(1f, 0.95f, 0.76f, 1f);
         private static readonly Color TextGold = new(1f, 0.82f, 0.24f, 1f);
+        private static readonly Color PanelGreen = new(0.025f, 0.17f, 0.085f, 0.9f);
+        private static readonly Vector2 PanelLandscapeSize = new(1600f, 930f);
+        private const float HeaderLogoY = -50f;
+        private const float HeaderLogoSize = 190f;
+        private const float TitleY = -190f;
+        private const float DescriptionY = -272f;
+        private const float TimerY = -382f;
+        private const float HeroY = -454f;
+        private const float HeroRewardY = -10f;
+        private const float ProgressBadgeY = -112f;
+        private const float ProgressLabelY = -598f;
+        private const float ProgressTrackY = -646f;
+        private const float TooltipY = 308f;
+        private const float StageRowY = 178f;
 
         private ChestChaseManager manager;
         private CanvasGroup canvasGroup;
@@ -30,6 +45,13 @@ namespace SolitaireAssociations
         private TextMeshProUGUI tooltipUndoText;
         private TextMeshProUGUI rewardToastText;
         private Coroutine timerRoutine;
+        private bool isShowing;
+#if UNITY_EDITOR
+        private bool editorRefreshQueued;
+#endif
+
+        [Header("Shared prefab references")]
+        [SerializeField] private PremiumEventPrefabReferences sharedPrefabs = new();
 
         public static ChestChasePopup GetOrCreate()
         {
@@ -38,6 +60,7 @@ namespace SolitaireAssociations
             ChestChasePopup existing = FindFirstObjectByType<ChestChasePopup>(FindObjectsInactive.Include);
             if (existing != null)
             {
+                existing.EnsureLayout();
                 return existing;
             }
 
@@ -66,6 +89,8 @@ namespace SolitaireAssociations
 
         public void Show(ChestChaseManager targetManager)
         {
+            isShowing = true;
+            EnsureLayout();
             manager = targetManager != null ? targetManager : ChestChaseManager.GetOrCreate(this);
 
             if (manager != null)
@@ -77,6 +102,7 @@ namespace SolitaireAssociations
             }
 
             Refresh();
+            DisableExternalGlow(transform);
             gameObject.SetActive(true);
             transform.SetAsLastSibling();
             StartShowAnimation();
@@ -89,13 +115,421 @@ namespace SolitaireAssociations
             timerRoutine = StartCoroutine(UpdateTimer());
         }
 
+        private void Awake()
+        {
+            if (!Application.isPlaying)
+            {
+#if UNITY_EDITOR
+                sharedPrefabs.AssignDefaultsIfMissing();
+#endif
+                return;
+            }
+
+            EnsureLayout();
+            if (!isShowing)
+            {
+                gameObject.SetActive(false);
+            }
+        }
+
+        private void OnEnable()
+        {
+            if (!Application.isPlaying)
+            {
+#if UNITY_EDITOR
+                sharedPrefabs.AssignDefaultsIfMissing();
+#endif
+            }
+        }
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            if (!Application.isPlaying)
+            {
+                sharedPrefabs.AssignDefaultsIfMissing();
+                QueueEditorRefresh();
+            }
+        }
+#endif
+
         private void OnDisable()
         {
+            isShowing = false;
             if (timerRoutine != null)
             {
                 StopCoroutine(timerRoutine);
                 timerRoutine = null;
             }
+        }
+
+        private void EnsureLayout()
+        {
+            canvasGroup = GetComponent<CanvasGroup>();
+            if (canvasGroup == null)
+            {
+                canvasGroup = gameObject.AddComponent<CanvasGroup>();
+            }
+
+            Image overlay = GetComponent<Image>();
+            if (overlay == null)
+            {
+                overlay = gameObject.AddComponent<Image>();
+            }
+
+            RectTransform rect = transform as RectTransform;
+            if (rect != null)
+            {
+                Stretch(rect);
+            }
+
+            panel = transform.Find("Panel") as RectTransform;
+            if (panel == null)
+            {
+#if UNITY_EDITOR
+                sharedPrefabs.AssignDefaultsIfMissing();
+#endif
+                BuildLayout();
+            }
+
+            CacheLayoutReferences();
+            UpgradeSharedVisuals();
+        }
+
+#if UNITY_EDITOR
+        public void MaterializeAuthoringLayout()
+        {
+            if (Application.isPlaying)
+            {
+                return;
+            }
+
+            EnsureLayout();
+            CacheLayoutReferences();
+            ApplyFontsToAllTexts();
+            RefreshEditorPreview();
+        }
+
+        private void QueueEditorRefresh()
+        {
+            sharedPrefabs.AssignDefaultsIfMissing();
+            if (editorRefreshQueued)
+            {
+                return;
+            }
+
+            editorRefreshQueued = true;
+            UnityEditor.EditorApplication.delayCall += () =>
+            {
+                if (this == null)
+                {
+                    return;
+                }
+
+                editorRefreshQueued = false;
+                if (Application.isPlaying)
+                {
+                    return;
+                }
+
+                EnsureLayout();
+            };
+        }
+#endif
+
+        private void UpgradeSharedVisuals()
+        {
+            if (panel != null)
+            {
+                Image image = panel.GetComponent<Image>();
+                if (image != null)
+                {
+                    image.sprite = RoyalEventSprites.Panel != null ? RoyalEventSprites.Panel : PremiumUISprites.EmeraldPanel;
+                    image.type = Image.Type.Sliced;
+                    image.color = Color.white;
+                }
+
+                Shadow shadow = panel.GetComponent<Shadow>() ?? panel.gameObject.AddComponent<Shadow>();
+                shadow.effectColor = new Color(1f, 0.68f, 0.14f, 0f);
+                shadow.effectDistance = Vector2.zero;
+            }
+
+            StyleSharedButton(transform.Find("Panel/CloseButton") as RectTransform, "X", new Vector2(86f, 86f), new Vector2(-72f, -70f), true);
+            StyleSharedButton(transform.Find("Panel/InfoButton") as RectTransform, "i", new Vector2(66f, 66f), new Vector2(76f, -78f), false);
+            NormalizeLayoutPositions();
+            StyleHeaderLogo();
+            UpgradeCrownHero();
+            DisableDuplicateCrowns(transform);
+            DisableExternalGlow(transform);
+        }
+
+        private void NormalizeLayoutPositions()
+        {
+            if (panel == null)
+            {
+                return;
+            }
+
+            bool landscapeLayout = panel.sizeDelta.x > panel.sizeDelta.y;
+            panel.sizeDelta = landscapeLayout ? PanelLandscapeSize : panel.sizeDelta;
+
+            RectTransform title = transform.Find("Panel/Title") as RectTransform;
+            if (title != null)
+            {
+                SetAnchored(title, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(980f, 74f), new Vector2(0f, TitleY));
+                TMP_Text text = title.GetComponent<TMP_Text>();
+                if (text != null)
+                {
+                    text.fontSizeMax = 54f;
+                    text.fontSizeMin = 34f;
+                }
+            }
+
+            RectTransform description = transform.Find("Panel/Description") as RectTransform;
+            if (description != null)
+            {
+                SetAnchored(description, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(980f, 58f), new Vector2(0f, DescriptionY));
+                TMP_Text text = description.GetComponent<TMP_Text>();
+                if (text != null)
+                {
+                    text.fontSizeMax = 23f;
+                    text.fontSizeMin = 17f;
+                    text.lineSpacing = -8f;
+                }
+            }
+
+            SetAnchored(transform.Find("Panel/Timer") as RectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 0.5f), new Vector2(230f, 54f), new Vector2(0f, TimerY));
+            SetAnchored(transform.Find("Panel/ProgressLabel") as RectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 0.5f), new Vector2(440f, 46f), new Vector2(0f, landscapeLayout ? ProgressLabelY : -646f));
+            TMP_Text progressLabel = transform.Find("Panel/ProgressLabel")?.GetComponent<TMP_Text>();
+            if (progressLabel != null)
+            {
+                progressLabel.fontSizeMax = 28f;
+                progressLabel.fontSizeMin = 18f;
+            }
+
+            SetAnchored(transform.Find("Panel/ProgressBack") as RectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 0.5f), new Vector2(landscapeLayout ? 1050f : 720f, landscapeLayout ? 58f : 52f), new Vector2(0f, landscapeLayout ? ProgressTrackY : -716f));
+            SetAnchored(transform.Find("Panel/StageRow") as RectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0.5f), new Vector2(landscapeLayout ? 1210f : 840f, landscapeLayout ? 268f : 246f), new Vector2(0f, landscapeLayout ? StageRowY : 218f));
+            SetAnchored(transform.Find("Panel/RewardTooltip") as RectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(landscapeLayout ? 292f : 340f, landscapeLayout ? 78f : 108f), new Vector2(0f, landscapeLayout ? TooltipY : 348f));
+        }
+
+        private void StyleHeaderLogo()
+        {
+            RectTransform headerLogo = transform.Find("Panel/HeaderLogo") as RectTransform;
+            if (panel == null)
+            {
+                return;
+            }
+
+            if (headerLogo == null)
+            {
+                headerLogo = CreateRect("HeaderLogo", panel, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 0.5f), new Vector2(HeaderLogoSize, HeaderLogoSize), new Vector2(0f, HeaderLogoY));
+                headerLogo.gameObject.AddComponent<Image>();
+            }
+
+            SetAnchored(headerLogo, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 0.5f), new Vector2(HeaderLogoSize, HeaderLogoSize), new Vector2(0f, HeaderLogoY));
+            Image image = headerLogo.GetComponent<Image>();
+            if (image != null)
+            {
+                image.sprite = GetHeaderLogoSprite();
+                image.preserveAspect = true;
+                image.color = Color.white;
+                image.raycastTarget = false;
+            }
+
+            foreach (Transform child in headerLogo)
+            {
+                child.gameObject.SetActive(false);
+            }
+
+            headerLogo.SetAsLastSibling();
+        }
+
+        private void UpgradeCrownHero()
+        {
+            RectTransform hero = transform.Find("Panel/Hero") as RectTransform;
+            if (hero == null)
+            {
+                return;
+            }
+
+            SetAnchored(hero, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 0.5f), new Vector2(650f, 210f), new Vector2(0f, HeroY));
+
+            Image heroImage = hero.GetComponent<Image>();
+            if (heroImage != null)
+            {
+                heroImage.sprite = null;
+                heroImage.color = new Color(1f, 1f, 1f, 0f);
+                heroImage.raycastTarget = false;
+            }
+
+            RectTransform goldFrame = EnsureHeroImage(hero, "IntegratedGoldFrame", PremiumUISprites.CleanGoldButton != null ? PremiumUISprites.CleanGoldButton : PremiumUISprites.PrimaryButton, new Color(1f, 0.82f, 0.24f, 0.78f), new Vector2(0f, HeroRewardY), new Vector2(536f, 92f), Image.Type.Sliced);
+            goldFrame.SetAsFirstSibling();
+
+            RectTransform backplate = EnsureHeroImage(hero, "IntegratedBackplate", PremiumUISprites.EmeraldPanel, new Color(0.035f, 0.23f, 0.105f, 0.98f), new Vector2(0f, HeroRewardY), new Vector2(502f, 66f), Image.Type.Sliced);
+            backplate.SetSiblingIndex(1);
+
+            RectTransform softHalo = EnsureHeroImage(hero, "SoftGoldHalo", PremiumUISprites.IconCircle, new Color(1f, 0.72f, 0.12f, 0f), new Vector2(0f, 10f), new Vector2(500f, 260f), Image.Type.Simple);
+            softHalo.gameObject.SetActive(false);
+            softHalo.SetSiblingIndex(1);
+
+            RectTransform leftCard = EnsureHeroImage(hero, "RearCardLeft", RoyalEventSprites.RewardCard, new Color(0.82f, 0.95f, 0.76f, 0.16f), new Vector2(-158f, -4f), new Vector2(90f, 118f), Image.Type.Sliced);
+            leftCard.localRotation = Quaternion.Euler(0f, 0f, -8f);
+            leftCard.gameObject.SetActive(false);
+            leftCard.SetSiblingIndex(2);
+
+            RectTransform rightCard = EnsureHeroImage(hero, "RearCardRight", RoyalEventSprites.RewardCard, new Color(0.82f, 0.95f, 0.76f, 0.16f), new Vector2(158f, -4f), new Vector2(90f, 118f), Image.Type.Sliced);
+            rightCard.localRotation = Quaternion.Euler(0f, 0f, 8f);
+            rightCard.gameObject.SetActive(false);
+            rightCard.SetSiblingIndex(3);
+
+            RectTransform crownArt = EnsureHeroImage(hero, "CrownHeroArt", GetHeaderLogoSprite(), new Color(1f, 1f, 1f, 0f), new Vector2(0f, 64f), new Vector2(96f, 96f), Image.Type.Simple);
+            Image crownImage = crownArt.GetComponent<Image>();
+            if (crownImage != null)
+            {
+                crownImage.sprite = GetHeaderLogoSprite();
+                crownImage.preserveAspect = true;
+                crownImage.color = new Color(1f, 1f, 1f, 0f);
+                crownImage.raycastTarget = false;
+            }
+            crownArt.gameObject.SetActive(false);
+            crownArt.SetSiblingIndex(5);
+
+            CreateGoalRewardContent(hero);
+
+            RectTransform pedestal = hero.Find("ProgressPedestal") as RectTransform;
+            if (pedestal != null)
+            {
+                pedestal.gameObject.SetActive(false);
+            }
+
+            RectTransform progressBadge = hero.Find("ProgressBadge") as RectTransform;
+            if (progressBadge != null)
+            {
+                SetAnchored(progressBadge, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(320f, 76f), new Vector2(0f, ProgressBadgeY));
+                Image badgeImage = progressBadge.GetComponent<Image>();
+                if (badgeImage != null)
+                {
+                    badgeImage.sprite = PremiumUISprites.CleanGoldButton != null ? PremiumUISprites.CleanGoldButton : PremiumUISprites.PrimaryButton;
+                    badgeImage.type = badgeImage.sprite != null && badgeImage.sprite.border != Vector4.zero ? Image.Type.Sliced : Image.Type.Simple;
+                    badgeImage.color = new Color(1f, 0.9f, 0.42f, 0.98f);
+                    badgeImage.raycastTarget = false;
+                }
+
+                progressBadge.SetAsLastSibling();
+                TMP_Text countText = progressBadge.Find("ProgressCount")?.GetComponent<TMP_Text>();
+                if (countText != null)
+                {
+                    countText.fontSizeMax = 50f;
+                    countText.fontSizeMin = 30f;
+                    SetAnchored(countText.rectTransform, Vector2.zero, Vector2.one, new Vector2(0.5f, 0.5f), new Vector2(-36f, -8f), new Vector2(18f, 4f));
+                }
+
+                Shadow shadow = progressBadge.GetComponent<Shadow>();
+                if (shadow != null)
+                {
+                    shadow.effectColor = new Color(0f, 0f, 0f, 0f);
+                    shadow.effectDistance = Vector2.zero;
+                }
+            }
+        }
+
+        private void CacheLayoutReferences()
+        {
+            panel = transform.Find("Panel") as RectTransform;
+            timerText = FindTMP("Panel/Timer/TimerText");
+            progressCountText = FindTMP("Panel/Hero/ProgressBadge/ProgressCount");
+            progressLabelText = FindTMP("Panel/ProgressLabel");
+            progressFill = transform.Find("Panel/ProgressBack/ProgressFill")?.GetComponent<Image>();
+            progressTrack = transform.Find("Panel/ProgressBack") as RectTransform;
+            stageRow = transform.Find("Panel/StageRow") as RectTransform;
+            tooltip = transform.Find("Panel/RewardTooltip") as RectTransform;
+            tooltipTitleText = FindTMP("Panel/RewardTooltip/Title");
+            tooltipCoinText = FindTMP("Panel/RewardTooltip/Coins/Text");
+            tooltipHintText = FindTMP("Panel/RewardTooltip/Hints/Text");
+            tooltipUndoText = FindTMP("Panel/RewardTooltip/Undos/Text");
+            rewardToastText = FindTMP("Panel/RewardToast");
+            BindButton("Panel/CloseButton", Close);
+            BindButton("Panel/InfoButton", ShowRules);
+        }
+
+        private static void CreateGoalRewardContent(RectTransform hero)
+        {
+            if (hero == null)
+            {
+                return;
+            }
+
+            TextMeshProUGUI title = hero.Find("GoalRewardTitle")?.GetComponent<TextMeshProUGUI>();
+            if (title == null)
+            {
+                title = CreateText(hero, "GoalRewardTitle", "НАГРАДА ЗА ЦЕЛЬ", 20f, TextGold, TextAlignmentOptions.Center);
+            }
+
+            title.fontStyle = FontStyles.Bold;
+            title.fontSizeMax = 22f;
+            title.fontSizeMin = 17f;
+            SetAnchored(title.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(400f, 30f), new Vector2(0f, 33f));
+            AddTextOutline(title, new Color(0.16f, 0.05f, 0f, 0.55f), new Vector2(1f, -1f));
+
+            CreateGoalRewardRow(hero, "GoalCoins", RoyalEventSprites.CoinIcon, "x300", new Vector2(-164f, -14f));
+            CreateGoalRewardRow(hero, "GoalHints", PremiumUISprites.HintBulbIcon, "x1", new Vector2(0f, -14f));
+            CreateGoalRewardRow(hero, "GoalUndos", PremiumUISprites.UndoIcon, "-", new Vector2(164f, -14f));
+        }
+
+        private static void CreateGoalRewardRow(RectTransform parent, string name, Sprite iconSprite, string value, Vector2 position)
+        {
+            RectTransform row = parent.Find(name) as RectTransform;
+            if (row == null)
+            {
+                row = CreateRect(name, parent, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(142f, 42f), position);
+            }
+
+            SetAnchored(row, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(142f, 42f), position);
+
+            Image icon = row.Find("Icon")?.GetComponent<Image>();
+            if (icon == null)
+            {
+                icon = CreateRect("Icon", row, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(32f, 32f), new Vector2(24f, 0f)).gameObject.AddComponent<Image>();
+            }
+            else
+            {
+                SetAnchored(icon.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(32f, 32f), new Vector2(24f, 0f));
+            }
+
+            icon.sprite = iconSprite != null ? iconSprite : PremiumUISprites.IconCircle;
+            icon.color = Color.white;
+            icon.preserveAspect = true;
+            icon.raycastTarget = false;
+
+            TextMeshProUGUI text = row.Find("Value")?.GetComponent<TextMeshProUGUI>();
+            if (text == null)
+            {
+                text = CreateText(row, "Value", value, 24f, TextCream, TextAlignmentOptions.Left);
+            }
+
+            SetText(text, value);
+            text.fontStyle = FontStyles.Bold;
+            text.fontSizeMax = 28f;
+            text.fontSizeMin = 18f;
+            SetAnchored(text.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 1f), new Vector2(0f, 0.5f), new Vector2(-48f, 0f), new Vector2(48f, 0f));
+            AddTextOutline(text, new Color(0f, 0.02f, 0f, 0.55f), new Vector2(1f, -1f));
+        }
+
+        private TextMeshProUGUI FindTMP(string path)
+        {
+            return transform.Find(path)?.GetComponent<TextMeshProUGUI>();
+        }
+
+        private void BindButton(string path, UnityAction action)
+        {
+            Button button = transform.Find(path)?.GetComponent<Button>();
+            if (button == null)
+            {
+                return;
+            }
+
+            button.onClick.RemoveListener(action);
+            button.onClick.AddListener(action);
         }
 
         private void BuildLayout()
@@ -113,17 +547,24 @@ namespace SolitaireAssociations
             panelImage.sprite = RoyalEventSprites.Panel != null ? RoyalEventSprites.Panel : PremiumUISprites.EmeraldPanel;
             panelImage.type = panelImage.sprite != null && panelImage.sprite.border != Vector4.zero ? Image.Type.Sliced : Image.Type.Simple;
             panelImage.color = Color.white;
-            AddShadow(panel.gameObject, new Color(0f, 0.01f, 0f, 0.58f), new Vector2(0f, -14f));
+            AddShadow(panel.gameObject, new Color(1f, 0.68f, 0.14f, 0f), Vector2.zero);
 
-            TextMeshProUGUI title = CreateText(panel, "Title", "КОРОЛЕВСКАЯ СЕРИЯ", 58f, TextGold, TextAlignmentOptions.Center);
+            Image headerLogo = CreateRect("HeaderLogo", panel, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 0.5f), new Vector2(132f, 132f), new Vector2(0f, HeaderLogoY)).gameObject.AddComponent<Image>();
+            headerLogo.sprite = GetHeaderLogoSprite();
+            headerLogo.preserveAspect = true;
+            headerLogo.color = Color.white;
+            headerLogo.raycastTarget = false;
+
+            TextMeshProUGUI title = CreateText(panel, "Title", "КОРОЛЕВСКАЯ СЕРИЯ", 54f, TextGold, TextAlignmentOptions.Center);
             title.fontStyle = FontStyles.Bold;
-            SetAnchored(title.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(980f, 82f), new Vector2(0f, -86f));
+            SetAnchored(title.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(980f, 74f), new Vector2(0f, TitleY));
             AddTextOutline(title, new Color(0.25f, 0.1f, 0f, 0.62f), new Vector2(1.5f, -1.5f));
-            AddTextShadow(title.gameObject, new Color(1f, 0.72f, 0.12f, 0.18f), new Vector2(0f, 2f));
+            AddTextShadow(title.gameObject, new Color(1f, 0.72f, 0.12f, 0f), Vector2.zero);
 
-            TextMeshProUGUI description = CreateText(panel, "Description", "Побеждай уровни подряд и получай всё больше наград.\nПри проигрыше серия сбрасывается.", 28f, TextCream, TextAlignmentOptions.Center);
+            TextMeshProUGUI description = CreateText(panel, "Description", "Побеждай уровни подряд и получай всё больше наград.\nПри проигрыше серия сбрасывается.", 23f, TextCream, TextAlignmentOptions.Center);
             description.fontStyle = FontStyles.Bold;
-            SetAnchored(description.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(900f, 80f), new Vector2(0f, -152f));
+            description.lineSpacing = -8f;
+            SetAnchored(description.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(980f, 58f), new Vector2(0f, DescriptionY));
             AddTextOutline(description, new Color(0f, 0.02f, 0f, 0.62f), new Vector2(1f, -1f));
 
             Button closeButton = CreateCircleButton(panel, "CloseButton", "X", new Color(0.95f, 0.58f, 0.05f, 1f), TextDark, Close);
@@ -132,48 +573,50 @@ namespace SolitaireAssociations
             Button infoButton = CreateCircleButton(panel, "InfoButton", "i", new Color(0.06f, 0.31f, 0.14f, 1f), TextGold, ShowRules);
             SetAnchored(infoButton.transform as RectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0.5f, 0.5f), new Vector2(64f, 64f), new Vector2(82f, -82f));
 
-            RectTransform timer = CreateRect("Timer", panel, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 0.5f), new Vector2(222f, 64f), new Vector2(0f, -236f));
+            RectTransform timer = CreateRect("Timer", panel, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 0.5f), new Vector2(230f, 54f), new Vector2(0f, TimerY));
             Image timerImage = timer.gameObject.AddComponent<Image>();
-            timerImage.sprite = PremiumUISprites.PrimaryButton != null ? PremiumUISprites.PrimaryButton : RoyalEventSprites.Tooltip;
+            timerImage.sprite = PremiumUISprites.CleanGoldButton != null ? PremiumUISprites.CleanGoldButton : (PremiumUISprites.PrimaryButton != null ? PremiumUISprites.PrimaryButton : RoyalEventSprites.Tooltip);
             timerImage.type = timerImage.sprite != null && timerImage.sprite.border != Vector4.zero ? Image.Type.Sliced : Image.Type.Simple;
             timerImage.color = Color.white;
             timerText = CreateText(timer, "TimerText", string.Empty, 30f, TextDark, TextAlignmentOptions.Center);
             timerText.fontStyle = FontStyles.Bold;
             Stretch(timerText.rectTransform, 16f, 16f, 0f, 1f);
 
-            RectTransform hero = CreateRect("Hero", panel, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 0.5f), landscapeLayout ? new Vector2(800f, 382f) : new Vector2(700f, 336f), new Vector2(0f, landscapeLayout ? -392f : -486f));
+            RectTransform hero = CreateRect("Hero", panel, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 0.5f), landscapeLayout ? new Vector2(650f, 210f) : new Vector2(690f, 260f), new Vector2(0f, landscapeLayout ? HeroY : -456f));
             Image heroImage = hero.gameObject.AddComponent<Image>();
             heroImage.sprite = RoyalEventSprites.Hero;
-            heroImage.color = Color.white;
+            heroImage.color = new Color(0.98f, 0.96f, 0.88f, 0.94f);
             heroImage.raycastTarget = false;
-            AddPulse(hero.gameObject, 0.012f, 0f, 0.85f, 0f);
+            AddPulse(hero.gameObject, 0.006f, 0f, 0.85f, 0f);
 
-            RectTransform progressBadge = CreateRect("ProgressBadge", hero, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0.5f), new Vector2(274f, 78f), new Vector2(0f, 78f));
+            RectTransform progressBadge = CreateRect("ProgressBadge", hero, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(320f, 76f), new Vector2(0f, ProgressBadgeY));
             Image badgeImage = progressBadge.gameObject.AddComponent<Image>();
-            badgeImage.sprite = PremiumUISprites.SecondaryButton != null ? PremiumUISprites.SecondaryButton : PremiumUISprites.EmeraldPanel;
+            badgeImage.sprite = PremiumUISprites.CleanGoldButton != null ? PremiumUISprites.CleanGoldButton : PremiumUISprites.PrimaryButton;
             badgeImage.type = badgeImage.sprite != null && badgeImage.sprite.border != Vector4.zero ? Image.Type.Sliced : Image.Type.Simple;
-            badgeImage.color = Color.white;
-            AddShadow(progressBadge.gameObject, new Color(0f, 0f, 0f, 0.32f), new Vector2(0f, -5f));
+            badgeImage.color = new Color(1f, 0.9f, 0.42f, 0.98f);
+            badgeImage.raycastTarget = false;
+            AddShadow(progressBadge.gameObject, new Color(0f, 0f, 0f, 0f), Vector2.zero);
 
-            progressCountText = CreateText(progressBadge, "ProgressCount", string.Empty, 42f, TextCream, TextAlignmentOptions.Center);
+            progressCountText = CreateText(progressBadge, "ProgressCount", string.Empty, 50f, TextCream, TextAlignmentOptions.Center);
             progressCountText.fontStyle = FontStyles.Bold;
-            Stretch(progressCountText.rectTransform, 18f, 18f, 2f, 8f);
-            AddTextOutline(progressCountText, new Color(0f, 0.02f, 0f, 0.55f), new Vector2(1.2f, -1.2f));
+            progressCountText.fontSizeMin = 30f;
+            Stretch(progressCountText.rectTransform, 18f, 18f, 0f, 8f);
+            AddTextOutline(progressCountText, new Color(0f, 0.02f, 0f, 0.62f), new Vector2(1.4f, -1.4f));
 
-            progressLabelText = CreateText(panel, "ProgressLabel", "ПОБЕД ПОДРЯД", 24f, TextCream, TextAlignmentOptions.Center);
+            progressLabelText = CreateText(panel, "ProgressLabel", "ПОБЕД ПОДРЯД", 28f, TextCream, TextAlignmentOptions.Center);
             progressLabelText.fontStyle = FontStyles.Bold;
-            SetAnchored(progressLabelText.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 0.5f), new Vector2(340f, 44f), new Vector2(0f, landscapeLayout ? -548f : -652f));
+            SetAnchored(progressLabelText.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 0.5f), new Vector2(440f, 46f), new Vector2(0f, landscapeLayout ? ProgressLabelY : -646f));
             AddTextOutline(progressLabelText, new Color(0f, 0.02f, 0f, 0.5f), new Vector2(1f, -1f));
 
-            float progressWidth = landscapeLayout ? 1010f : 700f;
-            RectTransform progressBack = CreateRect("ProgressBack", panel, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 0.5f), new Vector2(progressWidth, 46f), new Vector2(0f, landscapeLayout ? -604f : -720f));
+            float progressWidth = landscapeLayout ? 1050f : 720f;
+            RectTransform progressBack = CreateRect("ProgressBack", panel, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 0.5f), new Vector2(progressWidth, landscapeLayout ? 58f : 52f), new Vector2(0f, landscapeLayout ? ProgressTrackY : -716f));
             progressTrack = progressBack;
             Image progressBackImage = progressBack.gameObject.AddComponent<Image>();
             progressBackImage.sprite = RoyalEventSprites.ProgressBack != null ? RoyalEventSprites.ProgressBack : PremiumUISprites.HudCounterGold;
             progressBackImage.type = progressBackImage.sprite != null && progressBackImage.sprite.border != Vector4.zero ? Image.Type.Sliced : Image.Type.Simple;
             progressBackImage.color = Color.white;
 
-            progressFill = CreateRect("ProgressFill", progressBack, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(1f, 38f), Vector2.zero).gameObject.AddComponent<Image>();
+            progressFill = CreateRect("ProgressFill", progressBack, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(1f, landscapeLayout ? 48f : 42f), Vector2.zero).gameObject.AddComponent<Image>();
             progressFill.sprite = RoyalEventSprites.ProgressFill != null ? RoyalEventSprites.ProgressFill : PremiumUISprites.SecondaryButton;
             progressFill.type = progressFill.sprite != null && progressFill.sprite.border != Vector4.zero ? Image.Type.Sliced : Image.Type.Simple;
             progressFill.color = Color.white;
@@ -182,14 +625,14 @@ namespace SolitaireAssociations
 
             CreateSparkles(panel, landscapeLayout);
 
-            stageRow = CreateRect("StageRow", panel, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0.5f), landscapeLayout ? new Vector2(1160f, 252f) : new Vector2(800f, 224f), new Vector2(0f, landscapeLayout ? 138f : 218f));
+            stageRow = CreateRect("StageRow", panel, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0.5f), landscapeLayout ? new Vector2(1210f, 268f) : new Vector2(840f, 246f), new Vector2(0f, landscapeLayout ? StageRowY : 218f));
 
-            tooltip = CreateRect("RewardTooltip", panel, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), landscapeLayout ? new Vector2(322f, 96f) : new Vector2(340f, 108f), new Vector2(0f, landscapeLayout ? 294f : 348f));
+            tooltip = CreateRect("RewardTooltip", panel, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), landscapeLayout ? new Vector2(292f, 78f) : new Vector2(340f, 108f), new Vector2(0f, landscapeLayout ? TooltipY : 348f));
             Image tooltipImage = tooltip.gameObject.AddComponent<Image>();
             tooltipImage.sprite = RoyalEventSprites.Tooltip != null ? RoyalEventSprites.Tooltip : PremiumUISprites.CreamPanel;
             tooltipImage.type = tooltipImage.sprite != null && tooltipImage.sprite.border != Vector4.zero ? Image.Type.Sliced : Image.Type.Simple;
             tooltipImage.color = Color.white;
-            AddShadow(tooltip.gameObject, new Color(0.1f, 0.04f, 0f, 0.34f), new Vector2(0f, -6f));
+            AddShadow(tooltip.gameObject, new Color(0.1f, 0.04f, 0f, 0f), Vector2.zero);
 
             tooltipTitleText = CreateText(tooltip, "Title", "Награда", 18f, TextDark, TextAlignmentOptions.Center);
             tooltipTitleText.fontStyle = FontStyles.Bold;
@@ -229,8 +672,12 @@ namespace SolitaireAssociations
 
             RefreshProgressMarkers(current, required);
             RebuildStages();
-            ShowTooltipForStage(manager.CurrentStage);
+            if (tooltip != null)
+            {
+                tooltip.gameObject.SetActive(false);
+            }
             UpdateTimerText();
+            DisableExternalGlow(transform);
         }
 
         private void RebuildStages()
@@ -254,8 +701,8 @@ namespace SolitaireAssociations
 
             float rowWidth = Mathf.Max(stageRow.rect.width, stageRow.sizeDelta.x);
             bool wide = rowWidth > 1000f;
-            Vector2 stageSize = wide ? new Vector2(194f, 254f) : new Vector2(148f, 208f);
-            float usableWidth = wide ? Mathf.Min(1010f, rowWidth - 150f) : 660f;
+            Vector2 stageSize = wide ? new Vector2(210f, 260f) : new Vector2(168f, 230f);
+            float usableWidth = wide ? Mathf.Min(1080f, rowWidth - 130f) : 700f;
             float step = count > 1 ? usableWidth / (count - 1) : 0f;
             float startX = -step * (count - 1) * 0.5f;
             for (int index = 0; index < count; index++)
@@ -363,7 +810,28 @@ namespace SolitaireAssociations
 
         private void Close()
         {
+            isShowing = false;
             gameObject.SetActive(false);
+        }
+
+        private void ApplyFontsToAllTexts()
+        {
+            foreach (TMP_Text text in GetComponentsInChildren<TMP_Text>(true))
+            {
+                RuntimeCyrillicFontProvider.Apply(text, text.text);
+            }
+        }
+
+        private void RefreshEditorPreview()
+        {
+            if (Application.isPlaying)
+            {
+                return;
+            }
+
+            SetText(timerText, "1д 16ч");
+            SetText(progressCountText, "0/20");
+            SetText(progressLabelText, "ПОБЕД ПОДРЯД");
         }
 
         private void StartShowAnimation()
@@ -384,7 +852,7 @@ namespace SolitaireAssociations
             for (int index = 0; index < 5; index++)
             {
                 float normalized = index / 4f;
-                RectTransform mark = CreateRect($"Milestone_{index + 1}", parent, new Vector2(normalized, 0.5f), new Vector2(normalized, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(42f, 42f), Vector2.zero);
+                RectTransform mark = CreateRect($"Milestone_{index + 1}", parent, new Vector2(normalized, 0.5f), new Vector2(normalized, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(52f, 52f), Vector2.zero);
                 mark.localRotation = Quaternion.Euler(0f, 0f, 45f);
                 Image image = mark.gameObject.AddComponent<Image>();
                 image.sprite = RoyalEventSprites.ProgressMarker != null ? RoyalEventSprites.ProgressMarker : PremiumUISprites.IconCircle;
@@ -408,6 +876,12 @@ namespace SolitaireAssociations
                     continue;
                 }
 
+                RectTransform markerRect = marker.rectTransform;
+                if (markerRect != null)
+                {
+                    markerRect.sizeDelta = new Vector2(52f, 52f);
+                }
+
                 int threshold = Mathf.RoundToInt(required * (index / 4f));
                 bool active = current >= threshold;
                 marker.color = active
@@ -418,38 +892,35 @@ namespace SolitaireAssociations
 
         private static void CreateRewardStageCard(RectTransform root, ChestChaseRewardTier reward, int stageNumber, bool completed, bool current)
         {
-            bool large = root.sizeDelta.x > 180f;
-            RectTransform glow = CreateRect("Glow", root, Vector2.zero, Vector2.one, new Vector2(0.5f, 0.5f), large ? new Vector2(36f, 36f) : new Vector2(24f, 24f), Vector2.zero);
+            bool large = root.sizeDelta.x >= 170f;
+            RectTransform glow = CreateRect("Glow", root, Vector2.zero, Vector2.one, new Vector2(0.5f, 0.5f), large ? new Vector2(40f, 40f) : new Vector2(30f, 30f), Vector2.zero);
             Image glowImage = glow.gameObject.AddComponent<Image>();
-            glowImage.sprite = RoyalEventSprites.RewardCardActive != null ? RoyalEventSprites.RewardCardActive : RoyalEventSprites.RewardCard;
-            glowImage.color = current ? new Color(1f, 1f, 1f, 0.34f) : new Color(1f, 1f, 1f, 0f);
+            glowImage.sprite = RoyalEventSprites.RewardCard;
+            glowImage.color = new Color(1f, 1f, 1f, 0f);
             glowImage.raycastTarget = false;
-            if (current)
-            {
-                AddPulse(glow.gameObject, 0.028f, 0.22f, 1.05f, stageNumber * 0.4f);
-            }
+            glow.gameObject.SetActive(false);
 
-            RectTransform card = CreateRect("Card", root, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), large ? new Vector2(180f, 236f) : new Vector2(142f, 198f), new Vector2(0f, large ? -4f : -8f));
+            RectTransform card = CreateRect("Card", root, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), large ? new Vector2(194f, 232f) : new Vector2(160f, 220f), new Vector2(0f, large ? -14f : -10f));
             Image cardImage = card.gameObject.AddComponent<Image>();
-            cardImage.sprite = current ? RoyalEventSprites.RewardCardActive : RoyalEventSprites.RewardCard;
+            cardImage.sprite = RoyalEventSprites.RewardCard;
             cardImage.color = current ? Color.white : completed ? new Color(0.9f, 1f, 0.82f, 1f) : new Color(0.74f, 0.82f, 0.7f, 1f);
             cardImage.raycastTarget = false;
 
-            TextMeshProUGUI stageLabel = CreateText(root, "StageLabel", Roman(stageNumber), large ? 30f : 26f, TextGold, TextAlignmentOptions.Center);
+            TextMeshProUGUI stageLabel = CreateText(root, "StageLabel", Roman(stageNumber), large ? 34f : 28f, TextGold, TextAlignmentOptions.Center);
             stageLabel.fontStyle = FontStyles.Bold;
-            SetAnchored(stageLabel.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 0.5f), new Vector2(68f, 42f), new Vector2(0f, large ? -8f : -12f));
+            SetAnchored(stageLabel.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 0.5f), new Vector2(78f, 40f), new Vector2(0f, large ? -2f : -10f));
             AddTextOutline(stageLabel, new Color(0.18f, 0.06f, 0f, 0.65f), new Vector2(1.2f, -1.2f));
 
-            CreateRewardLine(card, "Coins", RoyalEventSprites.CoinIcon, reward != null ? reward.Coins.ToString() : "0", large ? 64f : 46f, large);
+            CreateRewardLine(card, "Coins", RoyalEventSprites.CoinIcon, reward != null ? reward.Coins.ToString() : "0", large ? 64f : 52f, large);
             CreateRewardLine(card, "Hints", PremiumUISprites.HintBulbIcon, reward != null ? reward.Hints.ToString() : "0", large ? 2f : -2f, large);
             if (reward != null && reward.Undos > 0)
             {
-                CreateRewardLine(card, "Undo", PremiumUISprites.UndoIcon, reward.Undos.ToString(), large ? -60f : -50f, large);
+                CreateRewardLine(card, "Undo", PremiumUISprites.UndoIcon, reward.Undos.ToString(), large ? -62f : -54f, large);
             }
 
             if (completed)
             {
-                RectTransform done = CreateRect("CompletedGem", root, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0.5f), large ? new Vector2(54f, 54f) : new Vector2(46f, 46f), new Vector2(0f, large ? 18f : 14f));
+                RectTransform done = CreateRect("CompletedGem", root, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0.5f), large ? new Vector2(32f, 32f) : new Vector2(46f, 46f), new Vector2(0f, large ? 10f : 14f));
                 Image doneImage = done.gameObject.AddComponent<Image>();
                 doneImage.sprite = PremiumUISprites.IconCircle != null ? PremiumUISprites.IconCircle : RoyalEventSprites.CoinIcon;
                 doneImage.color = new Color(0.18f, 1f, 0.28f, 1f);
@@ -459,16 +930,22 @@ namespace SolitaireAssociations
 
         private static void CreateRewardLine(RectTransform parent, string name, Sprite iconSprite, string value, float y, bool large)
         {
-            RectTransform row = CreateRect(name, parent, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), large ? new Vector2(142f, 46f) : new Vector2(112f, 38f), new Vector2(0f, y));
-            RectTransform icon = CreateRect("Icon", row, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f), large ? new Vector2(42f, 42f) : new Vector2(34f, 34f), new Vector2(large ? 26f : 22f, 0f));
+            RectTransform row = CreateRect(name, parent, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), large ? new Vector2(150f, 42f) : new Vector2(124f, 40f), new Vector2(0f, y));
+            RectTransform icon = CreateRect("Icon", row, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), large ? new Vector2(32f, 32f) : new Vector2(34f, 34f), new Vector2(large ? -48f : -36f, 0f));
             Image image = icon.gameObject.AddComponent<Image>();
             image.sprite = iconSprite != null ? iconSprite : PremiumUISprites.IconCircle;
             image.color = Color.white;
+            image.preserveAspect = true;
             image.raycastTarget = false;
 
-            TextMeshProUGUI label = CreateText(row, "Value", value, large ? 36f : 30f, TextCream, TextAlignmentOptions.Left);
+            bool longValue = large && value != null && value.Length >= 4;
+            TextMeshProUGUI label = CreateText(row, "Value", value, longValue ? 25f : large ? 32f : 30f, TextCream, TextAlignmentOptions.Left);
             label.fontStyle = FontStyles.Bold;
-            SetAnchored(label.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 1f), new Vector2(0f, 0.5f), new Vector2(large ? -58f : -48f, 0f), new Vector2(large ? 68f : 58f, 0f));
+            label.fontSizeMax = longValue ? 25f : large ? 32f : label.fontSizeMax;
+            label.fontSizeMin = large ? 18f : label.fontSizeMin;
+            label.enableAutoSizing = true;
+            label.overflowMode = TextOverflowModes.Ellipsis;
+            SetAnchored(label.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 1f), new Vector2(0f, 0.5f), new Vector2(large ? 94f : 84f, 0f), new Vector2(large ? -22f : -12f, 0f));
             AddTextOutline(label, new Color(0f, 0.02f, 0f, 0.6f), new Vector2(1f, -1f));
         }
 
@@ -508,6 +985,67 @@ namespace SolitaireAssociations
             return button;
         }
 
+        private static RectTransform EnsureHeroImage(RectTransform parent, string name, Sprite sprite, Color color, Vector2 position, Vector2 size, Image.Type imageType)
+        {
+            RectTransform rect = parent.Find(name) as RectTransform;
+            if (rect == null)
+            {
+                rect = CreateRect(name, parent, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), size, position);
+            }
+            else
+            {
+                SetAnchored(rect, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), size, position);
+            }
+
+            Image image = rect.GetComponent<Image>();
+            if (image == null)
+            {
+                image = rect.gameObject.AddComponent<Image>();
+            }
+
+            image.sprite = sprite != null ? sprite : PremiumUISprites.EmeraldPanel;
+            image.type = image.sprite != null && image.sprite.border != Vector4.zero ? imageType : Image.Type.Simple;
+            image.color = color;
+            image.raycastTarget = false;
+            return rect;
+        }
+
+        private static void StyleSharedButton(RectTransform rect, string label, Vector2 size, Vector2 position, bool rightTop)
+        {
+            if (rect == null)
+            {
+                return;
+            }
+
+            rect.anchorMin = rightTop ? Vector2.one : new Vector2(0f, 1f);
+            rect.anchorMax = rect.anchorMin;
+            rect.pivot = new Vector2(0.5f, 0.5f);
+            rect.sizeDelta = size;
+            rect.anchoredPosition = position;
+            Image image = rect.GetComponent<Image>();
+            if (image != null)
+            {
+                image.sprite = PremiumUISprites.CleanIconCircle != null ? PremiumUISprites.CleanIconCircle : PremiumUISprites.IconCircle;
+                image.type = Image.Type.Sliced;
+                image.color = new Color(1f, 1f, 1f, 0.94f);
+            }
+
+            Shadow shadow = rect.GetComponent<Shadow>();
+            if (shadow != null)
+            {
+                shadow.effectColor = new Color(0f, 0.02f, 0f, 0f);
+                shadow.effectDistance = Vector2.zero;
+            }
+
+            TMP_Text text = rect.Find("Label")?.GetComponent<TMP_Text>();
+            if (text != null)
+            {
+                SetText(text, label);
+                text.fontSizeMax = size.y * 0.46f;
+                text.color = new Color(1f, 0.82f, 0.24f, 1f);
+            }
+        }
+
         private static Button CreateImageButton(Transform parent, string name, string label, Sprite sprite, Color color, Color textColor, float fontSize)
         {
             RectTransform root = CreateRect(name, parent, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(220f, 72f), Vector2.zero);
@@ -518,7 +1056,7 @@ namespace SolitaireAssociations
             Button button = root.gameObject.AddComponent<Button>();
             button.transition = Selectable.Transition.None;
             button.targetGraphic = image;
-            AddShadow(root.gameObject, new Color(0f, 0.02f, 0f, 0.34f), new Vector2(0f, -6f));
+            AddShadow(root.gameObject, new Color(0f, 0.02f, 0f, 0f), Vector2.zero);
 
             TextMeshProUGUI text = CreateText(root, "Label", label, fontSize, textColor, TextAlignmentOptions.Center);
             text.fontStyle = FontStyles.Bold;
@@ -555,14 +1093,51 @@ namespace SolitaireAssociations
             bool landscape = screenWidth >= screenHeight;
             if (landscape)
             {
-                return new Vector2(
-                    Mathf.Clamp(screenWidth * 0.78f, 1220f, 1520f),
-                    Mathf.Clamp(screenHeight * 0.78f, 820f, 940f));
+                return PanelLandscapeSize;
             }
 
             return new Vector2(
                 Mathf.Clamp(screenWidth * 0.9f, 860f, 980f),
                 Mathf.Clamp(screenHeight * 0.74f, 1120f, 1260f));
+        }
+
+        private static Sprite GetHeaderLogoSprite()
+        {
+            Sprite sprite = RoyalEventSprites.EventLogo;
+#if UNITY_EDITOR
+            sprite = sprite != null ? sprite : UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Resources/UI/RoyalEvent/royal_event_logo.png");
+#endif
+            return sprite != null ? sprite : RoyalEventSprites.ProgressMarker;
+        }
+
+        private static void DisableDuplicateCrowns(Transform root)
+        {
+            if (root == null)
+            {
+                return;
+            }
+
+            foreach (Transform child in root.GetComponentsInChildren<Transform>(true))
+            {
+                if (child.name == "HeaderLogo" || child.IsChildOf(root.Find("Panel/HeaderLogo")))
+                {
+                    continue;
+                }
+
+                string name = child.name.ToLowerInvariant();
+                if (name.Contains("crown"))
+                {
+                    foreach (Image image in child.GetComponentsInChildren<Image>(true))
+                    {
+                        Color color = image.color;
+                        color.a = 0f;
+                        image.color = color;
+                        image.raycastTarget = false;
+                    }
+
+                    child.gameObject.SetActive(false);
+                }
+            }
         }
 
         private static void CreateSparkles(RectTransform parent, bool landscapeLayout)
@@ -591,9 +1166,9 @@ namespace SolitaireAssociations
                 RectTransform sparkle = CreateRect($"Sparkle_{index + 1}", parent, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.one * (index % 2 == 0 ? 24f : 16f), positions[index]);
                 Image image = sparkle.gameObject.AddComponent<Image>();
                 image.sprite = RoyalEventSprites.ProgressMarker != null ? RoyalEventSprites.ProgressMarker : RoyalEventSprites.CoinIcon;
-                image.color = new Color(1f, 0.9f, 0.28f, index % 2 == 0 ? 0.28f : 0.2f);
+                image.color = new Color(1f, 0.9f, 0.28f, 0f);
                 image.raycastTarget = false;
-                AddPulse(sparkle.gameObject, 0.12f, 0.25f, 0.75f + (index * 0.11f), index * 0.9f);
+                sparkle.gameObject.SetActive(false);
             }
         }
 
@@ -635,6 +1210,11 @@ namespace SolitaireAssociations
 
         private static void SetAnchored(RectTransform rect, Vector2 anchorMin, Vector2 anchorMax, Vector2 pivot, Vector2 size, Vector2 position)
         {
+            if (rect == null)
+            {
+                return;
+            }
+
             rect.anchorMin = anchorMin;
             rect.anchorMax = anchorMax;
             rect.pivot = pivot;
@@ -668,17 +1248,75 @@ namespace SolitaireAssociations
                 shadow = target.AddComponent<Shadow>();
             }
 
-            shadow.effectColor = color;
-            shadow.effectDistance = distance;
+            shadow.effectColor = new Color(color.r, color.g, color.b, 0f);
+            shadow.effectDistance = Vector2.zero;
             shadow.useGraphicAlpha = true;
         }
 
         private static void AddTextShadow(GameObject target, Color color, Vector2 distance)
         {
             Shadow shadow = target.AddComponent<Shadow>();
-            shadow.effectColor = color;
-            shadow.effectDistance = distance;
+            shadow.effectColor = new Color(color.r, color.g, color.b, 0f);
+            shadow.effectDistance = Vector2.zero;
             shadow.useGraphicAlpha = true;
+        }
+
+        private static void DisableExternalGlow(Transform root)
+        {
+            if (root == null)
+            {
+                return;
+            }
+
+            foreach (Shadow shadow in root.GetComponentsInChildren<Shadow>(true))
+            {
+                if (shadow is Outline)
+                {
+                    continue;
+                }
+
+                shadow.effectColor = new Color(shadow.effectColor.r, shadow.effectColor.g, shadow.effectColor.b, 0f);
+                shadow.effectDistance = Vector2.zero;
+            }
+
+            foreach (Outline outline in root.GetComponentsInChildren<Outline>(true))
+            {
+                if (outline.GetComponent<TMP_Text>() != null)
+                {
+                    continue;
+                }
+
+                outline.effectColor = new Color(outline.effectColor.r, outline.effectColor.g, outline.effectColor.b, 0f);
+                outline.effectDistance = Vector2.zero;
+            }
+
+            foreach (Image image in root.GetComponentsInChildren<Image>(true))
+            {
+                if (!IsExternalGlowName(image.gameObject.name))
+                {
+                    continue;
+                }
+
+                Color color = image.color;
+                color.a = 0f;
+                image.color = color;
+                image.gameObject.SetActive(false);
+            }
+        }
+
+        private static bool IsExternalGlowName(string objectName)
+        {
+            string name = objectName.ToLowerInvariant();
+            return name.Contains("glow")
+                || name.Contains("halo")
+                || name.Contains("flash")
+                || name.Contains("shine")
+                || name.Contains("sparkle")
+                || name.Contains("aura")
+                || name.Contains("bloom")
+                || name.Contains("outer")
+                || name.Contains("highlight")
+                || name.Contains("backlight");
         }
 
         private static void AddTextOutline(TMP_Text text, Color color, Vector2 distance)

@@ -9,10 +9,10 @@ namespace SolitaireAssociations
     public sealed class DrawSlot : MonoBehaviour, ICardContainer, IPointerClickHandler
     {
         private const int MaxVisibleRevealedCards = 3;
-        private const float RevealedCardsBaseOffsetXFactor = -1.42f;
+        private const float RevealedCardsBaseOffsetXFactor = -1.30f;
         private const float RevealedCardsBaseOffsetY = -8f;
         private const float RevealedCardsStepX = 12f;
-        private const float RevealedCardsStepY = -42f;
+        private const float RevealedCardsStepY = -50f;
 
         [SerializeField] private Image backgroundImage;
         [SerializeField] private LayoutElement layoutElement;

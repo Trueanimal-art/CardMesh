@@ -24,6 +24,15 @@ namespace SolitaireAssociations
         public int CurrentCycleIndex => ResolveCycleIndex(CurrentLevelNumber);
         public int CurrentTargetColumns => GetColumnsForLevel(CurrentLevelNumber);
         public int CurrentLayoutVariantIndex => Mathf.Max(0, CurrentLevelNumber - 1);
+        public string CurrentLayoutId
+        {
+            get
+            {
+                return TryGetCurrentManifestEntry(out LevelManifestEntry entry)
+                    ? entry.layoutId
+                    : string.Empty;
+            }
+        }
 
         private void Awake()
         {
@@ -99,6 +108,11 @@ namespace SolitaireAssociations
             return EnsureLevelSeed(Mathf.Max(1, levelNumber));
         }
 
+        public bool TryGetCurrentManifestEntry(out LevelManifestEntry entry)
+        {
+            return LevelManifestDatabase.TryGetLevel(CurrentLevelNumber, out entry);
+        }
+
         public bool HasSeed(int levelNumber)
         {
             return saveProgress && PlayerPrefs.HasKey(GetSeedKey(Mathf.Max(1, levelNumber)));
@@ -106,6 +120,11 @@ namespace SolitaireAssociations
 
         private int GetColumnsForLevel(int levelNumber)
         {
+            if (LevelManifestDatabase.TryGetLevel(levelNumber, out LevelManifestEntry entry) && entry.columns > 0)
+            {
+                return Mathf.Clamp(entry.columns, 3, 5);
+            }
+
             if (layoutCycle == null || layoutCycle.Length == 0)
             {
                 return 3;
@@ -163,6 +182,10 @@ namespace SolitaireAssociations
         private int EnsureLevelSeed(int levelNumber)
         {
             int safeLevel = Mathf.Max(1, levelNumber);
+            if (LevelManifestDatabase.TryGetLevel(safeLevel, out LevelManifestEntry entry) && entry.seed > 0)
+            {
+                return entry.seed;
+            }
 
             if (!saveProgress)
             {

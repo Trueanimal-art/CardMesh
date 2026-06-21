@@ -1,0 +1,2811 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-06-21T07:22:07Z",
+  "relations": [
+    {
+      "imageCardId": "business_product",
+      "textCardId": "business_product",
+      "relationType": "exact",
+      "allowedFromLevel": 801,
+      "difficulty": "hard"
+    },
+    {
+      "imageCardId": "business_client",
+      "textCardId": "business_client",
+      "relationType": "exact",
+      "allowedFromLevel": 801,
+      "difficulty": "hard"
+    },
+    {
+      "imageCardId": "business_brand",
+      "textCardId": "business_brand",
+      "relationType": "exact",
+      "allowedFromLevel": 801,
+      "difficulty": "hard"
+    },
+    {
+      "imageCardId": "business_sale",
+      "textCardId": "business_sale",
+      "relationType": "exact",
+      "allowedFromLevel": 801,
+      "difficulty": "hard"
+    },
+    {
+      "imageCardId": "business_team",
+      "textCardId": "business_team",
+      "relationType": "exact",
+      "allowedFromLevel": 801,
+      "difficulty": "hard"
+    },
+    {
+      "imageCardId": "business_office",
+      "textCardId": "business_office",
+      "relationType": "exact",
+      "allowedFromLevel": 801,
+      "difficulty": "hard"
+    },
+    {
+      "imageCardId": "business_contract",
+      "textCardId": "business_contract",
+      "relationType": "exact",
+      "allowedFromLevel": 801,
+      "difficulty": "hard"
+    },
+    {
+      "imageCardId": "business_market",
+      "textCardId": "business_market",
+      "relationType": "exact",
+      "allowedFromLevel": 801,
+      "difficulty": "hard"
+    },
+    {
+      "imageCardId": "cup_cup",
+      "textCardId": "cup_cup",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "cup_mug",
+      "textCardId": "cup_mug",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "cup_coffee",
+      "textCardId": "cup_coffee",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "cup_drink",
+      "textCardId": "cup_drink",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "cup_tea",
+      "textCardId": "cup_tea",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "cup_handle",
+      "textCardId": "cup_handle",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "cup_saucer",
+      "textCardId": "cup_saucer",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "cup_thermos",
+      "textCardId": "cup_thermos",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "food_food",
+      "textCardId": "food_food",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "food_plate",
+      "textCardId": "food_plate",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "food_lunch",
+      "textCardId": "food_lunch",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "food_canteen",
+      "textCardId": "food_canteen",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "food_soup",
+      "textCardId": "food_soup",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "food_bread",
+      "textCardId": "food_bread",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "food_fruit",
+      "textCardId": "food_fruit",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "food_salad",
+      "textCardId": "food_salad",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "time_time",
+      "textCardId": "time_time",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "time_clock",
+      "textCardId": "time_clock",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "time_alarm",
+      "textCardId": "time_alarm",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "time_minutes",
+      "textCardId": "time_minutes",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "time_day",
+      "textCardId": "time_day",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "time_night",
+      "textCardId": "time_night",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "time_week",
+      "textCardId": "time_week",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "time_hour",
+      "textCardId": "time_hour",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "travel_ticket",
+      "textCardId": "travel_ticket",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "travel_hotel",
+      "textCardId": "travel_hotel",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "travel_route",
+      "textCardId": "travel_route",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "travel_suitcase",
+      "textCardId": "travel_suitcase",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "travel_train",
+      "textCardId": "travel_train",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "travel_plane",
+      "textCardId": "travel_plane",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "travel_map",
+      "textCardId": "travel_map",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "travel_passport",
+      "textCardId": "travel_passport",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "music_song",
+      "textCardId": "music_song",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "music_rhythm",
+      "textCardId": "music_rhythm",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "music_melody",
+      "textCardId": "music_melody",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "music_guitar",
+      "textCardId": "music_guitar",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "music_piano",
+      "textCardId": "music_piano",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "music_note",
+      "textCardId": "music_note",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "music_concert",
+      "textCardId": "music_concert",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "music_band",
+      "textCardId": "music_band",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "sport_ball",
+      "textCardId": "sport_ball",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "sport_coach",
+      "textCardId": "sport_coach",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "sport_team",
+      "textCardId": "sport_team",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "sport_match",
+      "textCardId": "sport_match",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "sport_field",
+      "textCardId": "sport_field",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "sport_medal",
+      "textCardId": "sport_medal",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "sport_race",
+      "textCardId": "sport_race",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "sport_player",
+      "textCardId": "sport_player",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "nature_tree",
+      "textCardId": "nature_tree",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "nature_river",
+      "textCardId": "nature_river",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "nature_mountain",
+      "textCardId": "nature_mountain",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "nature_stone",
+      "textCardId": "nature_stone",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "nature_leaf",
+      "textCardId": "nature_leaf",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "nature_cloud",
+      "textCardId": "nature_cloud",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "nature_meadow",
+      "textCardId": "nature_meadow",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "nature_sky",
+      "textCardId": "nature_sky",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "weather_sun",
+      "textCardId": "weather_sun",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "weather_rain",
+      "textCardId": "weather_rain",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "weather_snow",
+      "textCardId": "weather_snow",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "weather_wind",
+      "textCardId": "weather_wind",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "weather_storm",
+      "textCardId": "weather_storm",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "weather_fog",
+      "textCardId": "weather_fog",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "weather_frost",
+      "textCardId": "weather_frost",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "weather_heat",
+      "textCardId": "weather_heat",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "city_street",
+      "textCardId": "city_street",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "city_park",
+      "textCardId": "city_park",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "city_bridge",
+      "textCardId": "city_bridge",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "city_square",
+      "textCardId": "city_square",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "city_subway",
+      "textCardId": "city_subway",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "city_cafe",
+      "textCardId": "city_cafe",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "city_tower",
+      "textCardId": "city_tower",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "city_traffic",
+      "textCardId": "city_traffic",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "home_sofa",
+      "textCardId": "home_sofa",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "home_lamp",
+      "textCardId": "home_lamp",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "home_window",
+      "textCardId": "home_window",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "home_door",
+      "textCardId": "home_door",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "home_carpet",
+      "textCardId": "home_carpet",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "home_shelf",
+      "textCardId": "home_shelf",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "home_pillow",
+      "textCardId": "home_pillow",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "home_key",
+      "textCardId": "home_key",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "kitchen_stove",
+      "textCardId": "kitchen_stove",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "kitchen_spoon",
+      "textCardId": "kitchen_spoon",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "kitchen_fork",
+      "textCardId": "kitchen_fork",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "kitchen_knife",
+      "textCardId": "kitchen_knife",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "kitchen_pan",
+      "textCardId": "kitchen_pan",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "kitchen_kettle",
+      "textCardId": "kitchen_kettle",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "kitchen_fridge",
+      "textCardId": "kitchen_fridge",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "kitchen_oven",
+      "textCardId": "kitchen_oven",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "school_class",
+      "textCardId": "school_class",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "school_teacher",
+      "textCardId": "school_teacher",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "school_desk",
+      "textCardId": "school_desk",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "school_board",
+      "textCardId": "school_board",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "school_lesson",
+      "textCardId": "school_lesson",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "school_bell",
+      "textCardId": "school_bell",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "school_notebook",
+      "textCardId": "school_notebook",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "school_marker",
+      "textCardId": "school_marker",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "books_novel",
+      "textCardId": "books_novel",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "books_page",
+      "textCardId": "books_page",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "books_cover",
+      "textCardId": "books_cover",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "books_reader",
+      "textCardId": "books_reader",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "books_shelf",
+      "textCardId": "books_shelf",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "books_author",
+      "textCardId": "books_author",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "books_chapter",
+      "textCardId": "books_chapter",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "books_bookmark",
+      "textCardId": "books_bookmark",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "art_paint",
+      "textCardId": "art_paint",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "art_brush",
+      "textCardId": "art_brush",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "art_canvas",
+      "textCardId": "art_canvas",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "art_frame",
+      "textCardId": "art_frame",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "art_sketch",
+      "textCardId": "art_sketch",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "art_gallery",
+      "textCardId": "art_gallery",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "art_statue",
+      "textCardId": "art_statue",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "art_color",
+      "textCardId": "art_color",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "cinema_film",
+      "textCardId": "cinema_film",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "cinema_actor",
+      "textCardId": "cinema_actor",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "cinema_scene",
+      "textCardId": "cinema_scene",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "cinema_screen",
+      "textCardId": "cinema_screen",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "cinema_ticket",
+      "textCardId": "cinema_ticket",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "cinema_popcorn",
+      "textCardId": "cinema_popcorn",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "cinema_trailer",
+      "textCardId": "cinema_trailer",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "cinema_camera",
+      "textCardId": "cinema_camera",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "family_mother",
+      "textCardId": "family_mother",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "family_father",
+      "textCardId": "family_father",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "family_child",
+      "textCardId": "family_child",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "family_sister",
+      "textCardId": "family_sister",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "family_brother",
+      "textCardId": "family_brother",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "family_dinner",
+      "textCardId": "family_dinner",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "family_home",
+      "textCardId": "family_home",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "family_album",
+      "textCardId": "family_album",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "pets_dog",
+      "textCardId": "pets_dog",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "pets_cat",
+      "textCardId": "pets_cat",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "pets_bowl",
+      "textCardId": "pets_bowl",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "pets_leash",
+      "textCardId": "pets_leash",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "pets_toy",
+      "textCardId": "pets_toy",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "pets_tail",
+      "textCardId": "pets_tail",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "pets_paw",
+      "textCardId": "pets_paw",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "pets_vet",
+      "textCardId": "pets_vet",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "garden_bench",
+      "textCardId": "garden_bench",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "garden_shovel",
+      "textCardId": "garden_shovel",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "garden_seed",
+      "textCardId": "garden_seed",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "garden_soil",
+      "textCardId": "garden_soil",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "garden_bush",
+      "textCardId": "garden_bush",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "garden_hose",
+      "textCardId": "garden_hose",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "garden_apple",
+      "textCardId": "garden_apple",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "garden_path",
+      "textCardId": "garden_path",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "transport_bus",
+      "textCardId": "transport_bus",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "transport_taxi",
+      "textCardId": "transport_taxi",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "transport_wheel",
+      "textCardId": "transport_wheel",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "transport_driver",
+      "textCardId": "transport_driver",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "transport_route",
+      "textCardId": "transport_route",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "transport_station",
+      "textCardId": "transport_station",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "transport_road",
+      "textCardId": "transport_road",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "transport_stop",
+      "textCardId": "transport_stop",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "sea_wave",
+      "textCardId": "sea_wave",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "sea_shell",
+      "textCardId": "sea_shell",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "sea_beach",
+      "textCardId": "sea_beach",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "sea_boat",
+      "textCardId": "sea_boat",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "sea_sail",
+      "textCardId": "sea_sail",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "sea_island",
+      "textCardId": "sea_island",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "sea_fish",
+      "textCardId": "sea_fish",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "sea_lighthouse",
+      "textCardId": "sea_lighthouse",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "space_star",
+      "textCardId": "space_star",
+      "relationType": "exact",
+      "allowedFromLevel": 501,
+      "difficulty": "medium_hard"
+    },
+    {
+      "imageCardId": "space_planet",
+      "textCardId": "space_planet",
+      "relationType": "exact",
+      "allowedFromLevel": 501,
+      "difficulty": "medium_hard"
+    },
+    {
+      "imageCardId": "space_rocket",
+      "textCardId": "space_rocket",
+      "relationType": "exact",
+      "allowedFromLevel": 501,
+      "difficulty": "medium_hard"
+    },
+    {
+      "imageCardId": "space_moon",
+      "textCardId": "space_moon",
+      "relationType": "exact",
+      "allowedFromLevel": 501,
+      "difficulty": "medium_hard"
+    },
+    {
+      "imageCardId": "space_orbit",
+      "textCardId": "space_orbit",
+      "relationType": "exact",
+      "allowedFromLevel": 501,
+      "difficulty": "medium_hard"
+    },
+    {
+      "imageCardId": "space_comet",
+      "textCardId": "space_comet",
+      "relationType": "exact",
+      "allowedFromLevel": 501,
+      "difficulty": "medium_hard"
+    },
+    {
+      "imageCardId": "space_astronaut",
+      "textCardId": "space_astronaut",
+      "relationType": "exact",
+      "allowedFromLevel": 501,
+      "difficulty": "medium_hard"
+    },
+    {
+      "imageCardId": "space_galaxy",
+      "textCardId": "space_galaxy",
+      "relationType": "exact",
+      "allowedFromLevel": 501,
+      "difficulty": "medium_hard"
+    },
+    {
+      "imageCardId": "colors_red",
+      "textCardId": "colors_red",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "colors_blue",
+      "textCardId": "colors_blue",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "colors_green",
+      "textCardId": "colors_green",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "colors_yellow",
+      "textCardId": "colors_yellow",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "colors_white",
+      "textCardId": "colors_white",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "colors_black",
+      "textCardId": "colors_black",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "colors_orange",
+      "textCardId": "colors_orange",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "colors_pink",
+      "textCardId": "colors_pink",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "shapes_circle",
+      "textCardId": "shapes_circle",
+      "relationType": "exact",
+      "allowedFromLevel": 501,
+      "difficulty": "medium_hard"
+    },
+    {
+      "imageCardId": "shapes_square",
+      "textCardId": "shapes_square",
+      "relationType": "exact",
+      "allowedFromLevel": 501,
+      "difficulty": "medium_hard"
+    },
+    {
+      "imageCardId": "shapes_triangle",
+      "textCardId": "shapes_triangle",
+      "relationType": "exact",
+      "allowedFromLevel": 501,
+      "difficulty": "medium_hard"
+    },
+    {
+      "imageCardId": "shapes_line",
+      "textCardId": "shapes_line",
+      "relationType": "exact",
+      "allowedFromLevel": 501,
+      "difficulty": "medium_hard"
+    },
+    {
+      "imageCardId": "shapes_oval",
+      "textCardId": "shapes_oval",
+      "relationType": "exact",
+      "allowedFromLevel": 501,
+      "difficulty": "medium_hard"
+    },
+    {
+      "imageCardId": "shapes_cube",
+      "textCardId": "shapes_cube",
+      "relationType": "exact",
+      "allowedFromLevel": 501,
+      "difficulty": "medium_hard"
+    },
+    {
+      "imageCardId": "shapes_star",
+      "textCardId": "shapes_star",
+      "relationType": "exact",
+      "allowedFromLevel": 501,
+      "difficulty": "medium_hard"
+    },
+    {
+      "imageCardId": "shapes_ring",
+      "textCardId": "shapes_ring",
+      "relationType": "exact",
+      "allowedFromLevel": 501,
+      "difficulty": "medium_hard"
+    },
+    {
+      "imageCardId": "clothes_shirt",
+      "textCardId": "clothes_shirt",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "clothes_coat",
+      "textCardId": "clothes_coat",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "clothes_hat",
+      "textCardId": "clothes_hat",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "clothes_scarf",
+      "textCardId": "clothes_scarf",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "clothes_dress",
+      "textCardId": "clothes_dress",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "clothes_jeans",
+      "textCardId": "clothes_jeans",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "clothes_glove",
+      "textCardId": "clothes_glove",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "clothes_belt",
+      "textCardId": "clothes_belt",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "shoes_boot",
+      "textCardId": "shoes_boot",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "shoes_sneaker",
+      "textCardId": "shoes_sneaker",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "shoes_sandal",
+      "textCardId": "shoes_sandal",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "shoes_lace",
+      "textCardId": "shoes_lace",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "shoes_heel",
+      "textCardId": "shoes_heel",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "shoes_sole",
+      "textCardId": "shoes_sole",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "shoes_pair",
+      "textCardId": "shoes_pair",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "shoes_size",
+      "textCardId": "shoes_size",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "health_doctor",
+      "textCardId": "health_doctor",
+      "relationType": "exact",
+      "allowedFromLevel": 801,
+      "difficulty": "hard"
+    },
+    {
+      "imageCardId": "health_clinic",
+      "textCardId": "health_clinic",
+      "relationType": "exact",
+      "allowedFromLevel": 801,
+      "difficulty": "hard"
+    },
+    {
+      "imageCardId": "health_pill",
+      "textCardId": "health_pill",
+      "relationType": "exact",
+      "allowedFromLevel": 801,
+      "difficulty": "hard"
+    },
+    {
+      "imageCardId": "health_rest",
+      "textCardId": "health_rest",
+      "relationType": "exact",
+      "allowedFromLevel": 801,
+      "difficulty": "hard"
+    },
+    {
+      "imageCardId": "health_water",
+      "textCardId": "health_water",
+      "relationType": "exact",
+      "allowedFromLevel": 801,
+      "difficulty": "hard"
+    },
+    {
+      "imageCardId": "health_sleep",
+      "textCardId": "health_sleep",
+      "relationType": "exact",
+      "allowedFromLevel": 801,
+      "difficulty": "hard"
+    },
+    {
+      "imageCardId": "health_pulse",
+      "textCardId": "health_pulse",
+      "relationType": "exact",
+      "allowedFromLevel": 801,
+      "difficulty": "hard"
+    },
+    {
+      "imageCardId": "health_care",
+      "textCardId": "health_care",
+      "relationType": "exact",
+      "allowedFromLevel": 801,
+      "difficulty": "hard"
+    },
+    {
+      "imageCardId": "body_hand",
+      "textCardId": "body_hand",
+      "relationType": "exact",
+      "allowedFromLevel": 801,
+      "difficulty": "hard"
+    },
+    {
+      "imageCardId": "body_foot",
+      "textCardId": "body_foot",
+      "relationType": "exact",
+      "allowedFromLevel": 801,
+      "difficulty": "hard"
+    },
+    {
+      "imageCardId": "body_eye",
+      "textCardId": "body_eye",
+      "relationType": "exact",
+      "allowedFromLevel": 801,
+      "difficulty": "hard"
+    },
+    {
+      "imageCardId": "body_ear",
+      "textCardId": "body_ear",
+      "relationType": "exact",
+      "allowedFromLevel": 801,
+      "difficulty": "hard"
+    },
+    {
+      "imageCardId": "body_heart",
+      "textCardId": "body_heart",
+      "relationType": "exact",
+      "allowedFromLevel": 801,
+      "difficulty": "hard"
+    },
+    {
+      "imageCardId": "body_back",
+      "textCardId": "body_back",
+      "relationType": "exact",
+      "allowedFromLevel": 801,
+      "difficulty": "hard"
+    },
+    {
+      "imageCardId": "body_finger",
+      "textCardId": "body_finger",
+      "relationType": "exact",
+      "allowedFromLevel": 801,
+      "difficulty": "hard"
+    },
+    {
+      "imageCardId": "body_smile",
+      "textCardId": "body_smile",
+      "relationType": "exact",
+      "allowedFromLevel": 801,
+      "difficulty": "hard"
+    },
+    {
+      "imageCardId": "work_task",
+      "textCardId": "work_task",
+      "relationType": "exact",
+      "allowedFromLevel": 801,
+      "difficulty": "hard"
+    },
+    {
+      "imageCardId": "work_salary",
+      "textCardId": "work_salary",
+      "relationType": "exact",
+      "allowedFromLevel": 801,
+      "difficulty": "hard"
+    },
+    {
+      "imageCardId": "work_shift",
+      "textCardId": "work_shift",
+      "relationType": "exact",
+      "allowedFromLevel": 801,
+      "difficulty": "hard"
+    },
+    {
+      "imageCardId": "work_manager",
+      "textCardId": "work_manager",
+      "relationType": "exact",
+      "allowedFromLevel": 801,
+      "difficulty": "hard"
+    },
+    {
+      "imageCardId": "work_report",
+      "textCardId": "work_report",
+      "relationType": "exact",
+      "allowedFromLevel": 801,
+      "difficulty": "hard"
+    },
+    {
+      "imageCardId": "work_call",
+      "textCardId": "work_call",
+      "relationType": "exact",
+      "allowedFromLevel": 801,
+      "difficulty": "hard"
+    },
+    {
+      "imageCardId": "work_desk",
+      "textCardId": "work_desk",
+      "relationType": "exact",
+      "allowedFromLevel": 801,
+      "difficulty": "hard"
+    },
+    {
+      "imageCardId": "work_break",
+      "textCardId": "work_break",
+      "relationType": "exact",
+      "allowedFromLevel": 801,
+      "difficulty": "hard"
+    },
+    {
+      "imageCardId": "office_chair",
+      "textCardId": "office_chair",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "office_printer",
+      "textCardId": "office_printer",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "office_paper",
+      "textCardId": "office_paper",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "office_folder",
+      "textCardId": "office_folder",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "office_pen",
+      "textCardId": "office_pen",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "office_coffee",
+      "textCardId": "office_coffee",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "office_badge",
+      "textCardId": "office_badge",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "office_screen",
+      "textCardId": "office_screen",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "technology_robot",
+      "textCardId": "technology_robot",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "technology_sensor",
+      "textCardId": "technology_sensor",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "technology_chip",
+      "textCardId": "technology_chip",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "technology_code",
+      "textCardId": "technology_code",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "technology_drone",
+      "textCardId": "technology_drone",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "technology_laser",
+      "textCardId": "technology_laser",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "technology_server",
+      "textCardId": "technology_server",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "technology_battery",
+      "textCardId": "technology_battery",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "internet_site",
+      "textCardId": "internet_site",
+      "relationType": "exact",
+      "allowedFromLevel": 801,
+      "difficulty": "hard"
+    },
+    {
+      "imageCardId": "internet_link",
+      "textCardId": "internet_link",
+      "relationType": "exact",
+      "allowedFromLevel": 801,
+      "difficulty": "hard"
+    },
+    {
+      "imageCardId": "internet_search",
+      "textCardId": "internet_search",
+      "relationType": "exact",
+      "allowedFromLevel": 801,
+      "difficulty": "hard"
+    },
+    {
+      "imageCardId": "internet_mail",
+      "textCardId": "internet_mail",
+      "relationType": "exact",
+      "allowedFromLevel": 801,
+      "difficulty": "hard"
+    },
+    {
+      "imageCardId": "internet_video",
+      "textCardId": "internet_video",
+      "relationType": "exact",
+      "allowedFromLevel": 801,
+      "difficulty": "hard"
+    },
+    {
+      "imageCardId": "internet_blog",
+      "textCardId": "internet_blog",
+      "relationType": "exact",
+      "allowedFromLevel": 801,
+      "difficulty": "hard"
+    },
+    {
+      "imageCardId": "internet_cloud",
+      "textCardId": "internet_cloud",
+      "relationType": "exact",
+      "allowedFromLevel": 801,
+      "difficulty": "hard"
+    },
+    {
+      "imageCardId": "internet_chat",
+      "textCardId": "internet_chat",
+      "relationType": "exact",
+      "allowedFromLevel": 801,
+      "difficulty": "hard"
+    },
+    {
+      "imageCardId": "phone_call",
+      "textCardId": "phone_call",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "phone_screen",
+      "textCardId": "phone_screen",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "phone_case",
+      "textCardId": "phone_case",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "phone_app",
+      "textCardId": "phone_app",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "phone_charge",
+      "textCardId": "phone_charge",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "phone_contact",
+      "textCardId": "phone_contact",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "phone_message",
+      "textCardId": "phone_message",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "phone_camera",
+      "textCardId": "phone_camera",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "photo_lens",
+      "textCardId": "photo_lens",
+      "relationType": "exact",
+      "allowedFromLevel": 801,
+      "difficulty": "hard"
+    },
+    {
+      "imageCardId": "photo_flash",
+      "textCardId": "photo_flash",
+      "relationType": "exact",
+      "allowedFromLevel": 801,
+      "difficulty": "hard"
+    },
+    {
+      "imageCardId": "photo_album",
+      "textCardId": "photo_album",
+      "relationType": "exact",
+      "allowedFromLevel": 801,
+      "difficulty": "hard"
+    },
+    {
+      "imageCardId": "photo_portrait",
+      "textCardId": "photo_portrait",
+      "relationType": "exact",
+      "allowedFromLevel": 801,
+      "difficulty": "hard"
+    },
+    {
+      "imageCardId": "photo_frame",
+      "textCardId": "photo_frame",
+      "relationType": "exact",
+      "allowedFromLevel": 801,
+      "difficulty": "hard"
+    },
+    {
+      "imageCardId": "photo_shot",
+      "textCardId": "photo_shot",
+      "relationType": "exact",
+      "allowedFromLevel": 801,
+      "difficulty": "hard"
+    },
+    {
+      "imageCardId": "photo_focus",
+      "textCardId": "photo_focus",
+      "relationType": "exact",
+      "allowedFromLevel": 801,
+      "difficulty": "hard"
+    },
+    {
+      "imageCardId": "photo_studio",
+      "textCardId": "photo_studio",
+      "relationType": "exact",
+      "allowedFromLevel": 801,
+      "difficulty": "hard"
+    },
+    {
+      "imageCardId": "holidays_cake",
+      "textCardId": "holidays_cake",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "holidays_gift",
+      "textCardId": "holidays_gift",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "holidays_candle",
+      "textCardId": "holidays_candle",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "holidays_guest",
+      "textCardId": "holidays_guest",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "holidays_music",
+      "textCardId": "holidays_music",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "holidays_table",
+      "textCardId": "holidays_table",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "holidays_card",
+      "textCardId": "holidays_card",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "holidays_balloon",
+      "textCardId": "holidays_balloon",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "winter_snow",
+      "textCardId": "winter_snow",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "winter_ski",
+      "textCardId": "winter_ski",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "winter_scarf",
+      "textCardId": "winter_scarf",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "winter_ice",
+      "textCardId": "winter_ice",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "winter_mitten",
+      "textCardId": "winter_mitten",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "winter_pine",
+      "textCardId": "winter_pine",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "winter_cocoa",
+      "textCardId": "winter_cocoa",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "winter_sleigh",
+      "textCardId": "winter_sleigh",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "summer_sun",
+      "textCardId": "summer_sun",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "summer_beach",
+      "textCardId": "summer_beach",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "summer_hat",
+      "textCardId": "summer_hat",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "summer_lake",
+      "textCardId": "summer_lake",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "summer_berry",
+      "textCardId": "summer_berry",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "summer_picnic",
+      "textCardId": "summer_picnic",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "summer_fan",
+      "textCardId": "summer_fan",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "summer_sandals",
+      "textCardId": "summer_sandals",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "breakfast_toast",
+      "textCardId": "breakfast_toast",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "breakfast_porridge",
+      "textCardId": "breakfast_porridge",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "breakfast_egg",
+      "textCardId": "breakfast_egg",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "breakfast_jam",
+      "textCardId": "breakfast_jam",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "breakfast_cereal",
+      "textCardId": "breakfast_cereal",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "breakfast_yogurt",
+      "textCardId": "breakfast_yogurt",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "breakfast_tea",
+      "textCardId": "breakfast_tea",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "breakfast_butter",
+      "textCardId": "breakfast_butter",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "dessert_cake",
+      "textCardId": "dessert_cake",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "dessert_cookie",
+      "textCardId": "dessert_cookie",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "dessert_candy",
+      "textCardId": "dessert_candy",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "dessert_pie",
+      "textCardId": "dessert_pie",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "dessert_cream",
+      "textCardId": "dessert_cream",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "dessert_icecream",
+      "textCardId": "dessert_icecream",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "dessert_waffle",
+      "textCardId": "dessert_waffle",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "dessert_honey",
+      "textCardId": "dessert_honey",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "drinks_juice",
+      "textCardId": "drinks_juice",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "drinks_tea",
+      "textCardId": "drinks_tea",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "drinks_coffee",
+      "textCardId": "drinks_coffee",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "drinks_water",
+      "textCardId": "drinks_water",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "drinks_cocoa",
+      "textCardId": "drinks_cocoa",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "drinks_milk",
+      "textCardId": "drinks_milk",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "drinks_lemonade",
+      "textCardId": "drinks_lemonade",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "drinks_smoothie",
+      "textCardId": "drinks_smoothie",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "farm_barn",
+      "textCardId": "farm_barn",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "farm_tractor",
+      "textCardId": "farm_tractor",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "farm_field",
+      "textCardId": "farm_field",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "farm_hay",
+      "textCardId": "farm_hay",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "farm_cow",
+      "textCardId": "farm_cow",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "farm_chicken",
+      "textCardId": "farm_chicken",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "farm_grain",
+      "textCardId": "farm_grain",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "farm_fence",
+      "textCardId": "farm_fence",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "forest_pine",
+      "textCardId": "forest_pine",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "forest_mushroom",
+      "textCardId": "forest_mushroom",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "forest_fox",
+      "textCardId": "forest_fox",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "forest_owl",
+      "textCardId": "forest_owl",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "forest_fern",
+      "textCardId": "forest_fern",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "forest_stump",
+      "textCardId": "forest_stump",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "forest_berry",
+      "textCardId": "forest_berry",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "forest_path",
+      "textCardId": "forest_path",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "flowers_rose",
+      "textCardId": "flowers_rose",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "flowers_tulip",
+      "textCardId": "flowers_tulip",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "flowers_lily",
+      "textCardId": "flowers_lily",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "flowers_peony",
+      "textCardId": "flowers_peony",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "flowers_bouquet",
+      "textCardId": "flowers_bouquet",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "flowers_petal",
+      "textCardId": "flowers_petal",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "flowers_stem",
+      "textCardId": "flowers_stem",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "flowers_vase",
+      "textCardId": "flowers_vase",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "insects_bee",
+      "textCardId": "insects_bee",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "insects_ant",
+      "textCardId": "insects_ant",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "insects_butterfly",
+      "textCardId": "insects_butterfly",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "insects_beetle",
+      "textCardId": "insects_beetle",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "insects_wing",
+      "textCardId": "insects_wing",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "insects_hive",
+      "textCardId": "insects_hive",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "insects_cocoon",
+      "textCardId": "insects_cocoon",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "insects_ladybug",
+      "textCardId": "insects_ladybug",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "emotions_joy",
+      "textCardId": "emotions_joy",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "emotions_calm",
+      "textCardId": "emotions_calm",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "emotions_surprise",
+      "textCardId": "emotions_surprise",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "emotions_interest",
+      "textCardId": "emotions_interest",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "emotions_hope",
+      "textCardId": "emotions_hope",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "emotions_trust",
+      "textCardId": "emotions_trust",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "emotions_pride",
+      "textCardId": "emotions_pride",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "emotions_warmth",
+      "textCardId": "emotions_warmth",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "friendship_friend",
+      "textCardId": "friendship_friend",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "friendship_chat",
+      "textCardId": "friendship_chat",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "friendship_walk",
+      "textCardId": "friendship_walk",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "friendship_smile",
+      "textCardId": "friendship_smile",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "friendship_help",
+      "textCardId": "friendship_help",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "friendship_team",
+      "textCardId": "friendship_team",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "friendship_secret",
+      "textCardId": "friendship_secret",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "friendship_memory",
+      "textCardId": "friendship_memory",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "hobbies_drawing",
+      "textCardId": "hobbies_drawing",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "hobbies_knitting",
+      "textCardId": "hobbies_knitting",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "hobbies_chess",
+      "textCardId": "hobbies_chess",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "hobbies_puzzle",
+      "textCardId": "hobbies_puzzle",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "hobbies_dance",
+      "textCardId": "hobbies_dance",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "hobbies_baking",
+      "textCardId": "hobbies_baking",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "hobbies_reading",
+      "textCardId": "hobbies_reading",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "hobbies_music",
+      "textCardId": "hobbies_music",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "camping_tent",
+      "textCardId": "camping_tent",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "camping_fire",
+      "textCardId": "camping_fire",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "camping_map",
+      "textCardId": "camping_map",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "camping_compass",
+      "textCardId": "camping_compass",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "camping_backpack",
+      "textCardId": "camping_backpack",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "camping_lantern",
+      "textCardId": "camping_lantern",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "camping_trail",
+      "textCardId": "camping_trail",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "camping_mug",
+      "textCardId": "camping_mug",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "toys_doll",
+      "textCardId": "toys_doll",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "toys_blocks",
+      "textCardId": "toys_blocks",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "toys_train",
+      "textCardId": "toys_train",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "toys_puzzle",
+      "textCardId": "toys_puzzle",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "toys_ball",
+      "textCardId": "toys_ball",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "toys_robot",
+      "textCardId": "toys_robot",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "toys_kite",
+      "textCardId": "toys_kite",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "toys_car",
+      "textCardId": "toys_car",
+      "relationType": "exact",
+      "allowedFromLevel": 1,
+      "difficulty": "simple"
+    },
+    {
+      "imageCardId": "tools_hammer",
+      "textCardId": "tools_hammer",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "tools_saw",
+      "textCardId": "tools_saw",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "tools_drill",
+      "textCardId": "tools_drill",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "tools_wrench",
+      "textCardId": "tools_wrench",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "tools_nail",
+      "textCardId": "tools_nail",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "tools_pliers",
+      "textCardId": "tools_pliers",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "tools_ruler",
+      "textCardId": "tools_ruler",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    },
+    {
+      "imageCardId": "tools_level",
+      "textCardId": "tools_level",
+      "relationType": "exact",
+      "allowedFromLevel": 51,
+      "difficulty": "easy"
+    }
+  ],
+  "policy": {
+    "earlyLevels": "exact",
+    "lateLevels": "synonym/category/tricky allowed only when explicitly added",
+    "imageGoalRule": "A concrete gold goal can contain only ImageCard or only TextCard, never both."
+  }
+}

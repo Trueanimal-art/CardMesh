@@ -11,11 +11,15 @@ namespace SolitaireAssociations
         private const float StackSpacingMultiplier = 1.2f;
         private const float MaxVisualStackOffset = 50f;
         private const float MinReadableStackOffset = 16f;
+        private static readonly Color EmptyFrameFillColor = new(0.46f, 0.50f, 0.48f, 0.08f);
+        private static readonly Color EmptyFrameOutlineColor = new(0.70f, 0.74f, 0.70f, 0.12f);
+        private static readonly Vector2 EmptyFrameOutlineDistance = new(1.8f, -1.8f);
 
         [SerializeField] private Image backgroundImage;
         [SerializeField] private LayoutElement layoutElement;
         [SerializeField] private Transform cardsRoot;
         [SerializeField] private RectTransform blockedDropArea;
+        [SerializeField] private RectTransform emptyColumnFrame;
 
         private readonly List<CardView> cards = new();
 
@@ -255,6 +259,7 @@ namespace SolitaireAssociations
 
         public void RefreshLayout()
         {
+            RefreshEmptyColumnFrame();
             int topLayoutCardIndex = -1;
 
             for (int index = cards.Count - 1; index >= 0; index--)
@@ -294,6 +299,59 @@ namespace SolitaireAssociations
                 card.SetVisible(true);
                 card.SetRaycastBlocks(true);
                 currentOffset += shouldFaceUp ? resolvedVerticalOffset : resolvedVerticalOffset * FaceDownOffsetFactor;
+            }
+        }
+
+        private void RefreshEmptyColumnFrame()
+        {
+            EnsureEmptyColumnFrame();
+            if (emptyColumnFrame == null)
+            {
+                return;
+            }
+
+            emptyColumnFrame.gameObject.SetActive(cards.Count == 0);
+            emptyColumnFrame.anchorMin = new Vector2(0.5f, 1f);
+            emptyColumnFrame.anchorMax = new Vector2(0.5f, 1f);
+            emptyColumnFrame.pivot = new Vector2(0.5f, 1f);
+            emptyColumnFrame.anchoredPosition = Vector2.zero;
+            emptyColumnFrame.sizeDelta = cardSize;
+            emptyColumnFrame.localScale = Vector3.one;
+            emptyColumnFrame.SetAsFirstSibling();
+        }
+
+        private void EnsureEmptyColumnFrame()
+        {
+            if (emptyColumnFrame != null || CardsRoot == null)
+            {
+                return;
+            }
+
+            Transform existing = CardsRoot.Find("EmptyColumnFrame");
+            if (existing is RectTransform existingRect)
+            {
+                emptyColumnFrame = existingRect;
+            }
+            else
+            {
+                GameObject frameObject = new("EmptyColumnFrame", typeof(RectTransform), typeof(Image), typeof(Outline));
+                emptyColumnFrame = frameObject.GetComponent<RectTransform>();
+                emptyColumnFrame.SetParent(CardsRoot, false);
+            }
+
+            Image image = emptyColumnFrame.GetComponent<Image>();
+            if (image != null)
+            {
+                image.color = EmptyFrameFillColor;
+                image.raycastTarget = false;
+            }
+
+            Outline outline = emptyColumnFrame.GetComponent<Outline>();
+            if (outline != null)
+            {
+                outline.effectColor = EmptyFrameOutlineColor;
+                outline.effectDistance = EmptyFrameOutlineDistance;
+                outline.useGraphicAlpha = true;
             }
         }
 

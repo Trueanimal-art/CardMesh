@@ -2,23 +2,31 @@ using UnityEngine;
 
 public class AdsInitializer : MonoBehaviour
 {
-    [SerializeField] private bool logDisabledState;
+    [SerializeField] private bool debugLogs = true;
 
     private void Awake()
     {
         DontDestroyOnLoad(gameObject);
-
-        if (logDisabledState)
-        {
-            Debug.Log("AdsInitializer is disabled for the CardMesh MVP.");
-        }
+        EnsureAdsManager();
     }
 
     public void InitializeAds()
     {
-        if (logDisabledState)
+        EnsureAdsManager();
+
+        if (debugLogs)
         {
-            Debug.Log("AdsInitializer.InitializeAds skipped: Unity Ads is not used in the CardMesh MVP.");
+            Debug.Log("[ADS] AdsInitializer completed");
         }
+    }
+
+    private static void EnsureAdsManager()
+    {
+        if (AdsManager.Instance != null || FindFirstObjectByType<AdsManager>() != null)
+        {
+            return;
+        }
+
+        new GameObject("AdsManager").AddComponent<AdsManager>();
     }
 }

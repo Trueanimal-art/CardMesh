@@ -1,0 +1,424 @@
+{
+  "cardUsageTop": [
+    {
+      "cardId": "dessert",
+      "count": 272
+    },
+    {
+      "cardId": "breakfast",
+      "count": 271
+    },
+    {
+      "cardId": "friendship",
+      "count": 270
+    },
+    {
+      "cardId": "garden",
+      "count": 268
+    },
+    {
+      "cardId": "emotions",
+      "count": 264
+    },
+    {
+      "cardId": "family",
+      "count": 261
+    },
+    {
+      "cardId": "pets",
+      "count": 258
+    },
+    {
+      "cardId": "food",
+      "count": 258
+    },
+    {
+      "cardId": "forest",
+      "count": 252
+    },
+    {
+      "cardId": "toys",
+      "count": 251
+    },
+    {
+      "cardId": "time",
+      "count": 250
+    },
+    {
+      "cardId": "colors",
+      "count": 250
+    },
+    {
+      "cardId": "books",
+      "count": 249
+    },
+    {
+      "cardId": "cup",
+      "count": 248
+    },
+    {
+      "cardId": "flowers",
+      "count": 248
+    },
+    {
+      "cardId": "drinks",
+      "count": 247
+    },
+    {
+      "cardId": "summer",
+      "count": 247
+    },
+    {
+      "cardId": "farm",
+      "count": 244
+    },
+    {
+      "cardId": "home",
+      "count": 244
+    },
+    {
+      "cardId": "clothes",
+      "count": 242
+    },
+    {
+      "cardId": "tools",
+      "count": 242
+    },
+    {
+      "cardId": "sport",
+      "count": 241
+    },
+    {
+      "cardId": "school",
+      "count": 239
+    },
+    {
+      "cardId": "weather",
+      "count": 238
+    },
+    {
+      "cardId": "kitchen",
+      "count": 237
+    },
+    {
+      "cardId": "shoes",
+      "count": 237
+    },
+    {
+      "cardId": "cinema",
+      "count": 234
+    },
+    {
+      "cardId": "sea",
+      "count": 233
+    },
+    {
+      "cardId": "music",
+      "count": 233
+    },
+    {
+      "cardId": "city",
+      "count": 232
+    }
+  ],
+  "unusedCards": [],
+  "unusedCardsCount": 0,
+  "categoryUsage": {
+    "art": 1534,
+    "body": 999,
+    "books": 1694,
+    "breakfast": 1828,
+    "business": 890,
+    "camping": 1506,
+    "cinema": 1579,
+    "city": 1597,
+    "clothes": 1608,
+    "colors": 1711,
+    "cup": 1678,
+    "dessert": 1815,
+    "drinks": 1627,
+    "emotions": 1802,
+    "family": 1747,
+    "farm": 1610,
+    "flowers": 1718,
+    "food": 1746,
+    "forest": 1731,
+    "friendship": 1823,
+    "garden": 1883,
+    "health": 863,
+    "hobbies": 1458,
+    "holidays": 1024,
+    "home": 1617,
+    "insects": 1546,
+    "internet": 816,
+    "kitchen": 1569,
+    "music": 1593,
+    "nature": 1510,
+    "office": 852,
+    "pets": 1681,
+    "phone": 876,
+    "photo": 801,
+    "school": 1613,
+    "sea": 1551,
+    "shapes": 811,
+    "shoes": 1595,
+    "space": 839,
+    "sport": 1625,
+    "summer": 1630,
+    "technology": 896,
+    "time": 1664,
+    "tools": 1577,
+    "toys": 1644,
+    "transport": 1425,
+    "travel": 1521,
+    "weather": 1617,
+    "winter": 1509,
+    "work": 851
+  },
+  "imageCardUsageTop": [
+    {
+      "cardId": "garden_shovel",
+      "count": 57
+    },
+    {
+      "cardId": "garden_bench",
+      "count": 57
+    },
+    {
+      "cardId": "garden_hose",
+      "count": 57
+    },
+    {
+      "cardId": "garden_bush",
+      "count": 57
+    },
+    {
+      "cardId": "garden_soil",
+      "count": 57
+    },
+    {
+      "cardId": "garden_seed",
+      "count": 57
+    },
+    {
+      "cardId": "garden_path",
+      "count": 57
+    },
+    {
+      "cardId": "garden_apple",
+      "count": 57
+    },
+    {
+      "cardId": "city_bridge",
+      "count": 57
+    },
+    {
+      "cardId": "city_park",
+      "count": 57
+    },
+    {
+      "cardId": "city_street",
+      "count": 57
+    },
+    {
+      "cardId": "city_traffic",
+      "count": 57
+    },
+    {
+      "cardId": "city_tower",
+      "count": 57
+    },
+    {
+      "cardId": "city_cafe",
+      "count": 57
+    },
+    {
+      "cardId": "city_subway",
+      "count": 57
+    },
+    {
+      "cardId": "city_square",
+      "count": 57
+    },
+    {
+      "cardId": "shoes_heel",
+      "count": 56
+    },
+    {
+      "cardId": "shoes_lace",
+      "count": 56
+    },
+    {
+      "cardId": "shoes_sandal",
+      "count": 56
+    },
+    {
+      "cardId": "shoes_sneaker",
+      "count": 56
+    },
+    {
+      "cardId": "shoes_boot",
+      "count": 56
+    },
+    {
+      "cardId": "shoes_size",
+      "count": 56
+    },
+    {
+      "cardId": "shoes_pair",
+      "count": 56
+    },
+    {
+      "cardId": "shoes_sole",
+      "count": 56
+    },
+    {
+      "cardId": "food_plate",
+      "count": 55
+    },
+    {
+      "cardId": "food_food",
+      "count": 55
+    },
+    {
+      "cardId": "food_bread",
+      "count": 55
+    },
+    {
+      "cardId": "food_soup",
+      "count": 55
+    },
+    {
+      "cardId": "food_canteen",
+      "count": 55
+    },
+    {
+      "cardId": "food_lunch",
+      "count": 55
+    }
+  ],
+  "textCardUsageTop": [
+    {
+      "cardId": "breakfast_cereal",
+      "count": 161
+    },
+    {
+      "cardId": "emotions_trust",
+      "count": 154
+    },
+    {
+      "cardId": "breakfast_porridge",
+      "count": 154
+    },
+    {
+      "cardId": "dessert_icecream",
+      "count": 153
+    },
+    {
+      "cardId": "dessert_honey",
+      "count": 152
+    },
+    {
+      "cardId": "family_child",
+      "count": 152
+    },
+    {
+      "cardId": "garden_bush",
+      "count": 152
+    },
+    {
+      "cardId": "garden_path",
+      "count": 152
+    },
+    {
+      "cardId": "emotions_interest",
+      "count": 152
+    },
+    {
+      "cardId": "dessert_cake",
+      "count": 152
+    },
+    {
+      "cardId": "friendship_friend",
+      "count": 152
+    },
+    {
+      "cardId": "breakfast_butter",
+      "count": 152
+    },
+    {
+      "cardId": "breakfast_yogurt",
+      "count": 151
+    },
+    {
+      "cardId": "family_mother",
+      "count": 151
+    },
+    {
+      "cardId": "friendship_smile",
+      "count": 150
+    },
+    {
+      "cardId": "emotions_warmth",
+      "count": 149
+    },
+    {
+      "cardId": "dessert_cookie",
+      "count": 149
+    },
+    {
+      "cardId": "forest_stump",
+      "count": 148
+    },
+    {
+      "cardId": "breakfast_tea",
+      "count": 147
+    },
+    {
+      "cardId": "cup_cup",
+      "count": 147
+    },
+    {
+      "cardId": "breakfast_egg",
+      "count": 147
+    },
+    {
+      "cardId": "dessert_pie",
+      "count": 146
+    },
+    {
+      "cardId": "garden_soil",
+      "count": 146
+    },
+    {
+      "cardId": "breakfast_jam",
+      "count": 146
+    },
+    {
+      "cardId": "dessert_candy",
+      "count": 146
+    },
+    {
+      "cardId": "family_dinner",
+      "count": 146
+    },
+    {
+      "cardId": "friendship_team",
+      "count": 146
+    },
+    {
+      "cardId": "colors_yellow",
+      "count": 146
+    },
+    {
+      "cardId": "forest_pine",
+      "count": 146
+    },
+    {
+      "cardId": "toys_blocks",
+      "count": 145
+    }
+  ],
+  "imageCardsUsed": 400,
+  "textCardsUsed": 400
+}

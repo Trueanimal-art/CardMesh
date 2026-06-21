@@ -1,84 +1,151 @@
+using SolitaireAssociations;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class SoundToggleButton : MonoBehaviour
 {
-    [Header("UI")]
-    [SerializeField] private Toggle toggle;          // дочерний Toggle
-    [SerializeField] private GameObject checkmark;   // Toggle/Background/Checkmark (полоска)
+    [Header("Collection Book")]
+    [SerializeField] private CollectionBookPopup collectionBookPopup;
+    [SerializeField] private CollectionBookManager collectionBookManager;
+    [SerializeField] private TMP_Text progressBadgeText;
 
-    private bool _isApplying;
+    private Button button;
+    private Toggle legacyToggle;
+    private UIJuicyButton juicyButton;
+    private int lastOpenFrame = -1;
 
     private void Reset()
     {
-        toggle = GetComponentInChildren<Toggle>(true);
+        BindReferences();
+        EnsureHoverFeedback();
     }
 
     private void Awake()
     {
-        if (!toggle) toggle = GetComponentInChildren<Toggle>(true);
-        if (!toggle) return;
-
-        toggle.onValueChanged.RemoveListener(OnToggleChanged);
-        toggle.onValueChanged.AddListener(OnToggleChanged);
-
-        // Синхронизируем UI с реальным состоянием музыки
-        SyncFromMusicPlayer();
+        BindReferences();
+        EnsureHoverFeedback();
+        WireButton();
+        RefreshBadge();
     }
 
     private void OnEnable()
     {
-        SyncFromMusicPlayer();
+        BindReferences();
+        EnsureHoverFeedback();
+        WireButton();
+
+        collectionBookManager ??= CollectionBookManager.GetOrCreate(this);
+        collectionBookManager.StateChanged -= RefreshBadge;
+        collectionBookManager.StateChanged += RefreshBadge;
+        RefreshBadge();
     }
 
-    private void Start()
+    private void OnDisable()
     {
-        SyncFromMusicPlayer();
+        if (collectionBookManager != null)
+        {
+            collectionBookManager.StateChanged -= RefreshBadge;
+        }
     }
 
     private void OnDestroy()
     {
-        if (toggle) toggle.onValueChanged.RemoveListener(OnToggleChanged);
-    }
-
-    private void SyncFromMusicPlayer()
-    {
-        // По умолчанию музыка играет => muted = false
-        bool muted = false;
-
-        if (MusicPlayer.Instance != null)
-            muted = MusicPlayer.Instance.IsMuted();
-
-        ApplyState(muted, updateToggle: true);
-    }
-
-    private void OnToggleChanged(bool isOn)
-    {
-        if (_isApplying) return;
-
-        // Договоримся так:
-        // Toggle.isOn == true  => перечёркнуто => muted = true
-        // Toggle.isOn == false => просто динамик => muted = false
-        bool muted = isOn;
-
-        if (MusicPlayer.Instance != null)
+        if (button != null)
         {
-            if (MusicPlayer.Instance.IsMuted() != muted)
-                MusicPlayer.Instance.ToggleMute();
+            button.onClick.RemoveListener(OpenCollectionBook);
+        }
+    }
+
+    // Kept for the existing MainMenu scene persistent callback.
+    public void ToggleSound()
+    {
+        OpenCollectionBook();
+    }
+
+    public void OpenCollectionBook()
+    {
+        if (lastOpenFrame == Time.frameCount)
+        {
+            return;
         }
 
-        ApplyState(muted, updateToggle: false);
+        lastOpenFrame = Time.frameCount;
+        collectionBookManager ??= CollectionBookManager.GetOrCreate(this);
+        collectionBookPopup ??= CollectionBookPopup.SceneInstance;
+
+        if (collectionBookPopup == null)
+        {
+            Debug.LogWarning("SoundToggleButton: CollectionBookPopup is missing from MainMenu scene.");
+            return;
+        }
+
+        collectionBookPopup.Show(collectionBookManager);
     }
 
-    private void ApplyState(bool muted, bool updateToggle)
+    private void BindReferences()
     {
-        _isApplying = true;
+        button = GetComponent<Button>();
+        legacyToggle = GetComponentInChildren<Toggle>(true);
+        juicyButton = GetComponent<UIJuicyButton>();
+        collectionBookPopup ??= CollectionBookPopup.SceneInstance;
+        collectionBookManager ??= FindFirstObjectByType<CollectionBookManager>(FindObjectsInactive.Include);
 
-        if (checkmark) checkmark.SetActive(muted);
+        if (progressBadgeText == null)
+        {
+            progressBadgeText = transform.Find("ProgressBadge/BadgeText")?.GetComponent<TMP_Text>();
+        }
+    }
 
-        if (updateToggle && toggle)
-            toggle.isOn = muted;
+    private void WireButton()
+    {
+        if (legacyToggle != null)
+        {
+            legacyToggle.onValueChanged.RemoveAllListeners();
+            legacyToggle.interactable = false;
+        }
 
-        _isApplying = false;
+        if (button == null)
+        {
+            return;
+        }
+
+        button.onClick.RemoveListener(OpenCollectionBook);
+        button.onClick.AddListener(OpenCollectionBook);
+    }
+
+    private void RefreshBadge()
+    {
+        if (progressBadgeText == null)
+        {
+            return;
+        }
+
+        collectionBookManager ??= CollectionBookManager.GetOrCreate(this);
+        CollectionBookReward next = collectionBookManager.GetNextReward();
+
+        if (next == null)
+        {
+            progressBadgeText.text = "MAX";
+        }
+        else
+        {
+            progressBadgeText.text = $"{collectionBookManager.CurrentPoints}/{next.RequiredPoints}";
+        }
+
+        RuntimeCyrillicFontProvider.Apply(progressBadgeText, progressBadgeText.text);
+    }
+
+    private void EnsureHoverFeedback()
+    {
+        if (juicyButton == null)
+        {
+            juicyButton = GetComponent<UIJuicyButton>();
+        }
+
+        if (juicyButton != null)
+        {
+            juicyButton.enabled = true;
+        }
     }
 }

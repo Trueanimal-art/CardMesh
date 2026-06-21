@@ -31,6 +31,11 @@ namespace SolitaireAssociations
         private Vector2 cardSize;
         private Color storedBackgroundColor;
         private bool hasStoredBackgroundColor;
+        private bool preserveAuthoredSlotVisual;
+        private Sprite authoredSlotSprite;
+        private Color authoredSlotColor;
+        private Image.Type authoredSlotType;
+        private bool authoredSlotPreserveAspect;
         private Coroutine feedbackRoutine;
         public int CardCount => cards.Count;
         public CardView TopCard => cards.Count > 0 ? cards[^1] : null;
@@ -47,6 +52,7 @@ namespace SolitaireAssociations
             backgroundImage = targetBackgroundImage;
             layoutElement = targetLayoutElement;
             cardsRoot = targetCardsRoot;
+            CacheAuthoredSlotVisual();
             EnsureHeader();
         }
 
@@ -205,7 +211,8 @@ namespace SolitaireAssociations
                 return false;
             }
 
-            return movingCard.Data.AssociationId == goalCard.Data.AssociationId;
+            return movingCard.Data.AssociationId == goalCard.Data.AssociationId
+                && movingCard.Data.IsImageCard == goalCard.Data.IsImageGoal;
         }
 
         public bool CanAcceptStack(IReadOnlyList<CardView> movingCards)
@@ -232,12 +239,14 @@ namespace SolitaireAssociations
             }
 
             string associationId = firstCard.Data != null ? firstCard.Data.AssociationId : string.Empty;
+            bool shouldUseImageCards = GoalCard != null && GoalCard.Data != null && GoalCard.Data.IsImageGoal;
             foreach (CardView movingCard in movingCards)
             {
                 if (movingCard == null
                     || movingCard.Data == null
                     || movingCard.Data.IsGold
-                    || movingCard.Data.AssociationId != associationId)
+                    || movingCard.Data.AssociationId != associationId
+                    || movingCard.Data.IsImageCard != shouldUseImageCards)
                 {
                     return false;
                 }
@@ -342,13 +351,36 @@ namespace SolitaireAssociations
                 return false;
             }
 
-            return RectTransformUtility.RectangleContainsScreenPoint(dropArea, eventData.position, eventData.pressEventCamera);
+            if (RectTransformUtility.RectangleContainsScreenPoint(dropArea, eventData.position, eventData.pressEventCamera))
+            {
+                return true;
+            }
+
+            RectTransform slotRect = transform as RectTransform;
+            return slotRect != null
+                   && RectTransformUtility.RectangleContainsScreenPoint(slotRect, eventData.position, eventData.pressEventCamera);
         }
 
         private void ApplySlotVisual()
         {
             if (backgroundImage == null)
             {
+                return;
+            }
+
+            if (preserveAuthoredSlotVisual || HasAuthoredCategorySlotVisual(backgroundImage.transform))
+            {
+                if (!preserveAuthoredSlotVisual)
+                {
+                    CacheAuthoredSlotVisual();
+                }
+
+                backgroundImage.enabled = true;
+                backgroundImage.raycastTarget = true;
+                backgroundImage.sprite = authoredSlotSprite;
+                backgroundImage.color = authoredSlotColor;
+                backgroundImage.type = authoredSlotType;
+                backgroundImage.preserveAspect = authoredSlotPreserveAspect;
                 return;
             }
 
@@ -371,6 +403,39 @@ namespace SolitaireAssociations
             shadow.effectColor = new Color(0f, 0f, 0f, 0.18f);
             shadow.effectDistance = new Vector2(0f, -4f);
             shadow.useGraphicAlpha = true;
+        }
+
+        private void CacheAuthoredSlotVisual()
+        {
+            if (backgroundImage == null)
+            {
+                return;
+            }
+
+            preserveAuthoredSlotVisual = HasAuthoredCategorySlotVisual(backgroundImage.transform);
+            if (!preserveAuthoredSlotVisual)
+            {
+                return;
+            }
+
+            authoredSlotSprite = backgroundImage.sprite;
+            authoredSlotColor = backgroundImage.color;
+            authoredSlotType = backgroundImage.type;
+            authoredSlotPreserveAspect = backgroundImage.preserveAspect;
+        }
+
+        private static bool HasAuthoredCategorySlotVisual(Transform slot)
+        {
+            if (slot == null)
+            {
+                return false;
+            }
+
+            return slot.Find("CrownMarkIcon") != null
+                || slot.Find("GoalCardsRoot") != null
+                || (slot.parent != null
+                    && (slot.parent.Find("CrownSlotLabelBg") != null
+                        || slot.parent.Find("CardsStackRoot") != null));
         }
 
         private void NormalizeCardsRoot()

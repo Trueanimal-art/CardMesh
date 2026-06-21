@@ -182,10 +182,10 @@ namespace SolitaireAssociations
         private const float CrownSlotAnchoredY = -78f;
         private const float CrownToCardsGap = 14f;
         private const float CardsStackHeight = 390f;
-        private const float BoardAreaTopInset = 220f;
+        private const float BoardAreaTopInset = 225f;
         private const float BoardAreaBottomInset = 260f;
         private const float BottomHudHeight = 178f;
-        private const float BottomHudBottomInset = 34f;
+        private const float BottomHudBottomInset = 40f;
 
         [Header("Roots")]
         [SerializeField] private RectTransform safeAreaRoot;
@@ -233,7 +233,7 @@ namespace SolitaireAssociations
         private void OnValidate()
         {
             AutoAssign();
-            ApplyEditorPreviewColumns();
+            ScheduleEditorPreviewColumns();
         }
 
         public void NormalizeSceneLayout()
@@ -252,11 +252,11 @@ namespace SolitaireAssociations
             isValid &= ReportMissing(deckCounter, "DeckCounter");
             isValid &= ReportMissing(columnSlotsRoot, "ColumnSlotsRoot");
             isValid &= ReportMissing(deckCardBack, "DeckCardBack");
-            isValid &= ReportMissing(menuButton, "MenuButton");
-            isValid &= ReportMissing(plusButton, "PlusButton");
+            isValid &= ReportMissing(menuButton != null ? menuButton : rewardBonusButton, "MenuButton/RewardBonusButton");
             isValid &= ReportMissing(hintButton, "HintButton");
             isValid &= ReportMissing(undoButton, "UndoButton");
-            isValid &= ReportMissing(badge, "Badge");
+            isValid &= ReportMissing(boosterDeckButton, "BoosterDeckButton");
+            isValid &= ReportMissing(badge, "Badge/BoosterDeckButtonBadge");
 
             if (columns == null || columns.Count == 0)
             {
@@ -342,22 +342,66 @@ namespace SolitaireAssociations
                     ? canvas.transform
                     : transform;
 
-            safeAreaRoot ??= FindChildRecursive<RectTransform>(searchRoot, "SafeAreaRoot");
-            columnSlotsRoot ??= FindChildRecursive<RectTransform>(safeAreaRoot, "ColumnSlotsRoot");
-            deckCardBack ??= FindChildRecursive<RectTransform>(safeAreaRoot, "DeckCardBack");
+            if (safeAreaRoot == null)
+            {
+                safeAreaRoot = FindChildRecursive<RectTransform>(searchRoot, "SafeAreaRoot");
+            }
+            if (columnSlotsRoot == null)
+            {
+                columnSlotsRoot = FindChildRecursive<RectTransform>(safeAreaRoot, "ColumnSlotsRoot");
+            }
+            if (deckCardBack == null)
+            {
+                deckCardBack = FindChildRecursive<RectTransform>(safeAreaRoot, "DeckCardBack");
+            }
 
-            movesValue ??= FindChildRecursive<TMP_Text>(safeAreaRoot, "MovesValue");
-            coinsText ??= FindChildRecursive<TMP_Text>(safeAreaRoot, "CoinsText");
-            deckCounter ??= FindChildRecursive<TMP_Text>(safeAreaRoot, "DeckCounter");
+            if (movesValue == null)
+            {
+                movesValue = FindChildRecursive<TMP_Text>(safeAreaRoot, "MovesValue");
+            }
+            if (coinsText == null)
+            {
+                coinsText = FindChildRecursive<TMP_Text>(safeAreaRoot, "CoinsText");
+            }
+            if (deckCounter == null)
+            {
+                deckCounter = FindChildRecursive<TMP_Text>(safeAreaRoot, "DeckCounter");
+            }
 
-            badge ??= FindChildRecursive<Transform>(safeAreaRoot, "Badge")?.gameObject;
+            if (badge == null)
+            {
+                badge = FindChildRecursive<Transform>(safeAreaRoot, "Badge")?.gameObject
+                    ?? FindChildRecursive<Transform>(safeAreaRoot, "BoosterDeckButtonBadge")?.gameObject;
+            }
 
-            menuButton ??= FindOrAddButton(safeAreaRoot, "MenuButton");
-            plusButton ??= FindOrAddButton(safeAreaRoot, "PlusButton");
-            rewardBonusButton ??= FindOrAddButton(safeAreaRoot, "RewardBonusButton");
-            hintButton ??= FindOrAddButton(safeAreaRoot, "HintButton");
-            undoButton ??= FindOrAddButton(safeAreaRoot, "UndoButton");
-            boosterDeckButton ??= FindOrAddButton(safeAreaRoot, "BoosterDeckButton");
+            Button currentRewardButton = FindOrAddButton(safeAreaRoot, "RewardBonusButton");
+            if (currentRewardButton != null)
+            {
+                rewardBonusButton = currentRewardButton;
+                menuButton = currentRewardButton;
+            }
+            else
+            {
+                rewardBonusButton = null;
+                menuButton = FindOrAddButton(safeAreaRoot, "MenuButton");
+                rewardBonusButton = menuButton;
+            }
+            if (plusButton == null)
+            {
+                plusButton = FindOrAddButton(safeAreaRoot, "PlusButton");
+            }
+            if (hintButton == null)
+            {
+                hintButton = FindOrAddButton(safeAreaRoot, "HintButton");
+            }
+            if (undoButton == null)
+            {
+                undoButton = FindOrAddButton(safeAreaRoot, "UndoButton");
+            }
+            if (boosterDeckButton == null)
+            {
+                boosterDeckButton = FindOrAddButton(safeAreaRoot, "BoosterDeckButton");
+            }
 
             int supportedSceneColumnsCount = CountSupportedSceneColumns(columnSlotsRoot);
             if (columns == null || columns.Count == 0 || columns.Count > MaxSupportedColumns || HasInvalidColumns() || (supportedSceneColumnsCount > 0 && columns.Count != supportedSceneColumnsCount))
@@ -366,8 +410,24 @@ namespace SolitaireAssociations
             }
 
             EnsureCanvasSetup();
-            ApplyReferenceLayout();
-            ApplyPremiumSkin();
+            if (!HasPrefabAuthoredGameplayUi())
+            {
+                ApplyReferenceLayout();
+                ApplyPremiumSkin();
+            }
+        }
+
+        private bool HasPrefabAuthoredGameplayUi()
+        {
+            if (safeAreaRoot == null)
+            {
+                return false;
+            }
+
+            return FindChildRecursive<Transform>(safeAreaRoot, "HintButtonIcon") != null
+                && FindChildRecursive<Transform>(safeAreaRoot, "UndoButtonIcon") != null
+                && FindChildRecursive<Transform>(safeAreaRoot, "BoosterDeckButtonIcon") != null
+                && FindChildRecursive<Transform>(safeAreaRoot, "LivesHud") != null;
         }
 
         private void ApplyPremiumSkin()
@@ -449,7 +509,7 @@ namespace SolitaireAssociations
             }
 
             int previewColumnsCount = Mathf.Clamp(Mathf.Min(MaxSupportedColumns, columns.Count), 3, MaxSupportedColumns);
-            ColumnLayoutProfile profile = GameLayoutConfig.CreateDefault().GetProfile(previewColumnsCount);
+            ColumnLayoutProfile profile = GameManager.GetGameplayLayoutProfile(previewColumnsCount);
 
             HorizontalLayoutGroup layoutGroup = columnSlotsRoot.GetComponent<HorizontalLayoutGroup>();
             if (layoutGroup != null)
@@ -466,9 +526,47 @@ namespace SolitaireAssociations
                 }
 
                 column.Root.gameObject.SetActive(index < previewColumnsCount);
+                ApplyEditorPreviewColumnLayout(column, profile);
             }
 
             LayoutRebuilder.ForceRebuildLayoutImmediate(columnSlotsRoot);
+        }
+
+        private void ScheduleEditorPreviewColumns()
+        {
+#if UNITY_EDITOR
+            if (Application.isPlaying)
+            {
+                ApplyEditorPreviewColumns();
+                return;
+            }
+
+            UnityEditor.EditorApplication.delayCall -= ApplyEditorPreviewColumns;
+            UnityEditor.EditorApplication.delayCall += ApplyEditorPreviewColumns;
+#else
+            ApplyEditorPreviewColumns();
+#endif
+        }
+
+        private static void ApplyEditorPreviewColumnLayout(ColumnRef column, ColumnLayoutProfile profile)
+        {
+            if (column?.Root == null)
+            {
+                return;
+            }
+
+            EnsureLayoutElement(column.Root.gameObject, profile.cardSize.x, profile.cardSize.y + (profile.verticalOffset * 4f));
+
+            if (column.CrownSlot is RectTransform crownSlot)
+            {
+                crownSlot.sizeDelta = profile.cardSize;
+                EnsureLayoutElement(crownSlot.gameObject, profile.cardSize.x, profile.cardSize.y);
+            }
+
+            if (column.CardsStackRoot is RectTransform cardsStackRoot)
+            {
+                cardsStackRoot.sizeDelta = new Vector2(profile.cardSize.x, profile.cardSize.y + (profile.verticalOffset * 5f));
+            }
         }
 
         private void EnsureCanvasSetup()
@@ -586,7 +684,7 @@ namespace SolitaireAssociations
             RectTransform rewardRoot = rewardBonusButton != null ? rewardBonusButton.GetComponent<RectTransform>() : FindChildRecursive<RectTransform>(topHud, "RewardBonusButton");
             if (rewardRoot != null)
             {
-                SetAnchored(rewardRoot, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 0.5f), new Vector2(170f, 88f), new Vector2(-110f, -68f));
+                SetAnchored(rewardRoot, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 0.5f), new Vector2(170f, 88f), new Vector2(-120f, -78f));
                 Image rewardImage = EnsureGraphic<Image>(rewardRoot.gameObject);
                 if (rewardImage.sprite == null)
                 {
@@ -630,7 +728,7 @@ namespace SolitaireAssociations
                 return;
             }
 
-            SetAnchored(deckArea, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 0.5f), new Vector2(520f, 310f), new Vector2(-440f, -470f));
+            SetAnchored(deckArea, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 0.5f), new Vector2(520f, 310f), new Vector2(-269f, -470f));
             Image deckAreaImage = EnsureGraphic<Image>(deckArea.gameObject);
             if (deckAreaImage.sprite == null)
             {
@@ -639,7 +737,7 @@ namespace SolitaireAssociations
 
             if (deckCardBack != null)
             {
-                SetAnchored(deckCardBack, new Vector2(1f, 0.54f), new Vector2(1f, 0.54f), new Vector2(0.5f, 0.5f), new Vector2(CrownSlotWidth, CrownSlotHeight), new Vector2(-62f, -2f));
+                SetAnchored(deckCardBack, new Vector2(1f, 0.54f), new Vector2(1f, 0.54f), new Vector2(0.5f, 0.5f), new Vector2(CrownSlotWidth, CrownSlotHeight), new Vector2(-239f, -2f));
                 EnsureLayoutElement(deckCardBack.gameObject, CrownSlotWidth, CrownSlotHeight);
                 Image deckBackImage = EnsureGraphic<Image>(deckCardBack.gameObject);
                 if (deckBackImage.sprite == null)
@@ -650,7 +748,7 @@ namespace SolitaireAssociations
 
             if (deckCounter != null)
             {
-                SetAnchored((RectTransform)deckCounter.transform, new Vector2(1f, 0.54f), new Vector2(1f, 0.54f), new Vector2(0.5f, 0.5f), new Vector2(68f, 44f), new Vector2(-20f, 116f));
+                SetAnchored((RectTransform)deckCounter.transform, new Vector2(1f, 0.54f), new Vector2(1f, 0.54f), new Vector2(0.5f, 0.5f), new Vector2(52f, 40f), new Vector2(-165f, 120f));
                 deckCounter.enableWordWrapping = false;
                 deckCounter.enableAutoSizing = true;
                 deckCounter.fontSizeMin = 22f;

@@ -12,13 +12,16 @@ namespace SolitaireAssociations
     {
         private const float HudTopInset = 100f;
         private const float MovesTopInset = 242f;
-        private const float RightDeckInset = 440f;
+        private const float LivesLeftInsetX = 154f;
+        private const float LivesUnderMovesTopInset = 379f;
+        private const float RightDeckInset = 269f;
+        private const float DeckCardBackInsetX = 239f;
         private static readonly Vector2 GameplayCardSize = new(196f, 286f);
         private const float BottomButtonMaxWidth = 392f;
         private const float BottomButtonMinWidth = 210f;
         private const float BottomHudHeight = 178f;
-        private const float BottomHudBottomInset = 34f;
-        private const float BottomButtonYOffset = 6f;
+        private const float BottomHudBottomInset = 40f;
+        private const float BottomButtonYOffset = 3f;
         private const int HintCost = 900;
 
         [SerializeField] private TMP_Text movesLabel;
@@ -58,6 +61,7 @@ namespace SolitaireAssociations
         private LivesManager activeLivesManager;
         private Coroutine livesEmptyTimerRoutine;
         private Action pauseRestartAction;
+        private Action pauseMainMenuAction;
         private Coroutine coinsPulseRoutine;
         private RectTransform hintBadgeRoot;
         private TextMeshProUGUI hintBadgeText;
@@ -71,6 +75,8 @@ namespace SolitaireAssociations
         private int hintCount;
         private int undoCount;
         private int boosterCount = 1;
+        private int lastDisplayedMoves = 140;
+        private bool hasDisplayedMoves;
 
         public void Configure(
             SolitaireSceneRefs sceneRefs,
@@ -88,6 +94,9 @@ namespace SolitaireAssociations
             menuButton = sceneRefs != null ? sceneRefs.MenuButton : null;
             plusButton = sceneRefs != null ? sceneRefs.PlusButton : null;
             rewardBonusButton = sceneRefs != null ? sceneRefs.RewardBonusButton : null;
+            rewardBonusButton ??= FindChildRecursive<Button>(safeAreaRoot, "RewardBonusButton");
+            menuButton ??= rewardBonusButton;
+            rewardBonusButton ??= menuButton;
             hintButton = sceneRefs != null ? sceneRefs.HintButton : null;
             undoButton = sceneRefs != null ? sceneRefs.UndoButton : null;
             boosterDeckButton = sceneRefs != null ? sceneRefs.BoosterDeckButton : null;
@@ -107,16 +116,20 @@ namespace SolitaireAssociations
                 }
             }
 
-            WireButton(menuButton, "MenuButton");
-            WireButton(plusButton, "PlusButton");
             WirePauseButton(gameManager);
+            SetButtonInteractable(rewardBonusButton, true);
+            if (menuButton != rewardBonusButton)
+            {
+                WireButton(menuButton, "MenuButton", ShowPausePopup);
+            }
+            WireButton(plusButton, "PlusButton");
             WireButton(hintButton, "HintButton", gameManager != null ? (Action)gameManager.UseHintForTesting : null);
             WireButton(undoButton, "UndoButton", gameManager != null ? (Action)gameManager.TryUseUndo : null);
-            WireButton(boosterDeckButton, "BoosterDeckButton");
+            WireButton(boosterDeckButton, "AddMovesButton", gameManager != null ? (Action)gameManager.ShowRewardedAddMoves : null);
             EnsureLivesHud(gameManager != null ? gameManager.LivesManager : null);
             ShowStatus(string.Empty, new Color(1f, 1f, 1f, 0f));
             UpdateDeckCounter(0);
-            SetBoosterBadgeVisible(boosterBadge != null && boosterBadge.activeSelf);
+            SetBoosterBadgeVisible(false);
         }
 
         public void ResetPauseState()
@@ -157,9 +170,74 @@ namespace SolitaireAssociations
 
         public void UpdateMoves(int remainingMoves)
         {
+            lastDisplayedMoves = remainingMoves;
+            hasDisplayedMoves = true;
+
+            if (safeAreaRoot == null && sceneRefs != null)
+            {
+                safeAreaRoot = sceneRefs.SafeAreaRoot;
+            }
+
+            if (movesLabel == null || movesLabel.name != "MovesValue" || !movesLabel.gameObject.activeInHierarchy)
+            {
+                movesLabel = FindChildRecursive<TMP_Text>(safeAreaRoot, "MovesValue");
+            }
+
             if (movesLabel != null)
             {
                 movesLabel.text = remainingMoves.ToString();
+            }
+
+            if (safeAreaRoot == null)
+            {
+                return;
+            }
+
+            foreach (TMP_Text value in safeAreaRoot.GetComponentsInChildren<TMP_Text>(true))
+            {
+                if (value != null && value.name == "MovesValue")
+                {
+                    value.text = remainingMoves.ToString();
+                }
+            }
+
+            foreach (RectTransform movesRoot in safeAreaRoot.GetComponentsInChildren<RectTransform>(true))
+            {
+                if (movesRoot == null || movesRoot.name != "MovesPanel")
+                {
+                    continue;
+                }
+
+                CleanupMovesPanelChildren(movesRoot);
+                TMP_Text value = FindChildRecursive<TMP_Text>(movesRoot, "MovesValue");
+                if (value == null)
+                {
+                    RebuildMovesPanelText(movesRoot);
+                    value = FindChildRecursive<TMP_Text>(movesRoot, "MovesValue");
+                }
+
+                if (value != null)
+                {
+                    value.text = remainingMoves.ToString();
+                    movesLabel = value;
+                }
+
+                foreach (TMP_Text text in movesRoot.GetComponentsInChildren<TMP_Text>(true))
+                {
+                    if (text == null)
+                    {
+                        continue;
+                    }
+
+                    if (text.name == "MovesLabel")
+                    {
+                        text.text = "Ходы";
+                    }
+                    else if (text.name == "MovesValue")
+                    {
+                        text.text = remainingMoves.ToString();
+                    }
+                }
             }
         }
 
@@ -200,9 +278,13 @@ namespace SolitaireAssociations
         public void SetGameplayButtonsInteractable(bool isInteractable)
         {
             SetButtonInteractable(restartButton, isInteractable);
-            SetButtonInteractable(rewardBonusButton, isInteractable);
             SetButtonInteractable(hintButton, isInteractable);
             SetButtonInteractable(undoButton, isInteractable);
+            SetButtonInteractable(boosterDeckButton, isInteractable);
+        }
+
+        public void SetAddMovesButtonInteractable(bool isInteractable)
+        {
             SetButtonInteractable(boosterDeckButton, isInteractable);
         }
 
@@ -400,9 +482,17 @@ namespace SolitaireAssociations
 
             if (restartConfirmationPopup != null)
             {
-                restartConfirmationPopup.transform.SetAsLastSibling();
-                restartConfirmationPopup.SetActive(true);
-                Time.timeScale = 0f;
+                RestartConfirmationPopupController controller = restartConfirmationPopup.GetComponent<RestartConfirmationPopupController>();
+                if (controller != null)
+                {
+                    controller.Show();
+                }
+                else
+                {
+                    restartConfirmationPopup.transform.SetAsLastSibling();
+                    restartConfirmationPopup.SetActive(true);
+                    Time.timeScale = 0f;
+                }
             }
 
             if (EventSystem.current != null)
@@ -461,13 +551,55 @@ namespace SolitaireAssociations
                 return;
             }
 
-            EnsureBackgroundVignette();
+            if (HasPrefabAuthoredGameplayUi())
+            {
+                BindAuthoredGameplayButtonBadges();
+            }
+            else
+            {
+                EnsureBackgroundVignette();
+            }
+
             StyleTopHud();
             StyleMovesPanel();
             StyleDeckArea();
             StyleBottomHudZone();
             StyleBottomButtons();
             HideAdPlaceholder();
+        }
+
+        private bool HasPrefabAuthoredGameplayUi()
+        {
+            return safeAreaRoot != null
+                && FindChildRecursive<RectTransform>(safeAreaRoot, "HintButtonIcon") != null
+                && FindChildRecursive<RectTransform>(safeAreaRoot, "UndoButtonIcon") != null
+                && FindChildRecursive<RectTransform>(safeAreaRoot, "BoosterDeckButtonIcon") != null
+                && FindChildRecursive<RectTransform>(safeAreaRoot, "LivesHud") != null;
+        }
+
+        private void BindAuthoredGameplayButtonBadges()
+        {
+            if (hintButton != null)
+            {
+                BindAuthoredBadge(hintButton.transform, "HintButtonBadge", out hintBadgeRoot, out hintBadgeText);
+            }
+
+            if (undoButton != null)
+            {
+                BindAuthoredBadge(undoButton.transform, "UndoButtonBadge", out undoBadgeRoot, out undoBadgeText);
+            }
+
+            if (boosterDeckButton != null)
+            {
+                BindAuthoredBadge(boosterDeckButton.transform, "BoosterDeckButtonBadge", out boosterBadgeRoot, out boosterBadgeText);
+                boosterBadge = boosterBadgeRoot != null ? boosterBadgeRoot.gameObject : boosterBadge;
+            }
+        }
+
+        private static void BindAuthoredBadge(Transform buttonRoot, string badgeName, out RectTransform badgeRoot, out TextMeshProUGUI badgeText)
+        {
+            badgeRoot = FindChildRecursive<RectTransform>(buttonRoot, badgeName);
+            badgeText = badgeRoot != null ? FindChildRecursive<TextMeshProUGUI>(badgeRoot, "BadgeText") : null;
         }
 
         private void EnsureLivesHud(LivesManager livesManager)
@@ -480,11 +612,11 @@ namespace SolitaireAssociations
             RectTransform root = FindChildRecursive<RectTransform>(safeAreaRoot, "LivesHud");
             if (root == null)
             {
-                root = CreateRect("LivesHud", safeAreaRoot, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 0.5f), new Vector2(172f, 64f), new Vector2(0f, -HudTopInset));
+                root = CreateRect("LivesHud", safeAreaRoot, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0.5f, 0.5f), new Vector2(172f, 64f), new Vector2(LivesLeftInsetX, -LivesUnderMovesTopInset));
             }
             else
             {
-                SetAnchored(root, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 0.5f), new Vector2(172f, 64f), new Vector2(0f, -HudTopInset));
+                SetAnchored(root, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0.5f, 0.5f), new Vector2(172f, 64f), new Vector2(LivesLeftInsetX, -LivesUnderMovesTopInset));
             }
 
             Image panelImage = EnsureGraphic<Image>(root.gameObject);
@@ -492,7 +624,13 @@ namespace SolitaireAssociations
             panelImage.color = new Color(1f, 1f, 1f, 0f);
             panelImage.raycastTarget = false;
 
-            RectTransform heart = EnsureImageLayer(root, "HeartIcon", GetHeartSprite(), Image.Type.Simple, new Color(1f, 0.2f, 0.24f, 1f));
+            RectTransform heart = EnsureImageLayer(root, "HeartIcon", GetHeartSprite(), Image.Type.Simple, Color.white);
+            TMP_Text heartText = heart.GetComponent<TMP_Text>();
+            if (heartText != null)
+            {
+                Destroy(heartText);
+            }
+
             SetAnchored(heart, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(54f, 54f), new Vector2(42f, 0f));
             Image heartImage = heart.GetComponent<Image>();
             heartImage.preserveAspect = true;
@@ -522,7 +660,7 @@ namespace SolitaireAssociations
                 SetAnchored(topHud, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, 128f), new Vector2(0f, -18f));
             }
 
-            if (menuButton != null)
+            if (menuButton != null && menuButton != rewardBonusButton)
             {
                 menuButton.gameObject.SetActive(false);
             }
@@ -578,24 +716,16 @@ namespace SolitaireAssociations
             if (rewardBonusButton != null)
             {
                 RectTransform pauseRoot = rewardBonusButton.GetComponent<RectTransform>();
-                SetAnchored(pauseRoot, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 0.5f), new Vector2(68f, 68f), new Vector2(-112f, -92f));
-                Image pauseImage = EnsureGraphic<Image>(rewardBonusButton.gameObject);
-                pauseImage.sprite = GetRoundSprite();
-                pauseImage.type = Image.Type.Sliced;
-                pauseImage.color = new Color(0.1f, 0.62f, 0.31f, 0.96f);
-                AddShadow(rewardBonusButton.gameObject, new Color(0f, 0.1f, 0.04f, 0.32f), new Vector2(0f, -5f));
+                Image pauseImage = rewardBonusButton.GetComponent<Image>();
+                if (pauseImage != null && rewardBonusButton.targetGraphic == null)
+                {
+                    rewardBonusButton.targetGraphic = pauseImage;
+                }
 
-                TextMeshProUGUI pauseIcon = EnsureText(pauseRoot, "PauseIcon");
-                pauseIcon.text = string.Empty;
-                pauseIcon.fontSize = 34f;
-                pauseIcon.fontStyle = FontStyles.Bold;
-                pauseIcon.alignment = TextAlignmentOptions.Center;
-                pauseIcon.color = new Color(0.9f, 1f, 0.78f, 1f);
-                StretchToFill(pauseIcon.rectTransform, 0f, 0f, 0f, 0f);
-
-                EnsureMenuBar(pauseRoot, "MenuBarTop", new Vector2(0f, 14f));
-                EnsureMenuBar(pauseRoot, "MenuBarMiddle", Vector2.zero);
-                EnsureMenuBar(pauseRoot, "MenuBarBottom", new Vector2(0f, -14f));
+                RemoveChildIfExists(pauseRoot, "PauseIcon");
+                RemoveChildIfExists(pauseRoot, "MenuBarTop");
+                RemoveChildIfExists(pauseRoot, "MenuBarMiddle");
+                RemoveChildIfExists(pauseRoot, "MenuBarBottom");
             }
         }
 
@@ -607,6 +737,8 @@ namespace SolitaireAssociations
                 return;
             }
 
+            CleanupMovesPanelChildren(movesPanel);
+            movesLabel = FindChildRecursive<TMP_Text>(movesPanel, "MovesValue");
             SetAnchored(movesPanel, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0.5f, 0.5f), new Vector2(164f, 108f), new Vector2(154f, -MovesTopInset));
             Image panelImage = EnsureGraphic<Image>(movesPanel.gameObject);
             panelImage.sprite = GetHudPanelCreamGoldSprite();
@@ -618,26 +750,195 @@ namespace SolitaireAssociations
             SetAnchored(movesGloss, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(-36f, 18f), new Vector2(0f, -20f));
             movesGloss.SetAsFirstSibling();
 
-            RectTransform labelRoot = FindChildRecursive<RectTransform>(movesPanel, "MovesLabel");
-            if (labelRoot != null)
+            RebuildMovesPanelText(movesPanel);
+        }
+
+        private void RebuildMovesPanelText(RectTransform panel)
+        {
+            string value = hasDisplayedMoves
+                ? lastDisplayedMoves.ToString()
+                : (movesLabel != null && !string.IsNullOrWhiteSpace(movesLabel.text)
+                    ? movesLabel.text
+                    : lastDisplayedMoves.ToString());
+
+            foreach (TMP_Text text in panel.GetComponentsInChildren<TMP_Text>(true))
             {
-                SetAnchored(labelRoot, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(-26f, 28f), new Vector2(0f, -13f));
-                TMP_Text label = labelRoot.GetComponent<TMP_Text>();
-                if (label != null)
+                if (text.transform == panel)
                 {
-                    label.text = "Ходы";
-                    ConfigureText(label, 25f, 17f, TextAlignmentOptions.Center, new Color(0.37f, 0.22f, 0.06f, 1f));
-                    label.fontStyle = FontStyles.Normal;
-                    AddTextOutline(label, new Color(1f, 0.93f, 0.62f, 0.22f), new Vector2(0.6f, -0.6f));
+                    if (Application.isPlaying)
+                    {
+                        Destroy(text);
+                    }
+                    else
+                    {
+                        DestroyImmediate(text);
+                    }
+
+                    continue;
+                }
+
+                if (Application.isPlaying)
+                {
+                    Destroy(text.gameObject);
+                }
+                else
+                {
+                    DestroyImmediate(text.gameObject);
                 }
             }
 
-            if (movesLabel != null)
+            TextMeshProUGUI label = CreateText("MovesLabel", panel, "Ходы", 25f, new Color(0.37f, 0.22f, 0.06f, 1f));
+            SetAnchored(label.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(-26f, 28f), new Vector2(0f, -17f));
+            ConfigureText(label, 25f, 17f, TextAlignmentOptions.Center, new Color(0.37f, 0.22f, 0.06f, 1f));
+            label.fontStyle = FontStyles.Normal;
+            AddTextOutline(label, new Color(1f, 0.93f, 0.62f, 0.22f), new Vector2(0.6f, -0.6f));
+
+            movesLabel = CreateText("MovesValue", panel, value, 30f, new Color(0.31f, 0.17f, 0.04f, 1f));
+            SetAnchored(movesLabel.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(-28f, 48f), new Vector2(0f, 12f));
+            ConfigureText(movesLabel, 30f, 30f, TextAlignmentOptions.Center, new Color(0.31f, 0.17f, 0.04f, 1f));
+            movesLabel.enableAutoSizing = false;
+            movesLabel.fontSize = 30f;
+            movesLabel.fontStyle = FontStyles.Normal;
+            RemoveUiEffects(movesLabel.gameObject);
+        }
+
+        private static void CleanupMovesPanelChildren(RectTransform panel)
+        {
+            if (panel == null)
             {
-                SetAnchored(movesLabel.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(-24f, 56f), new Vector2(0f, 12f));
-                ConfigureText(movesLabel, 50f, 30f, TextAlignmentOptions.Center, new Color(0.27f, 0.15f, 0.04f, 1f));
-                movesLabel.fontStyle = FontStyles.Bold;
-                AddTextOutline(movesLabel, new Color(1f, 0.93f, 0.62f, 0.3f), new Vector2(0.8f, -0.8f));
+                return;
+            }
+
+            bool keptLabel = false;
+            bool keptValue = false;
+            for (int index = panel.childCount - 1; index >= 0; index--)
+            {
+                Transform child = panel.GetChild(index);
+                string childName = child.name;
+                if (childName == "MovesLabel")
+                {
+                    if (!keptLabel)
+                    {
+                        keptLabel = true;
+                        continue;
+                    }
+                }
+                else if (childName == "MovesValue")
+                {
+                    if (!keptValue)
+                    {
+                        keptValue = true;
+                        continue;
+                    }
+                }
+                else if (childName == "MovesTopGloss")
+                {
+                    continue;
+                }
+
+                if (Application.isPlaying)
+                {
+                    Destroy(child.gameObject);
+                }
+                else
+                {
+                    DestroyImmediate(child.gameObject);
+                }
+            }
+
+            foreach (TMP_Text text in panel.GetComponentsInChildren<TMP_Text>(true))
+            {
+                string textName = text.transform.name;
+                if (textName == "MovesLabel" || textName == "MovesValue")
+                {
+                    TrimExtraTextComponents(text.gameObject, text);
+                    continue;
+                }
+
+                if (text.transform == panel)
+                {
+                    if (Application.isPlaying)
+                    {
+                        Destroy(text);
+                    }
+                    else
+                    {
+                        DestroyImmediate(text);
+                    }
+
+                    continue;
+                }
+
+                if (Application.isPlaying)
+                {
+                    Destroy(text.gameObject);
+                }
+                else
+                {
+                    DestroyImmediate(text.gameObject);
+                }
+            }
+        }
+
+        private static void TrimExtraTextComponents(GameObject target, TMP_Text keep)
+        {
+            if (target == null)
+            {
+                return;
+            }
+
+            foreach (TMP_Text text in target.GetComponents<TMP_Text>())
+            {
+                if (text == keep)
+                {
+                    continue;
+                }
+
+                if (Application.isPlaying)
+                {
+                    Destroy(text);
+                }
+                else
+                {
+                    DestroyImmediate(text);
+                }
+            }
+        }
+
+        private static void RemoveUiEffects(GameObject target)
+        {
+            if (target == null)
+            {
+                return;
+            }
+
+            foreach (Outline outline in target.GetComponents<Outline>())
+            {
+                if (Application.isPlaying)
+                {
+                    Destroy(outline);
+                }
+                else
+                {
+                    DestroyImmediate(outline);
+                }
+            }
+
+            foreach (Shadow shadow in target.GetComponents<Shadow>())
+            {
+                if (shadow is Outline)
+                {
+                    continue;
+                }
+
+                if (Application.isPlaying)
+                {
+                    Destroy(shadow);
+                }
+                else
+                {
+                    DestroyImmediate(shadow);
+                }
             }
         }
 
@@ -656,7 +957,7 @@ namespace SolitaireAssociations
             RectTransform deckCardBack = sceneRefs != null ? sceneRefs.DeckCardBack : null;
             if (deckCardBack != null)
             {
-                SetAnchored(deckCardBack, new Vector2(1f, 0.54f), new Vector2(1f, 0.54f), new Vector2(0.5f, 0.5f), GameplayCardSize, new Vector2(-98f, -2f));
+                SetAnchored(deckCardBack, new Vector2(1f, 0.54f), new Vector2(1f, 0.54f), new Vector2(0.5f, 0.5f), GameplayCardSize, new Vector2(-DeckCardBackInsetX, -2f));
                 Image deckImage = EnsureGraphic<Image>(deckCardBack.gameObject);
                 deckImage.raycastTarget = true;
             }
@@ -664,7 +965,7 @@ namespace SolitaireAssociations
             if (deckCounterLabel != null)
             {
                 RectTransform counterRect = deckCounterLabel.rectTransform;
-                SetAnchored(counterRect, new Vector2(1f, 0.54f), new Vector2(1f, 0.54f), new Vector2(0.5f, 0.5f), new Vector2(52f, 40f), new Vector2(-24f, 120f));
+                SetAnchored(counterRect, new Vector2(1f, 0.54f), new Vector2(1f, 0.54f), new Vector2(0.5f, 0.5f), new Vector2(52f, 40f), new Vector2(-165f, 120f));
                 ConfigureText(deckCounterLabel, 32f, 22f, TextAlignmentOptions.Center, new Color(0.12f, 0.18f, 0.25f, 1f));
                 deckCounterLabel.fontStyle = FontStyles.Bold;
                 EnsureDeckCounterBadge(counterRect);
@@ -773,13 +1074,13 @@ namespace SolitaireAssociations
             StyleActionButton(
                 boosterDeckButton,
                 "BoosterDeckButton",
-                "Бустер",
+                "+10 ходов",
                 PremiumUISprites.BoosterRocketIcon,
                 string.Empty,
-                $"x{boosterCount}",
+                string.Empty,
                 new Vector2(buttonStep, BottomButtonYOffset),
                 buttonSize,
-                boosterCount > 0,
+                false,
                 out boosterBadgeRoot,
                 out boosterBadgeText);
         }
@@ -856,7 +1157,7 @@ namespace SolitaireAssociations
                 imageOutline.enabled = false;
             }
 
-            RectTransform hoverGlow = EnsureImageLayer(root, "HoverGlow", GetGameplayActionButtonSprite(), Image.Type.Sliced, new Color(1f, 0.78f, 0.28f, 0.26f));
+            RectTransform hoverGlow = EnsureImageLayer(root, "HoverGlow", GetGameplayActionButtonSprite(), Image.Type.Sliced, new Color(1f, 0.74f, 0.2f, 0.16f));
             StretchToFill(hoverGlow, -8f, -8f, -7f, -7f);
             hoverGlow.SetAsFirstSibling();
             CanvasGroup hoverGroup = hoverGlow.GetComponent<CanvasGroup>();
@@ -867,30 +1168,31 @@ namespace SolitaireAssociations
 
             hoverGroup.alpha = 0f;
 
-            RectTransform gloss = EnsureImageLayer(root, "TopGloss", GetRoundedButtonSprite(), Image.Type.Sliced, new Color(1f, 0.96f, 0.76f, 0.18f));
-            SetAnchored(gloss, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(-78f, 28f), new Vector2(0f, -24f));
+            RectTransform gloss = EnsureImageLayer(root, "TopGloss", GetRoundedButtonSprite(), Image.Type.Sliced, new Color(0.82f, 1f, 0.74f, 0.13f));
+            SetAnchored(gloss, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(-104f, 23f), new Vector2(10f, -30f));
             gloss.SetAsLastSibling();
 
             float iconHaloSize = Mathf.Clamp(buttonSize.y * 0.82f, 50f, 92f);
-            float iconSize = Mathf.Clamp(iconHaloSize * 0.72f, 38f, 68f);
+            float iconSize = Mathf.Clamp(iconHaloSize * 0.78f, 42f, 74f);
             float iconX = Mathf.Clamp(buttonSize.x * 0.17f, 38f, 66f);
-            RectTransform iconHalo = EnsureImageLayer(root, $"{name}IconHalo", GetGoldIconSprite(), Image.Type.Sliced, Color.white);
+            RectTransform iconHalo = EnsureImageLayer(root, $"{name}IconHalo", GetGoldIconSprite(), Image.Type.Sliced, new Color(0.78f, 0.62f, 0.28f, 0.92f));
             SetAnchored(iconHalo, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(iconHaloSize, iconHaloSize), new Vector2(iconX, -1f));
             AddShadow(iconHalo.gameObject, new Color(0.32f, 0.13f, 0f, 0.26f), new Vector2(0f, -4f));
 
-            RectTransform icon = EnsureImageLayer(root, $"{name}Icon", iconSprite != null ? iconSprite : GetEmeraldIconSprite(), Image.Type.Simple, Color.white);
+            RectTransform icon = EnsureImageLayer(root, $"{name}Icon", iconSprite != null ? iconSprite : GetEmeraldIconSprite(), Image.Type.Simple, new Color(0.9f, 0.9f, 0.78f, 1f));
             SetAnchored(icon, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(iconSize, iconSize), new Vector2(iconX, 2f));
 
             TextMeshProUGUI labelText = EnsureText(root, $"{name}Label");
             if (labelText != null)
             {
                 labelText.text = label;
-                ConfigureText(labelText, 35f, 18f, TextAlignmentOptions.Center, new Color(0.28f, 0.16f, 0.04f, 1f));
-                labelText.fontStyle = FontStyles.Normal;
+                ConfigureText(labelText, 34f, 18f, TextAlignmentOptions.Center, new Color(0.96f, 0.78f, 0.32f, 1f));
+                ApplyGameplayButtonTextStyle(labelText, 0.105f);
                 Vector2 labelSize = string.IsNullOrEmpty(subValue) ? new Vector2(-84f, 50f) : new Vector2(-84f, 42f);
-                Vector2 labelPosition = string.IsNullOrEmpty(subValue) ? Vector2.zero : new Vector2(0f, 12f);
+                Vector2 labelOffset = GetGameplayLabelOffset(name);
+                Vector2 labelPosition = string.IsNullOrEmpty(subValue) ? labelOffset : labelOffset + new Vector2(0f, 12f);
                 SetAnchored(labelText.rectTransform, new Vector2(0f, 0.5f), new Vector2(1f, 0.5f), new Vector2(0.5f, 0.5f), labelSize, labelPosition);
-                AddTextOutline(labelText, new Color(1f, 0.9f, 0.48f, 0.22f), new Vector2(0f, -0.7f));
+                AddTextOutline(labelText, new Color(0.17f, 0.078f, 0.016f, 0.68f), new Vector2(1.05f, -1.05f));
                 Shadow labelShadow = labelText.GetComponent<Shadow>();
                 if (labelShadow == null)
                 {
@@ -898,8 +1200,8 @@ namespace SolitaireAssociations
                 }
 
                 labelShadow.enabled = true;
-                labelShadow.effectColor = new Color(0.07f, 0.03f, 0f, 0.18f);
-                labelShadow.effectDistance = new Vector2(1f, -1f);
+                labelShadow.effectColor = new Color(0.03f, 0.012f, 0f, 0.28f);
+                labelShadow.effectDistance = new Vector2(1f, -1.4f);
                 labelShadow.useGraphicAlpha = true;
             }
 
@@ -957,6 +1259,17 @@ namespace SolitaireAssociations
             return layer;
         }
 
+        private static Vector2 GetGameplayLabelOffset(string buttonName)
+        {
+            return buttonName switch
+            {
+                "HintButton" => new Vector2(20f, 1f),
+                "UndoButton" => new Vector2(-10f, 2f),
+                "BoosterDeckButton" => new Vector2(-10f, 1f),
+                _ => new Vector2(-10f, 0f)
+            };
+        }
+
         private RectTransform EnsureBadge(
             RectTransform buttonRoot,
             string buttonName,
@@ -982,24 +1295,29 @@ namespace SolitaireAssociations
             }
 
             bool isUndoCount = buttonName == "UndoButton";
-            Vector2 badgeSize = new(70f, 30f);
-            Vector2 badgePosition = new(-76f, -18f);
+            Vector2 badgeSize = new(58f, 24f);
+            Vector2 badgePosition = new(-82f, -16f);
             SetAnchored(badge, new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(0.5f, 0.5f), badgeSize, badgePosition);
 
             Image badgeImage = EnsureGraphic<Image>(badge.gameObject);
-            badgeImage.sprite = GetRoundedButtonSprite();
+            badgeImage.sprite = GetHudCounterGoldSprite();
             badgeImage.type = Image.Type.Sliced;
-            badgeImage.color = isUndoCount ? new Color(0.93f, 0.66f, 0.2f, 0.86f) : new Color(0.67f, 0.25f, 0.13f, 0.82f);
+            badgeImage.color = isUndoCount ? new Color(0.72f, 0.45f, 0.13f, 0.72f) : new Color(0.42f, 0.14f, 0.07f, 0.76f);
             badgeImage.raycastTarget = false;
-            AddShadow(badge.gameObject, new Color(0.13f, 0.05f, 0f, 0.18f), new Vector2(0f, -1.2f));
+            AddShadow(badge.gameObject, new Color(0.09f, 0.035f, 0f, 0.24f), new Vector2(0f, -1.4f));
+
+            RectTransform badgeGloss = EnsureImageLayer(badge, "BadgeGloss", GetRoundedButtonSprite(), Image.Type.Sliced, new Color(1f, 0.86f, 0.42f, 0.09f));
+            SetAnchored(badgeGloss, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(-16f, 7f), new Vector2(0f, -7f));
 
             text = EnsureText(badge, "BadgeText");
             text.text = value;
-            ConfigureText(text, 22f, 15f, TextAlignmentOptions.Center, isUndoCount ? new Color(0.29f, 0.14f, 0.02f, 1f) : new Color(1f, 0.91f, 0.74f, 1f));
-            text.fontStyle = FontStyles.Bold;
-            StretchToFill(text.rectTransform, 8f, 8f, 0f, 2f);
+            ConfigureText(text, 20f, 14f, TextAlignmentOptions.Center, new Color(0.9f, 0.7f, 0.32f, 1f));
+            ApplyGameplayButtonTextStyle(text, 0.08f);
+            StretchToFill(text.rectTransform, 7f, 7f, 0f, 2f);
 
-            AddTextOutline(text, isUndoCount ? new Color(1f, 0.93f, 0.62f, 0.22f) : new Color(0.27f, 0.04f, 0f, 0.26f), new Vector2(0.5f, -0.5f));
+            AddTextOutline(text, new Color(0.18f, 0.055f, 0f, 0.68f), new Vector2(0.75f, -0.75f));
+            badgeGloss.SetAsFirstSibling();
+            text.rectTransform.SetAsLastSibling();
             badge.gameObject.SetActive(isVisible);
             return badge;
         }
@@ -1017,11 +1335,11 @@ namespace SolitaireAssociations
             }
 
             Image rowImage = EnsureGraphic<Image>(row.gameObject);
-            rowImage.sprite = GetRoundedButtonSprite();
+            rowImage.sprite = GetHudCounterGoldSprite();
             rowImage.type = Image.Type.Sliced;
-            rowImage.color = new Color(0.74f, 0.48f, 0.14f, 0.34f);
+            rowImage.color = new Color(0.64f, 0.32f, 0.09f, 0.62f);
             rowImage.raycastTarget = false;
-            AddShadow(row.gameObject, new Color(0.18f, 0.08f, 0f, 0.14f), new Vector2(0f, -1f));
+            AddShadow(row.gameObject, new Color(0.12f, 0.045f, 0f, 0.2f), new Vector2(0f, -1f));
 
             RectTransform coin = EnsureImageLayer(row, "CoinDot", GetGoldIconSprite(), Image.Type.Sliced, new Color(1f, 0.95f, 0.66f, 0.98f));
             SetAnchored(coin, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(22f, 22f), new Vector2(19f, 0f));
@@ -1034,10 +1352,10 @@ namespace SolitaireAssociations
 
             TextMeshProUGUI subText = EnsureText(row, $"{buttonName}SubText");
             subText.text = value;
-            ConfigureText(subText, 21f, 14f, TextAlignmentOptions.Center, new Color(0.3f, 0.15f, 0.02f, 1f));
-            subText.fontStyle = FontStyles.Bold;
+            ConfigureText(subText, 21f, 14f, TextAlignmentOptions.Center, new Color(0.88f, 0.68f, 0.3f, 1f));
+            ApplyGameplayButtonTextStyle(subText, 0.08f);
             SetAnchored(subText.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 1f), new Vector2(0.5f, 0.5f), new Vector2(-30f, -2f), new Vector2(13f, 0f));
-            AddTextOutline(subText, new Color(1f, 0.93f, 0.62f, 0.24f), new Vector2(0.5f, -0.5f));
+            AddTextOutline(subText, new Color(0.18f, 0.055f, 0f, 0.62f), new Vector2(0.65f, -0.65f));
             row.gameObject.SetActive(true);
             return row;
         }
@@ -1151,22 +1469,46 @@ namespace SolitaireAssociations
 
         private void WirePauseButton(GameManager gameManager)
         {
+            rewardBonusButton ??= FindChildRecursive<Button>(safeAreaRoot, "RewardBonusButton");
+            rewardBonusButton ??= menuButton;
             if (rewardBonusButton == null)
             {
                 return;
             }
 
             pauseRestartAction = gameManager != null ? (Action)gameManager.RequestRestartWithConfirmation : null;
+            pauseMainMenuAction = gameManager != null ? (Action)gameManager.RequestReturnToMainMenu : null;
+            rewardBonusButton.gameObject.SetActive(true);
+            rewardBonusButton.interactable = true;
+
+            Image rewardImage = rewardBonusButton.GetComponent<Image>();
+            if (rewardImage != null)
+            {
+                rewardImage.raycastTarget = true;
+                rewardBonusButton.targetGraphic = rewardImage;
+            }
 
             if (rewardBonusButton.GetComponent<UIJuicyButton>() == null)
             {
                 rewardBonusButton.gameObject.AddComponent<UIJuicyButton>();
             }
 
-            if (wiredButtons.Add(rewardBonusButton))
+            ScenePauseMenuButton scenePauseButton = rewardBonusButton.GetComponent<ScenePauseMenuButton>();
+            if (scenePauseButton == null)
             {
-                rewardBonusButton.onClick.AddListener(ShowPausePopup);
+                scenePauseButton = rewardBonusButton.gameObject.AddComponent<ScenePauseMenuButton>();
             }
+            EnsurePausePopup();
+            scenePauseButton.SetPopup(pausePopup);
+
+            rewardBonusButton.onClick.RemoveAllListeners();
+            rewardBonusButton.onClick.AddListener(() =>
+            {
+                Debug.Log("UIManager: RewardBonusButton clicked.");
+                ShowPausePopup();
+            });
+            rewardBonusButton.onClick.AddListener(scenePauseButton.OpenPauseMenu);
+            wiredButtons.Add(rewardBonusButton);
         }
 
         private void ShowPausePopup()
@@ -1174,10 +1516,41 @@ namespace SolitaireAssociations
             EnsurePausePopup();
             if (pausePopup != null)
             {
-                pausePopup.transform.SetAsLastSibling();
+                PauseMenuPopupController controller = pausePopup.GetComponent<PauseMenuPopupController>();
+                if (controller != null)
+                {
+                    controller.SetRestartAction(pauseRestartAction);
+                    controller.SetMainMenuAction(pauseMainMenuAction);
+                    controller.Show();
+                    return;
+                }
+
+                if (safeAreaRoot != null && pausePopup.transform.parent != safeAreaRoot)
+                {
+                    pausePopup.transform.SetParent(safeAreaRoot, false);
+                }
+
                 pausePopup.SetActive(true);
+                pausePopup.transform.SetAsLastSibling();
+                if (pausePopup.transform is RectTransform popupRect)
+                {
+                    StretchToFill(popupRect, 0f, 0f, 0f, 0f);
+                }
+
+                CanvasGroup popupGroup = pausePopup.GetComponent<CanvasGroup>();
+                if (popupGroup != null)
+                {
+                    popupGroup.alpha = 1f;
+                    popupGroup.interactable = true;
+                    popupGroup.blocksRaycasts = true;
+                }
+
+                Debug.Log($"UIManager: Pause menu opened via authored {GetHierarchyPath(pausePopup.transform)}.");
                 Time.timeScale = 0f;
+                return;
             }
+
+            Debug.LogWarning("UIManager: Pause menu click received, but authored PauseSettingsPopup was not found in the scene.");
         }
 
         private void ClosePausePopup()
@@ -1200,94 +1573,198 @@ namespace SolitaireAssociations
 
         private void EnsurePausePopup()
         {
-            if (pausePopup != null || safeAreaRoot == null)
+            if (pausePopup != null)
+            {
+                WireAuthoredPausePopupButtons();
+                return;
+            }
+
+            safeAreaRoot ??= sceneRefs != null ? sceneRefs.SafeAreaRoot : null;
+            if (safeAreaRoot == null)
+            {
+                Canvas canvas = GetComponentInParent<Canvas>() ?? FindObjectOfType<Canvas>();
+                safeAreaRoot = canvas != null ? canvas.transform as RectTransform : null;
+            }
+
+            if (safeAreaRoot == null)
             {
                 return;
             }
 
-            GameObject overlayObject = new("PauseSettingsPopup", typeof(RectTransform), typeof(CanvasGroup), typeof(Image));
-            RectTransform overlay = overlayObject.GetComponent<RectTransform>();
-            overlay.SetParent(safeAreaRoot, false);
-            StretchToFill(overlay, 0f, 0f, 0f, 0f);
-            Image overlayImage = overlayObject.GetComponent<Image>();
-            overlayImage.color = new Color(0.02f, 0.08f, 0.04f, 0.55f);
-            overlayImage.raycastTarget = true;
-
-            RectTransform panel = CreateRect("Panel", overlay, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(420f, 316f), Vector2.zero);
-            Image panelImage = panel.gameObject.AddComponent<Image>();
-            panelImage.sprite = GetCreamPanelSprite();
-            panelImage.type = Image.Type.Sliced;
-            panelImage.color = Color.white;
-            AddShadow(panel.gameObject, new Color(0.05f, 0.03f, 0f, 0.35f), new Vector2(0f, -9f));
-
-            TextMeshProUGUI title = CreateText("Title", panel, "Пауза", 38f, new Color(0.22f, 0.15f, 0.04f, 1f));
-            SetAnchored(title.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(-44f, 70f), new Vector2(0f, -28f));
-
-            Button continueButton = CreateButton("ContinueButton", panel, "Продолжить");
-            SetAnchored(continueButton.GetComponent<RectTransform>(), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(304f, 64f), new Vector2(0f, 116f));
-            ConfigurePauseMenuButton(continueButton);
-            continueButton.onClick.AddListener(ClosePausePopup);
-            if (continueButton.GetComponent<UIJuicyButton>() == null)
+            Transform existing = safeAreaRoot.Find("PauseSettingsPopup") ?? FindChildRecursive<RectTransform>(safeAreaRoot, "PauseSettingsPopup");
+            if (existing == null)
             {
-                continueButton.gameObject.AddComponent<UIJuicyButton>();
+                foreach (Transform candidate in UnityEngine.Object.FindObjectsByType<Transform>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+                {
+                    if (candidate != null && candidate.name == "PauseSettingsPopup")
+                    {
+                        existing = candidate;
+                        break;
+                    }
+                }
             }
 
-            Button restartButton = CreateButton("RestartButton", panel, "Начать заново");
-            SetAnchored(restartButton.GetComponent<RectTransform>(), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(304f, 64f), new Vector2(0f, 36f));
-            ConfigurePauseMenuButton(restartButton);
-            restartButton.onClick.AddListener(() => pauseRestartAction?.Invoke());
-            if (restartButton.GetComponent<UIJuicyButton>() == null)
+            if (existing != null)
             {
-                restartButton.gameObject.AddComponent<UIJuicyButton>();
+                pausePopup = existing.gameObject;
+                WireAuthoredPausePopupButtons();
+            }
+        }
+
+        private static string GetHierarchyPath(Transform transform)
+        {
+            if (transform == null)
+            {
+                return "<null>";
             }
 
-            pausePopup = overlayObject;
-            pausePopup.SetActive(false);
+            Stack<string> path = new();
+            Transform current = transform;
+            while (current != null)
+            {
+                path.Push(current.name);
+                current = current.parent;
+            }
+
+            return string.Join("/", path);
+        }
+
+        private void WireAuthoredPausePopupButtons()
+        {
+            if (pausePopup == null)
+            {
+                return;
+            }
+
+            PauseMenuPopupController controller = pausePopup.GetComponent<PauseMenuPopupController>();
+            if (controller != null)
+            {
+                controller.SetRestartAction(pauseRestartAction);
+                controller.SetMainMenuAction(pauseMainMenuAction);
+                controller.WireButtons();
+                return;
+            }
+
+            Button continueButton = FindChildRecursive<Button>(pausePopup.transform, "ContinueButton");
+            if (continueButton != null)
+            {
+                continueButton.onClick.RemoveAllListeners();
+                continueButton.onClick.AddListener(ClosePausePopup);
+                if (continueButton.GetComponent<UIJuicyButton>() == null)
+                {
+                    continueButton.gameObject.AddComponent<UIJuicyButton>();
+                }
+            }
+
+            Button restartButton = FindChildRecursive<Button>(pausePopup.transform, "RestartButton");
+            if (restartButton != null)
+            {
+                restartButton.onClick.RemoveAllListeners();
+                restartButton.onClick.AddListener(() => pauseRestartAction?.Invoke());
+                if (restartButton.GetComponent<UIJuicyButton>() == null)
+                {
+                    restartButton.gameObject.AddComponent<UIJuicyButton>();
+                }
+            }
+
+            Button mainMenuButton = FindChildRecursive<Button>(pausePopup.transform, "MainMenuButton");
+            if (mainMenuButton != null)
+            {
+                mainMenuButton.onClick.RemoveAllListeners();
+                mainMenuButton.onClick.AddListener(() => pauseMainMenuAction?.Invoke());
+                if (mainMenuButton.GetComponent<UIJuicyButton>() == null)
+                {
+                    mainMenuButton.gameObject.AddComponent<UIJuicyButton>();
+                }
+            }
         }
 
         private void EnsureRestartConfirmationPopup(Func<bool> onConfirmed)
         {
             if (restartConfirmationPopup == null)
             {
-                restartConfirmationPopup = CreateModalRoot("RestartConfirmationPopup", out RectTransform panel, new Vector2(440f, 300f));
-                CreateModalTitle(panel, "Начать уровень заново?", new Vector2(-44f, 72f), new Vector2(0f, -30f), 34f);
-                TextMeshProUGUI body = CreateText("Body", panel, "Будет потрачена 1 жизнь", 27f, new Color(0.38f, 0.25f, 0.12f, 1f));
-                body.fontStyle = FontStyles.Bold;
-                SetAnchored(body.rectTransform, new Vector2(0f, 0.5f), new Vector2(1f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-56f, 54f), new Vector2(0f, 18f));
-
-                Button continueButton = CreateButton("ContinueButton", panel, "Продолжить");
-                SetAnchored(continueButton.GetComponent<RectTransform>(), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(300f, 62f), new Vector2(0f, 88f));
-                ConfigureModalButton(continueButton, true);
-
-                Button cancelButton = CreateButton("CancelButton", panel, "Отмена");
-                SetAnchored(cancelButton.GetComponent<RectTransform>(), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(300f, 58f), new Vector2(0f, 24f));
-                ConfigureModalButton(cancelButton, false);
-                cancelButton.onClick.AddListener(() => HideModal(restartConfirmationPopup));
-
-                CreateCloseButton(panel, () => HideModal(restartConfirmationPopup));
+                restartConfirmationPopup = FindAuthoredModal("RestartConfirmationPopup");
+                if (restartConfirmationPopup == null)
+                {
+                    Debug.LogWarning("UIManager: authored RestartConfirmationPopup was not found in the scene.");
+                    return;
+                }
             }
 
-            Button primary = FindChildRecursive<Button>(restartConfirmationPopup.transform, "ContinueButton");
+            Action cancel = () => HideModal(restartConfirmationPopup);
+            Action confirm = () =>
+            {
+                bool restarted = onConfirmed?.Invoke() == true;
+                if (restarted)
+                {
+                    HideModal(restartConfirmationPopup);
+                }
+                else if (restartConfirmationPopup != null)
+                {
+                    restartConfirmationPopup.SetActive(false);
+                    if (!HasActiveModal())
+                    {
+                        Time.timeScale = 1f;
+                    }
+                }
+            };
+
+            RestartConfirmationPopupController controller = restartConfirmationPopup.GetComponent<RestartConfirmationPopupController>();
+            if (controller != null)
+            {
+                controller.SetActions(confirm, cancel);
+                return;
+            }
+
+            Button primary = FindChildRecursive<Button>(restartConfirmationPopup.transform, "ConfirmButton")
+                ?? FindChildRecursive<Button>(restartConfirmationPopup.transform, "ContinueButton");
             if (primary != null)
             {
                 primary.onClick.RemoveAllListeners();
-                primary.onClick.AddListener(() =>
-                {
-                    bool restarted = onConfirmed?.Invoke() == true;
-                    if (restarted)
-                    {
-                        HideModal(restartConfirmationPopup);
-                    }
-                    else if (restartConfirmationPopup != null)
-                    {
-                        restartConfirmationPopup.SetActive(false);
-                        if (!HasActiveModal())
-                        {
-                            Time.timeScale = 1f;
-                        }
-                    }
-                });
+                primary.onClick.AddListener(() => confirm());
             }
+
+            Button cancelButton = FindChildRecursive<Button>(restartConfirmationPopup.transform, "CancelButton");
+            if (cancelButton != null)
+            {
+                cancelButton.onClick.RemoveAllListeners();
+                cancelButton.onClick.AddListener(() => cancel());
+            }
+
+            Button closeButton = FindChildRecursive<Button>(restartConfirmationPopup.transform, "CloseButton");
+            if (closeButton != null)
+            {
+                closeButton.onClick.RemoveAllListeners();
+                closeButton.onClick.AddListener(() => cancel());
+            }
+        }
+
+        private GameObject FindAuthoredModal(string modalName)
+        {
+            safeAreaRoot ??= sceneRefs != null ? sceneRefs.SafeAreaRoot : null;
+            if (safeAreaRoot == null)
+            {
+                Canvas canvas = GetComponentInParent<Canvas>() ?? FindObjectOfType<Canvas>();
+                safeAreaRoot = canvas != null ? canvas.transform as RectTransform : null;
+            }
+
+            Transform existing = safeAreaRoot != null
+                ? safeAreaRoot.Find(modalName) ?? FindChildRecursive<RectTransform>(safeAreaRoot, modalName)
+                : null;
+            if (existing != null)
+            {
+                return existing.gameObject;
+            }
+
+            foreach (Transform candidate in UnityEngine.Object.FindObjectsByType<Transform>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            {
+                if (candidate != null && candidate.name == modalName)
+                {
+                    return candidate.gameObject;
+                }
+            }
+
+            return null;
         }
 
         private void EnsureLevelFailedPopup(Func<bool> onRetry)
@@ -1375,15 +1852,15 @@ namespace SolitaireAssociations
             StretchToFill(overlay, 0f, 0f, 0f, 0f);
 
             Image overlayImage = overlayObject.GetComponent<Image>();
-            overlayImage.color = new Color(0.02f, 0.08f, 0.04f, 0.58f);
+            overlayImage.color = new Color(0.01f, 0.045f, 0.028f, 0.66f);
             overlayImage.raycastTarget = true;
 
             panel = CreateRect("Panel", overlay, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), panelSize, Vector2.zero);
             Image panelImage = panel.gameObject.AddComponent<Image>();
-            panelImage.sprite = GetCreamPanelSprite();
-            panelImage.type = Image.Type.Sliced;
+            panelImage.sprite = GetPauseWindowSprite();
+            panelImage.type = Image.Type.Simple;
             panelImage.color = Color.white;
-            AddShadow(panel.gameObject, new Color(0.05f, 0.03f, 0f, 0.35f), new Vector2(0f, -9f));
+            AddShadow(panel.gameObject, new Color(0.02f, 0.01f, 0f, 0.42f), new Vector2(0f, -8f));
 
             overlayObject.SetActive(false);
             return overlayObject;
@@ -1391,9 +1868,10 @@ namespace SolitaireAssociations
 
         private TextMeshProUGUI CreateModalTitle(RectTransform panel, string value, Vector2 sizeDelta, Vector2 anchoredPosition, float fontSize)
         {
-            TextMeshProUGUI title = CreateText("Title", panel, value, fontSize, new Color(0.24f, 0.15f, 0.07f, 1f));
+            TextMeshProUGUI title = CreateText("Title", panel, value, fontSize, new Color(0.98f, 0.86f, 0.52f, 1f));
             title.fontStyle = FontStyles.Bold;
             SetAnchored(title.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), sizeDelta, anchoredPosition);
+            AddTextOutline(title, new Color(0.12f, 0.055f, 0.012f, 0.62f), new Vector2(1f, -1f));
             return title;
         }
 
@@ -1639,16 +2117,17 @@ namespace SolitaireAssociations
         {
             RectTransform root = CreateRect(name, parent, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(220f, 62f), Vector2.zero);
             Image image = root.gameObject.AddComponent<Image>();
-            image.sprite = GetPrimaryButtonSprite();
-            image.type = Image.Type.Sliced;
+            image.sprite = GetGameplayActionButtonSprite();
+            image.type = image.sprite != null ? Image.Type.Sliced : Image.Type.Simple;
             image.color = Color.white;
             Button button = root.gameObject.AddComponent<Button>();
             button.targetGraphic = image;
-            AddShadow(root.gameObject, new Color(0.34f, 0.16f, 0f, 0.32f), new Vector2(0f, -6f));
+            AddShadow(root.gameObject, new Color(0.03f, 0.015f, 0f, 0.34f), new Vector2(0f, -5f));
 
-            TextMeshProUGUI text = CreateText("Label", root, label, 26f, new Color(0.22f, 0.14f, 0.03f, 1f));
+            TextMeshProUGUI text = CreateText("Label", root, label, 26f, new Color(0.98f, 0.73f, 0.2f, 1f));
             text.fontStyle = FontStyles.Bold;
             StretchToFill(text.rectTransform, 12f, 12f, 0f, 0f);
+            AddTextOutline(text, new Color(0.15f, 0.07f, 0.015f, 0.62f), new Vector2(1f, -1f));
             return button;
         }
 
@@ -1660,19 +2139,17 @@ namespace SolitaireAssociations
             }
 
             Image image = EnsureGraphic<Image>(button.gameObject);
-            image.sprite = GetPrimaryButtonSprite();
+            image.sprite = GetGameplayActionButtonSprite();
             image.type = image.sprite != null ? Image.Type.Sliced : Image.Type.Simple;
-            image.color = isPrimary
-                ? new Color(0.03f, 0.76f, 0.34f, 1f)
-                : new Color(1f, 0.76f, 0.24f, 1f);
+            image.color = isPrimary ? Color.white : new Color(0.92f, 0.92f, 0.88f, 1f);
             button.targetGraphic = image;
-            AddShadow(button.gameObject, isPrimary ? new Color(0f, 0.16f, 0.06f, 0.28f) : new Color(0.22f, 0.11f, 0f, 0.26f), new Vector2(0f, -5f));
+            AddShadow(button.gameObject, new Color(0.03f, 0.015f, 0f, 0.32f), new Vector2(0f, -5f));
 
             foreach (TMP_Text text in button.GetComponentsInChildren<TMP_Text>(true))
             {
-                ConfigureText(text, 30f, 20f, TextAlignmentOptions.Center, isPrimary ? Color.white : new Color(0.31f, 0.16f, 0.03f, 1f));
+                ConfigureText(text, 30f, 20f, TextAlignmentOptions.Center, new Color(0.98f, 0.73f, 0.2f, 1f));
                 text.fontStyle = FontStyles.Bold;
-                AddTextOutline(text, isPrimary ? new Color(0f, 0.24f, 0.1f, 0.22f) : new Color(1f, 0.94f, 0.62f, 0.34f), new Vector2(0f, -0.7f));
+                AddTextOutline(text, new Color(0.15f, 0.07f, 0.015f, 0.62f), new Vector2(1f, -1f));
             }
         }
 
@@ -1744,6 +2221,52 @@ namespace SolitaireAssociations
             text.color = color;
         }
 
+        private static void ApplyGameplayButtonTextStyle(TMP_Text text, float outlineWidth)
+        {
+            if (text == null)
+            {
+                return;
+            }
+
+            text.fontStyle = FontStyles.Bold;
+            text.fontWeight = FontWeight.Bold;
+            text.enableVertexGradient = true;
+            text.colorGradient = new VertexGradient(
+                new Color(0.98f, 0.88f, 0.48f, 1f),
+                new Color(0.94f, 0.74f, 0.28f, 1f),
+                new Color(0.58f, 0.32f, 0.06f, 1f),
+                new Color(0.72f, 0.44f, 0.09f, 1f));
+
+            Material material = text.fontMaterial;
+            if (material == null)
+            {
+                return;
+            }
+
+            material = new Material(material);
+            if (material.HasProperty(ShaderUtilities.ID_FaceColor))
+            {
+                material.SetColor(ShaderUtilities.ID_FaceColor, new Color(0.96f, 0.77f, 0.32f, 1f));
+            }
+
+            if (material.HasProperty(ShaderUtilities.ID_OutlineColor))
+            {
+                material.SetColor(ShaderUtilities.ID_OutlineColor, new Color(0.11f, 0.052f, 0.012f, 1f));
+            }
+
+            if (material.HasProperty(ShaderUtilities.ID_OutlineWidth))
+            {
+                material.SetFloat(ShaderUtilities.ID_OutlineWidth, outlineWidth);
+            }
+
+            if (material.HasProperty(ShaderUtilities.ID_GlowColor))
+            {
+                material.SetColor(ShaderUtilities.ID_GlowColor, Color.clear);
+            }
+
+            text.fontMaterial = material;
+        }
+
         private static void AddShadow(GameObject target, Color color, Vector2 distance)
         {
             Shadow shadow = target.GetComponent<Shadow>();
@@ -1810,6 +2333,29 @@ namespace SolitaireAssociations
             image.type = Image.Type.Simple;
             image.color = new Color(0.9f, 1f, 0.78f, 1f);
             image.raycastTarget = false;
+        }
+
+        private static void RemoveChildIfExists(RectTransform parent, string name)
+        {
+            if (parent == null)
+            {
+                return;
+            }
+
+            Transform child = parent.Find(name);
+            if (child == null)
+            {
+                return;
+            }
+
+            if (Application.isPlaying)
+            {
+                Destroy(child.gameObject);
+            }
+            else
+            {
+                DestroyImmediate(child.gameObject);
+            }
         }
 
         private static T EnsureGraphic<T>(GameObject target) where T : Graphic
@@ -1889,6 +2435,13 @@ namespace SolitaireAssociations
                 : GetPrimaryButtonSprite();
         }
 
+        private static Sprite GetPauseWindowSprite()
+        {
+            return PremiumUISprites.PauseWindowCardMesh != null
+                ? PremiumUISprites.PauseWindowCardMesh
+                : GetHudPanelCreamGoldSprite();
+        }
+
         private static Sprite GetHudCounterGoldSprite()
         {
             return PremiumUISprites.HudCounterGold != null
@@ -1917,6 +2470,13 @@ namespace SolitaireAssociations
                 : GetRoundSprite();
         }
 
+        private static Sprite GetMenuButtonSprite()
+        {
+            return PremiumUISprites.MenuButtonCardMesh != null
+                ? PremiumUISprites.MenuButtonCardMesh
+                : GetRoundSprite();
+        }
+
         private static Sprite GetCreamPanelSprite()
         {
             return PremiumUISprites.CreamPanel != null
@@ -1940,6 +2500,12 @@ namespace SolitaireAssociations
 
         private static Sprite GetHeartSprite()
         {
+            if (heartSprite != null)
+            {
+                return heartSprite;
+            }
+
+            heartSprite = Resources.Load<Sprite>("UI/Premium/icon_lives_heart");
             if (heartSprite != null)
             {
                 return heartSprite;
