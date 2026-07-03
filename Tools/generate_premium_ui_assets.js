@@ -131,46 +131,53 @@ function drawLayeredActionButton() {
   const width = 560;
   const height = 150;
   const pixels = Buffer.alloc(width * height * 4);
-  const shadow = hex("#352006", 142);
-  const outerStroke = hex("#F2CE69", 245);
-  const innerStroke = hex("#FFF0B2", 176);
-  const bodyTop = hex("#EBC56A", 255);
-  const bodyMid = hex("#D99630", 255);
-  const bodyBottom = hex("#A75F16", 255);
-  const faceTop = hex("#FFF1C8", 255);
-  const faceBottom = hex("#EFC06B", 255);
+  const clear = [0, 0, 0, 0];
+  const shadow = [46, 18, 0, 128];
+  const goldDark = [112, 61, 10, 255];
+  const goldMid = [189, 130, 33, 255];
+  const goldLight = [242, 196, 64, 255];
+  const greenTop = [20, 92, 48, 255];
+  const greenBottom = [3, 51, 33, 255];
+  const greenGloss = [89, 168, 99, 255];
 
   for (let py = 0; py < height; py += 1) {
     for (let px = 0; px < width; px += 1) {
       const index = (py * width + px) * 4;
-      const shadowDistance = signedDistanceRoundedRect(px + 0.5, py + 0.5, 20, 38, 520, 104, 52);
-      if (shadowDistance <= 0) {
-        blend(pixels, index, shadow);
+      const outer = signedDistanceRoundedRect(px + 0.5, py + 0.5, 10, 10, width - 20, height - 20, 54);
+      if (outer > 0) {
+        const softShadow = Math.max(0, Math.min(1, 1 - outer / 8));
+        const source = softShadow > 0 ? [shadow[0], shadow[1], shadow[2], Math.round(shadow[3] * softShadow)] : clear;
+        pixels[index] = source[0];
+        pixels[index + 1] = source[1];
+        pixels[index + 2] = source[2];
+        pixels[index + 3] = source[3];
+        continue;
       }
 
-      const bodyDistance = signedDistanceRoundedRect(px + 0.5, py + 0.5, 14, 18, 532, 112, 56);
-      if (bodyDistance <= 0) {
-        const t = Math.max(0, Math.min(1, (py - 18) / 112));
-        const fill = t < 0.42 ? mix(bodyTop, bodyMid, t / 0.42) : mix(bodyMid, bodyBottom, (t - 0.42) / 0.58);
-        blend(pixels, index, fill);
-        if (-bodyDistance < 4) {
-          blend(pixels, index, outerStroke);
+      const inner = signedDistanceRoundedRect(px + 0.5, py + 0.5, 18, 18, width - 36, height - 36, 46);
+      const vertical = Math.max(0, Math.min(1, py / (height - 1)));
+      const center = Math.max(0, Math.min(1, 1 - Math.abs(px - width * 0.5) / (width * 0.5)));
+      let pixel;
+
+      if (inner <= 0) {
+        const enamelT = Math.max(0, Math.min(1, (py - 34) / 82));
+        pixel = mix(greenTop, greenBottom, enamelT);
+
+        const topGloss = Math.max(0, Math.min(1, 1 - Math.abs(py - 40) / 11))
+          * Math.max(0, Math.min(1, 1 - Math.abs(px - width * 0.5) / 250));
+        pixel = mix(pixel, greenGloss, topGloss * 0.08);
+      } else {
+        const bevel = Math.max(0, Math.min(1, Math.abs(outer) / 22));
+        pixel = mix(goldLight, mix(goldMid, goldDark, vertical), bevel);
+        if (inner < 5) {
+          pixel = mix(pixel, greenTop, Math.max(0, Math.min(1, 1 - inner / 5)) * 0.12);
         }
       }
 
-      const faceDistance = signedDistanceRoundedRect(px + 0.5, py + 0.5, 40, 23, 480, 42, 21);
-      if (faceDistance <= 0) {
-        const t = Math.max(0, Math.min(1, (py - 23) / 42));
-        blend(pixels, index, mix(faceTop, faceBottom, t));
-        if (-faceDistance < 2) {
-          blend(pixels, index, innerStroke);
-        }
-      }
-
-      const bevelDistance = signedDistanceRoundedRect(px + 0.5, py + 0.5, 24, 30, 512, 92, 46);
-      if (bevelDistance <= 0 && py > 92) {
-        blend(pixels, index, [110, 58, 12, Math.round(Math.min(1, (py - 92) / 30) * 58)]);
-      }
+      pixels[index] = pixel[0];
+      pixels[index + 1] = pixel[1];
+      pixels[index + 2] = pixel[2];
+      pixels[index + 3] = pixel[3];
     }
   }
 

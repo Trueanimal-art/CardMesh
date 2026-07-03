@@ -11,9 +11,9 @@ namespace SolitaireAssociations
         private const float StackSpacingMultiplier = 1.2f;
         private const float MaxVisualStackOffset = 50f;
         private const float MinReadableStackOffset = 16f;
-        private static readonly Color EmptyFrameFillColor = new(0.46f, 0.50f, 0.48f, 0.08f);
-        private static readonly Color EmptyFrameOutlineColor = new(0.70f, 0.74f, 0.70f, 0.12f);
-        private static readonly Vector2 EmptyFrameOutlineDistance = new(1.8f, -1.8f);
+        private const float LinkedStackPeekHeight = 32f;
+        private const float LinkedStackStepHeight = 28f;
+        private static readonly Color EmptyFrameFillColor = Color.white;
 
         [SerializeField] private Image backgroundImage;
         [SerializeField] private LayoutElement layoutElement;
@@ -85,6 +85,7 @@ namespace SolitaireAssociations
                 return;
             }
 
+            cardView.SetPlayerStackedOnPrevious(false);
             cards.Add(cardView);
             cardView.BindToContainer(this);
             cardView.transform.SetParent(CardsRoot, false);
@@ -106,6 +107,41 @@ namespace SolitaireAssociations
                     continue;
                 }
 
+                cardView.SetPlayerStackedOnPrevious(false);
+                cards.Add(cardView);
+                cardView.BindToContainer(this);
+                cardView.transform.SetParent(CardsRoot, false);
+                cardView.SetSize(cardSize);
+            }
+
+            RefreshLayout();
+        }
+
+        public void AddCardsFromPlayerMove(IEnumerable<CardView> cardViews)
+        {
+            if (cardViews == null)
+            {
+                return;
+            }
+
+            List<CardView> movingCards = new();
+            foreach (CardView cardView in cardViews)
+            {
+                if (cardView != null)
+                {
+                    movingCards.Add(cardView);
+                }
+            }
+
+            if (movingCards.Count == 0)
+            {
+                return;
+            }
+
+            bool linksToExistingTop = TopCard != null;
+            movingCards[0].SetPlayerStackedOnPrevious(linksToExistingTop);
+            foreach (CardView cardView in movingCards)
+            {
                 cards.Add(cardView);
                 cardView.BindToContainer(this);
                 cardView.transform.SetParent(CardsRoot, false);
@@ -122,8 +158,11 @@ namespace SolitaireAssociations
                 return;
             }
 
-            cards.Remove(cardView);
-            RefreshLayout();
+            if (cards.Remove(cardView))
+            {
+                cardView.SetPlayerStackedOnPrevious(false);
+                RefreshLayout();
+            }
         }
 
         public List<CardView> RemoveStackStartingAt(CardView firstCard)
@@ -139,6 +178,7 @@ namespace SolitaireAssociations
                 cards.Remove(cardView);
             }
 
+            stack[0].SetPlayerStackedOnPrevious(false);
             RefreshLayout();
             return stack;
         }
@@ -146,22 +186,98 @@ namespace SolitaireAssociations
         public List<CardView> GetMovableStack(CardView firstCard)
         {
             List<CardView> stack = new();
+            if (firstCard == null || firstCard.Data == null || !firstCard.IsFaceUp)
+            {
+                return stack;
+            }
+
             int firstIndex = cards.IndexOf(firstCard);
             if (firstIndex < 0)
             {
                 return stack;
             }
 
-            for (int index = firstIndex; index < cards.Count; index++)
+            string associationId = firstCard.Data.AssociationId;
+            bool expectsImageCard = firstCard.Data.IsGold
+                ? firstCard.Data.IsImageGoal
+                : firstCard.Data.IsImageCard;
+            int stackStartIndex = firstIndex;
+
+            if (firstCard.Data.IsGold)
             {
-                CardView cardView = cards[index];
-                if (cardView == null || !cardView.IsFaceUp || cardView.Data == null || cardView.Data.IsGold)
+                if (firstIndex != cards.Count - 1)
                 {
-                    stack.Clear();
                     return stack;
                 }
 
-                if (index > firstIndex && cardView.Data.AssociationId != firstCard.Data.AssociationId)
+                while (stackStartIndex - 1 >= 0)
+                {
+                    CardView upperCard = cards[stackStartIndex];
+                    if (upperCard == null || !upperCard.IsPlayerStackedOnPrevious)
+                    {
+                        break;
+                    }
+
+                    CardView previousCard = cards[stackStartIndex - 1];
+                    if (!CanJoinRegularStack(previousCard, associationId, expectsImageCard))
+                    {
+                        break;
+                    }
+
+                    stackStartIndex--;
+                }
+
+                for (int index = stackStartIndex; index <= firstIndex; index++)
+                {
+                    CardView cardView = cards[index];
+                    bool isGoldHead = index == firstIndex;
+                    if (isGoldHead)
+                    {
+                        if (cardView == null
+                            || !cardView.IsFaceUp
+                            || cardView.Data == null
+                            || !cardView.Data.IsGold
+                            || cardView.Data.AssociationId != associationId
+                            || cardView.Data.IsImageGoal != expectsImageCard)
+                        {
+                            stack.Clear();
+                            return stack;
+                        }
+                    }
+                    else if (!CanJoinRegularStack(cardView, associationId, expectsImageCard))
+                    {
+                        stack.Clear();
+                        return stack;
+                    }
+
+                    stack.Add(cardView);
+                }
+
+                return stack;
+            }
+
+            while (stackStartIndex - 1 >= 0)
+            {
+                CardView upperCard = cards[stackStartIndex];
+                if (upperCard == null || !upperCard.IsPlayerStackedOnPrevious)
+                {
+                    break;
+                }
+
+                CardView previousCard = cards[stackStartIndex - 1];
+                if (!CanJoinRegularStack(previousCard, associationId, expectsImageCard))
+                {
+                    break;
+                }
+
+                stackStartIndex--;
+            }
+
+            for (int index = stackStartIndex; index < cards.Count; index++)
+            {
+                CardView cardView = cards[index];
+                if (!CanJoinRegularStack(cardView, associationId, expectsImageCard)
+                    || (index > stackStartIndex && !cardView.IsPlayerStackedOnPrevious))
                 {
                     stack.Clear();
                     return stack;
@@ -171,6 +287,16 @@ namespace SolitaireAssociations
             }
 
             return stack;
+        }
+
+        private static bool CanJoinRegularStack(CardView cardView, string associationId, bool expectsImageCard)
+        {
+            return cardView != null
+                && cardView.IsFaceUp
+                && cardView.Data != null
+                && !cardView.Data.IsGold
+                && cardView.Data.AssociationId == associationId
+                && cardView.Data.IsImageCard == expectsImageCard;
         }
 
         public CardView GetCardAt(int index)
@@ -215,7 +341,7 @@ namespace SolitaireAssociations
 
         public bool CanAccept(CardView movingCard)
         {
-            if (movingCard == null || movingCard.Data == null || movingCard.Data.IsGold)
+            if (movingCard == null || movingCard.Data == null)
             {
                 return false;
             }
@@ -223,19 +349,32 @@ namespace SolitaireAssociations
             CardView topCard = TopCard;
             if (topCard == null)
             {
-                return true;
+                return !movingCard.Data.IsGold;
             }
 
-            if (topCard.Data.IsGold)
+            if (topCard.Data == null || topCard.Data.IsGold)
             {
                 return false;
             }
 
-            return topCard.Data.AssociationId == movingCard.Data.AssociationId;
+            if (topCard.Data.AssociationId != movingCard.Data.AssociationId)
+            {
+                return false;
+            }
+
+            bool movingUsesImages = movingCard.Data.IsGold
+                ? movingCard.Data.IsImageGoal
+                : movingCard.Data.IsImageCard;
+            return topCard.Data.IsImageCard == movingUsesImages;
         }
 
         public void ClearCards()
         {
+            foreach (CardView cardView in cards)
+            {
+                cardView?.SetPlayerStackedOnPrevious(false);
+            }
+
             cards.Clear();
             RefreshLayout();
         }
@@ -259,20 +398,30 @@ namespace SolitaireAssociations
 
         public void RefreshLayout()
         {
+            RefreshLayout(true);
+        }
+
+        public void RefreshLayoutForDragPreview()
+        {
+            RefreshLayout(false);
+        }
+
+        private void RefreshLayout(bool revealTopCard)
+        {
             RefreshEmptyColumnFrame();
             int topLayoutCardIndex = -1;
 
             for (int index = cards.Count - 1; index >= 0; index--)
             {
                 CardView card = cards[index];
-                if (card != null)
+                if (card != null && !card.IsDragDetached)
                 {
                     topLayoutCardIndex = index;
                     break;
                 }
             }
 
-            float resolvedVerticalOffset = ResolveSafeVerticalOffset(topLayoutCardIndex);
+            float resolvedVerticalOffset = ResolveSafeVerticalOffset(topLayoutCardIndex, revealTopCard);
             float currentOffset = 0f;
 
             for (int index = 0; index < cards.Count; index++)
@@ -293,13 +442,32 @@ namespace SolitaireAssociations
                 cardRect.SetSiblingIndex(index);
                 card.SetSize(cardSize);
                 bool isTopCard = index == topLayoutCardIndex;
-                bool shouldFaceUp = isTopCard || card.IsFaceUp;
+                bool shouldFaceUp = (revealTopCard && isTopCard) || card.IsFaceUp;
+                bool isPeekCard = !isTopCard;
+                bool isLinkedStackPeek = IsLinkedStackPeek(index, topLayoutCardIndex);
+                float stepHeight = isLinkedStackPeek
+                    ? Mathf.Min(LinkedStackStepHeight, resolvedVerticalOffset)
+                    : shouldFaceUp ? resolvedVerticalOffset : resolvedVerticalOffset * FaceDownOffsetFactor;
+                float visibleHeight = isLinkedStackPeek ? LinkedStackPeekHeight : stepHeight;
                 card.SetFaceUp(shouldFaceUp);
-                card.SetRevealHistoryLayout(shouldFaceUp && !isTopCard, resolvedVerticalOffset, shouldFaceUp && !isTopCard);
+                card.SetRevealHistoryLayout(isPeekCard, visibleHeight, shouldFaceUp && isPeekCard);
                 card.SetVisible(true);
                 card.SetRaycastBlocks(true);
-                currentOffset += shouldFaceUp ? resolvedVerticalOffset : resolvedVerticalOffset * FaceDownOffsetFactor;
+                currentOffset += stepHeight;
             }
+        }
+
+        private bool IsLinkedStackPeek(int index, int topLayoutCardIndex)
+        {
+            if (index < 0 || index >= topLayoutCardIndex || index + 1 >= cards.Count)
+            {
+                return false;
+            }
+
+            CardView nextCard = cards[index + 1];
+            return nextCard != null
+                && !nextCard.IsDragDetached
+                && nextCard.IsPlayerStackedOnPrevious;
         }
 
         private void RefreshEmptyColumnFrame()
@@ -322,40 +490,54 @@ namespace SolitaireAssociations
 
         private void EnsureEmptyColumnFrame()
         {
-            if (emptyColumnFrame != null || CardsRoot == null)
+            if (CardsRoot == null)
             {
                 return;
             }
 
-            Transform existing = CardsRoot.Find("EmptyColumnFrame");
-            if (existing is RectTransform existingRect)
+            if (emptyColumnFrame == null)
             {
-                emptyColumnFrame = existingRect;
-            }
-            else
-            {
-                GameObject frameObject = new("EmptyColumnFrame", typeof(RectTransform), typeof(Image), typeof(Outline));
-                emptyColumnFrame = frameObject.GetComponent<RectTransform>();
-                emptyColumnFrame.SetParent(CardsRoot, false);
+                Transform existing = CardsRoot.Find("EmptyColumnFrame");
+                if (existing is RectTransform existingRect)
+                {
+                    emptyColumnFrame = existingRect;
+                }
+                else
+                {
+                    GameObject frameObject = new("EmptyColumnFrame", typeof(RectTransform), typeof(Image));
+                    emptyColumnFrame = frameObject.GetComponent<RectTransform>();
+                    emptyColumnFrame.SetParent(CardsRoot, false);
+                }
             }
 
             Image image = emptyColumnFrame.GetComponent<Image>();
             if (image != null)
             {
+                image.sprite = PremiumUISprites.EmptyColumnSlot;
+                image.type = Image.Type.Sliced;
+                image.material = null;
                 image.color = EmptyFrameFillColor;
                 image.raycastTarget = false;
+            }
+
+            CanvasGroup group = emptyColumnFrame.GetComponent<CanvasGroup>();
+            if (group != null)
+            {
+                group.alpha = 1f;
+                group.interactable = false;
+                group.blocksRaycasts = false;
             }
 
             Outline outline = emptyColumnFrame.GetComponent<Outline>();
             if (outline != null)
             {
-                outline.effectColor = EmptyFrameOutlineColor;
-                outline.effectDistance = EmptyFrameOutlineDistance;
+                outline.effectColor = new Color(0f, 0f, 0f, 0f);
+                outline.effectDistance = Vector2.zero;
                 outline.useGraphicAlpha = true;
             }
         }
 
-        private float ResolveSafeVerticalOffset(int topLayoutCardIndex)
+        private float ResolveSafeVerticalOffset(int topLayoutCardIndex, bool revealTopCard)
         {
             if (cards.Count <= 1)
             {
@@ -378,7 +560,13 @@ namespace SolitaireAssociations
                     continue;
                 }
 
-                bool shouldFaceUp = index == topLayoutCardIndex || card.IsFaceUp;
+                if (IsLinkedStackPeek(index, topLayoutCardIndex))
+                {
+                    weightedSteps += LinkedStackStepHeight / Mathf.Max(1f, verticalOffset);
+                    continue;
+                }
+
+                bool shouldFaceUp = (revealTopCard && index == topLayoutCardIndex) || card.IsFaceUp;
                 weightedSteps += shouldFaceUp ? 1f : FaceDownOffsetFactor;
             }
 

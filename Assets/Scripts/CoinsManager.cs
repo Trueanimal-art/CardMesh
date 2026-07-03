@@ -6,23 +6,39 @@ namespace SolitaireAssociations
     public sealed class CoinsManager : MonoBehaviour
     {
         private const string CoinsKey = "CardMesh.Coins";
+        private const string EconomyVersionKey = "CardMesh.EconomyVersion";
+        private const int CurrentEconomyVersion = 2;
 
         [SerializeField, Min(0)] private int startingCoins;
-        [SerializeField, Min(1)] private int rewardPerGoldCategory = 10;
+        [SerializeField, Min(0)] private int levelWinReward = 50;
 
         public int CurrentCoins { get; private set; }
-        public int RewardPerGoldCategory => Mathf.Max(1, rewardPerGoldCategory);
+        public int LevelWinReward => Mathf.Max(0, levelWinReward);
 
         public event Action<int, int> CoinsChanged;
 
         private void Awake()
         {
+            if (PlayerPrefs.GetInt(EconomyVersionKey, 0) < CurrentEconomyVersion)
+            {
+                CurrentCoins = Mathf.Max(0, startingCoins);
+                PlayerPrefs.SetInt(CoinsKey, CurrentCoins);
+                PlayerPrefs.SetInt(EconomyVersionKey, CurrentEconomyVersion);
+                PlayerPrefs.Save();
+                return;
+            }
+
             CurrentCoins = Mathf.Max(0, PlayerPrefs.GetInt(CoinsKey, startingCoins));
         }
 
-        public int AddGoldCategoryReward()
+        public void ReloadFromPrefs()
         {
-            return AddCoins(RewardPerGoldCategory);
+            CurrentCoins = Mathf.Max(0, PlayerPrefs.GetInt(CoinsKey, startingCoins));
+        }
+
+        public int AddLevelWinReward()
+        {
+            return AddCoins(LevelWinReward);
         }
 
         public int AddCoins(int amount)

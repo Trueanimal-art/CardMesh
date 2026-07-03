@@ -32,6 +32,7 @@ namespace SolitaireAssociations
         public int imageCards;
         public int textCards;
         public int referenceMoves;
+        public int startingMoves;
         public int generationAttempts;
         public bool solverSolved;
         public int solverMoves;
@@ -167,7 +168,7 @@ namespace SolitaireAssociations
             generatedLevelData = new GeneratedLevelData(
                 entry.layoutId,
                 entry.columns,
-                Mathf.Max(1, entry.referenceMoves),
+                Mathf.Max(1, entry.startingMoves > 0 ? entry.startingMoves : entry.referenceMoves),
                 columns,
                 entry.stockCards != null ? new List<string>(entry.stockCards) : new List<string>(),
                 requiredCountsByGold,

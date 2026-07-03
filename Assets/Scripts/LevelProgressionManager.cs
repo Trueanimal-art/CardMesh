@@ -4,10 +4,14 @@ namespace SolitaireAssociations
 {
     public sealed class LevelProgressionManager : MonoBehaviour
     {
-        private const string CurrentLevelNumberKey = "CardMesh.CurrentLevelNumber";
-        private const string MaxUnlockedLevelKey = "CardMesh.MaxUnlockedLevel";
-        private const string MaxCompletedLevelKey = "CardMesh.MaxCompletedLevel";
-        private const string LastSelectedLevelKey = "CardMesh.LastSelectedLevel";
+        private const string LegacyCurrentLevelNumberKey = "CardMesh.CurrentLevelNumber";
+        private const string LegacyMaxUnlockedLevelKey = "CardMesh.MaxUnlockedLevel";
+        private const string LegacyMaxCompletedLevelKey = "CardMesh.MaxCompletedLevel";
+        private const string LegacyLastSelectedLevelKey = "CardMesh.LastSelectedLevel";
+        private const string CurrentLevelNumberKey = "CardMesh.Player.CurrentLevelNumber";
+        private const string MaxUnlockedLevelKey = "CardMesh.Player.MaxUnlockedLevel";
+        private const string MaxCompletedLevelKey = "CardMesh.Player.MaxCompletedLevel";
+        private const string LastSelectedLevelKey = "CardMesh.Player.LastSelectedLevel";
         private const string LevelSeedPrefix = "CardMesh.LevelSeed.";
         private const int MaxClearedSeedLevels = 500;
 
@@ -19,8 +23,8 @@ namespace SolitaireAssociations
 
         public int CurrentLevelNumber => Mathf.Max(1, currentLevelNumber);
         public int LastSelectedLevel => CurrentLevelNumber;
-        public int MaxUnlockedLevel => Mathf.Max(1, maxUnlockedLevel);
         public int MaxCompletedLevel => Mathf.Max(0, maxCompletedLevel);
+        public int MaxUnlockedLevel => Mathf.Clamp(Mathf.Max(1, maxUnlockedLevel), 1, MaxCompletedLevel + 1);
         public int CurrentCycleIndex => ResolveCycleIndex(CurrentLevelNumber);
         public int CurrentTargetColumns => GetColumnsForLevel(CurrentLevelNumber);
         public int CurrentLayoutVariantIndex => Mathf.Max(0, CurrentLevelNumber - 1);
@@ -71,6 +75,10 @@ namespace SolitaireAssociations
             PlayerPrefs.DeleteKey(MaxUnlockedLevelKey);
             PlayerPrefs.DeleteKey(MaxCompletedLevelKey);
             PlayerPrefs.DeleteKey(LastSelectedLevelKey);
+            PlayerPrefs.DeleteKey(LegacyCurrentLevelNumberKey);
+            PlayerPrefs.DeleteKey(LegacyMaxUnlockedLevelKey);
+            PlayerPrefs.DeleteKey(LegacyMaxCompletedLevelKey);
+            PlayerPrefs.DeleteKey(LegacyLastSelectedLevelKey);
 
             for (int level = 1; level <= MaxClearedSeedLevels; level++)
             {
@@ -149,15 +157,24 @@ namespace SolitaireAssociations
             if (!saveProgress)
             {
                 currentLevelNumber = Mathf.Max(1, currentLevelNumber);
-                maxUnlockedLevel = Mathf.Max(1, Mathf.Max(maxUnlockedLevel, currentLevelNumber));
-                maxCompletedLevel = Mathf.Clamp(maxCompletedLevel, 0, maxUnlockedLevel);
+                maxCompletedLevel = Mathf.Max(0, maxCompletedLevel);
+                maxUnlockedLevel = Mathf.Clamp(Mathf.Max(1, maxUnlockedLevel), 1, maxCompletedLevel + 1);
+
+                if (currentLevelNumber > maxUnlockedLevel)
+                {
+                    currentLevelNumber = maxUnlockedLevel;
+                }
+
                 return;
             }
 
-            int legacyCurrentLevel = Mathf.Max(1, PlayerPrefs.GetInt(CurrentLevelNumberKey, currentLevelNumber));
-            maxUnlockedLevel = Mathf.Max(1, PlayerPrefs.GetInt(MaxUnlockedLevelKey, legacyCurrentLevel));
-            maxCompletedLevel = Mathf.Max(0, PlayerPrefs.GetInt(MaxCompletedLevelKey, Mathf.Max(0, maxUnlockedLevel - 1)));
-            currentLevelNumber = Mathf.Max(1, PlayerPrefs.GetInt(LastSelectedLevelKey, legacyCurrentLevel));
+            int savedCurrentLevel = PlayerPrefs.GetInt(CurrentLevelNumberKey, 1);
+            maxCompletedLevel = Mathf.Max(0, PlayerPrefs.GetInt(MaxCompletedLevelKey, 0));
+
+            int savedUnlockedLevel = PlayerPrefs.GetInt(MaxUnlockedLevelKey, maxCompletedLevel + 1);
+            maxUnlockedLevel = Mathf.Clamp(savedUnlockedLevel, 1, maxCompletedLevel + 1);
+
+            currentLevelNumber = Mathf.Max(1, PlayerPrefs.GetInt(LastSelectedLevelKey, savedCurrentLevel));
 
             if (currentLevelNumber > maxUnlockedLevel)
             {

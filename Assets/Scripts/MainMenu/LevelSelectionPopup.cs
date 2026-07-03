@@ -6,62 +6,84 @@ using UnityEngine.UI;
 
 namespace SolitaireAssociations
 {
+    [ExecuteAlways]
     public sealed class LevelSelectionPopup : MonoBehaviour
     {
         private const string PopupName = "LevelSelectionPopup";
+        private const string ResourcesPrefabPath = "UI/MainMenu/LevelSelectionPopup";
         private const float FadeDuration = 0.18f;
-        private const int MinDisplayedLevels = 30;
-        private const int ExtraLockedLevels = 12;
+        private const int PreviewLevelRows = 6;
 
         private readonly Color textGold = new(1f, 0.83f, 0.34f, 1f);
         private readonly Color textDark = new(0.16f, 0.09f, 0.02f, 1f);
-        private readonly Color lockedTint = new(0.42f, 0.44f, 0.36f, 0.62f);
+        private readonly Color textCream = new(1f, 0.93f, 0.64f, 1f);
 
-        private CanvasGroup canvasGroup;
-        private RectTransform panel;
-        private RectTransform contentRoot;
-        private TextMeshProUGUI statsText;
+        [Header("Runtime bindings")]
+        [SerializeField] private CanvasGroup canvasGroup;
+        [SerializeField] private RectTransform panel;
+        [SerializeField] private RectTransform contentRoot;
+        [SerializeField] private TextMeshProUGUI statsText;
+        [SerializeField] private Button dimButton;
+        [SerializeField] private Button closeButton;
+
         private TMP_FontAsset fontAsset;
         private LevelProgressionManager progressionManager;
         private Action<int> onLevelSelected;
         private Coroutine animationRoutine;
         private bool isBusy;
 
+        public static LevelSelectionPopup SceneInstance =>
+            FindFirstObjectByType<LevelSelectionPopup>(FindObjectsInactive.Include);
+
         public static LevelSelectionPopup GetOrCreate()
         {
-            LevelSelectionPopup existing = FindFirstObjectByType<LevelSelectionPopup>(FindObjectsInactive.Include);
+            LevelSelectionPopup existing = SceneInstance;
             if (existing != null)
             {
                 return existing;
             }
 
-            Canvas canvas = FindFirstObjectByType<Canvas>(FindObjectsInactive.Include);
-            if (canvas == null)
-            {
-                GameObject canvasObject = new("Canvas", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
-                canvas = canvasObject.GetComponent<Canvas>();
-                canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-
-                CanvasScaler scaler = canvasObject.GetComponent<CanvasScaler>();
-                scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-                scaler.referenceResolution = new Vector2(1920f, 1080f);
-                scaler.matchWidthOrHeight = 0.5f;
-            }
-
+            Canvas canvas = GetOrCreateCanvas();
             EnsureEventSystem();
+
+            GameObject prefab = Resources.Load<GameObject>(ResourcesPrefabPath);
+            if (prefab != null)
+            {
+                GameObject instance = Instantiate(prefab, canvas.transform, false);
+                instance.name = PopupName;
+                StretchToFill(instance.transform as RectTransform, 0f, 0f, 0f, 0f);
+
+                LevelSelectionPopup popup = instance.GetComponent<LevelSelectionPopup>();
+                if (popup == null)
+                {
+                    popup = instance.AddComponent<LevelSelectionPopup>();
+                }
+
+                popup.BindSceneReferences();
+                popup.WireStaticButtons();
+                popup.ApplyHiddenVisuals();
+                instance.SetActive(false);
+                return popup;
+            }
 
             GameObject root = new(PopupName, typeof(RectTransform), typeof(CanvasGroup));
             root.transform.SetParent(canvas.transform, false);
             StretchToFill(root.transform as RectTransform, 0f, 0f, 0f, 0f);
 
-            LevelSelectionPopup popup = root.AddComponent<LevelSelectionPopup>();
-            popup.BuildUi();
+            LevelSelectionPopup fallback = root.AddComponent<LevelSelectionPopup>();
+            fallback.EnsureAuthoringHierarchy();
             root.SetActive(false);
-            return popup;
+            return fallback;
         }
 
         public void Show(LevelProgressionManager targetProgressionManager, Action<int> selectedCallback)
         {
+            BindSceneReferences();
+            if (panel == null || contentRoot == null)
+            {
+                EnsureAuthoringHierarchy();
+            }
+
             progressionManager = targetProgressionManager;
             onLevelSelected = selectedCallback;
 
@@ -87,19 +109,78 @@ namespace SolitaireAssociations
             PlayAnimation(false, () => gameObject.SetActive(false));
         }
 
+        public void EnsureAuthoringHierarchy()
+        {
+            BindSceneReferences();
+            if (panel == null || contentRoot == null)
+            {
+                BuildUi();
+                BindSceneReferences();
+            }
+
+            ApplyFontsToAllTexts();
+            WireStaticButtons();
+            ApplyHiddenVisuals();
+        }
+
+        private void Reset()
+        {
+            EnsureAuthoringHierarchy();
+        }
+
         private void Awake()
         {
+            BindSceneReferences();
+            ApplyFontsToAllTexts();
+            WireStaticButtons();
+            ApplyHiddenVisuals();
+        }
+
+        private void OnEnable()
+        {
+            if (!Application.isPlaying)
+            {
+                BindSceneReferences();
+                ApplyFontsToAllTexts();
+                WireStaticButtons();
+            }
+        }
+
+        private void BindSceneReferences()
+        {
+            canvasGroup ??= GetComponent<CanvasGroup>();
             if (canvasGroup == null)
             {
-                canvasGroup = GetComponent<CanvasGroup>();
+                canvasGroup = gameObject.AddComponent<CanvasGroup>();
             }
 
-            if (panel == null)
+            panel ??= transform.Find("Panel") as RectTransform;
+            statsText ??= FindChildRecursive<TextMeshProUGUI>(transform, "Stats");
+            dimButton ??= FindButton(transform, "Dim");
+            closeButton ??= FindButton(transform, "CloseButton");
+
+            if (contentRoot == null)
             {
-                panel = transform.Find("Panel") as RectTransform;
+                Transform content = transform.Find("Panel/LevelsScroll/Viewport/Content");
+                contentRoot = content as RectTransform ?? FindChildRecursive<RectTransform>(transform, "Content");
             }
 
-            ApplyHiddenVisuals();
+            fontAsset ??= ResolveFont();
+        }
+
+        private void WireStaticButtons()
+        {
+            if (dimButton != null)
+            {
+                dimButton.onClick.RemoveListener(Hide);
+                dimButton.onClick.AddListener(Hide);
+            }
+
+            if (closeButton != null)
+            {
+                closeButton.onClick.RemoveListener(Hide);
+                closeButton.onClick.AddListener(Hide);
+            }
         }
 
         private void BuildUi()
@@ -107,47 +188,46 @@ namespace SolitaireAssociations
             canvasGroup = GetComponent<CanvasGroup>();
             fontAsset = ResolveFont();
 
+            if (transform.Find("Panel") != null)
+            {
+                return;
+            }
+
             GameObject dim = CreateChild(gameObject, "Dim", typeof(Image), typeof(Button));
             StretchToFill(dim.transform as RectTransform, 0f, 0f, 0f, 0f);
             Image dimImage = dim.GetComponent<Image>();
-            dimImage.color = new Color(0f, 0.03f, 0.01f, 0.72f);
-            Button dimButton = dim.GetComponent<Button>();
-            dimButton.onClick.AddListener(Hide);
+            dimImage.color = new Color(0.01f, 0.045f, 0.028f, 0.72f);
+            dimButton = dim.GetComponent<Button>();
 
             GameObject panelObject = CreateChild(gameObject, "Panel", typeof(Image));
             panel = panelObject.transform as RectTransform;
-            SetAnchored(panel, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(820f, 780f), new Vector2(0f, 120f));
+            SetAnchored(panel, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(920f, 760f), Vector2.zero);
 
             Image panelImage = panelObject.GetComponent<Image>();
-            panelImage.sprite = PremiumUISprites.EmeraldPanel;
-            panelImage.type = Image.Type.Sliced;
-            panelImage.color = new Color(0.93f, 1f, 0.86f, 1f);
-            AddShadow(panelObject, new Color(0f, 0.03f, 0.01f, 0.58f), new Vector2(0f, -12f));
-            AddOutline(panelObject, new Color(1f, 0.78f, 0.22f, 0.86f), new Vector2(3f, -3f));
+            panelImage.sprite = GetPauseWindowSprite();
+            panelImage.type = Image.Type.Simple;
+            panelImage.color = Color.white;
+            panelImage.raycastTarget = false;
+            AddShadow(panelObject, new Color(0.02f, 0.01f, 0f, 0.42f), new Vector2(0f, -8f));
 
-            TextMeshProUGUI title = CreateText(panel, "Title", "\u0412\u044b\u0431\u043e\u0440 \u0443\u0440\u043e\u0432\u043d\u044f", 54f, textGold, TextAlignmentOptions.Center);
-            SetAnchored(title.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(560f, 78f), new Vector2(0f, -42f));
+            TextMeshProUGUI title = CreateText(panel, "Title", "Выбор уровня", 54f, textGold, TextAlignmentOptions.Center);
+            SetAnchored(title.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(-132f, 78f), new Vector2(0f, -118f));
             title.fontStyle = FontStyles.Bold;
-            AddTextOutline(title, new Color(0.02f, 0.08f, 0.03f, 0.8f), new Vector2(1.6f, -1.6f));
+            AddTextOutline(title, new Color(0.12f, 0.055f, 0.012f, 0.62f), new Vector2(1f, -1f));
 
-            statsText = CreateText(panel, "Stats", string.Empty, 30f, new Color(1f, 0.93f, 0.64f, 1f), TextAlignmentOptions.Center);
-            SetAnchored(statsText.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(560f, 46f), new Vector2(0f, -108f));
-            AddTextOutline(statsText, new Color(0f, 0.06f, 0.02f, 0.58f), new Vector2(1f, -1f));
+            statsText = CreateText(panel, "Stats", string.Empty, 30f, textCream, TextAlignmentOptions.Center);
+            SetAnchored(statsText.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(-150f, 48f), new Vector2(0f, -176f));
+            AddTextOutline(statsText, new Color(0.12f, 0.055f, 0.012f, 0.48f), new Vector2(1f, -1f));
 
-            Button closeButton = CreateImageButton(panel, "CloseButton", PremiumUISprites.IconCircle, new Color(1f, 0.82f, 0.18f, 1f));
-            SetAnchored(closeButton.transform as RectTransform, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 0.5f), new Vector2(72f, 72f), new Vector2(-56f, -54f));
-            closeButton.onClick.AddListener(Hide);
-            TextMeshProUGUI closeLabel = CreateText(closeButton.transform as RectTransform, "Label", "X", 30f, textDark, TextAlignmentOptions.Center);
-            StretchToFill(closeLabel.rectTransform, 0f, 0f, 0f, 2f);
-            closeLabel.fontStyle = FontStyles.Bold;
+            closeButton = CreateCloseButton(panel);
 
             GameObject scrollRoot = CreateChild(panelObject, "LevelsScroll", typeof(Image), typeof(ScrollRect));
             RectTransform scrollRectTransform = scrollRoot.transform as RectTransform;
-            SetAnchored(scrollRectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 1f), new Vector2(0.5f, 0.5f), new Vector2(690f, -210f), new Vector2(0f, -26f));
+            SetAnchored(scrollRectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 1f), new Vector2(0.5f, 0.5f), new Vector2(680f, -276f), new Vector2(0f, -28f));
             Image scrollImage = scrollRoot.GetComponent<Image>();
             scrollImage.sprite = PremiumUISprites.CategorySlot;
-            scrollImage.type = Image.Type.Sliced;
-            scrollImage.color = new Color(0.04f, 0.22f, 0.1f, 0.7f);
+            scrollImage.type = scrollImage.sprite != null ? Image.Type.Sliced : Image.Type.Simple;
+            scrollImage.color = new Color(0.035f, 0.18f, 0.085f, 0.76f);
 
             GameObject viewport = CreateChild(scrollRoot, "Viewport", typeof(Image), typeof(Mask));
             RectTransform viewportRect = viewport.transform as RectTransform;
@@ -164,7 +244,7 @@ namespace SolitaireAssociations
             contentRoot.offsetMin = Vector2.zero;
             contentRoot.offsetMax = Vector2.zero;
             VerticalLayoutGroup layout = content.GetComponent<VerticalLayoutGroup>();
-            layout.padding = new RectOffset(16, 16, 16, 16);
+            layout.padding = new RectOffset(18, 18, 18, 18);
             layout.spacing = 12f;
             layout.childAlignment = TextAnchor.UpperCenter;
             layout.childControlHeight = true;
@@ -195,12 +275,13 @@ namespace SolitaireAssociations
                 Destroy(contentRoot.GetChild(index).gameObject);
             }
 
+            int unlockedLevels = progressionManager.MaxUnlockedLevel;
+            int displayedLevels = Mathf.Max(PreviewLevelRows, unlockedLevels);
             if (statsText != null)
             {
-                statsText.text = $"\u041e\u0442\u043a\u0440\u044b\u0442\u043e \u0443\u0440\u043e\u0432\u043d\u0435\u0439: {progressionManager.MaxUnlockedLevel}";
+                statsText.text = $"Открыто уровней: {unlockedLevels}";
             }
 
-            int displayedLevels = Mathf.Max(MinDisplayedLevels, progressionManager.MaxUnlockedLevel + ExtraLockedLevels);
             for (int level = 1; level <= displayedLevels; level++)
             {
                 CreateLevelButton(level);
@@ -213,42 +294,44 @@ namespace SolitaireAssociations
         private void CreateLevelButton(int level)
         {
             bool isUnlocked = progressionManager.CanPlayLevel(level);
-            bool isCompleted = level <= progressionManager.MaxCompletedLevel;
-            bool isSelected = level == progressionManager.LastSelectedLevel && isCompleted;
+            bool isCompleted = isUnlocked && level <= progressionManager.MaxCompletedLevel;
+            bool isSelected = isUnlocked && level == progressionManager.LastSelectedLevel;
 
-            Button button = CreateImageButton(contentRoot, $"Level_{level}", isSelected ? PremiumUISprites.PrimaryButton : PremiumUISprites.SecondaryButton, Color.white);
+            Button button = CreateImageButton(contentRoot, $"Level_{level}", GetLevelButtonSprite(), Color.white);
             button.interactable = isUnlocked;
 
             RectTransform rectTransform = button.transform as RectTransform;
-            rectTransform.sizeDelta = new Vector2(0f, 76f);
+            rectTransform.sizeDelta = new Vector2(0f, 86f);
 
             LayoutElement layoutElement = button.gameObject.AddComponent<LayoutElement>();
-            layoutElement.minHeight = 76f;
-            layoutElement.preferredHeight = 76f;
+            layoutElement.minHeight = 86f;
+            layoutElement.preferredHeight = 86f;
 
             Image image = button.GetComponent<Image>();
-            image.type = Image.Type.Sliced;
-            image.color = isCompleted
+            image.type = image.sprite != null ? Image.Type.Sliced : Image.Type.Simple;
+            image.color = isSelected
                 ? Color.white
-                : isUnlocked
-                    ? new Color(0.2f, 0.47f, 0.26f, 0.58f)
-                    : lockedTint;
+                : isCompleted
+                    ? new Color(0.96f, 0.96f, 0.9f, 1f)
+                    : isUnlocked
+                        ? new Color(0.9f, 0.9f, 0.84f, 1f)
+                        : new Color(0.54f, 0.56f, 0.46f, 0.72f);
 
             CanvasGroup rowGroup = button.gameObject.AddComponent<CanvasGroup>();
-            rowGroup.alpha = isCompleted ? 1f : isUnlocked ? 0.72f : 0.42f;
+            rowGroup.alpha = isUnlocked
+                ? isSelected || isCompleted ? 1f : 0.88f
+                : 0.46f;
 
-            string labelText = isCompleted ? $"\u0423\u0440\u043e\u0432\u0435\u043d\u044c {level}" : "...";
-            Color labelColor = isCompleted
-                ? textDark
-                : new Color(0.86f, 0.8f, 0.62f, isUnlocked ? 0.82f : 0.56f);
-            TextMeshProUGUI label = CreateText(rectTransform, "Label", labelText, 32f, labelColor, TextAlignmentOptions.Center);
-            StretchToFill(label.rectTransform, 28f, 28f, 0f, 2f);
+            string labelText = isUnlocked ? $"Уровень {level}" : "...";
+            Color labelColor = isUnlocked ? textGold : new Color(0.86f, 0.8f, 0.62f, 0.64f);
+            TextMeshProUGUI label = CreateText(rectTransform, "Label", labelText, 36f, labelColor, TextAlignmentOptions.Center);
+            StretchToFill(label.rectTransform, 28f, 28f, 0f, 0f);
             label.fontStyle = FontStyles.Bold;
-            AddTextOutline(label, isCompleted ? new Color(1f, 0.88f, 0.34f, 0.34f) : new Color(0f, 0f, 0f, 0.26f), new Vector2(1f, -1f));
+            AddTextOutline(label, new Color(0.12f, 0.055f, 0.012f, isUnlocked ? 0.62f : 0.32f), new Vector2(1f, -1f));
 
             if (isSelected)
             {
-                AddOutline(button.gameObject, new Color(1f, 0.97f, 0.58f, 1f), new Vector2(3f, -3f));
+                AddOutline(button.gameObject, new Color(1f, 0.95f, 0.46f, 0.9f), new Vector2(2f, -2f));
             }
 
             if (isUnlocked)
@@ -347,6 +430,15 @@ namespace SolitaireAssociations
             }
         }
 
+        private void ApplyFontsToAllTexts()
+        {
+            foreach (TMP_Text text in GetComponentsInChildren<TMP_Text>(true))
+            {
+                RuntimeCyrillicFontProvider.Apply(text, text.text);
+                text.raycastTarget = false;
+            }
+        }
+
         private TMP_FontAsset ResolveFont()
         {
             TMP_Text sceneText = FindFirstObjectByType<TMP_Text>(FindObjectsInactive.Include);
@@ -369,19 +461,38 @@ namespace SolitaireAssociations
             GameObject buttonObject = CreateChild(parent.gameObject, objectName, typeof(Image), typeof(Button));
             Image image = buttonObject.GetComponent<Image>();
             image.sprite = sprite;
-            image.type = Image.Type.Sliced;
+            image.type = sprite != null ? Image.Type.Sliced : Image.Type.Simple;
             image.color = color;
 
             Button button = buttonObject.GetComponent<Button>();
             ColorBlock colors = button.colors;
             colors.normalColor = Color.white;
-            colors.highlightedColor = new Color(1f, 0.96f, 0.76f, 1f);
-            colors.pressedColor = new Color(0.9f, 0.68f, 0.18f, 1f);
-            colors.disabledColor = new Color(0.48f, 0.48f, 0.42f, 0.65f);
+            colors.highlightedColor = new Color(1f, 0.92f, 0.62f, 1f);
+            colors.pressedColor = new Color(0.96f, 0.72f, 0.18f, 1f);
+            colors.selectedColor = colors.highlightedColor;
             button.colors = colors;
 
             buttonObject.AddComponent<UIJuicyButton>();
             AddShadow(buttonObject, new Color(0.02f, 0.01f, 0f, 0.32f), new Vector2(0f, -5f));
+            return button;
+        }
+
+        private Button CreateCloseButton(RectTransform parent)
+        {
+            RectTransform closeRoot = CreateRect("CloseButton", parent, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 0.5f), new Vector2(58f, 58f), new Vector2(-78f, -72f));
+            Image image = closeRoot.gameObject.AddComponent<Image>();
+            image.color = new Color(0f, 0f, 0f, 0.001f);
+            image.raycastTarget = true;
+
+            Button button = closeRoot.gameObject.AddComponent<Button>();
+            button.targetGraphic = image;
+
+            TextMeshProUGUI label = CreateText(closeRoot, "Label", "X", 34f, textGold, TextAlignmentOptions.Center);
+            StretchToFill(label.rectTransform, 0f, 0f, 0f, 0f);
+            label.fontStyle = FontStyles.Bold;
+            AddTextOutline(label, new Color(0.12f, 0.055f, 0.012f, 0.62f), new Vector2(1f, -1f));
+
+            button.gameObject.AddComponent<UIJuicyButton>();
             return button;
         }
 
@@ -397,14 +508,25 @@ namespace SolitaireAssociations
             label.enableWordWrapping = false;
             label.alignment = alignment;
             label.color = color;
+            label.raycastTarget = false;
+            RuntimeCyrillicFontProvider.Apply(label, text);
             return label;
         }
 
         private static GameObject CreateChild(GameObject parent, string objectName, params Type[] components)
         {
             GameObject child = new(objectName, components);
+            child.layer = parent.layer;
             child.transform.SetParent(parent.transform, false);
             return child;
+        }
+
+        private static RectTransform CreateRect(string objectName, Transform parent, Vector2 anchorMin, Vector2 anchorMax, Vector2 pivot, Vector2 size, Vector2 anchoredPosition)
+        {
+            GameObject child = CreateChild(parent.gameObject, objectName, typeof(RectTransform));
+            RectTransform rectTransform = child.transform as RectTransform;
+            SetAnchored(rectTransform, anchorMin, anchorMax, pivot, size, anchoredPosition);
+            return rectTransform;
         }
 
         private static void SetAnchored(RectTransform rectTransform, Vector2 anchorMin, Vector2 anchorMax, Vector2 pivot, Vector2 size, Vector2 anchoredPosition)
@@ -418,6 +540,11 @@ namespace SolitaireAssociations
 
         private static void StretchToFill(RectTransform rectTransform, float left, float right, float top, float bottom)
         {
+            if (rectTransform == null)
+            {
+                return;
+            }
+
             rectTransform.anchorMin = Vector2.zero;
             rectTransform.anchorMax = Vector2.one;
             rectTransform.pivot = new Vector2(0.5f, 0.5f);
@@ -448,6 +575,62 @@ namespace SolitaireAssociations
             outline.effectColor = color;
             outline.effectDistance = distance;
             outline.useGraphicAlpha = true;
+        }
+
+        private static Sprite GetPauseWindowSprite()
+        {
+            return PremiumUISprites.PauseWindowCardMesh != null
+                ? PremiumUISprites.PauseWindowCardMesh
+                : PremiumUISprites.EmeraldPanel;
+        }
+
+        private static Sprite GetLevelButtonSprite()
+        {
+            return PremiumUISprites.GameplayActionButton != null
+                ? PremiumUISprites.GameplayActionButton
+                : PremiumUISprites.PrimaryButton;
+        }
+
+        private static Button FindButton(Transform root, string targetName)
+        {
+            return FindChildRecursive<Button>(root, targetName);
+        }
+
+        private static T FindChildRecursive<T>(Transform root, string targetName) where T : Component
+        {
+            if (root == null)
+            {
+                return null;
+            }
+
+            foreach (T component in root.GetComponentsInChildren<T>(true))
+            {
+                if (component != null && component.name == targetName)
+                {
+                    return component;
+                }
+            }
+
+            return null;
+        }
+
+        private static Canvas GetOrCreateCanvas()
+        {
+            Canvas canvas = FindFirstObjectByType<Canvas>(FindObjectsInactive.Include);
+            if (canvas != null)
+            {
+                return canvas;
+            }
+
+            GameObject canvasObject = new("Canvas", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
+            canvas = canvasObject.GetComponent<Canvas>();
+            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+
+            CanvasScaler scaler = canvasObject.GetComponent<CanvasScaler>();
+            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            scaler.referenceResolution = new Vector2(1920f, 1080f);
+            scaler.matchWidthOrHeight = 0.5f;
+            return canvas;
         }
 
         private static void EnsureEventSystem()

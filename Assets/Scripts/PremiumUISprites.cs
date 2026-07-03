@@ -21,7 +21,9 @@ namespace SolitaireAssociations
         private static Sprite hintBulbIcon;
         private static Sprite undoIcon;
         private static Sprite boosterRocketIcon;
+        private static Sprite coinIcon;
         private static Sprite categorySlot;
+        private static Sprite emptyColumnSlot;
         private static Sprite categoryLabel;
         private static Sprite softVignette;
         private static Sprite pauseWindowCardMesh;
@@ -41,7 +43,9 @@ namespace SolitaireAssociations
         public static Sprite HintBulbIcon => hintBulbIcon ??= Load("icon_hint_bulb");
         public static Sprite UndoIcon => undoIcon ??= Load("icon_undo_gold");
         public static Sprite BoosterRocketIcon => boosterRocketIcon ??= Load("icon_booster_rocket");
-        public static Sprite CategorySlot => categorySlot ??= Load("category_slot_emerald");
+        public static Sprite CoinIcon => coinIcon ??= Load("icon_coin_stack");
+        public static Sprite CategorySlot => categorySlot ??= Load("category_slot_cardmesh");
+        public static Sprite EmptyColumnSlot => emptyColumnSlot ??= Load("empty_column_slot_gray");
         public static Sprite CategoryLabel => categoryLabel ??= Load("category_label_gold");
         public static Sprite SoftVignette => softVignette ??= Load("vignette_soft");
         public static Sprite PauseWindowCardMesh => pauseWindowCardMesh ??= Load("pause_window_cardmesh");

@@ -53,6 +53,7 @@ namespace SolitaireAssociations
         private void Awake()
         {
             BindSceneReferences();
+            ApplyPopupPanelVisual();
             ApplyFontsToAllTexts();
             EnsureOpenBookButtonIsNonInteractive();
             WireButtons();
@@ -75,6 +76,8 @@ namespace SolitaireAssociations
 
             if (Application.isPlaying)
             {
+                BindSceneReferences();
+                ApplyPopupPanelVisual();
                 ApplyFontsToAllTexts();
                 EnsureOpenBookButtonIsNonInteractive();
                 WireButtons();
@@ -110,6 +113,7 @@ namespace SolitaireAssociations
             hasShownRuntime = true;
             gameObject.SetActive(true);
             BindSceneReferences();
+            ApplyPopupPanelVisual();
             ApplyFontsToAllTexts();
             EnsureOpenBookButtonIsNonInteractive();
             WireButtons();
@@ -585,6 +589,31 @@ namespace SolitaireAssociations
             }
         }
 
+        private void ApplyPopupPanelVisual()
+        {
+            Image panelImage = panel != null ? panel.GetComponent<Image>() : null;
+            if (panelImage != null)
+            {
+                ApplyPopupPanelVisual(panelImage);
+            }
+        }
+
+        private static void ApplyPopupPanelVisual(Image panelImage)
+        {
+            panelImage.sprite = GetPopupPanelSprite();
+            panelImage.type = PremiumUISprites.PauseWindowCardMesh != null ? Image.Type.Simple : Image.Type.Sliced;
+            panelImage.color = Color.white;
+        }
+
+        private static Sprite GetPopupPanelSprite()
+        {
+            return PremiumUISprites.PauseWindowCardMesh != null
+                ? PremiumUISprites.PauseWindowCardMesh
+                : RoyalEventSprites.Panel != null
+                    ? RoyalEventSprites.Panel
+                    : PremiumUISprites.EmeraldPanel;
+        }
+
 #if !UNITY_EDITOR
         private static void DisableExternalGlow(Transform root)
         {
@@ -633,9 +662,7 @@ namespace SolitaireAssociations
 
             panel = CreateRect(transform, "Panel", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(1500f, 980f), Vector2.zero);
             Image panelImage = panel.gameObject.AddComponent<Image>();
-            panelImage.sprite = RoyalEventSprites.Panel != null ? RoyalEventSprites.Panel : PremiumUISprites.EmeraldPanel;
-            panelImage.type = Image.Type.Sliced;
-            panelImage.color = Color.white;
+            ApplyPopupPanelVisual(panelImage);
             Shadow panelShadow = panel.gameObject.AddComponent<Shadow>();
             panelShadow.effectColor = new Color(1f, 0.74f, 0.12f, 0f);
             panelShadow.effectDistance = Vector2.zero;
@@ -761,9 +788,7 @@ namespace SolitaireAssociations
                 Image image = existingPanel.GetComponent<Image>();
                 if (image != null)
                 {
-                    image.sprite = RoyalEventSprites.Panel != null ? RoyalEventSprites.Panel : PremiumUISprites.EmeraldPanel;
-                    image.type = Image.Type.Sliced;
-                    image.color = Color.white;
+                    ApplyPopupPanelVisual(image);
                 }
 
                 Shadow shadow = existingPanel.GetComponent<Shadow>() ?? existingPanel.gameObject.AddComponent<Shadow>();

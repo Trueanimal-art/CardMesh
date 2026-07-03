@@ -127,6 +127,7 @@ namespace SolitaireAssociations
         private void ApplyRuntimePolish()
         {
             RuntimeSetAnchored(panel, Vector2.one * 0.5f, Vector2.one * 0.5f, Vector2.one * 0.5f, new Vector2(1510f, 980f), Vector2.zero);
+            ApplyPopupPanelVisual();
 
             RectTransform headerIcon = transform.Find("Panel/TopShopGem") as RectTransform;
             RuntimeSetImage(headerIcon, GetShopIcon(), Color.white, Image.Type.Simple);
@@ -448,9 +449,7 @@ namespace SolitaireAssociations
 
             panel.sizeDelta = new Vector2(1510f, 980f);
             Image panelImage = panel.GetComponent<Image>() ?? panel.gameObject.AddComponent<Image>();
-            panelImage.sprite = RoyalEventSprites.Panel != null ? RoyalEventSprites.Panel : PremiumUISprites.EmeraldPanel;
-            panelImage.type = Image.Type.Sliced;
-            panelImage.color = Color.white;
+            ApplyPopupPanelVisual(panelImage);
 
             Shadow shadow = panel.GetComponent<Shadow>() ?? panel.gameObject.AddComponent<Shadow>();
             shadow.effectColor = new Color(1f, 0.68f, 0.14f, 0f);
@@ -465,9 +464,7 @@ namespace SolitaireAssociations
         {
             panel = CreateRect(transform, "Panel", Vector2.one * 0.5f, Vector2.one * 0.5f, Vector2.one * 0.5f, new Vector2(1510f, 980f), Vector2.zero);
             Image panelImage = panel.gameObject.AddComponent<Image>();
-            panelImage.sprite = RoyalEventSprites.Panel != null ? RoyalEventSprites.Panel : PremiumUISprites.EmeraldPanel;
-            panelImage.type = Image.Type.Sliced;
-            panelImage.color = Color.white;
+            ApplyPopupPanelVisual(panelImage);
             AddShadow(panel.gameObject, new Color(1f, 0.68f, 0.14f, 0f), Vector2.zero);
 
             CreateImage(panel, "TopShopGem", GetShopIcon(), Color.white, new Vector2(0f, 414f), new Vector2(178f, 178f), Image.Type.Simple);
@@ -853,6 +850,31 @@ namespace SolitaireAssociations
             }
 
             AddSubtleOutline(rect.gameObject, color, distance);
+        }
+
+        private void ApplyPopupPanelVisual()
+        {
+            Image panelImage = panel != null ? panel.GetComponent<Image>() : null;
+            if (panelImage != null)
+            {
+                ApplyPopupPanelVisual(panelImage);
+            }
+        }
+
+        private static void ApplyPopupPanelVisual(Image panelImage)
+        {
+            panelImage.sprite = GetPopupPanelSprite();
+            panelImage.type = PremiumUISprites.PauseWindowCardMesh != null ? Image.Type.Simple : Image.Type.Sliced;
+            panelImage.color = Color.white;
+        }
+
+        private static Sprite GetPopupPanelSprite()
+        {
+            return PremiumUISprites.PauseWindowCardMesh != null
+                ? PremiumUISprites.PauseWindowCardMesh
+                : RoyalEventSprites.Panel != null
+                    ? RoyalEventSprites.Panel
+                    : PremiumUISprites.EmeraldPanel;
         }
 
         private static void DisableExternalGlow(Transform root)

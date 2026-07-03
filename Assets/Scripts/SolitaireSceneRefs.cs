@@ -241,6 +241,56 @@ namespace SolitaireAssociations
             AutoAssign();
         }
 
+        public void UpdateMovesValue(int remainingMoves)
+        {
+            AutoAssign();
+
+            string value = remainingMoves.ToString();
+            if (movesValue != null)
+            {
+                movesValue.text = value;
+            }
+
+            if (safeAreaRoot == null)
+            {
+                return;
+            }
+
+            foreach (TMP_Text text in safeAreaRoot.GetComponentsInChildren<TMP_Text>(true))
+            {
+                if (text == null)
+                {
+                    continue;
+                }
+
+                if (text.name == "MovesValue")
+                {
+                    text.text = value;
+                }
+            }
+
+            foreach (RectTransform panel in safeAreaRoot.GetComponentsInChildren<RectTransform>(true))
+            {
+                if (panel == null || panel.name != "MovesPanel")
+                {
+                    continue;
+                }
+
+                foreach (TMP_Text text in panel.GetComponentsInChildren<TMP_Text>(true))
+                {
+                    if (text == null || text.name == "MovesLabel")
+                    {
+                        continue;
+                    }
+
+                    if (text.name == "MovesValue" || int.TryParse(text.text, out _))
+                    {
+                        text.text = value;
+                    }
+                }
+            }
+        }
+
         public bool ResolveSceneReferences()
         {
             AutoAssign();
@@ -657,15 +707,39 @@ namespace SolitaireAssociations
                 {
                     SetAnchored(coinIcon, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(56f, 56f), new Vector2(34f, 0f));
                     Image coinImage = EnsureGraphic<Image>(coinIcon.gameObject);
-                    if (coinImage.sprite == null)
-                    {
-                        coinImage.color = new Color(0.98f, 0.84f, 0.2f, 1f);
-                    }
+                    coinImage.sprite = PremiumUISprites.CoinIcon != null ? PremiumUISprites.CoinIcon : coinImage.sprite;
+                    coinImage.type = Image.Type.Simple;
+                    coinImage.preserveAspect = true;
+                    coinImage.color = Color.white;
                 }
 
                 if (coinsText != null)
                 {
-                    SetAnchored((RectTransform)coinsText.transform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(120f, 44f), new Vector2(-10f, 0f));
+                    SetAnchored((RectTransform)coinsText.transform, new Vector2(0f, 0.5f), new Vector2(1f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-60f, 44f), new Vector2(24f, 0f));
+                    if (movesValue != null)
+                    {
+                        coinsText.font = movesValue.font;
+                        coinsText.fontSharedMaterial = movesValue.fontSharedMaterial;
+                    }
+
+                    coinsText.enableAutoSizing = false;
+                    coinsText.fontSize = 30f;
+                    coinsText.fontSizeMin = 30f;
+                    coinsText.fontSizeMax = 30f;
+                    coinsText.fontStyle = FontStyles.Normal;
+                    coinsText.fontWeight = FontWeight.Regular;
+                    coinsText.enableWordWrapping = false;
+                    coinsText.overflowMode = TextOverflowModes.Ellipsis;
+                    coinsText.alignment = TextAlignmentOptions.Center;
+                    coinsText.color = movesValue != null ? movesValue.color : new Color(0.31f, 0.17f, 0.04f, 1f);
+                    if (coinsText.TryGetComponent(out Shadow shadow))
+                    {
+                        shadow.enabled = false;
+                    }
+                    if (coinsText.TryGetComponent(out Outline outline))
+                    {
+                        outline.enabled = false;
+                    }
                 }
 
                 RectTransform plusRoot = plusButton != null ? plusButton.GetComponent<RectTransform>() : FindChildRecursive<RectTransform>(coinsPanel, "PlusButton");

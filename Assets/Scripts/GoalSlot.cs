@@ -127,6 +127,7 @@ namespace SolitaireAssociations
             }
 
             cards.Add(cardView);
+            cardView.SetPlayerStackedOnPrevious(false);
             cardView.BindToContainer(this);
             RectTransform cardRect = cardView.RectTransform;
             cardRect.SetParent(CardsRoot, false);
@@ -173,6 +174,7 @@ namespace SolitaireAssociations
                     }
 
                     cards.Add(cardView);
+                    cardView.SetPlayerStackedOnPrevious(false);
                     cardView.gameObject.SetActive(true);
                     cardView.BindToContainer(this);
                     RectTransform cardRect = cardView.RectTransform;
@@ -222,6 +224,11 @@ namespace SolitaireAssociations
                 return false;
             }
 
+            if (cards.Count == 0)
+            {
+                return CanAcceptGoldHeadedStack(movingCards);
+            }
+
             CardView firstCard = movingCards[0];
             if (!CanAccept(firstCard))
             {
@@ -255,8 +262,50 @@ namespace SolitaireAssociations
             return true;
         }
 
+        private static bool CanAcceptGoldHeadedStack(IReadOnlyList<CardView> movingCards)
+        {
+            CardView goalCard = movingCards[^1];
+            if (goalCard == null || goalCard.Data == null || !goalCard.Data.IsGold)
+            {
+                return false;
+            }
+
+            if (movingCards.Count == 1)
+            {
+                return true;
+            }
+
+            string associationId = goalCard.Data.AssociationId;
+            bool shouldUseImageCards = goalCard.Data.IsImageGoal;
+            int regularCount = movingCards.Count - 1;
+            if (regularCount > goalCard.Data.RequiredCount)
+            {
+                return false;
+            }
+
+            for (int index = 0; index < movingCards.Count - 1; index++)
+            {
+                CardView movingCard = movingCards[index];
+                if (movingCard == null
+                    || movingCard.Data == null
+                    || movingCard.Data.IsGold
+                    || movingCard.Data.AssociationId != associationId
+                    || movingCard.Data.IsImageCard != shouldUseImageCards)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         public void ClearCards()
         {
+            foreach (CardView cardView in cards)
+            {
+                cardView?.SetPlayerStackedOnPrevious(false);
+            }
+
             cards.Clear();
             RefreshLayout();
         }

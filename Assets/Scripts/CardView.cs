@@ -45,6 +45,9 @@ namespace SolitaireAssociations
         [SerializeField] private CardVisualConfig visualConfig;
         [SerializeField] private Shadow shadow;
         [SerializeField] private Image glowImage;
+        [SerializeField] private RectTransform peekMaskRoot;
+        [SerializeField] private Image peekBackgroundImage;
+        [SerializeField] private Outline peekOutline;
 
         private GameManager gameManager;
         private RectTransform dragLayer;
@@ -52,6 +55,7 @@ namespace SolitaireAssociations
         private Coroutine juiceCoroutine;
         private bool isFaceUp = true;
         private bool useRevealHistoryLayout;
+        private bool useDrawHistoryTitleLayout;
         private bool showRevealHistoryTitle;
         private float revealHistoryVisibleHeight = 46f;
         private bool showTitle = true;
@@ -62,6 +66,7 @@ namespace SolitaireAssociations
         public ICardContainer Container { get; private set; }
         public bool IsFaceUp => isFaceUp;
         public bool IsDragDetached { get; private set; }
+        public bool IsPlayerStackedOnPrevious { get; private set; }
 
         public void ConfigureComponents(
             Image targetBackgroundImage,
@@ -96,6 +101,7 @@ namespace SolitaireAssociations
             Data = data;
             gameManager = owner;
             dragLayer = dragParent;
+            SetPlayerStackedOnPrevious(false);
             EnsureDepthVisuals();
             RefreshVisual();
         }
@@ -113,6 +119,11 @@ namespace SolitaireAssociations
             {
                 showTitle = true;
                 showFooter = true;
+            }
+
+            if (container is not DrawSlot)
+            {
+                useDrawHistoryTitleLayout = false;
             }
 
             RefreshVisual();
@@ -146,6 +157,7 @@ namespace SolitaireAssociations
             }
 
             RectTransform.sizeDelta = size;
+            ApplyPeekBackgroundLayout();
         }
 
         public void SetFaceUp(bool value)
@@ -175,6 +187,11 @@ namespace SolitaireAssociations
         public void SetDragDetached(bool value)
         {
             IsDragDetached = value;
+        }
+
+        public void SetPlayerStackedOnPrevious(bool value)
+        {
+            IsPlayerStackedOnPrevious = value;
         }
 
         public void SetDraggingVisual(bool value)
@@ -239,6 +256,17 @@ namespace SolitaireAssociations
             RefreshVisual();
         }
 
+        public void SetDrawHistoryTitleLayout(bool value)
+        {
+            if (useDrawHistoryTitleLayout == value)
+            {
+                return;
+            }
+
+            useDrawHistoryTitleLayout = value;
+            RefreshVisual();
+        }
+
         public void AnimateFromWorldPosition(Vector3 startWorldPosition, float duration)
         {
             if (!isActiveAndEnabled || RectTransform == null || duration <= 0f)
@@ -277,7 +305,7 @@ namespace SolitaireAssociations
 
                 if (outline != null)
                 {
-                    outline.effectColor = visualConfig != null ? visualConfig.BackOutlineColor : BackOutlineColor;
+                    ApplyOutlineColor(visualConfig != null ? visualConfig.BackOutlineColor : BackOutlineColor);
                 }
 
                 if (titleLabel != null)
@@ -311,9 +339,9 @@ namespace SolitaireAssociations
 
             if (outline != null)
             {
-                outline.effectColor = visualConfig != null
+                ApplyOutlineColor(visualConfig != null
                     ? (Data.IsGold ? visualConfig.GoldOutlineColor : visualConfig.NormalOutlineColor)
-                    : (Data.IsGold ? GoldOutlineColor : RegularOutlineColor);
+                    : (Data.IsGold ? GoldOutlineColor : RegularOutlineColor));
             }
 
             if (titleLabel != null)
@@ -323,7 +351,8 @@ namespace SolitaireAssociations
                     ? (Data.IsGold ? visualConfig.GoldTextColor : visualConfig.TextColor)
                     : new Color(0.26f, 0.2f, 0.16f, 1f);
                 EnsureTextFontSupports(titleLabel, Data.DisplayText);
-                titleLabel.text = showTitle && !Data.IsImageCard ? Data.DisplayText : string.Empty;
+                bool shouldShowTitleText = showTitle && (!Data.IsImageCard || useRevealHistoryLayout || useDrawHistoryTitleLayout);
+                titleLabel.text = shouldShowTitleText ? Data.DisplayText : string.Empty;
             }
 
             if (footerLabel != null)
@@ -365,16 +394,194 @@ namespace SolitaireAssociations
                 return;
             }
 
+            Color visibleColor = sprite != null ? Color.white : fallbackColor;
             backgroundImage.sprite = sprite;
-            backgroundImage.color = sprite != null ? Color.white : fallbackColor;
+            backgroundImage.color = useRevealHistoryLayout
+                ? new Color(visibleColor.r, visibleColor.g, visibleColor.b, 0f)
+                : visibleColor;
             backgroundImage.type = Image.Type.Simple;
             backgroundImage.preserveAspect = false;
+            backgroundImage.raycastTarget = true;
 
             if (glowImage != null)
             {
                 glowImage.sprite = sprite;
                 glowImage.type = Image.Type.Simple;
                 glowImage.preserveAspect = false;
+                if (useRevealHistoryLayout)
+                {
+                    glowImage.enabled = false;
+                }
+            }
+
+            if (outline != null)
+            {
+                outline.enabled = !useRevealHistoryLayout;
+            }
+
+            if (shadow != null)
+            {
+                shadow.enabled = !useRevealHistoryLayout;
+            }
+
+            if (useRevealHistoryLayout)
+            {
+                ApplyPeekBackground(sprite, visibleColor);
+            }
+            else if (peekBackgroundImage != null)
+            {
+                SetPeekBackgroundVisible(false);
+            }
+        }
+
+        private void ApplyOutlineColor(Color color)
+        {
+            if (outline != null)
+            {
+                outline.effectColor = color;
+            }
+
+            if (peekOutline != null)
+            {
+                peekOutline.effectColor = color;
+            }
+        }
+
+        private void ApplyPeekBackground(Sprite sprite, Color color)
+        {
+            EnsurePeekBackground();
+            if (peekBackgroundImage == null)
+            {
+                return;
+            }
+
+            SetPeekBackgroundVisible(true);
+            peekBackgroundImage.sprite = sprite;
+            peekBackgroundImage.color = color;
+            peekBackgroundImage.type = Image.Type.Simple;
+            peekBackgroundImage.preserveAspect = false;
+            peekBackgroundImage.raycastTarget = false;
+
+            if (peekOutline != null)
+            {
+                peekOutline.enabled = true;
+                peekOutline.effectDistance = outline != null ? outline.effectDistance : new Vector2(1.5f, -1.5f);
+            }
+
+            ApplyPeekBackgroundLayout();
+        }
+
+        private void EnsurePeekBackground()
+        {
+            if (peekMaskRoot == null)
+            {
+                Transform existingMask = transform.Find("CardPeekMask");
+                if (existingMask is RectTransform existingMaskRect)
+                {
+                    peekMaskRoot = existingMaskRect;
+                }
+            }
+
+            if (peekMaskRoot == null)
+            {
+                GameObject maskObject = new("CardPeekMask", typeof(RectTransform), typeof(RectMask2D));
+                peekMaskRoot = maskObject.GetComponent<RectTransform>();
+                peekMaskRoot.SetParent(transform, false);
+            }
+
+            if (peekBackgroundImage == null)
+            {
+                Transform existingPeek = peekMaskRoot.Find("CardPeekBackground");
+                if (existingPeek != null)
+                {
+                    peekBackgroundImage = existingPeek.GetComponent<Image>();
+                    peekOutline = existingPeek.GetComponent<Outline>();
+                }
+            }
+
+            if (peekBackgroundImage == null)
+            {
+                GameObject peekObject = new("CardPeekBackground", typeof(RectTransform), typeof(Image), typeof(Outline));
+                RectTransform peekRect = peekObject.GetComponent<RectTransform>();
+                peekRect.SetParent(peekMaskRoot, false);
+                peekBackgroundImage = peekObject.GetComponent<Image>();
+                peekOutline = peekObject.GetComponent<Outline>();
+            }
+            else if (peekBackgroundImage.transform.parent != peekMaskRoot)
+            {
+                peekBackgroundImage.rectTransform.SetParent(peekMaskRoot, false);
+            }
+
+            if (peekOutline != null)
+            {
+                peekOutline.effectColor = outline != null ? outline.effectColor : RegularOutlineColor;
+                peekOutline.useGraphicAlpha = true;
+            }
+
+            peekMaskRoot.SetAsFirstSibling();
+            ApplyPeekBackgroundLayout();
+        }
+
+        private void ApplyPeekBackgroundLayout()
+        {
+            if (peekMaskRoot == null || peekBackgroundImage == null)
+            {
+                return;
+            }
+
+            peekMaskRoot.anchorMin = new Vector2(0f, 1f);
+            peekMaskRoot.anchorMax = new Vector2(1f, 1f);
+            peekMaskRoot.pivot = new Vector2(0.5f, 1f);
+            peekMaskRoot.sizeDelta = new Vector2(0f, revealHistoryVisibleHeight);
+            peekMaskRoot.anchoredPosition = Vector2.zero;
+            peekMaskRoot.localScale = Vector3.one;
+            peekMaskRoot.localRotation = Quaternion.identity;
+
+            RectTransform peekRect = peekBackgroundImage.rectTransform;
+            peekRect.anchorMin = new Vector2(0f, 1f);
+            peekRect.anchorMax = new Vector2(1f, 1f);
+            peekRect.pivot = new Vector2(0.5f, 1f);
+            peekRect.sizeDelta = new Vector2(0f, GetCurrentCardHeight());
+            peekRect.anchoredPosition = Vector2.zero;
+            peekRect.localScale = Vector3.one;
+            peekRect.localRotation = Quaternion.identity;
+        }
+
+        private float GetCurrentCardHeight()
+        {
+            if (RectTransform != null && RectTransform.rect.height > 1f)
+            {
+                return RectTransform.rect.height;
+            }
+
+            if (RectTransform != null && RectTransform.sizeDelta.y > 1f)
+            {
+                return RectTransform.sizeDelta.y;
+            }
+
+            if (layoutElement != null && layoutElement.preferredHeight > 1f)
+            {
+                return layoutElement.preferredHeight;
+            }
+
+            return 374f;
+        }
+
+        private void SetPeekBackgroundVisible(bool isVisible)
+        {
+            if (peekMaskRoot != null)
+            {
+                peekMaskRoot.gameObject.SetActive(isVisible);
+            }
+
+            if (peekBackgroundImage != null)
+            {
+                peekBackgroundImage.enabled = isVisible;
+            }
+
+            if (peekOutline != null)
+            {
+                peekOutline.enabled = isVisible;
             }
         }
 
@@ -477,20 +684,22 @@ namespace SolitaireAssociations
 
         private void ApplyTextLayout()
         {
-            bool isGoldCard = Data != null && Data.IsGold && !useRevealHistoryLayout;
-            bool isImageCard = Data != null && Data.IsImageCard && Data.Icon != null && !useRevealHistoryLayout;
-            bool isGoalSlotCard = Container is GoalSlot && !useRevealHistoryLayout;
+            bool useTopHistoryTitle = useRevealHistoryLayout || useDrawHistoryTitleLayout;
+            bool isGoldCard = Data != null && Data.IsGold && !useTopHistoryTitle;
+            bool isImageCard = Data != null && Data.IsImageCard && Data.Icon != null && !useTopHistoryTitle;
+            bool isGoalSlotCard = Container is GoalSlot && !useTopHistoryTitle;
 
             if (titleRoot != null)
             {
                 titleRoot.gameObject.SetActive(showTitle && !isImageCard && (!useRevealHistoryLayout || showRevealHistoryTitle));
 
-                if (useRevealHistoryLayout)
+                if (useTopHistoryTitle)
                 {
+                    float titleHeight = useRevealHistoryLayout ? revealHistoryVisibleHeight : 46f;
                     titleRoot.anchorMin = new Vector2(0f, 1f);
                     titleRoot.anchorMax = new Vector2(1f, 1f);
                     titleRoot.pivot = new Vector2(0.5f, 1f);
-                    titleRoot.sizeDelta = new Vector2(-16f, revealHistoryVisibleHeight);
+                    titleRoot.sizeDelta = new Vector2(-16f, titleHeight);
                     titleRoot.anchoredPosition = new Vector2(0f, -2f);
                 }
                 else if (isGoldCard)
@@ -526,22 +735,23 @@ namespace SolitaireAssociations
                     titleLabel.text = string.Empty;
                 }
 
-                titleLabel.alignment = useRevealHistoryLayout && showRevealHistoryTitle
+                titleLabel.alignment = useTopHistoryTitle
                     ? TextAlignmentOptions.Center
                     : isGoldCard
                     ? TextAlignmentOptions.Center
                     : TextAlignmentOptions.Center;
                 float fontSizeMax = visualConfig != null ? visualConfig.TitleFontSize : 34f;
                 float fontSizeMin = visualConfig != null ? visualConfig.TitleFontSizeMin : 18f;
-                float peekFontSize = Mathf.Clamp(revealHistoryVisibleHeight * 0.58f, 13f, 19f);
-                titleLabel.fontSizeMax = useRevealHistoryLayout
+                float historyTitleHeight = useRevealHistoryLayout ? revealHistoryVisibleHeight : 46f;
+                float peekFontSize = Mathf.Clamp(historyTitleHeight * 0.58f, 13f, 19f);
+                titleLabel.fontSizeMax = useTopHistoryTitle
                     ? Mathf.Min(peekFontSize, fontSizeMax)
                     : isGoldCard ? Mathf.Min(28f, fontSizeMax) : isImageCard ? Mathf.Min(20f, fontSizeMax) : fontSizeMax;
-                titleLabel.fontSizeMin = useRevealHistoryLayout
+                titleLabel.fontSizeMin = useTopHistoryTitle
                     ? Mathf.Min(11f, fontSizeMin)
                     : isGoldCard ? Mathf.Min(18f, fontSizeMin) : isImageCard ? Mathf.Min(11f, fontSizeMin) : fontSizeMin;
-                titleLabel.enableWordWrapping = !useRevealHistoryLayout && !isGoldCard && !isImageCard;
-                titleLabel.overflowMode = useRevealHistoryLayout || isGoldCard || isImageCard
+                titleLabel.enableWordWrapping = !useTopHistoryTitle && !isGoldCard && !isImageCard;
+                titleLabel.overflowMode = useTopHistoryTitle || isGoldCard || isImageCard
                     ? TextOverflowModes.Ellipsis
                     : TextOverflowModes.Overflow;
             }

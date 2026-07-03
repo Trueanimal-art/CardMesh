@@ -267,6 +267,32 @@ namespace SolitaireAssociations
             return goldCards;
         }
 
+        public List<CardData> CreateAllImageCardInstances()
+        {
+            List<CardData> imageCards = new();
+            if (!Load())
+            {
+                return imageCards;
+            }
+
+            List<string> cardIds = new(regularCardsById.Keys);
+            cardIds.Sort(System.StringComparer.Ordinal);
+            foreach (string cardId in cardIds)
+            {
+                if (!TryCreateCardInstance(cardId, CardType.Image, out CardData cardData)
+                    || cardData == null
+                    || !cardData.IsImageCard
+                    || cardData.Icon == null)
+                {
+                    continue;
+                }
+
+                imageCards.Add(cardData);
+            }
+
+            return imageCards;
+        }
+
         private Sprite ResolveImageCardSprite(CardData cardData)
         {
             if (cardData == null)

@@ -24,7 +24,7 @@ MonoBehaviour:
     - 4
     - 5
     deckCount: 24
-    referenceMoves: 100
+    referenceMoves: 70
     goldCardGroups:
     - goldCardsCount: 2
       ordinaryCardsPerGold: 8
@@ -40,7 +40,7 @@ MonoBehaviour:
     - 6
     - 7
     deckCount: 42
-    referenceMoves: 120
+    referenceMoves: 129
     goldCardGroups:
     - goldCardsCount: 3
       ordinaryCardsPerGold: 8
@@ -58,7 +58,7 @@ MonoBehaviour:
     - 7
     - 8
     deckCount: 54
-    referenceMoves: 140
+    referenceMoves: 158
     goldCardGroups:
     - goldCardsCount: 4
       ordinaryCardsPerGold: 8
@@ -78,7 +78,7 @@ MonoBehaviour:
     - 6
     - 7
     deckCount: 42
-    referenceMoves: 125
+    referenceMoves: 131
     goldCardGroups:
     - goldCardsCount: 3
       ordinaryCardsPerGold: 8
@@ -97,7 +97,7 @@ MonoBehaviour:
     - 8
     - 9
     deckCount: 63
-    referenceMoves: 160
+    referenceMoves: 191
     goldCardGroups:
     - goldCardsCount: 4
       ordinaryCardsPerGold: 8
@@ -118,7 +118,7 @@ MonoBehaviour:
     - 8
     - 9
     deckCount: 57
-    referenceMoves: 150
+    referenceMoves: 173
     goldCardGroups:
     - goldCardsCount: 3
       ordinaryCardsPerGold: 8

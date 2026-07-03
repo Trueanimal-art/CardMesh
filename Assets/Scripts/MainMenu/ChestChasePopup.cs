@@ -244,9 +244,7 @@ namespace SolitaireAssociations
                 Image image = panel.GetComponent<Image>();
                 if (image != null)
                 {
-                    image.sprite = RoyalEventSprites.Panel != null ? RoyalEventSprites.Panel : PremiumUISprites.EmeraldPanel;
-                    image.type = Image.Type.Sliced;
-                    image.color = Color.white;
+                    ApplyPopupPanelVisual(image);
                 }
 
                 Shadow shadow = panel.GetComponent<Shadow>() ?? panel.gameObject.AddComponent<Shadow>();
@@ -544,9 +542,7 @@ namespace SolitaireAssociations
             bool landscapeLayout = panelSize.x > panelSize.y;
             panel = CreateRect("Panel", transform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), panelSize, new Vector2(0f, 10f));
             Image panelImage = panel.gameObject.AddComponent<Image>();
-            panelImage.sprite = RoyalEventSprites.Panel != null ? RoyalEventSprites.Panel : PremiumUISprites.EmeraldPanel;
-            panelImage.type = panelImage.sprite != null && panelImage.sprite.border != Vector4.zero ? Image.Type.Sliced : Image.Type.Simple;
-            panelImage.color = Color.white;
+            ApplyPopupPanelVisual(panelImage);
             AddShadow(panel.gameObject, new Color(1f, 0.68f, 0.14f, 0f), Vector2.zero);
 
             Image headerLogo = CreateRect("HeaderLogo", panel, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 0.5f), new Vector2(132f, 132f), new Vector2(0f, HeaderLogoY)).gameObject.AddComponent<Image>();
@@ -1259,6 +1255,22 @@ namespace SolitaireAssociations
             shadow.effectColor = new Color(color.r, color.g, color.b, 0f);
             shadow.effectDistance = Vector2.zero;
             shadow.useGraphicAlpha = true;
+        }
+
+        private static void ApplyPopupPanelVisual(Image panelImage)
+        {
+            panelImage.sprite = GetPopupPanelSprite();
+            panelImage.type = PremiumUISprites.PauseWindowCardMesh != null ? Image.Type.Simple : Image.Type.Sliced;
+            panelImage.color = Color.white;
+        }
+
+        private static Sprite GetPopupPanelSprite()
+        {
+            return PremiumUISprites.PauseWindowCardMesh != null
+                ? PremiumUISprites.PauseWindowCardMesh
+                : RoyalEventSprites.Panel != null
+                    ? RoyalEventSprites.Panel
+                    : PremiumUISprites.EmeraldPanel;
         }
 
         private static void DisableExternalGlow(Transform root)

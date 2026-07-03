@@ -26,7 +26,7 @@ namespace SolitaireAssociations
         public static Sprite Tooltip => tooltip ??= Load("royal_tooltip");
         public static Sprite ProgressBack => progressBack ??= Load("royal_progress_back");
         public static Sprite ProgressFill => progressFill ??= Load("royal_progress_fill");
-        public static Sprite CoinIcon => coinIcon ??= Load("royal_icon_coin");
+        public static Sprite CoinIcon => coinIcon ??= (PremiumUISprites.CoinIcon != null ? PremiumUISprites.CoinIcon : Load("royal_icon_coin"));
         public static Sprite ButtonIcon => buttonIcon ??= Load("royal_event_button");
         public static Sprite EventLogo => eventLogo ??= Load("royal_event_logo");
         public static Sprite RedBadge => redBadge ??= Load("royal_badge_red");

@@ -158,13 +158,47 @@ namespace SolitaireAssociations.Editor
 
             if (coinIcon != null)
             {
-                SetAnchored(coinIcon, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(44f, 44f), new Vector2(28f, 0f), "CoinIcon");
+                SetAnchored(coinIcon, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(54f, 54f), new Vector2(40f, 0f), "CoinIcon");
+                Image coinImage = coinIcon.GetComponent<Image>();
+                if (coinImage != null)
+                {
+                    Undo.RecordObject(coinImage, "Apply CoinIcon Sprite");
+                    coinImage.sprite = PremiumUISprites.CoinIcon;
+                    coinImage.type = Image.Type.Simple;
+                    coinImage.preserveAspect = true;
+                    coinImage.color = Color.white;
+                    EditorUtility.SetDirty(coinImage);
+                }
             }
 
             if (coinsText != null)
             {
-                SetAnchored(coinsText, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(116f, 38f), new Vector2(-6f, 0f), "CoinsText");
-                SetTextValue(coinsText.GetComponent<TMP_Text>(), "0", "CoinsText");
+                SetAnchored(coinsText, new Vector2(0f, 0.5f), new Vector2(1f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-60f, 44f), new Vector2(24f, 0f), "CoinsText");
+                TMP_Text text = coinsText.GetComponent<TMP_Text>();
+                SetTextValue(text, "0", "CoinsText");
+                if (text != null)
+                {
+                    Undo.RecordObject(text, "Apply CoinsText Style");
+                    TMP_Text movesValueText = movesValue != null ? movesValue.GetComponent<TMP_Text>() : null;
+                    if (movesValueText != null)
+                    {
+                        text.font = movesValueText.font;
+                        text.fontSharedMaterial = movesValueText.fontSharedMaterial;
+                    }
+
+                    text.enableAutoSizing = false;
+                    text.fontSize = 30f;
+                    text.fontSizeMin = 30f;
+                    text.fontSizeMax = 30f;
+                    text.fontStyle = FontStyles.Normal;
+                    text.fontWeight = FontWeight.Regular;
+                    text.enableWordWrapping = false;
+                    text.overflowMode = TextOverflowModes.Ellipsis;
+                    text.alignment = TextAlignmentOptions.Center;
+                    text.color = movesValueText != null ? movesValueText.color : new Color(0.31f, 0.17f, 0.04f, 1f);
+
+                    EditorUtility.SetDirty(text);
+                }
             }
 
             if (plusButton != null)

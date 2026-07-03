@@ -20,6 +20,17 @@ namespace SolitaireAssociations
 
         public event Action<int, int> OnLivesChanged;
 
+#if UNITY_EDITOR
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetLivesForEditorPlayMode()
+        {
+            long now = GetUtcNowTimestamp();
+            PlayerPrefs.SetInt(LivesKey, MaxLives);
+            PlayerPrefs.SetString(LastRestoreTimestampKey, now.ToString());
+            PlayerPrefs.Save();
+        }
+#endif
+
         private void Awake()
         {
             Load();

@@ -84,6 +84,8 @@ namespace SolitaireAssociations
                 }
 
                 revealedCard.SetRevealHistoryLayout(false);
+                revealedCard.SetDrawHistoryTitleLayout(false);
+                revealedCard.SetPlayerStackedOnPrevious(false);
                 revealedCard.BindToContainer(null);
                 revealedCard.gameObject.SetActive(false);
             }
@@ -101,6 +103,8 @@ namespace SolitaireAssociations
                     }
 
                     cardView.SetRevealHistoryLayout(false);
+                    cardView.SetDrawHistoryTitleLayout(false);
+                    cardView.SetPlayerStackedOnPrevious(false);
                     cardView.BindToContainer(null);
                     cardView.gameObject.SetActive(false);
                     queuedCards.Add(cardView);
@@ -138,6 +142,7 @@ namespace SolitaireAssociations
                 : transform.position;
 
             nextCard.gameObject.SetActive(true);
+            nextCard.SetPlayerStackedOnPrevious(false);
             nextCard.BindToContainer(this);
             revealedCards.Add(nextCard);
 
@@ -155,10 +160,12 @@ namespace SolitaireAssociations
             }
 
             revealedCards.Add(cardView);
+            cardView.SetPlayerStackedOnPrevious(false);
             cardView.BindToContainer(this);
             cardView.transform.SetParent(CardRoot, false);
             cardView.SetSize(cardSize);
             cardView.SetRevealHistoryLayout(false);
+            cardView.SetDrawHistoryTitleLayout(false);
             RefreshLayout();
             RefreshCounter();
         }
@@ -204,6 +211,8 @@ namespace SolitaireAssociations
                     }
 
                     cardView.SetRevealHistoryLayout(false);
+                    cardView.SetDrawHistoryTitleLayout(false);
+                    cardView.SetPlayerStackedOnPrevious(false);
                     cardView.BindToContainer(null);
                     cardView.gameObject.SetActive(false);
                     queuedCards.Add(cardView);
@@ -220,10 +229,12 @@ namespace SolitaireAssociations
                     }
 
                     cardView.gameObject.SetActive(true);
+                    cardView.SetPlayerStackedOnPrevious(false);
                     cardView.BindToContainer(this);
                     cardView.transform.SetParent(CardRoot, false);
                     cardView.SetDragDetached(false);
                     cardView.SetSize(cardSize);
+                    cardView.SetDrawHistoryTitleLayout(false);
                     revealedCards.Add(cardView);
                 }
             }
@@ -244,6 +255,16 @@ namespace SolitaireAssociations
 
         public void ClearCards()
         {
+            foreach (CardView cardView in queuedCards)
+            {
+                cardView?.SetPlayerStackedOnPrevious(false);
+            }
+
+            foreach (CardView cardView in revealedCards)
+            {
+                cardView?.SetPlayerStackedOnPrevious(false);
+            }
+
             queuedCards.Clear();
             revealedCards.Clear();
             RefreshLayout();
@@ -288,6 +309,7 @@ namespace SolitaireAssociations
                 if (!isVisible)
                 {
                     cardView.SetRevealHistoryLayout(false);
+                    cardView.SetDrawHistoryTitleLayout(false);
                     continue;
                 }
 
@@ -304,9 +326,11 @@ namespace SolitaireAssociations
                     basePosition.y + (visibleIndex * RevealedCardsStepY));
                 cardRect.SetAsLastSibling();
                 cardView.SetSize(cardSize);
-                cardView.SetRevealHistoryLayout(!isTopRevealedCard, Mathf.Abs(RevealedCardsStepY) + 8f, !isTopRevealedCard);
+                cardView.SetRevealHistoryLayout(false);
+                cardView.SetDrawHistoryTitleLayout(!isTopRevealedCard);
                 cardView.SetFaceUp(true);
                 cardView.SetVisible(true);
+                cardView.SetRaycastBlocks(isTopRevealedCard);
             }
 
             if (backgroundImage != null)
@@ -371,6 +395,7 @@ namespace SolitaireAssociations
                 }
 
                 cardView.SetRevealHistoryLayout(false);
+                cardView.SetDrawHistoryTitleLayout(false);
                 cardView.BindToContainer(null);
                 cardView.gameObject.SetActive(false);
                 queuedCards.Add(cardView);

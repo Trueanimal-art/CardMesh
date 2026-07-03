@@ -100,7 +100,7 @@ public static class GameUiPrefabMigrator
         SavePrefab(CreateBottomGameButtonPrefab("UndoButton", "Отмена", PremiumUISprites.UndoIcon, true), $"{PrefabRoot}/UndoButton.prefab");
         SavePrefab(CreateBottomGameButtonPrefab("BoosterDeckButton", "+10 ходов", PremiumUISprites.BoosterRocketIcon, true), $"{PrefabRoot}/BoosterButton.prefab");
         SavePrefab(CreateCategorySlotPrefab(), $"{PrefabRoot}/CategorySlot.prefab");
-        SavePrefab(CreateCounterPrefab("CurrencyCounter", "CoinsPanel", "C", "185"), $"{PrefabRoot}/CurrencyCounter.prefab");
+        SavePrefab(CreateCounterPrefab("CurrencyCounter", "CoinsPanel", string.Empty, "0"), $"{PrefabRoot}/CurrencyCounter.prefab");
         SavePrefab(CreateMovesCounterPrefab(), $"{PrefabRoot}/MovesCounter.prefab");
         SavePrefab(CreateLivesCounterPrefab(), $"{PrefabRoot}/LivesCounter.prefab");
         SavePrefab(CreateMenuButtonPrefab(), $"{PrefabRoot}/MenuButton.prefab");
@@ -171,12 +171,6 @@ public static class GameUiPrefabMigrator
                     {
                         pixel = Color.Lerp(pixel, greenTop, Mathf.Clamp01(1f - inner / 5f) * 0.12f);
                     }
-                }
-
-                float topLine = Mathf.Clamp01(1f - Mathf.Abs(y - 21f) / 1.7f);
-                if ((x > 55 && x < 255) || (x > 355 && x < 515))
-                {
-                    pixel = Color.Lerp(pixel, new Color(1f, 0.95f, 0.55f, 1f), topLine * 0.42f);
                 }
 
                 texture.SetPixel(x, y, pixel);
@@ -815,7 +809,7 @@ public static class GameUiPrefabMigrator
 
     private static GameObject CreateLivesCounterPrefab()
     {
-        GameObject root = CreateRoot("LivesCounter", new Vector2(172f, 64f));
+        GameObject root = CreateRoot("LivesCounter", new Vector2(214f, 64f));
         ConfigureLivesCounter(root.transform as RectTransform);
         return root;
     }
@@ -933,7 +927,7 @@ public static class GameUiPrefabMigrator
     private static void ConfigureCurrencyCounter(RectTransform panel)
     {
         SetAnchored(panel, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0.5f, 0.5f), new Vector2(236f, 70f), new Vector2(196f, -100f));
-        ConfigureCounter(panel, "CoinsPanel", "C", "185");
+        ConfigureCounter(panel, "CoinsPanel", string.Empty, "0");
     }
 
     private static void ConfigureMovesCounter(RectTransform panel)
@@ -962,7 +956,7 @@ public static class GameUiPrefabMigrator
 
     private static void ConfigureLivesCounter(RectTransform root)
     {
-        SetAnchored(root, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0.5f, 0.5f), new Vector2(172f, 64f), new Vector2(154f, -379f));
+        SetAnchored(root, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0.5f, 0.5f), new Vector2(214f, 64f), new Vector2(154f, -379f));
         RemoveDirectChild(root, "Icon");
         RemoveDirectChild(root, "Value");
         EnsureImage(root).color = new Color(1f, 1f, 1f, 0f);
@@ -974,8 +968,18 @@ public static class GameUiPrefabMigrator
         }
         SetAnchored(heart, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(54f, 54f), new Vector2(42f, 0f));
         TextMeshProUGUI count = EnsureText(root, "LivesCount", "5/5");
-        ConfigurePlainText(count, 38f, 26f, TextAlignmentOptions.MidlineLeft, new Color(1f, 0.9f, 0.66f, 1f));
-        SetAnchored(count.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 1f), new Vector2(0.5f, 0.5f), new Vector2(-64f, -2f), new Vector2(42f, 0f));
+        ConfigurePlainText(count, 32f, 32f, TextAlignmentOptions.MidlineLeft, new Color(1f, 0.9f, 0.66f, 1f));
+        count.enableAutoSizing = false;
+        count.fontSize = 32f;
+        count.fontSizeMin = 32f;
+        count.fontSizeMax = 32f;
+        count.fontStyle = FontStyles.Normal;
+        count.enableWordWrapping = false;
+        count.overflowMode = TextOverflowModes.Overflow;
+        count.margin = Vector4.zero;
+        count.extraPadding = false;
+        count.raycastTarget = false;
+        SetAnchored(count.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(126f, 56f), new Vector2(82f, 0f));
         LivesHudView view = GetOrAdd<LivesHudView>(root.gameObject);
         EditorUtility.SetDirty(view);
     }
@@ -1003,12 +1007,43 @@ public static class GameUiPrefabMigrator
         image.sprite = PremiumUISprites.HudCounterGold;
         image.type = Image.Type.Sliced;
         image.color = new Color(1f, 1f, 1f, 0.96f);
-        TextMeshProUGUI iconText = EnsureText(root, objectName == "CoinsPanel" ? "CoinGlyph" : "Icon", icon);
-        ConfigurePlainText(iconText, 25f, 15f, TextAlignmentOptions.Center, new Color(0.43f, 0.22f, 0.04f, 1f));
-        SetAnchored(iconText.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(50f, 50f), new Vector2(38f, 0f));
+        if (objectName == "CoinsPanel")
+        {
+            RemoveDirectChild(root, "CoinGlyph");
+            RectTransform coinIcon = EnsureImageLayer(root, "CoinIcon", PremiumUISprites.CoinIcon, Image.Type.Simple, Color.white);
+            Image coinImage = coinIcon.GetComponent<Image>();
+            if (coinImage != null)
+            {
+                coinImage.preserveAspect = true;
+            }
+
+            SetAnchored(coinIcon, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(54f, 54f), new Vector2(40f, 0f));
+        }
+        else
+        {
+            TextMeshProUGUI iconText = EnsureText(root, "Icon", icon);
+            ConfigurePlainText(iconText, 25f, 15f, TextAlignmentOptions.Center, new Color(0.43f, 0.22f, 0.04f, 1f));
+            SetAnchored(iconText.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(50f, 50f), new Vector2(38f, 0f));
+        }
+
         TextMeshProUGUI text = EnsureText(root, objectName == "CoinsPanel" ? "CoinsText" : "Value", value);
-        ConfigurePlainText(text, 36f, 23f, TextAlignmentOptions.MidlineLeft, new Color(0.29f, 0.16f, 0.04f, 1f));
-        SetAnchored(text.rectTransform, new Vector2(0f, 0.5f), new Vector2(1f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-92f, 44f), new Vector2(38f, 0f));
+        if (objectName == "CoinsPanel")
+        {
+            ConfigurePlainText(text, 30f, 30f, TextAlignmentOptions.Center, new Color(0.31f, 0.17f, 0.04f, 1f));
+            text.enableAutoSizing = false;
+            text.fontSize = 30f;
+            text.fontSizeMin = 30f;
+            text.fontSizeMax = 30f;
+            text.fontStyle = FontStyles.Normal;
+            text.fontWeight = FontWeight.Regular;
+            RemoveUiEffects(text.gameObject);
+        }
+        else
+        {
+            ConfigurePlainText(text, 36f, 23f, TextAlignmentOptions.MidlineLeft, new Color(0.29f, 0.16f, 0.04f, 1f));
+        }
+
+        SetAnchored(text.rectTransform, new Vector2(0f, 0.5f), new Vector2(1f, 0.5f), new Vector2(0.5f, 0.5f), objectName == "CoinsPanel" ? new Vector2(-60f, 44f) : new Vector2(-92f, 44f), new Vector2(objectName == "CoinsPanel" ? 24f : 38f, 0f));
     }
 
     private static RectTransform EnsureImageLayer(RectTransform parent, string name, Sprite sprite, Image.Type type, Color color)

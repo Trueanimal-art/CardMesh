@@ -9,21 +9,24 @@ import sys
 import uuid
 import zlib
 from collections import Counter, defaultdict
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Iterable
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from validate_solvability import GeneratedLevel, Layout, SolvabilityValidator  # noqa: E402
+from validate_solvability import GeneratedLevel, Layout, SolveResult, SolvabilityValidator  # noqa: E402
 
 
 GENERATOR_VERSION = "solitaire-content-pipeline-1.0"
 SOLVER_VERSION = "validate_solvability.py-1.0"
 DEFAULT_LEVELS = 1000
 DEFAULT_MAX_STATES = 120_000
+DEFAULT_BUDGET_MAX_STATES = 5_000
 DEFAULT_MAX_ATTEMPTS = 20
 DEFAULT_REGEN_ATTEMPTS = 40
+DEFAULT_PLUS10_TARGET_PERCENT = 20
+DEFAULT_PLUS10_TARGET_START_LEVEL = 1
 PROJECT_IMAGE_WIDTH_RANGE = (150, 280)
 PROJECT_IMAGE_HEIGHT_RANGE = (190, 300)
 
@@ -533,9 +536,12 @@ def generate_levels_manifest(
     root: Path,
     total_levels: int,
     max_states: int,
+    budget_max_states: int,
     max_attempts: int,
     regen_attempts: int,
     seed_start: int,
+    plus10_target_percent: int,
+    plus10_target_start_level: int,
 ) -> dict:
     validator = SolvabilityValidator(root)
     layouts_by_id = {layout.id: layout for layout in validator.layouts}
@@ -549,6 +555,7 @@ def generate_levels_manifest(
     solver_moves: list[int] = []
     solver_states: list[int] = []
     generation_attempt_counts: list[int] = []
+    move_budget_tiers: Counter[str] = Counter()
 
     for level_number in range(1, total_levels + 1):
         layout_id = select_layout_id(level_number, layouts_by_id)
@@ -576,17 +583,75 @@ def generate_levels_manifest(
                 )
                 continue
 
-            result = validator.solve(generated, max_states)
-            if result.solved:
-                break
+            difficulty_ok, difficulty_report = validate_stock_pass_difficulty(validator, generated, max_states)
+            if not difficulty_ok:
+                failed_seeds.append(
+                    {
+                        "levelNumber": level_number,
+                        "seed": source_seed,
+                        "layoutId": layout_id,
+                        **difficulty_report,
+                    }
+                )
+                generated = None
+                result = None
+                continue
+
+            original_budget = assess_move_budget(
+                validator,
+                generated,
+                min(max_states, budget_max_states),
+                include_unlimited=False,
+            )
+            if original_budget["tier"] in {"base", "plus10"}:
+                target_plus10_count = 0
+                eligible_count = max(0, level_number - plus10_target_start_level + 1)
+                if eligible_count > 0:
+                    target_plus10_count = round(eligible_count * (plus10_target_percent / 100.0))
+                needs_plus10 = (
+                    level_number >= plus10_target_start_level
+                    and move_budget_tiers["plus10"] < target_plus10_count
+                )
+                move_budget = assign_gameplay_move_budget(
+                    validator,
+                    generated,
+                    min(max_states, budget_max_states),
+                    force_plus10=needs_plus10,
+                    original_budget=original_budget,
+                )
+                if needs_plus10 and move_budget["tier"] != "plus10" and regen_attempt <= max(1, int(regen_attempts * 0.9)):
+                    failed_seeds.append(
+                        {
+                            "levelNumber": level_number,
+                            "seed": source_seed,
+                            "layoutId": layout_id,
+                            "reason": "plus10_quota_needs_ad_level",
+                            "currentPlus10": move_budget_tiers["plus10"],
+                            "targetPlus10": target_plus10_count,
+                        }
+                    )
+                    generated = None
+                    result = None
+                    continue
+
+                result = SolveResult(
+                    solved=True,
+                    moves=move_budget["moves"] or 0,
+                    states=move_budget["states"],
+                    reason=move_budget["reason"],
+                )
+                if result.solved:
+                    break
 
             failed_seeds.append(
                 {
                     "levelNumber": level_number,
                     "seed": source_seed,
                     "layoutId": layout_id,
-                    "reason": result.reason,
-                    "states": result.states,
+                    "reason": f"move_budget_{original_budget['tier']}",
+                    "states": original_budget["states"],
+                    "moves": original_budget["moves"],
+                    "limit": original_budget["limit"],
                 }
             )
             generated = None
@@ -595,12 +660,13 @@ def generate_levels_manifest(
         if generated is None or result is None or not result.solved:
             raise RuntimeError(f"Failed to generate solved level {level_number} after {regen_attempts} attempts")
 
-        entry = build_level_entry(level_number, source_seed, generated, result.moves or 0, result.states, validator)
+        entry = build_level_entry(level_number, source_seed, generated, result.moves or 0, result.states, validator, move_budget)
         levels.append(entry)
         layout_counter[entry["layoutId"]] += 1
         generation_attempt_counts.append(entry["generationAttempts"])
         solver_moves.append(entry["solverMoves"])
         solver_states.append(entry["solverStates"])
+        move_budget_tiers[entry["moveBudgetTier"]] += 1
 
         for card_id in entry["cards"]:
             usage_counter[card_id] += 1
@@ -634,6 +700,7 @@ def generate_levels_manifest(
             "averageSolverMoves": round(statistics.mean(solver_moves), 2) if solver_moves else 0.0,
             "averageSolverStates": round(statistics.mean(solver_states), 2) if solver_states else 0.0,
             "averageGenerationAttempts": round(statistics.mean(generation_attempt_counts), 2) if generation_attempt_counts else 0.0,
+            "moveBudgetTiers": dict(sorted(move_budget_tiers.items())),
         },
         "layoutStats": dict(sorted(layout_counter.items())),
         "contentUsageStats": {
@@ -652,6 +719,170 @@ def generate_levels_manifest(
     return manifest
 
 
+def validate_stock_pass_difficulty(
+    validator: SolvabilityValidator,
+    generated: GeneratedLevel,
+    max_states: int,
+) -> tuple[bool, dict]:
+    without_draw = validator.simulate_greedy_stock_passes(generated, max_passes=0)
+    if without_draw["solved"]:
+        return False, {
+            "reason": "level_solved_without_stock",
+            "passReport": without_draw,
+        }
+
+    first_pass = validator.simulate_greedy_stock_passes(generated, max_passes=1)
+    if generated.layout.columns_count <= 3:
+        if not first_pass["solvedBeforeFirstPassEnd"]:
+            return True, {
+                "reason": "three_col_requires_full_first_stock_pass",
+                "passReport": first_pass,
+            }
+        return False, {
+            "reason": "three_col_solves_before_full_first_stock_pass",
+            "passReport": first_pass,
+        }
+
+    if first_pass["solved"]:
+        return False, {
+            "reason": "large_layout_solves_in_one_stock_pass",
+            "passReport": first_pass,
+        }
+
+    return True, {
+        "reason": "large_layout_requires_multiple_stock_passes",
+        "passReport": first_pass,
+    }
+
+
+def assess_move_budget(
+    validator: SolvabilityValidator,
+    generated: GeneratedLevel,
+    max_states: int,
+    include_unlimited: bool = True,
+    base_limit: int | None = None,
+) -> dict:
+    base_limit = generated.reference_moves if base_limit is None else max(1, base_limit)
+    base_level = replace(generated, reference_moves=base_limit)
+    base_result = validator.solve(base_level, max_states, ignore_move_limit=False)
+    if base_result.solved:
+        return {
+            "tier": "base",
+            "limit": base_limit,
+            "moves": base_result.moves,
+            "states": base_result.states,
+            "reason": base_result.reason,
+        }
+
+    plus10_level = replace(generated, reference_moves=base_limit + 10)
+    plus10_result = validator.solve(plus10_level, max_states, ignore_move_limit=False)
+    if plus10_result.solved:
+        return {
+            "tier": "plus10",
+            "limit": base_limit + 10,
+            "moves": plus10_result.moves,
+            "states": plus10_result.states,
+            "baseReason": base_result.reason,
+            "reason": plus10_result.reason,
+        }
+
+    if not include_unlimited:
+        return {
+            "tier": "over_plus10_or_unsolved",
+            "limit": base_limit + 10,
+            "moves": None,
+            "states": plus10_result.states,
+            "baseReason": base_result.reason,
+            "plus10Reason": plus10_result.reason,
+            "reason": plus10_result.reason,
+        }
+
+    plus20_level = replace(generated, reference_moves=base_limit + 20)
+    plus20_result = validator.solve(plus20_level, max_states, ignore_move_limit=False)
+    if plus20_result.solved:
+        return {
+            "tier": "plus20",
+            "limit": base_limit + 20,
+            "moves": plus20_result.moves,
+            "states": plus20_result.states,
+            "baseReason": base_result.reason,
+            "plus10Reason": plus10_result.reason,
+            "reason": plus20_result.reason,
+        }
+
+    if not include_unlimited:
+        return {
+            "tier": "unsolved_within_plus20",
+            "limit": base_limit + 20,
+            "moves": None,
+            "states": plus20_result.states,
+            "baseReason": base_result.reason,
+            "plus10Reason": plus10_result.reason,
+            "plus20Reason": plus20_result.reason,
+            "reason": plus20_result.reason,
+        }
+
+    unlimited_result = validator.solve(base_level, max_states, ignore_move_limit=True)
+    return {
+        "tier": "over_plus20" if unlimited_result.solved else "unsolved",
+        "limit": base_limit + 20,
+        "moves": unlimited_result.moves,
+        "states": unlimited_result.states,
+        "baseReason": base_result.reason,
+        "plus10Reason": plus10_result.reason,
+        "plus20Reason": plus20_result.reason,
+        "reason": unlimited_result.reason,
+    }
+
+
+def assign_gameplay_move_budget(
+    validator: SolvabilityValidator,
+    generated: GeneratedLevel,
+    max_states: int,
+    force_plus10: bool,
+    original_budget: dict,
+) -> dict:
+    if not force_plus10:
+        return {
+            **original_budget,
+            "startingMoves": generated.reference_moves,
+            "referenceMoves": generated.reference_moves,
+        }
+
+    solution_moves = original_budget.get("moves")
+    if not isinstance(solution_moves, int) or solution_moves <= 1:
+        return {
+            **original_budget,
+            "tier": "base",
+            "startingMoves": generated.reference_moves,
+            "referenceMoves": generated.reference_moves,
+            "reason": "plus10_assignment_no_solution_moves",
+        }
+
+    for starting_moves in range(solution_moves - 1, 0, -1):
+        candidate = assess_move_budget(
+            validator,
+            generated,
+            max_states,
+            include_unlimited=False,
+            base_limit=starting_moves,
+        )
+        if candidate["tier"] == "plus10":
+            return {
+                **candidate,
+                "startingMoves": starting_moves,
+                "referenceMoves": generated.reference_moves,
+            }
+
+    return {
+        **original_budget,
+        "tier": "base",
+        "startingMoves": generated.reference_moves,
+        "referenceMoves": generated.reference_moves,
+        "reason": "plus10_assignment_failed",
+    }
+
+
 def build_level_entry(
     level_number: int,
     source_seed: int,
@@ -659,6 +890,7 @@ def build_level_entry(
     solver_moves: int,
     solver_states: int,
     validator: SolvabilityValidator,
+    move_budget: dict | None = None,
 ) -> dict:
     all_cards = [card_id for column in generated.columns for card_id in column] + list(generated.stock)
     gold_cards = sorted(generated.required_by_gold)
@@ -692,11 +924,15 @@ def build_level_entry(
         "imageCards": len(image_cards),
         "textCards": len(text_cards),
         "referenceMoves": generated.reference_moves,
+        "startingMoves": (move_budget or {}).get("startingMoves", generated.reference_moves),
         "generationAttempts": generated.generation_attempts,
         "solverSolved": True,
         "solverMoves": solver_moves,
         "solverStates": solver_states,
         "solverResult": "solved",
+        "moveBudgetTier": (move_budget or {}).get("tier", "base"),
+        "moveBudgetLimit": (move_budget or {}).get("limit", generated.reference_moves),
+        "moveBudgetMoves": (move_budget or {}).get("moves", solver_moves),
         "cards": all_cards,
         "columnsData": [
             {"index": index, "cards": list(column)}
@@ -723,6 +959,8 @@ def validate_manifest(root: Path, max_states: int) -> dict:
     failed: list[dict] = []
     state_counts: list[int] = []
     move_counts: list[int] = []
+    move_budget_tiers: Counter[str] = Counter()
+    move_budget_examples: list[dict] = []
 
     for entry in manifest["levels"]:
         duplicate_card_ids = {
@@ -753,25 +991,50 @@ def validate_manifest(root: Path, max_states: int) -> dict:
             image_cards=frozenset(entry["imageCardIds"]),
             image_goals=frozenset(entry["imageGoalIds"]),
             selected_gold=frozenset(entry["goldCards"]),
-            reference_moves=entry["referenceMoves"],
+            reference_moves=entry.get("startingMoves", entry["referenceMoves"]),
             generation_attempts=entry["generationAttempts"],
             generation_mode="manifest_exact",
             construction_moves=entry["solverMoves"],
         )
-        result = validator.solve(generated, max_states)
-        state_counts.append(result.states)
-        if result.solved:
+        difficulty_ok, difficulty_report = validate_stock_pass_difficulty(validator, generated, max_states)
+        move_budget = assess_move_budget(
+            validator,
+            generated,
+            min(max_states, DEFAULT_BUDGET_MAX_STATES),
+            include_unlimited=False,
+        )
+        move_budget_tiers[move_budget["tier"]] += 1
+        if move_budget["tier"] != "base" and len(move_budget_examples) < 20:
+            move_budget_examples.append(
+                {
+                    "levelId": entry["levelId"],
+                    "levelNumber": entry["levelNumber"],
+                    "layoutId": entry["layoutId"],
+                    "tier": move_budget["tier"],
+                    "moves": move_budget["moves"],
+                    "limit": move_budget["limit"],
+                    "reason": move_budget["reason"],
+                }
+            )
+        state_counts.append(move_budget["states"])
+        if move_budget["tier"] in {"base", "plus10"} and difficulty_ok:
             solved += 1
-            move_counts.append(result.moves or 0)
+            move_counts.append(move_budget["moves"] or 0)
         else:
+            failure_report = dict(difficulty_report)
+            failure_report["reason"] = difficulty_report["reason"] if difficulty_ok else difficulty_report["reason"]
+            if move_budget["tier"] not in {"base", "plus10"}:
+                failure_report["reason"] = f"move_budget_{move_budget['tier']}"
             failed.append(
                 {
                     "levelId": entry["levelId"],
                     "levelNumber": entry["levelNumber"],
                     "seed": entry["seed"],
                     "layoutId": entry["layoutId"],
-                    "reason": result.reason,
-                    "states": result.states,
+                    "states": move_budget["states"],
+                    "moves": move_budget["moves"],
+                    "limit": move_budget["limit"],
+                    **failure_report,
                 }
             )
 
@@ -782,6 +1045,8 @@ def validate_manifest(root: Path, max_states: int) -> dict:
         "rate": round((solved / total) * 100.0, 2) if total else 0.0,
         "averageStates": round(statistics.mean(state_counts), 2) if state_counts else 0.0,
         "averageMoves": round(statistics.mean(move_counts), 2) if move_counts else 0.0,
+        "moveBudgetTiers": dict(sorted(move_budget_tiers.items())),
+        "moveBudgetExamples": move_budget_examples,
         "failed": failed,
     }
 
@@ -835,9 +1100,12 @@ def command_generate(args: argparse.Namespace) -> int:
         root,
         args.levels,
         args.max_states,
+        args.budget_max_states,
         args.max_attempts,
         args.regen_attempts,
         args.seed_start,
+        args.plus10_target_percent,
+        args.plus10_target_start_level,
     )
 
     write_json_resource(root / "Assets/Resources/ContentPacks/content_cards.json", content_cards)
@@ -855,8 +1123,12 @@ def command_validate(args: argparse.Namespace) -> int:
     print(
         f"manifest_validation solved={report['solved']}/{report['total']} "
         f"rate={report['rate']:.1f}% avg_moves={report['averageMoves']:.1f} "
-        f"avg_states={report['averageStates']:.0f}"
+        f"avg_states={report['averageStates']:.0f} "
+        f"move_budget={report['moveBudgetTiers']}"
     )
+    if report["moveBudgetExamples"]:
+        for item in report["moveBudgetExamples"][:20]:
+            print(f"move_budget {item}")
     if report["failed"]:
         for item in report["failed"][:20]:
             print(f"failed {item}")
@@ -884,7 +1156,8 @@ def print_report(manifest: dict, content_cards: dict | None) -> None:
     print(
         f"generated_levels={manifest['totalLevels']} solved={stats['solved']}/{stats['total']} "
         f"rate={stats['solvedRate']:.1f}% avg_moves={stats['averageSolverMoves']:.1f} "
-        f"avg_states={stats['averageSolverStates']:.0f} avg_generation_attempts={stats['averageGenerationAttempts']:.2f}"
+        f"avg_states={stats['averageSolverStates']:.0f} avg_generation_attempts={stats['averageGenerationAttempts']:.2f} "
+        f"move_budget={stats.get('moveBudgetTiers', {})}"
     )
     print(f"layouts={manifest['layoutStats']}")
     print(f"failed_seeds={manifest['failedSeedsCount']}")
@@ -912,9 +1185,12 @@ def build_parser() -> argparse.ArgumentParser:
     generate = subparsers.add_parser("generate", help="Generate content metadata and a verified level manifest.")
     generate.add_argument("--levels", type=int, default=DEFAULT_LEVELS)
     generate.add_argument("--max-states", type=int, default=DEFAULT_MAX_STATES)
+    generate.add_argument("--budget-max-states", type=int, default=DEFAULT_BUDGET_MAX_STATES)
     generate.add_argument("--max-attempts", type=int, default=DEFAULT_MAX_ATTEMPTS)
     generate.add_argument("--regen-attempts", type=int, default=DEFAULT_REGEN_ATTEMPTS)
     generate.add_argument("--seed-start", type=int, default=73_000)
+    generate.add_argument("--plus10-target-percent", type=int, default=DEFAULT_PLUS10_TARGET_PERCENT)
+    generate.add_argument("--plus10-target-start-level", type=int, default=DEFAULT_PLUS10_TARGET_START_LEVEL)
     generate.set_defaults(func=command_generate)
 
     validate = subparsers.add_parser("validate", help="Validate the generated manifest with the solver.")

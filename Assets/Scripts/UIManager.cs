@@ -77,6 +77,12 @@ namespace SolitaireAssociations
         private int boosterCount = 1;
         private int lastDisplayedMoves = 140;
         private bool hasDisplayedMoves;
+        private TMP_FontAsset movesLabelFontAsset;
+        private Material movesLabelFontMaterial;
+        private TMP_FontAsset movesValueFontAsset;
+        private Material movesValueFontMaterial;
+        private TMP_FontAsset livesCountFontAsset;
+        private Material livesCountFontMaterial;
 
         public void Configure(
             SolitaireSceneRefs sceneRefs,
@@ -100,6 +106,7 @@ namespace SolitaireAssociations
             hintButton = sceneRefs != null ? sceneRefs.HintButton : null;
             undoButton = sceneRefs != null ? sceneRefs.UndoButton : null;
             boosterDeckButton = sceneRefs != null ? sceneRefs.BoosterDeckButton : null;
+            CacheHudTextStyles();
         }
 
         public void Initialize(GameManager gameManager, IReadOnlyList<GameManager.ObjectiveState> objectiveStates)
@@ -180,64 +187,20 @@ namespace SolitaireAssociations
 
             if (movesLabel == null || movesLabel.name != "MovesValue" || !movesLabel.gameObject.activeInHierarchy)
             {
-                movesLabel = FindChildRecursive<TMP_Text>(safeAreaRoot, "MovesValue");
+                RectTransform movesRoot = FindChildRecursive<RectTransform>(safeAreaRoot, "MovesPanel");
+                movesLabel = FindDirectText(movesRoot, "MovesValue") ?? FindChildRecursive<TMP_Text>(safeAreaRoot, "MovesValue");
             }
 
             if (movesLabel != null)
             {
-                movesLabel.text = remainingMoves.ToString();
-            }
-
-            if (safeAreaRoot == null)
-            {
-                return;
-            }
-
-            foreach (TMP_Text value in safeAreaRoot.GetComponentsInChildren<TMP_Text>(true))
-            {
-                if (value != null && value.name == "MovesValue")
-                {
-                    value.text = remainingMoves.ToString();
-                }
-            }
-
-            foreach (RectTransform movesRoot in safeAreaRoot.GetComponentsInChildren<RectTransform>(true))
-            {
-                if (movesRoot == null || movesRoot.name != "MovesPanel")
-                {
-                    continue;
-                }
-
-                CleanupMovesPanelChildren(movesRoot);
-                TMP_Text value = FindChildRecursive<TMP_Text>(movesRoot, "MovesValue");
-                if (value == null)
-                {
-                    RebuildMovesPanelText(movesRoot);
-                    value = FindChildRecursive<TMP_Text>(movesRoot, "MovesValue");
-                }
-
-                if (value != null)
-                {
-                    value.text = remainingMoves.ToString();
-                    movesLabel = value;
-                }
-
-                foreach (TMP_Text text in movesRoot.GetComponentsInChildren<TMP_Text>(true))
-                {
-                    if (text == null)
-                    {
-                        continue;
-                    }
-
-                    if (text.name == "MovesLabel")
-                    {
-                        text.text = "Ходы";
-                    }
-                    else if (text.name == "MovesValue")
-                    {
-                        text.text = remainingMoves.ToString();
-                    }
-                }
+                movesLabel.gameObject.SetActive(true);
+                movesLabel.enabled = true;
+                movesLabel.canvasRenderer.SetAlpha(1f);
+                ApplyCachedTextStyle(movesLabel, movesValueFontAsset, movesValueFontMaterial);
+                ApplyMovesValueStyle(movesLabel);
+                movesLabel.SetText(remainingMoves.ToString());
+                ApplyMovesValueStyle(movesLabel);
+                movesLabel.ForceMeshUpdate(true, true);
             }
         }
 
@@ -475,9 +438,9 @@ namespace SolitaireAssociations
             statusLabel.color = color;
         }
 
-        public void ShowRestartConfirmation(Func<bool> onConfirmed)
+        public void ShowRestartConfirmation(Func<bool> onConfirmed, Action onClosed = null)
         {
-            EnsureRestartConfirmationPopup(onConfirmed);
+            EnsureRestartConfirmationPopup(onConfirmed, onClosed);
             ClosePausePopup(false);
 
             if (restartConfirmationPopup != null)
@@ -612,11 +575,11 @@ namespace SolitaireAssociations
             RectTransform root = FindChildRecursive<RectTransform>(safeAreaRoot, "LivesHud");
             if (root == null)
             {
-                root = CreateRect("LivesHud", safeAreaRoot, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0.5f, 0.5f), new Vector2(172f, 64f), new Vector2(LivesLeftInsetX, -LivesUnderMovesTopInset));
+                root = CreateRect("LivesHud", safeAreaRoot, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0.5f, 0.5f), new Vector2(214f, 64f), new Vector2(LivesLeftInsetX, -LivesUnderMovesTopInset));
             }
             else
             {
-                SetAnchored(root, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0.5f, 0.5f), new Vector2(172f, 64f), new Vector2(LivesLeftInsetX, -LivesUnderMovesTopInset));
+                SetAnchored(root, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0.5f, 0.5f), new Vector2(214f, 64f), new Vector2(LivesLeftInsetX, -LivesUnderMovesTopInset));
             }
 
             Image panelImage = EnsureGraphic<Image>(root.gameObject);
@@ -624,11 +587,11 @@ namespace SolitaireAssociations
             panelImage.color = new Color(1f, 1f, 1f, 0f);
             panelImage.raycastTarget = false;
 
-            RectTransform heart = EnsureImageLayer(root, "HeartIcon", GetHeartSprite(), Image.Type.Simple, Color.white);
+            RectTransform heart = EnsureDirectImageLayer(root, "HeartIcon", GetHeartSprite(), Image.Type.Simple, Color.white);
             TMP_Text heartText = heart.GetComponent<TMP_Text>();
             if (heartText != null)
             {
-                Destroy(heartText);
+                heartText.enabled = false;
             }
 
             SetAnchored(heart, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(54f, 54f), new Vector2(42f, 0f));
@@ -636,20 +599,179 @@ namespace SolitaireAssociations
             heartImage.preserveAspect = true;
             AddShadow(heart.gameObject, new Color(0.25f, 0f, 0f, 0.32f), new Vector2(0f, -2f));
 
-            TextMeshProUGUI count = EnsureText(root, "LivesCount");
-            ConfigureText(count, 38f, 26f, TextAlignmentOptions.MidlineLeft, new Color(1f, 0.9f, 0.66f, 1f));
-            count.fontStyle = FontStyles.Bold;
-            SetAnchored(count.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 1f), new Vector2(0.5f, 0.5f), new Vector2(-64f, -2f), new Vector2(42f, 0f));
-            AddTextOutline(count, new Color(0.2f, 0.08f, 0f, 0.72f), new Vector2(1.2f, -1.2f));
+            TextMeshProUGUI count = EnsureDirectText(root, "LivesCount");
+            RemoveUiEffects(count.gameObject);
+            ConfigureText(count, 32f, 32f, TextAlignmentOptions.MidlineLeft, new Color(1f, 0.9f, 0.66f, 1f));
+            ApplyCachedTextStyle(count, livesCountFontAsset, null);
+            ApplyLivesCountStyle(count);
+            SetAnchored(count.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(126f, 56f), new Vector2(82f, 0f));
+            count.transform.SetAsLastSibling();
+            NormalizeLivesHudChildren(root, heart, count);
 
-            livesHudView = root.GetComponent<LivesHudView>();
-            if (livesHudView == null)
+            LivesHudView[] hudViews = root.GetComponents<LivesHudView>();
+            if (hudViews.Length > 0)
+            {
+                livesHudView = hudViews[0];
+                for (int index = 1; index < hudViews.Length; index++)
+                {
+                    if (Application.isPlaying)
+                    {
+                        Destroy(hudViews[index]);
+                    }
+                    else
+                    {
+                        DestroyImmediate(hudViews[index]);
+                    }
+                }
+            }
+            else
             {
                 livesHudView = root.gameObject.AddComponent<LivesHudView>();
             }
 
             livesHudView.Configure(livesManager, count, heart.GetComponent<Image>());
             root.SetAsLastSibling();
+        }
+
+        private static void NormalizeLivesHudChildren(RectTransform root, RectTransform heart, TMP_Text count)
+        {
+            if (root == null)
+            {
+                return;
+            }
+
+            for (int index = 0; index < root.childCount; index++)
+            {
+                Transform child = root.GetChild(index);
+                bool keep = child == heart || (count != null && child == count.transform);
+                child.gameObject.SetActive(keep);
+            }
+
+            foreach (TMP_Text text in root.GetComponentsInChildren<TMP_Text>(true))
+            {
+                if (text == count)
+                {
+                    TrimExtraTextComponents(text.gameObject, text);
+                    ApplyLivesCountStyle(text);
+                    continue;
+                }
+
+                text.enabled = false;
+                text.canvasRenderer.SetAlpha(0f);
+            }
+        }
+
+        private void CacheHudTextStyles()
+        {
+            RectTransform movesRoot = FindChildRecursive<RectTransform>(safeAreaRoot, "MovesPanel");
+            TMP_Text authoredMovesLabel = FindDirectText(movesRoot, "MovesLabel") ?? FindChildRecursive<TMP_Text>(movesRoot, "MovesLabel");
+            TMP_Text authoredMovesValue = FindDirectText(movesRoot, "MovesValue") ?? FindChildRecursive<TMP_Text>(movesRoot, "MovesValue") ?? movesLabel;
+            CacheTextStyle(authoredMovesLabel, ref movesLabelFontAsset, ref movesLabelFontMaterial);
+            CacheTextStyle(authoredMovesValue, ref movesValueFontAsset, ref movesValueFontMaterial);
+
+            RectTransform livesRoot = FindChildRecursive<RectTransform>(safeAreaRoot, "LivesHud");
+            TMP_Text authoredLivesCount = FindDirectText(livesRoot, "LivesCount") ?? FindChildRecursive<TMP_Text>(livesRoot, "LivesCount");
+            CacheTextStyle(authoredLivesCount, ref livesCountFontAsset, ref livesCountFontMaterial);
+            livesCountFontMaterial = null;
+        }
+
+        private static void CacheTextStyle(TMP_Text source, ref TMP_FontAsset fontAsset, ref Material fontMaterial)
+        {
+            if (source == null)
+            {
+                return;
+            }
+
+            if (fontAsset == null && source.font != null)
+            {
+                fontAsset = source.font;
+            }
+
+            if (fontMaterial == null && source.fontSharedMaterial != null)
+            {
+                fontMaterial = source.fontSharedMaterial;
+            }
+        }
+
+        private static void ApplyCachedTextStyle(TMP_Text target, TMP_FontAsset fontAsset, Material fontMaterial)
+        {
+            if (target == null)
+            {
+                return;
+            }
+
+            if (fontAsset != null)
+            {
+                target.font = fontAsset;
+            }
+
+            if (fontMaterial != null)
+            {
+                target.fontSharedMaterial = fontMaterial;
+            }
+        }
+
+        private static void ApplyCleanFontMaterial(TMP_Text text)
+        {
+            if (text == null || text.font == null || text.font.material == null)
+            {
+                return;
+            }
+
+            text.fontSharedMaterial = text.font.material;
+        }
+
+        private static void ApplyMovesValueStyle(TMP_Text text)
+        {
+            if (text == null)
+            {
+                return;
+            }
+
+            text.gameObject.SetActive(true);
+            text.enabled = true;
+            text.canvasRenderer.SetAlpha(1f);
+            text.enableAutoSizing = false;
+            text.fontSize = 38f;
+            text.fontSizeMin = 38f;
+            text.fontSizeMax = 38f;
+            text.fontStyle = FontStyles.Normal;
+            text.fontWeight = FontWeight.Regular;
+            text.enableWordWrapping = false;
+            text.overflowMode = TextOverflowModes.Overflow;
+            text.alignment = TextAlignmentOptions.Center;
+            text.color = new Color(0.31f, 0.17f, 0.04f, 1f);
+            text.margin = Vector4.zero;
+            text.extraPadding = false;
+            text.raycastTarget = false;
+            text.ForceMeshUpdate(true, true);
+        }
+
+        private static void ApplyLivesCountStyle(TMP_Text text)
+        {
+            if (text == null)
+            {
+                return;
+            }
+
+            text.gameObject.SetActive(true);
+            text.enabled = true;
+            text.canvasRenderer.SetAlpha(1f);
+            text.enableAutoSizing = false;
+            text.fontSize = 32f;
+            text.fontSizeMin = 32f;
+            text.fontSizeMax = 32f;
+            text.fontStyle = FontStyles.Normal;
+            text.fontWeight = FontWeight.Regular;
+            text.enableWordWrapping = false;
+            text.overflowMode = TextOverflowModes.Overflow;
+            text.alignment = TextAlignmentOptions.MidlineLeft;
+            text.color = new Color(1f, 0.9f, 0.66f, 1f);
+            text.margin = Vector4.zero;
+            text.extraPadding = false;
+            text.raycastTarget = false;
+            ApplyCleanFontMaterial(text);
+            text.ForceMeshUpdate(true, true);
         }
 
         private void StyleTopHud()
@@ -679,32 +801,38 @@ namespace SolitaireAssociations
                 SetAnchored(coinGloss, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(-54f, 18f), new Vector2(10f, -19f));
                 coinGloss.SetAsFirstSibling();
 
-                RectTransform coinIcon = FindChildRecursive<RectTransform>(coinsPanel, "CoinIcon");
+                RectTransform coinIcon = FindChildRecursive<RectTransform>(coinsPanel, "CoinIcon")
+                    ?? EnsureImageLayer(coinsPanel, "CoinIcon", GetCoinIconSprite(), Image.Type.Simple, Color.white);
                 if (coinIcon != null)
                 {
-                    SetAnchored(coinIcon, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(50f, 50f), new Vector2(38f, 0f));
+                    SetAnchored(coinIcon, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(54f, 54f), new Vector2(40f, 0f));
                     Image coinImage = EnsureGraphic<Image>(coinIcon.gameObject);
-                    coinImage.sprite = GetGoldIconSprite();
-                    coinImage.type = Image.Type.Sliced;
-                    coinImage.color = new Color(1f, 0.96f, 0.72f, 0.98f);
+                    coinImage.sprite = GetCoinIconSprite();
+                    coinImage.type = Image.Type.Simple;
+                    coinImage.preserveAspect = true;
+                    coinImage.color = Color.white;
                     AddShadow(coinIcon.gameObject, new Color(0.32f, 0.14f, 0f, 0.24f), new Vector2(0f, -2f));
 
-                    TextMeshProUGUI glyph = EnsureText(coinIcon, "CoinGlyph");
-                    glyph.text = "C";
-                    glyph.fontSize = 25f;
-                    glyph.fontStyle = FontStyles.Bold;
-                    glyph.alignment = TextAlignmentOptions.Center;
-                    glyph.color = new Color(0.43f, 0.22f, 0.04f, 1f);
-                    StretchToFill(glyph.rectTransform, 0f, 0f, 0f, 0f);
+                    foreach (TMP_Text text in coinIcon.GetComponentsInChildren<TMP_Text>(true))
+                    {
+                        text.gameObject.SetActive(false);
+                    }
                 }
 
                 if (coinsLabel != null)
                 {
                     RectTransform coinsRect = coinsLabel.rectTransform;
-                    SetAnchored(coinsRect, new Vector2(0f, 0.5f), new Vector2(1f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-92f, 44f), new Vector2(38f, 0f));
-                    ConfigureText(coinsLabel, 36f, 23f, TextAlignmentOptions.MidlineLeft, new Color(0.29f, 0.16f, 0.04f, 1f));
-                    coinsLabel.fontStyle = FontStyles.Bold;
-                    AddTextOutline(coinsLabel, new Color(1f, 0.93f, 0.64f, 0.28f), new Vector2(0.8f, -0.8f));
+                    SetAnchored(coinsRect, new Vector2(0f, 0.5f), new Vector2(1f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-60f, 44f), new Vector2(24f, 0f));
+                    RemoveUiEffects(coinsLabel.gameObject);
+                    ApplyCachedTextStyle(coinsLabel, movesValueFontAsset, movesValueFontMaterial);
+                    ConfigureText(coinsLabel, 30f, 30f, TextAlignmentOptions.Center, new Color(0.31f, 0.17f, 0.04f, 1f));
+                    coinsLabel.enableAutoSizing = false;
+                    coinsLabel.fontSize = 30f;
+                    coinsLabel.fontSizeMin = 30f;
+                    coinsLabel.fontSizeMax = 30f;
+                    coinsLabel.fontStyle = FontStyles.Normal;
+                    coinsLabel.fontWeight = FontWeight.Regular;
+                    coinsLabel.overflowMode = TextOverflowModes.Ellipsis;
                 }
             }
 
@@ -737,8 +865,6 @@ namespace SolitaireAssociations
                 return;
             }
 
-            CleanupMovesPanelChildren(movesPanel);
-            movesLabel = FindChildRecursive<TMP_Text>(movesPanel, "MovesValue");
             SetAnchored(movesPanel, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0.5f, 0.5f), new Vector2(164f, 108f), new Vector2(154f, -MovesTopInset));
             Image panelImage = EnsureGraphic<Image>(movesPanel.gameObject);
             panelImage.sprite = GetHudPanelCreamGoldSprite();
@@ -750,10 +876,10 @@ namespace SolitaireAssociations
             SetAnchored(movesGloss, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(-36f, 18f), new Vector2(0f, -20f));
             movesGloss.SetAsFirstSibling();
 
-            RebuildMovesPanelText(movesPanel);
+            EnsureMovesPanelText(movesPanel);
         }
 
-        private void RebuildMovesPanelText(RectTransform panel)
+        private void EnsureMovesPanelText(RectTransform panel)
         {
             string value = hasDisplayedMoves
                 ? lastDisplayedMoves.ToString()
@@ -761,122 +887,59 @@ namespace SolitaireAssociations
                     ? movesLabel.text
                     : lastDisplayedMoves.ToString());
 
-            foreach (TMP_Text text in panel.GetComponentsInChildren<TMP_Text>(true))
-            {
-                if (text.transform == panel)
-                {
-                    if (Application.isPlaying)
-                    {
-                        Destroy(text);
-                    }
-                    else
-                    {
-                        DestroyImmediate(text);
-                    }
-
-                    continue;
-                }
-
-                if (Application.isPlaying)
-                {
-                    Destroy(text.gameObject);
-                }
-                else
-                {
-                    DestroyImmediate(text.gameObject);
-                }
-            }
-
-            TextMeshProUGUI label = CreateText("MovesLabel", panel, "Ходы", 25f, new Color(0.37f, 0.22f, 0.06f, 1f));
+            TextMeshProUGUI label = EnsureDirectText(panel, "MovesLabel");
+            label.text = "Ходы";
+            label.gameObject.SetActive(true);
+            label.enabled = true;
+            label.canvasRenderer.SetAlpha(1f);
             SetAnchored(label.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(-26f, 28f), new Vector2(0f, -17f));
             ConfigureText(label, 25f, 17f, TextAlignmentOptions.Center, new Color(0.37f, 0.22f, 0.06f, 1f));
+            ApplyCachedTextStyle(label, movesLabelFontAsset, movesLabelFontMaterial);
             label.fontStyle = FontStyles.Normal;
+            label.fontWeight = FontWeight.Regular;
+            RemoveUiEffects(label.gameObject);
             AddTextOutline(label, new Color(1f, 0.93f, 0.62f, 0.22f), new Vector2(0.6f, -0.6f));
 
-            movesLabel = CreateText("MovesValue", panel, value, 30f, new Color(0.31f, 0.17f, 0.04f, 1f));
-            SetAnchored(movesLabel.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(-28f, 48f), new Vector2(0f, 12f));
-            ConfigureText(movesLabel, 30f, 30f, TextAlignmentOptions.Center, new Color(0.31f, 0.17f, 0.04f, 1f));
-            movesLabel.enableAutoSizing = false;
-            movesLabel.fontSize = 30f;
-            movesLabel.fontStyle = FontStyles.Normal;
+            movesLabel = EnsureDirectText(panel, "MovesValue");
+            movesLabel.text = value;
+            movesLabel.gameObject.SetActive(true);
+            movesLabel.enabled = true;
+            movesLabel.canvasRenderer.SetAlpha(1f);
+            SetAnchored(movesLabel.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(-24f, 54f), new Vector2(0f, 10f));
+            ConfigureText(movesLabel, 38f, 38f, TextAlignmentOptions.Center, new Color(0.31f, 0.17f, 0.04f, 1f));
+            ApplyCachedTextStyle(movesLabel, movesValueFontAsset, movesValueFontMaterial);
+            ApplyMovesValueStyle(movesLabel);
             RemoveUiEffects(movesLabel.gameObject);
+            label.transform.SetAsLastSibling();
+            movesLabel.transform.SetAsLastSibling();
+            NormalizeMovesPanelText(panel, label, movesLabel);
         }
 
-        private static void CleanupMovesPanelChildren(RectTransform panel)
+        private static void NormalizeMovesPanelText(RectTransform panel, TMP_Text label, TMP_Text value)
         {
             if (panel == null)
             {
                 return;
             }
 
-            bool keptLabel = false;
-            bool keptValue = false;
-            for (int index = panel.childCount - 1; index >= 0; index--)
-            {
-                Transform child = panel.GetChild(index);
-                string childName = child.name;
-                if (childName == "MovesLabel")
-                {
-                    if (!keptLabel)
-                    {
-                        keptLabel = true;
-                        continue;
-                    }
-                }
-                else if (childName == "MovesValue")
-                {
-                    if (!keptValue)
-                    {
-                        keptValue = true;
-                        continue;
-                    }
-                }
-                else if (childName == "MovesTopGloss")
-                {
-                    continue;
-                }
-
-                if (Application.isPlaying)
-                {
-                    Destroy(child.gameObject);
-                }
-                else
-                {
-                    DestroyImmediate(child.gameObject);
-                }
-            }
-
             foreach (TMP_Text text in panel.GetComponentsInChildren<TMP_Text>(true))
             {
-                string textName = text.transform.name;
-                if (textName == "MovesLabel" || textName == "MovesValue")
+                if (text == label || text == value)
                 {
                     TrimExtraTextComponents(text.gameObject, text);
-                    continue;
-                }
-
-                if (text.transform == panel)
-                {
-                    if (Application.isPlaying)
+                    text.gameObject.SetActive(true);
+                    text.enabled = true;
+                    text.canvasRenderer.SetAlpha(1f);
+                    if (text == value)
                     {
-                        Destroy(text);
-                    }
-                    else
-                    {
-                        DestroyImmediate(text);
+                        ApplyMovesValueStyle(text);
                     }
 
                     continue;
                 }
 
-                if (Application.isPlaying)
-                {
-                    Destroy(text.gameObject);
-                }
-                else
-                {
-                    DestroyImmediate(text.gameObject);
-                }
+                text.enabled = false;
+                text.canvasRenderer.SetAlpha(0f);
             }
         }
 
@@ -1259,6 +1322,44 @@ namespace SolitaireAssociations
             return layer;
         }
 
+        private RectTransform EnsureDirectImageLayer(RectTransform parent, string name, Sprite sprite, Image.Type imageType, Color color)
+        {
+            RectTransform layer = null;
+            if (parent != null)
+            {
+                for (int index = 0; index < parent.childCount; index++)
+                {
+                    if (parent.GetChild(index) is not RectTransform child || child.name != name)
+                    {
+                        continue;
+                    }
+
+                    if (child.TryGetComponent(out TMP_Text text))
+                    {
+                        text.enabled = false;
+                        child.gameObject.SetActive(false);
+                        continue;
+                    }
+
+                    layer = child;
+                    break;
+                }
+            }
+
+            if (layer == null)
+            {
+                layer = CreateRect(name, parent, Vector2.zero, Vector2.one, new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.zero);
+            }
+
+            layer.gameObject.SetActive(true);
+            Image image = EnsureGraphic<Image>(layer.gameObject);
+            image.sprite = sprite;
+            image.type = imageType;
+            image.color = color;
+            image.raycastTarget = false;
+            return layer;
+        }
+
         private static Vector2 GetGameplayLabelOffset(string buttonName)
         {
             return buttonName switch
@@ -1341,14 +1442,13 @@ namespace SolitaireAssociations
             rowImage.raycastTarget = false;
             AddShadow(row.gameObject, new Color(0.12f, 0.045f, 0f, 0.2f), new Vector2(0f, -1f));
 
-            RectTransform coin = EnsureImageLayer(row, "CoinDot", GetGoldIconSprite(), Image.Type.Sliced, new Color(1f, 0.95f, 0.66f, 0.98f));
-            SetAnchored(coin, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(22f, 22f), new Vector2(19f, 0f));
-
-            TextMeshProUGUI coinGlyph = EnsureText(coin, "CoinGlyph");
-            coinGlyph.text = "C";
-            ConfigureText(coinGlyph, 14f, 10f, TextAlignmentOptions.Center, new Color(0.46f, 0.21f, 0.01f, 1f));
-            coinGlyph.fontStyle = FontStyles.Bold;
-            StretchToFill(coinGlyph.rectTransform, 0f, 0f, 0f, 1f);
+            RectTransform coin = EnsureImageLayer(row, "CoinDot", GetCoinIconSprite(), Image.Type.Simple, Color.white);
+            SetAnchored(coin, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(28f, 28f), new Vector2(19f, 0f));
+            Image coinImage = coin.GetComponent<Image>();
+            if (coinImage != null)
+            {
+                coinImage.preserveAspect = true;
+            }
 
             TextMeshProUGUI subText = EnsureText(row, $"{buttonName}SubText");
             subText.text = value;
@@ -1500,6 +1600,7 @@ namespace SolitaireAssociations
             }
             EnsurePausePopup();
             scenePauseButton.SetPopup(pausePopup);
+            scenePauseButton.enabled = false;
 
             rewardBonusButton.onClick.RemoveAllListeners();
             rewardBonusButton.onClick.AddListener(() =>
@@ -1507,7 +1608,6 @@ namespace SolitaireAssociations
                 Debug.Log("UIManager: RewardBonusButton clicked.");
                 ShowPausePopup();
             });
-            rewardBonusButton.onClick.AddListener(scenePauseButton.OpenPauseMenu);
             wiredButtons.Add(rewardBonusButton);
         }
 
@@ -1679,7 +1779,7 @@ namespace SolitaireAssociations
             }
         }
 
-        private void EnsureRestartConfirmationPopup(Func<bool> onConfirmed)
+        private void EnsureRestartConfirmationPopup(Func<bool> onConfirmed, Action onClosed)
         {
             if (restartConfirmationPopup == null)
             {
@@ -1691,13 +1791,38 @@ namespace SolitaireAssociations
                 }
             }
 
-            Action cancel = () => HideModal(restartConfirmationPopup);
+            bool confirmConsumed = false;
+            bool closeNotified = false;
+            void NotifyClosed()
+            {
+                if (closeNotified)
+                {
+                    return;
+                }
+
+                closeNotified = true;
+                onClosed?.Invoke();
+            }
+
+            Action cancel = () =>
+            {
+                HideModal(restartConfirmationPopup);
+                NotifyClosed();
+            };
+
             Action confirm = () =>
             {
+                if (confirmConsumed)
+                {
+                    return;
+                }
+
+                confirmConsumed = true;
                 bool restarted = onConfirmed?.Invoke() == true;
                 if (restarted)
                 {
                     HideModal(restartConfirmationPopup);
+                    NotifyClosed();
                 }
                 else if (restartConfirmationPopup != null)
                 {
@@ -1706,6 +1831,8 @@ namespace SolitaireAssociations
                     {
                         Time.timeScale = 1f;
                     }
+
+                    NotifyClosed();
                 }
             };
 
@@ -1978,16 +2105,11 @@ namespace SolitaireAssociations
         private Image CreateBonusCoin()
         {
             Image coin = CreateSparkle("MovesBonusCoin");
-            coin.sprite = GetGoldIconSprite();
-            coin.type = Image.Type.Sliced;
-            coin.color = new Color(1f, 0.88f, 0.22f, 0.96f);
+            coin.sprite = GetCoinIconSprite();
+            coin.type = Image.Type.Simple;
+            coin.preserveAspect = true;
+            coin.color = Color.white;
             AddShadow(coin.gameObject, new Color(0.25f, 0.12f, 0f, 0.24f), new Vector2(0f, -2f));
-
-            TextMeshProUGUI glyph = EnsureText(coin.rectTransform, "CoinGlyph");
-            glyph.text = "C";
-            ConfigureText(glyph, 18f, 12f, TextAlignmentOptions.Center, new Color(0.45f, 0.22f, 0.02f, 1f));
-            glyph.fontStyle = FontStyles.Bold;
-            StretchToFill(glyph.rectTransform, 0f, 0f, 0f, 0f);
             return coin;
         }
 
@@ -2077,7 +2199,10 @@ namespace SolitaireAssociations
                 StartCoroutine(FloatAndFade(sparkleRect, sparkle, offset, 0.58f));
             }
 
-            SpawnFloatingText(source, $"+{Mathf.Max(0, amount)}");
+            if (amount > 0)
+            {
+                SpawnFloatingText(source, $"+{amount}");
+            }
             yield return null;
         }
 
@@ -2184,6 +2309,44 @@ namespace SolitaireAssociations
             }
 
             return CreateText(name, parent, string.Empty, 24f, Color.white);
+        }
+
+        private static TextMeshProUGUI EnsureDirectText(RectTransform parent, string name)
+        {
+            TextMeshProUGUI existing = FindDirectText(parent, name);
+            if (existing != null)
+            {
+                return existing;
+            }
+
+            return CreateText(name, parent, string.Empty, 24f, Color.white);
+        }
+
+        private static TextMeshProUGUI FindDirectText(RectTransform parent, string name)
+        {
+            if (parent == null)
+            {
+                return null;
+            }
+
+            TextMeshProUGUI inactiveMatch = null;
+            for (int index = 0; index < parent.childCount; index++)
+            {
+                Transform child = parent.GetChild(index);
+                if (child.name != name || !child.TryGetComponent(out TextMeshProUGUI text))
+                {
+                    continue;
+                }
+
+                if (child.gameObject.activeSelf)
+                {
+                    return text;
+                }
+
+                inactiveMatch ??= text;
+            }
+
+            return inactiveMatch;
         }
 
         private static TextMeshProUGUI CreateText(string name, Transform parent, string value, float fontSize, Color color)
@@ -2468,6 +2631,13 @@ namespace SolitaireAssociations
             return PremiumUISprites.IconCircle != null
                 ? PremiumUISprites.IconCircle
                 : GetRoundSprite();
+        }
+
+        private static Sprite GetCoinIconSprite()
+        {
+            return PremiumUISprites.CoinIcon != null
+                ? PremiumUISprites.CoinIcon
+                : GetGoldIconSprite();
         }
 
         private static Sprite GetMenuButtonSprite()

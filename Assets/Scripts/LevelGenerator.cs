@@ -289,11 +289,10 @@ namespace SolitaireAssociations
                 int totalCards = CountCards(columns) + stockCards.Count;
                 int imageCards = CountCardsInSet(columns, stockCards, imageCardIds);
                 int textCards = Mathf.Max(0, totalCards - imageCards - goldRequiredCountsById.Count);
-                int referenceMoves = Mathf.Max(layout.ReferenceMoves, solverMoves);
                 generatedLevelData = new GeneratedLevelData(
                     layout.Id,
                     layout.ColumnsCount,
-                    referenceMoves,
+                    layout.ReferenceMoves,
                     columns,
                     stockCards,
                     goldRequiredCountsById,
@@ -414,26 +413,62 @@ namespace SolitaireAssociations
                 return false;
             }
 
+            List<SelectedGoldCard> orderedGoldCards = new(selectedGoldCards);
+            Shuffle(orderedGoldCards);
+            orderedGoldCards.Sort((left, right) =>
+            {
+                int leftCount = left?.AssignedOrdinaryIds?.Count ?? 0;
+                int rightCount = right?.AssignedOrdinaryIds?.Count ?? 0;
+                return rightCount.CompareTo(leftCount);
+            });
+
             HashSet<string> solutionIds = new();
             List<string> solutionOrder = new();
-            foreach (SelectedGoldCard selectedGoldCard in selectedGoldCards)
+            int activeGoalBatchSize = Mathf.Max(1, Mathf.Min(layout.ColumnsCount, layout.ColumnsCount >= 4 ? 3 : layout.ColumnsCount));
+            foreach (List<SelectedGoldCard> batch in MakeGoalBatches(orderedGoldCards, activeGoalBatchSize))
             {
-                if (selectedGoldCard?.GoldCard == null)
+                foreach (SelectedGoldCard selectedGoldCard in batch)
                 {
-                    return false;
+                    if (selectedGoldCard?.GoldCard == null)
+                    {
+                        return false;
+                    }
+
+                    solutionOrder.Add(selectedGoldCard.GoldCard.Id);
+                    solutionIds.Add(selectedGoldCard.GoldCard.Id);
                 }
 
-                solutionOrder.Add(selectedGoldCard.GoldCard.Id);
-                solutionIds.Add(selectedGoldCard.GoldCard.Id);
-                foreach (string cardId in selectedGoldCard.AssignedOrdinaryIds)
+                int maxAssignedCards = 0;
+                foreach (SelectedGoldCard selectedGoldCard in batch)
                 {
-                    if (string.IsNullOrWhiteSpace(cardId))
+                    if (selectedGoldCard?.AssignedOrdinaryIds == null)
                     {
                         continue;
                     }
 
-                    solutionOrder.Add(cardId);
-                    solutionIds.Add(cardId);
+                    maxAssignedCards = Mathf.Max(maxAssignedCards, selectedGoldCard.AssignedOrdinaryIds.Count);
+                }
+
+                for (int cardIndex = 0; cardIndex < maxAssignedCards; cardIndex++)
+                {
+                    List<SelectedGoldCard> wave = new(batch);
+                    Shuffle(wave);
+                    foreach (SelectedGoldCard selectedGoldCard in wave)
+                    {
+                        if (selectedGoldCard?.AssignedOrdinaryIds == null || cardIndex >= selectedGoldCard.AssignedOrdinaryIds.Count)
+                        {
+                            continue;
+                        }
+
+                        string cardId = selectedGoldCard.AssignedOrdinaryIds[cardIndex];
+                        if (string.IsNullOrWhiteSpace(cardId))
+                        {
+                            continue;
+                        }
+
+                        solutionOrder.Add(cardId);
+                        solutionIds.Add(cardId);
+                    }
                 }
             }
 
@@ -447,33 +482,20 @@ namespace SolitaireAssociations
             }
 
             Shuffle(extras);
-            List<string> dealOrder = new(solutionOrder);
-            dealOrder.AddRange(extras);
 
-            int cursor = 0;
-            int columnSolutionCards = 0;
+            int columnCapacity = 0;
             foreach (int columnCardCount in layout.ColumnCardCounts)
             {
-                int safeCount = Mathf.Max(0, columnCardCount);
-                List<string> column = new();
-                for (int index = 0; index < safeCount && cursor < dealOrder.Count; index++, cursor++)
-                {
-                    column.Add(dealOrder[cursor]);
-                    if (cursor < solutionOrder.Count)
-                    {
-                        columnSolutionCards++;
-                    }
-                }
-
-                column.Reverse();
-                columns.Add(column);
+                columnCapacity += Mathf.Max(0, columnCardCount);
             }
 
-            while (cursor < dealOrder.Count && stockCards.Count < layout.DeckCount)
-            {
-                stockCards.Add(dealOrder[cursor]);
-                cursor++;
-            }
+            int columnSolutionCards = Mathf.Min(columnCapacity, solutionOrder.Count);
+            List<string> solutionPrefix = solutionOrder.GetRange(0, columnSolutionCards);
+            columns = DealColumnsRoundRobin(solutionPrefix, layout.ColumnCardCounts);
+
+            List<string> solutionSuffix = solutionOrder.GetRange(columnSolutionCards, solutionOrder.Count - columnSolutionCards);
+            stockCards = WeaveStock(solutionSuffix, extras);
+            LimitInitialGoldTops(columns, stockCards, GetGoldIds(selectedGoldCards));
 
             if (CountCards(columns) + stockCards.Count != pool.Count)
             {
@@ -483,6 +505,166 @@ namespace SolitaireAssociations
             int stockSolutionCards = Mathf.Max(0, solutionOrder.Count - columnSolutionCards);
             solutionMoves = columnSolutionCards + (stockSolutionCards * 2);
             return true;
+        }
+
+        private static List<List<SelectedGoldCard>> MakeGoalBatches(List<SelectedGoldCard> orderedGoldCards, int batchSize)
+        {
+            List<List<SelectedGoldCard>> batches = new();
+            int cursor = 0;
+            int safeBatchSize = Mathf.Max(1, batchSize);
+            while (cursor < orderedGoldCards.Count)
+            {
+                int remaining = orderedGoldCards.Count - cursor;
+                int currentSize = safeBatchSize > 1 && remaining == safeBatchSize + 1
+                    ? 2
+                    : Mathf.Min(safeBatchSize, remaining);
+                batches.Add(orderedGoldCards.GetRange(cursor, currentSize));
+                cursor += currentSize;
+            }
+
+            return batches;
+        }
+
+        private static List<List<string>> DealColumnsRoundRobin(List<string> solutionPrefix, IReadOnlyList<int> columnCardCounts)
+        {
+            List<List<string>> dealtColumns = new();
+            List<int> remainingCapacity = new();
+            foreach (int columnCardCount in columnCardCounts)
+            {
+                dealtColumns.Add(new List<string>());
+                remainingCapacity.Add(Mathf.Max(0, columnCardCount));
+            }
+
+            int columnIndex = 0;
+            foreach (string cardId in solutionPrefix)
+            {
+                int checkedColumns = 0;
+                while (checkedColumns < remainingCapacity.Count && remainingCapacity[columnIndex] <= 0)
+                {
+                    columnIndex = (columnIndex + 1) % remainingCapacity.Count;
+                    checkedColumns++;
+                }
+
+                if (checkedColumns >= remainingCapacity.Count)
+                {
+                    break;
+                }
+
+                dealtColumns[columnIndex].Add(cardId);
+                remainingCapacity[columnIndex]--;
+                columnIndex = (columnIndex + 1) % remainingCapacity.Count;
+            }
+
+            foreach (List<string> column in dealtColumns)
+            {
+                column.Reverse();
+            }
+
+            return dealtColumns;
+        }
+
+        private static List<string> WeaveStock(List<string> solutionSuffix, List<string> extras)
+        {
+            List<string> stock = new();
+            List<string> remainingExtras = new(extras);
+            int solutionIndex = 0;
+            while (solutionIndex < solutionSuffix.Count || remainingExtras.Count > 0)
+            {
+                bool shouldPlaceExtra = remainingExtras.Count > 0
+                    && (solutionIndex >= solutionSuffix.Count || stock.Count % 4 == 2 || Random.value < 0.18f);
+                if (shouldPlaceExtra)
+                {
+                    int lastIndex = remainingExtras.Count - 1;
+                    stock.Add(remainingExtras[lastIndex]);
+                    remainingExtras.RemoveAt(lastIndex);
+                    continue;
+                }
+
+                stock.Add(solutionSuffix[solutionIndex]);
+                solutionIndex++;
+            }
+
+            return stock;
+        }
+
+        private static void LimitInitialGoldTops(List<List<string>> columns, List<string> stockCards, HashSet<string> goldIds, int maxGoldTops = 1)
+        {
+            if (columns == null || stockCards == null || goldIds == null)
+            {
+                return;
+            }
+
+            List<int> goldTopColumns = new();
+            for (int columnIndex = 0; columnIndex < columns.Count; columnIndex++)
+            {
+                List<string> column = columns[columnIndex];
+                if (column != null && column.Count > 0 && goldIds.Contains(column[^1]))
+                {
+                    goldTopColumns.Add(columnIndex);
+                }
+            }
+
+            if (goldTopColumns.Count <= maxGoldTops)
+            {
+                return;
+            }
+
+            Shuffle(goldTopColumns);
+            for (int index = maxGoldTops; index < goldTopColumns.Count; index++)
+            {
+                List<string> column = columns[goldTopColumns[index]];
+                int hiddenNonGoldIndex = FindHiddenNonGoldIndex(column, goldIds);
+                if (hiddenNonGoldIndex >= 0)
+                {
+                    (column[^1], column[hiddenNonGoldIndex]) = (column[hiddenNonGoldIndex], column[^1]);
+                    continue;
+                }
+
+                int stockNonGoldIndex = FindStockNonGoldIndex(stockCards, goldIds);
+                if (stockNonGoldIndex < 0)
+                {
+                    continue;
+                }
+
+                (column[^1], stockCards[stockNonGoldIndex]) = (stockCards[stockNonGoldIndex], column[^1]);
+            }
+        }
+
+        private static int FindHiddenNonGoldIndex(List<string> column, HashSet<string> goldIds)
+        {
+            if (column == null)
+            {
+                return -1;
+            }
+
+            for (int index = column.Count - 2; index >= 0; index--)
+            {
+                if (!goldIds.Contains(column[index]))
+                {
+                    return index;
+                }
+            }
+
+            return -1;
+        }
+
+        private static int FindStockNonGoldIndex(List<string> stockCards, HashSet<string> goldIds)
+        {
+            List<int> candidates = new();
+            for (int index = 0; index < stockCards.Count; index++)
+            {
+                if (!goldIds.Contains(stockCards[index]))
+                {
+                    candidates.Add(index);
+                }
+            }
+
+            if (candidates.Count == 0)
+            {
+                return -1;
+            }
+
+            return candidates[Random.Range(0, candidates.Count)];
         }
 
         private static HashSet<string> SelectImageCardIds(

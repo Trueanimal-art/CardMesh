@@ -195,8 +195,43 @@ public class MainMenuController : MonoBehaviour
         Image image = rect.GetComponent<Image>();
         if (image != null)
         {
+            RestoreTopEventIconImage(rect, image);
             image.preserveAspect = true;
             image.color = Color.white;
+        }
+    }
+
+    private static void RestoreTopEventIconImage(RectTransform rect, Image image)
+    {
+        Transform generatedIcon = rect.Find("TopEventIcon");
+        if (generatedIcon != null && generatedIcon.TryGetComponent(out Image iconImage) && iconImage.sprite != null)
+        {
+            image.sprite = iconImage.sprite;
+            image.type = Image.Type.Simple;
+            image.color = iconImage.color;
+        }
+
+        RemoveGeneratedTopEventLayer(rect, "TopEventFrameGlow");
+        RemoveGeneratedTopEventLayer(rect, "TopEventIconHalo");
+        RemoveGeneratedTopEventLayer(rect, "TopEventIcon");
+        RemoveGeneratedTopEventLayer(rect, "TopEventTopGloss");
+    }
+
+    private static void RemoveGeneratedTopEventLayer(RectTransform parent, string childName)
+    {
+        Transform child = parent.Find(childName);
+        if (child == null)
+        {
+            return;
+        }
+
+        if (Application.isPlaying)
+        {
+            Destroy(child.gameObject);
+        }
+        else
+        {
+            DestroyImmediate(child.gameObject);
         }
     }
 
