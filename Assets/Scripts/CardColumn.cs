@@ -349,7 +349,7 @@ namespace SolitaireAssociations
             CardView topCard = TopCard;
             if (topCard == null)
             {
-                return !movingCard.Data.IsGold;
+                return true;
             }
 
             if (topCard.Data == null || topCard.Data.IsGold)

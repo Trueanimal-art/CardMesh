@@ -1,0 +1,1091 @@
+[
+  {
+    "id": "body_smile",
+    "source": "ai_atlas_repair",
+    "sourcePath": "Tools/ImageCardAudit/ai_atlas_repair/sliced/body_smile.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/body_smile.png",
+    "status": "copied",
+    "beforeSha256": "809fbee5b3c7d5c8f7b6defe91a35f858a74d6ec3bc506f142b913d794dbbe32",
+    "afterSha256": "457f41c797ff03cc3f561bdef8c9637234be7c629dcc701c49a343d4e1945df6"
+  },
+  {
+    "id": "books_cover",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/books_cover.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/books_cover.png",
+    "status": "copied",
+    "beforeSha256": "f56f0d85a9969ffe3416626d9c086a9aeaf51fc4bbf4446db36000f0781cc4c0",
+    "afterSha256": "68c922ed9f6256dcf660086b5a1649f0c94593d4b1125311225b7b91d89a8a14"
+  },
+  {
+    "id": "breakfast_butter",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/breakfast_butter.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/breakfast_butter.png",
+    "status": "copied",
+    "beforeSha256": "9d23dafd318ca4dfa5a5cbbedb6e831746e1abd7e4385567c4f680c6b91a1e15",
+    "afterSha256": "77ab639fc5c915335ed472da3b5d7705feb0d8adab28f1cace5887f320293be1"
+  },
+  {
+    "id": "breakfast_cereal",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/breakfast_cereal.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/breakfast_cereal.png",
+    "status": "copied",
+    "beforeSha256": "208fca9eb8a0b7013996c42a3a091eabea04b8968a7549e9a66bea1f3e92dd75",
+    "afterSha256": "bad58611e8926e248a518c7b317e3712d3b3946ad9762cfedfd3d8cc071709cb"
+  },
+  {
+    "id": "breakfast_porridge",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/breakfast_porridge.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/breakfast_porridge.png",
+    "status": "copied",
+    "beforeSha256": "0af53a9340e7672c59d3a74a274304d190349a73c2a7ac25193ab83c891a4208",
+    "afterSha256": "6e5d1ffec4e31589947cc82de6f55cd6dc4c9acb5f9e34a081317d111bde2e6a"
+  },
+  {
+    "id": "breakfast_toast",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/breakfast_toast.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/breakfast_toast.png",
+    "status": "copied",
+    "beforeSha256": "14352ab583cdd55f84fb7c24760937de3a7ac1bc74aeb965675af5cb16043495",
+    "afterSha256": "472465b539ea88617d5636d2e9eb7c47314bba62bded76dac17aedbd46946221"
+  },
+  {
+    "id": "breakfast_yogurt",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/breakfast_yogurt.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/breakfast_yogurt.png",
+    "status": "copied",
+    "beforeSha256": "4f0ad55eddd2d4bf3ffe34648d27e291919d74620a2eaa2eb05114223f229471",
+    "afterSha256": "757d0b08cfbb13a49a9c217a08c69825d01a9d86e74ba2b65701f31b6609ee05"
+  },
+  {
+    "id": "business_team",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/business_team.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/business_team.png",
+    "status": "already_same",
+    "beforeSha256": "0475f987603e25df4886cf165ae181c00dc06882dce82bab114f05f14d9e12dd",
+    "afterSha256": "0475f987603e25df4886cf165ae181c00dc06882dce82bab114f05f14d9e12dd"
+  },
+  {
+    "id": "camping_fire",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/camping_fire.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/camping_fire.png",
+    "status": "copied",
+    "beforeSha256": "039174a449482bcddb7b33776c3f03299ae7a9b74e22c4eb937f5ebe40a11c1a",
+    "afterSha256": "1c33117ce470e260326263348f35ea57572c7a8eeb189c2e5b240235fcd9839a"
+  },
+  {
+    "id": "camping_lantern",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/camping_lantern.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/camping_lantern.png",
+    "status": "copied",
+    "beforeSha256": "5e7b3c338f3dd781797752a873e5f08900a7733c941f206f17dce5f75ef097ed",
+    "afterSha256": "cb6c77c9dcfac57b500f0861b889dae23d292c789cc096d6f303d3741bace68d"
+  },
+  {
+    "id": "camping_map",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/camping_map.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/camping_map.png",
+    "status": "copied",
+    "beforeSha256": "a60e300df2fc056fdf0a87cfbc772ca519b181c8a262f768e19905d08ebe2085",
+    "afterSha256": "20fd4470a892536d4b52021fb9405aa21828f1204fa171a3cff366468c1ca64d"
+  },
+  {
+    "id": "camping_tent",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/camping_tent.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/camping_tent.png",
+    "status": "copied",
+    "beforeSha256": "0524b773d255139d52636486772696143cfa9f4f7faa9ffb402f245bcc720297",
+    "afterSha256": "c6a8269916a2231695ff57e24b23b9398c5ff1841b9eca52405d1c68a038d6bb"
+  },
+  {
+    "id": "cinema_ticket",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/cinema_ticket.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/cinema_ticket.png",
+    "status": "copied",
+    "beforeSha256": "80e6b8e30be40bdf2f41f50fc400d8480b0635d55a71976f9ce437b0ddfc50a7",
+    "afterSha256": "73a5f6eb7d13c1fad75c115bbdf81cb3a978d52b1e4e14d09340d6ceb9f01596"
+  },
+  {
+    "id": "cinema_trailer",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/cinema_trailer.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/cinema_trailer.png",
+    "status": "copied",
+    "beforeSha256": "672039c28d89b973c9cb36c76d130ab1c69ad9be1a59e7c0125cfe60314c7a7c",
+    "afterSha256": "b34fcdfe43b74f2554c20d1a79bea1f02c84146a40efb9e376492e6818dbad68"
+  },
+  {
+    "id": "city_park",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/city_park.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/city_park.png",
+    "status": "copied",
+    "beforeSha256": "7ea2ec6fc00ae4b874ce94c148c24726d4e1d105384b44e6e0baccb13e79f505",
+    "afterSha256": "e969dcd3169a780254873f7d59c1fedfd389cfe75380998c6386d1d1f1634886"
+  },
+  {
+    "id": "city_street",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/city_street.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/city_street.png",
+    "status": "copied",
+    "beforeSha256": "2fc3a06bbf4d1d33dd7be704b90f9b3566bad6381629f06c77caae9823fef6db",
+    "afterSha256": "83f28a86ce0778c1bad6f7c020181bfd32e7f67021eed33d7513d2c4d1d74102"
+  },
+  {
+    "id": "clothes_glove",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/clothes_glove.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/clothes_glove.png",
+    "status": "copied",
+    "beforeSha256": "4915042b56ac1473e6954135911e2b13dd64ad1442071932c9c2d2eb253bd0cd",
+    "afterSha256": "cdf04fd8730cb12128be6679f1efcb7d01ccf8a85b195d45cf2318afa1862825"
+  },
+  {
+    "id": "clothes_scarf",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/clothes_scarf.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/clothes_scarf.png",
+    "status": "copied",
+    "beforeSha256": "c971f64860201fbc4daf0bb1eae15c2e4dd1ee5ee05e4270965ea6fcaf287a9b",
+    "afterSha256": "cdbd43d863f279366230de6ea4a077ef6918c29c34a298a5c4155eb6e8062ca7"
+  },
+  {
+    "id": "colors_blue",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/colors_blue.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/colors_blue.png",
+    "status": "copied",
+    "beforeSha256": "58b01e0cd3babb122475d4dbf5a0f7e0bdebba0d0903d989de6a3f15ea5289ac",
+    "afterSha256": "4b522032eb2535dad1377234dbc293b80a4e9d87b0263c649a539cb1ad2234ca"
+  },
+  {
+    "id": "colors_green",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/colors_green.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/colors_green.png",
+    "status": "copied",
+    "beforeSha256": "d86fa4193fb3e194ee971ac13e042c787b8fc5355e6318413295a43823166854",
+    "afterSha256": "fc9fa14da35ba47c1ad74c43597ef3e22eefcc3dd2d8cd16aa5b7b8e74aba0bc"
+  },
+  {
+    "id": "colors_orange",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/colors_orange.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/colors_orange.png",
+    "status": "copied",
+    "beforeSha256": "e36df33493a741b83a25e75481d3a57fe818e972c38b9bdd1e12dbaacf58005b",
+    "afterSha256": "9d18f9e4303cabc51148243f1d859fdf34ec13195a7c2c5f09f2d34cb3397a82"
+  },
+  {
+    "id": "colors_pink",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/colors_pink.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/colors_pink.png",
+    "status": "copied",
+    "beforeSha256": "e8ec73886219db9beab18d4c32870f07bffcf44ed73a298fdd57df92f90108bf",
+    "afterSha256": "5602035e6d9346c520ab8c483498ce1c4c465b915d1b2e00ae674bdcba78de28"
+  },
+  {
+    "id": "colors_red",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/colors_red.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/colors_red.png",
+    "status": "copied",
+    "beforeSha256": "9064f4440654cc1076ee026601f42021ab59b4ad5b248ce1f0de93aac87a7509",
+    "afterSha256": "eaa2b2edd9079786c0dc66ff0f30c03680dd45e31cd4c89ce65539a462b62ce4"
+  },
+  {
+    "id": "colors_white",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/colors_white.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/colors_white.png",
+    "status": "copied",
+    "beforeSha256": "af11d674704ea5eb3eddd14eb85e507013d80a3056c12fa8403a397f3d5f447b",
+    "afterSha256": "77a733e51e84503f6db9c464406606486456d018eba0036cf91e08d7e74ebcb9"
+  },
+  {
+    "id": "colors_yellow",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/colors_yellow.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/colors_yellow.png",
+    "status": "copied",
+    "beforeSha256": "89fb4450e404f469822ccfc17cee441ba8bd21b12825a503d05c6f649a1e2bb2",
+    "afterSha256": "6cdee0962ef89af1af77ba31957d58d3678449fa87a600a12bb8b4081db36482"
+  },
+  {
+    "id": "dessert_cookie",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/dessert_cookie.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/dessert_cookie.png",
+    "status": "copied",
+    "beforeSha256": "8440f04e16ebd9452daad13ef840c1ca9098e5f664d589e4d38078c1c1d6c8bf",
+    "afterSha256": "fffb6b8c7ce3d8ce91dbb1682f001d85cc72b84ea60e7011204c50504715ec75"
+  },
+  {
+    "id": "dessert_cream",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/dessert_cream.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/dessert_cream.png",
+    "status": "copied",
+    "beforeSha256": "d28f65f83e5ce9b78570ca992dd0e967da0c756806cc1890d513983838a112fc",
+    "afterSha256": "802f7825da10147608f70cace3882c59db8529d6ddda12f55dd6c346731a4a6c"
+  },
+  {
+    "id": "dessert_icecream",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/dessert_icecream.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/dessert_icecream.png",
+    "status": "copied",
+    "beforeSha256": "7f6a6452db1a73a66c2fec0e429ec0677eca5619c90998b9d1ddd5568c13c6aa",
+    "afterSha256": "21b12a26d0865db793fb2b3d03cd20f68590a3e12c6bc7c64949f378549068e5"
+  },
+  {
+    "id": "dessert_pie",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/dessert_pie.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/dessert_pie.png",
+    "status": "copied",
+    "beforeSha256": "2c738d20d81f1dc60e44e6ef776680b6b39b2493e7a1709610892bbe86f18898",
+    "afterSha256": "5d175ad94007c386ee95b3210faa1416325e85f9e8b6a362757a3bf33fcaaeb7"
+  },
+  {
+    "id": "dessert_waffle",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/dessert_waffle.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/dessert_waffle.png",
+    "status": "copied",
+    "beforeSha256": "6f8bf4404b16be2ca7f48ebca003b3c36b1adf49434cf53fc5cabec5406c7779",
+    "afterSha256": "139726343420359905ad917cc718d25c22707604fa4a88207c15bc1553f70a99"
+  },
+  {
+    "id": "drinks_coffee",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/drinks_coffee.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/drinks_coffee.png",
+    "status": "already_same",
+    "beforeSha256": "04b8792781d20d53cfa96dacc76b487917254704546427daa4f82a2f58fd63c6",
+    "afterSha256": "04b8792781d20d53cfa96dacc76b487917254704546427daa4f82a2f58fd63c6"
+  },
+  {
+    "id": "drinks_lemonade",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/drinks_lemonade.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/drinks_lemonade.png",
+    "status": "copied",
+    "beforeSha256": "2c779f8a402451a7db0e538143674a8f2809bb31184b8cb8e209b6e521f5c558",
+    "afterSha256": "d9d053c90847f6a3804f66aa334065f572cdf046ca4a026d479248636f3a85ad"
+  },
+  {
+    "id": "emotions_calm",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/emotions_calm.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/emotions_calm.png",
+    "status": "copied",
+    "beforeSha256": "f6d6f98bf658f0d50ece3180dd2826de9b2af32c9ea2a30c88935d6f811f653d",
+    "afterSha256": "69ea88ade04c4414a8ae86c1a1b75bb124ffbcbf6150a0d6ec8ae371eeec9b9e"
+  },
+  {
+    "id": "emotions_interest",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/emotions_interest.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/emotions_interest.png",
+    "status": "copied",
+    "beforeSha256": "16d791eac17cc3553c468de17e26ad70524ba4cd45a8e918277246e03fc811c2",
+    "afterSha256": "ecd8a80d663d2fac9ac3b545f15cd7671e63d5f9df8d03c0655f986d69d6671f"
+  },
+  {
+    "id": "emotions_joy",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/emotions_joy.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/emotions_joy.png",
+    "status": "copied",
+    "beforeSha256": "a7c7f690b4127ebc85775566cab65e63f316e4b448e1149e30cf65d3bb4a2695",
+    "afterSha256": "e8caab8952bbfa58c54fd6035a18e4118c6c4f6af4a247514f8b4735098d100d"
+  },
+  {
+    "id": "emotions_warmth",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/emotions_warmth.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/emotions_warmth.png",
+    "status": "copied",
+    "beforeSha256": "d2a35bfa2cbb60953340ffbf68836770e6d2a42d0b725611fb0b35f0209d8c6d",
+    "afterSha256": "a4e084579b193d69a5234cfc191f6c5d1d11a868a658dbfc854d5ecf5cddc887"
+  },
+  {
+    "id": "family_album",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/family_album.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/family_album.png",
+    "status": "copied",
+    "beforeSha256": "2781c7fc0329b39303c2a779d04f415034d73298028d6abf64300aedd944a37c",
+    "afterSha256": "b82d094113be448f0766a4b94a331ffe98784aa3de0e504ad2048b8f03d5fe1f"
+  },
+  {
+    "id": "family_dinner",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/family_dinner.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/family_dinner.png",
+    "status": "copied",
+    "beforeSha256": "a5ea2af56d63b11cb89ff9fcf7a8d3285e51998f35c315d92b545a1e01aba6c9",
+    "afterSha256": "7d315e049fe34fae582f8a4bfd736548a51413d8b515a2e51d81446c4158628d"
+  },
+  {
+    "id": "family_home",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/family_home.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/family_home.png",
+    "status": "copied",
+    "beforeSha256": "e6e8cf6b824fa6412db3a98db995616e2344e95fc7f9583fd05b84c2abaca93d",
+    "afterSha256": "edeea1bb13ad9cd8ec060e8549cdffc9664e162d218a15822ba8b6d0aa7327a0"
+  },
+  {
+    "id": "family_mother",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/family_mother.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/family_mother.png",
+    "status": "copied",
+    "beforeSha256": "b742d1fa224446840ead24724c18a38e4a01784a0f52923d46604199aebb35f8",
+    "afterSha256": "90610e9928b0ed554606f7c0ab16085fd1bbe284d26213c4b12254e7ca46e7a9"
+  },
+  {
+    "id": "family_sister",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/family_sister.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/family_sister.png",
+    "status": "copied",
+    "beforeSha256": "ce4e2aaa5a66227d2ce3564412ca4e926468526a8cd01711aa94b7dcec5f7d22",
+    "afterSha256": "ddd343a98a934c65daa564cf14021f4bb8880fba34e90a0496fff944f3ba88b2"
+  },
+  {
+    "id": "farm_barn",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/farm_barn.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/farm_barn.png",
+    "status": "copied",
+    "beforeSha256": "c1501477d375dca22a11c7d0e8de304e1b9fdcdadbc60a1d12d579dd2212af5b",
+    "afterSha256": "ffa0f4bb63acbb1ad13de8b55943fef62944e63724ee68867f83295678d7f048"
+  },
+  {
+    "id": "farm_chicken",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/farm_chicken.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/farm_chicken.png",
+    "status": "copied",
+    "beforeSha256": "1439064ed64b2a7934001e94a5a1f78739ceed373e4a5343bf66967fbdba4eee",
+    "afterSha256": "dc4ed2ab660522d3430b82cb68b882674b9d49cfd4d2e1fbf3e5290cded354f9"
+  },
+  {
+    "id": "farm_cow",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/farm_cow.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/farm_cow.png",
+    "status": "copied",
+    "beforeSha256": "ee33751c83cb0bf4ebff491a838cb4a5f8a7e1faaa2b2b4685caf09a4a53b818",
+    "afterSha256": "62c71d1b399b87fd989d2c6c51de18c1b28aa7bbbdb7fe017bbd16514d1df256"
+  },
+  {
+    "id": "farm_fence",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/farm_fence.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/farm_fence.png",
+    "status": "copied",
+    "beforeSha256": "3fd733b3f64aadaa8632a0a6e1e20ef94d62905ed7e3e505ac1a0ab4bf177208",
+    "afterSha256": "7b6b2ae94e86d1ade59c44c96258178425d18059991390dc9dfe22eb64f3af24"
+  },
+  {
+    "id": "farm_field",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/farm_field.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/farm_field.png",
+    "status": "copied",
+    "beforeSha256": "f0d9e7cea34d43b9758823dd7b3576c5cd902bf7adafd4a5c28658e3855dfabe",
+    "afterSha256": "c1729550a9f98572ded9b34bae651aef59c28f67d1a6f4014c2729a3142c00d3"
+  },
+  {
+    "id": "farm_hay",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/farm_hay.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/farm_hay.png",
+    "status": "copied",
+    "beforeSha256": "4bd863bcd3da854284a82abd2664648b6f7b46a94c913afa0918198d3505f592",
+    "afterSha256": "8ee89ad05312f2fde9851937c6b6454fe1b22636fc6e65655b93faf592741356"
+  },
+  {
+    "id": "farm_tractor",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/farm_tractor.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/farm_tractor.png",
+    "status": "copied",
+    "beforeSha256": "3e958b9349436c3f5ef5db733cf64228d197092e16b75c4660d2a0dd337eb148",
+    "afterSha256": "fbff656e5dbecd82b49ddb73489871584e308c64cfc898dcb0e419ac13659a42"
+  },
+  {
+    "id": "flowers_peony",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/flowers_peony.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/flowers_peony.png",
+    "status": "copied",
+    "beforeSha256": "967cf752271e5e2a8ff83c5500ba6470028d374b289b76c63d967e2ab425792b",
+    "afterSha256": "f584023f52377a11c8b99e58910fc80aacb15a676c315a09606c32e7e585d81b"
+  },
+  {
+    "id": "forest_berry",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/forest_berry.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/forest_berry.png",
+    "status": "copied",
+    "beforeSha256": "10260e35bee6bcb803a33040f14318c4cd3aa6ca67ce8276209c40b1da8c8cfe",
+    "afterSha256": "dbdbd0ad8788f0f729e6661a938180c78fbc57c5135787c72248594f424cdde7"
+  },
+  {
+    "id": "forest_fox",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/forest_fox.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/forest_fox.png",
+    "status": "copied",
+    "beforeSha256": "93e9740fdb627fdb1c1107c022c1a4ccff31b03dd4b8b5c8f0e851c05c58b147",
+    "afterSha256": "4cb39ec4adddeaec686a0ed99f6a0ab9e12d10c1b17887f4df56d86e07cb1c65"
+  },
+  {
+    "id": "forest_path",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/forest_path.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/forest_path.png",
+    "status": "copied",
+    "beforeSha256": "da5da492110343a8e06bf65966470c08099cccd4dca4eb76ea2a6d5c4e3a8db4",
+    "afterSha256": "4e02bcf2e5f4923896c351c2d248320e46759ed4f6f7b71da88df08f5e43cea2"
+  },
+  {
+    "id": "friendship_chat",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/friendship_chat.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/friendship_chat.png",
+    "status": "copied",
+    "beforeSha256": "47477b56a9c8657011a369e51e3d0185f176ace46b059d27f6b7a7c3bbd61b75",
+    "afterSha256": "98d3803d0a418ef1cb9f748c951be6182f8c4d7c0788b9857c2adcfa11fa9e1d"
+  },
+  {
+    "id": "friendship_friend",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/friendship_friend.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/friendship_friend.png",
+    "status": "copied",
+    "beforeSha256": "0791e166c0e49ce341027ac66b5661bf423bf225001f5e7db91a37cff4e04323",
+    "afterSha256": "f2413e9056454a7f988e16b33c9fabdbbbd74e120e0b9c215dc59c6a4f6701b0"
+  },
+  {
+    "id": "friendship_memory",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/friendship_memory.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/friendship_memory.png",
+    "status": "copied",
+    "beforeSha256": "3e3409f78525febe32c6686fefa11f078908ece01dc923083b41c2dd8a0403c0",
+    "afterSha256": "9d9b2c000b2c0f91eba31f5ac8e451564e027e5a9e9199eb4937a9ac36d935e6"
+  },
+  {
+    "id": "friendship_secret",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/friendship_secret.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/friendship_secret.png",
+    "status": "copied",
+    "beforeSha256": "21518f76b11b0fb63563229d33b21a6b061451ac564c35218f07733ce011e7e9",
+    "afterSha256": "9b3d9f69ce0494a002a97c4e255b2dc7e13bd74d7b226ff5937cbbf6b151a477"
+  },
+  {
+    "id": "friendship_team",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/friendship_team.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/friendship_team.png",
+    "status": "copied",
+    "beforeSha256": "4d508f303692b0e5060d7e7ee3b9298a7ea5a4a3a76aa59222239c55513935a2",
+    "afterSha256": "4cbc299c693d41473c1fd10f8d8c8b37417504d554fd37f1e0364fd87d679910"
+  },
+  {
+    "id": "friendship_walk",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/friendship_walk.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/friendship_walk.png",
+    "status": "copied",
+    "beforeSha256": "4a273605be49cac17ec5e45993b8a0f256dc6a71c6d975840d21af2785b4e3b6",
+    "afterSha256": "648aa17ba6180c5fb695cc1f0a8c7354c595eada27c5afe81d2b950ee40a285d"
+  },
+  {
+    "id": "garden_bench",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/garden_bench.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/garden_bench.png",
+    "status": "copied",
+    "beforeSha256": "6540a5317729314bc13a33d2fdd5d3aab8d3e8661009bf64029bd42175002e66",
+    "afterSha256": "abd587f8cc744be0ebf6923ce5b04720cf8701f691843cc1bdb451eb167e80c9"
+  },
+  {
+    "id": "garden_bush",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/garden_bush.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/garden_bush.png",
+    "status": "copied",
+    "beforeSha256": "cbfc5fc4ef065fa142cde75f4873bcf8ddf5ba22ac3ea361fcaa60ebc1f60d84",
+    "afterSha256": "ae38b58b723f877432c14f4a84664a280582ea00f5eb5e29b8858a2bf8a6f620"
+  },
+  {
+    "id": "garden_soil",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/garden_soil.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/garden_soil.png",
+    "status": "already_same",
+    "beforeSha256": "609c9153501f5306c11fea29b95e45a0f4997eb36c00a980dd6b92dc4cfd62a9",
+    "afterSha256": "609c9153501f5306c11fea29b95e45a0f4997eb36c00a980dd6b92dc4cfd62a9"
+  },
+  {
+    "id": "health_care",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/health_care.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/health_care.png",
+    "status": "copied",
+    "beforeSha256": "d77bd034c90c1016be9fb43bc31fedceb36c4c0a7f09f3a15f29c002887988da",
+    "afterSha256": "7274eaf81f360e360e512df2841867b549aab5d838ffeb50dd8488b6d72d11ba"
+  },
+  {
+    "id": "health_clinic",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/health_clinic.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/health_clinic.png",
+    "status": "copied",
+    "beforeSha256": "ab9f1d132227b40b5d4c824c889faff6d2ac2a997ad3eb532db3feb0fc11c404",
+    "afterSha256": "54c017aa10e1767bee30898a2b493ba54d108d1c55a21dda60b6b7f9a6fb74d7"
+  },
+  {
+    "id": "health_sleep",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/health_sleep.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/health_sleep.png",
+    "status": "copied",
+    "beforeSha256": "026f77e6de888381fc6640ca3336d470043102a14f99b458db7c3ce73a48bac1",
+    "afterSha256": "d22bb2adeda89c2014b9270799e66ff146aff4f0f2c35136c51c1dc9395e0517"
+  },
+  {
+    "id": "hobbies_baking",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/hobbies_baking.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/hobbies_baking.png",
+    "status": "copied",
+    "beforeSha256": "6f416f98f1933dbff367f59e620cdc47e83c81e4c60970814b720a5cacd761d7",
+    "afterSha256": "2f930bc802e57f59dab9ab354f1c3882c14a46f5b810d26b2c731ef9e54fb1f9"
+  },
+  {
+    "id": "hobbies_drawing",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/hobbies_drawing.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/hobbies_drawing.png",
+    "status": "already_same",
+    "beforeSha256": "3bf7786c0935008539aaf036cb8428a41fb9cb5cf7043f1d14ab2b0d28afae1b",
+    "afterSha256": "3bf7786c0935008539aaf036cb8428a41fb9cb5cf7043f1d14ab2b0d28afae1b"
+  },
+  {
+    "id": "hobbies_music",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/hobbies_music.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/hobbies_music.png",
+    "status": "copied",
+    "beforeSha256": "f7dc42acdd15426df0ce96dc652f03f61773fd2c6b16699876689598c9c63087",
+    "afterSha256": "48146138b0c3956eabe869a841f1a6e73174f1ab3d4282fe207730f085d621ad"
+  },
+  {
+    "id": "hobbies_puzzle",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/hobbies_puzzle.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/hobbies_puzzle.png",
+    "status": "copied",
+    "beforeSha256": "e0f42404889947cc4bc72badf0bfcce3975aafa49fda1e0223ab191fd790c175",
+    "afterSha256": "4978fe934beb53ad04f059dac4d333e2040adc7603668b30538e57f0ee53f989"
+  },
+  {
+    "id": "holidays_candle",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/holidays_candle.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/holidays_candle.png",
+    "status": "copied",
+    "beforeSha256": "8334732d4875de0e35e956f7b43568b586ee7f383427e4a1cb0b459de340ee1a",
+    "afterSha256": "867a84ca0de2cdc41ff518c84a9faba2ad1ce8ea3c95780d1be24eb022a62416"
+  },
+  {
+    "id": "home_key",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/home_key.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/home_key.png",
+    "status": "copied",
+    "beforeSha256": "da4b7947df3ff81b9b26f38b542033c2219ee5fa17dcb245394445c10c2ca6eb",
+    "afterSha256": "5c040891de8b413c61c7f6c389a18e0b800e0ad308fb4ea934162e7be243beb8"
+  },
+  {
+    "id": "internet_chat",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/internet_chat.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/internet_chat.png",
+    "status": "copied",
+    "beforeSha256": "f5cb9a43e11c55d163021d5da638c1963c3534ea95bff96a08096a064a28cd26",
+    "afterSha256": "4485eb0c3347ab73e1f91dc84d082c5f761f946f718cedc25e19793a7e6bdce7"
+  },
+  {
+    "id": "internet_cloud",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/internet_cloud.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/internet_cloud.png",
+    "status": "copied",
+    "beforeSha256": "f34194b76642f0dfe0c13ab214b96a4bebb87b11ed086328745b63ee4db187eb",
+    "afterSha256": "9fce5d4106ddc197c5bf54faede12c83e0a4e931ffc246ceff2320cd9a6854cf"
+  },
+  {
+    "id": "internet_mail",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/internet_mail.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/internet_mail.png",
+    "status": "copied",
+    "beforeSha256": "0b79487cda518e401cb6cb6ec9f02bdc0b386079614aa0fc8d7dbe3a2f2c4f6d",
+    "afterSha256": "dc50843f309828bb96d21dd0105488a9d58d14191c60209361fe815916b659f7"
+  },
+  {
+    "id": "kitchen_fork",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/kitchen_fork.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/kitchen_fork.png",
+    "status": "copied",
+    "beforeSha256": "95f40dc3cd65386fb299f580d62d4681e25924cd9aa003d14a320d7629dbc7da",
+    "afterSha256": "897d1ce60fe47c2af4a1db6e6fe5ad3f10c446c82f62344fc974541ae5f394fd"
+  },
+  {
+    "id": "kitchen_spoon",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/kitchen_spoon.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/kitchen_spoon.png",
+    "status": "copied",
+    "beforeSha256": "488c78535f9abe7e639cf5ddaf0104a53981bceace5797d41ae469cb79155fa6",
+    "afterSha256": "6dd63441b750c7bdcb0b7e60b0b975938c748383e0312388bc8d6a4f60ccf446"
+  },
+  {
+    "id": "music_concert",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/music_concert.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/music_concert.png",
+    "status": "copied",
+    "beforeSha256": "d8d3429326ee86a66af8ce957d4c29f6ebac0d9bdf23030e67d27a2fa18b4f0a",
+    "afterSha256": "28d603d4e27b6b9cd5a9a276016292460ed571e7bbe7f907e0e875add5039a73"
+  },
+  {
+    "id": "music_piano",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/music_piano.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/music_piano.png",
+    "status": "copied",
+    "beforeSha256": "b04ccc06b54486d9b088724fed478655da4e376e8adaa1973b584aa1ef9aa7ec",
+    "afterSha256": "968c858705458655df1aff9a60b73feab9f0937a56939e5864a85de492b281a1"
+  },
+  {
+    "id": "music_rhythm",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/music_rhythm.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/music_rhythm.png",
+    "status": "copied",
+    "beforeSha256": "04c1481f5879ab444873ce192e20292b9753ccd439958fd3d6f9665b68aa840e",
+    "afterSha256": "c283e2f5ebbacca1aa7c61bd26d2a06ec135a9a783176a118fb51040ffdf8de3"
+  },
+  {
+    "id": "nature_cloud",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/nature_cloud.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/nature_cloud.png",
+    "status": "copied",
+    "beforeSha256": "ac79f902db9a85de362424b2263fe5a6b96c1fb298eb046eb3a11d55218e7e0d",
+    "afterSha256": "45f5e2770cbd86abcdf6d20194c58541e575d5e92c0b955af04adee1fec21dc9"
+  },
+  {
+    "id": "nature_meadow",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/nature_meadow.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/nature_meadow.png",
+    "status": "copied",
+    "beforeSha256": "db2f05e15dc0773a40951fc79c12e6736dcf8b23201ce335cf8faef06f7d59db",
+    "afterSha256": "c0dfb6328c9d475b865f0266ddabea4cc8cf8d8ce137d408ddd429f6f8128902"
+  },
+  {
+    "id": "nature_river",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/nature_river.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/nature_river.png",
+    "status": "copied",
+    "beforeSha256": "934f589428a363bfe073f90ddb642f00fc39dfe489a93b81a472029956d5b280",
+    "afterSha256": "faecd9970450eb9eb6283f48905e7be2f9fd6800a50d15431a3a9d059c3b8e97"
+  },
+  {
+    "id": "nature_stone",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/nature_stone.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/nature_stone.png",
+    "status": "copied",
+    "beforeSha256": "379691044dc7d74f1208de2a9dc72bdadb429d7a89c0bfaeaf87dab383d408f9",
+    "afterSha256": "eee5502d01c0e42e99b54957b7cbd89b623547ce292675cbff089390d91a330e"
+  },
+  {
+    "id": "office_badge",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/office_badge.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/office_badge.png",
+    "status": "copied",
+    "beforeSha256": "13ddb51b2a05c3175c630564104fd548f8ab94c3dff2b286f3aacab5bce371c9",
+    "afterSha256": "1c681654bddc0328aa65f7bd9d1c957db669bfa40e37cd6e8b06e7b0a899f18a"
+  },
+  {
+    "id": "office_paper",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/office_paper.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/office_paper.png",
+    "status": "copied",
+    "beforeSha256": "3c3635d4b06ca1fa67473aa276f0cd372243b7d63d4ecab5c6e160c2a5293995",
+    "afterSha256": "bdc2b8e3c8e81f38e684cbbb08c5471f5597fe97c81f0503e16836b15214b40c"
+  },
+  {
+    "id": "office_printer",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/office_printer.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/office_printer.png",
+    "status": "copied",
+    "beforeSha256": "404eb123771ad2afdb60c47bb07e4f882a06c407977b7a8432598aaa22eddd8f",
+    "afterSha256": "93bb3317c27a37619179bcd4fc27be30d0c5b51f95105f7297d67ebc4e074117"
+  },
+  {
+    "id": "office_screen",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/office_screen.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/office_screen.png",
+    "status": "copied",
+    "beforeSha256": "bbd54a25b74eff71cb104ab3c6dfd1d36f303c27d60202c38bde1343e3548fb7",
+    "afterSha256": "59fc72ae957c7f2f619362cdcb26c1ca9c533cb673e7a78e1f2dca08f2f213ec"
+  },
+  {
+    "id": "phone_case",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/phone_case.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/phone_case.png",
+    "status": "copied",
+    "beforeSha256": "06cd477ef5bd09d9e27c82beef9a313e1adb01772db84389936b5398e0ec9efa",
+    "afterSha256": "6519b10ab3a52255314ddcfbf482e2777ddd205b1fb60ae27bcb099e39890bd4"
+  },
+  {
+    "id": "phone_message",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/phone_message.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/phone_message.png",
+    "status": "copied",
+    "beforeSha256": "efb5950477c231095d876cc98e3c7273d327d0dae95e7cf42308e7a58339a610",
+    "afterSha256": "cc65f3d8bc67a52be52f9a8db810ab2bd01935f3a381243cdc9e62d850cbeb17"
+  },
+  {
+    "id": "photo_frame",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/photo_frame.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/photo_frame.png",
+    "status": "copied",
+    "beforeSha256": "cdd58a0bdad39eb9a34875dfcd375fd4c9a3e9ef85b4f03afa745c4a64dcb782",
+    "afterSha256": "f5231658f364b3310c35e98385e3b5397eb413522b32030e125369584e7f0ae9"
+  },
+  {
+    "id": "photo_shot",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/photo_shot.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/photo_shot.png",
+    "status": "copied",
+    "beforeSha256": "5a318f329f24b4eefbe038ee3742a595cf080598a690503b21a998d3c7008e67",
+    "afterSha256": "86244301edb3753d3a70260d0de0f05442645cbd60244c662bab327da0e5038f"
+  },
+  {
+    "id": "photo_studio",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/photo_studio.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/photo_studio.png",
+    "status": "copied",
+    "beforeSha256": "ef41d260f3303b765a25bfef3abce61658d5935d0f8aaca5d54d3c111fb3b8dd",
+    "afterSha256": "ec1f11845a97c91eab96394b05a86902bc14a19a5f3c7578a469f243d2b12465"
+  },
+  {
+    "id": "school_board",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/school_board.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/school_board.png",
+    "status": "copied",
+    "beforeSha256": "77feadeb0c0203b6873e03500c996708b2a76466b27bd3ae71c783d9f9eafe66",
+    "afterSha256": "5664ee2410678886cd94c7d318f8cd8bdef2349f27ea278880d2cc591f4ae143"
+  },
+  {
+    "id": "school_desk",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/school_desk.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/school_desk.png",
+    "status": "copied",
+    "beforeSha256": "a9e7f0915301d66e2aac286a958fc980b0e43e47055bf9dc792655791b379666",
+    "afterSha256": "40dd4aea7096e117617dec39e16d77010a765f89589941caff28745a57f77483"
+  },
+  {
+    "id": "shapes_circle",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/shapes_circle.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/shapes_circle.png",
+    "status": "copied",
+    "beforeSha256": "21ae4b6c3fcd34a898f3826688ece214468f54c69d8c0597d39fb23e91666250",
+    "afterSha256": "976d40ee60c5b7be3d83a97ae902a41a4e0499fed6b1532271b2508360a89abd"
+  },
+  {
+    "id": "shapes_ring",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/shapes_ring.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/shapes_ring.png",
+    "status": "copied",
+    "beforeSha256": "ac4cb66bd5ef2872da7c7dcb93946d474ca0260d5d298573efb1b273dadaaca6",
+    "afterSha256": "d19fe5af6e94a43ce325e85561b0f687d687339a14cb23a7a58da71eba77d9d7"
+  },
+  {
+    "id": "shapes_triangle",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/shapes_triangle.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/shapes_triangle.png",
+    "status": "copied",
+    "beforeSha256": "39b082bbf0a89176645d368ba2b628933c8e105dcfe3577e4b16d50b4f644d1f",
+    "afterSha256": "5b18f0b775a32633ac567da446330c2449fb37a28fd2a1af96760f81cd08b117"
+  },
+  {
+    "id": "shoes_boot",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/shoes_boot.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/shoes_boot.png",
+    "status": "copied",
+    "beforeSha256": "815144c2ed712b65cd28435fd002b61052830ede01c9f5dda7692304e4a70a35",
+    "afterSha256": "72b37a1743532bc3e470ae259b8ea35b4eeb6b1547a2fe341f37abf9cecccb65"
+  },
+  {
+    "id": "shoes_heel",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/shoes_heel.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/shoes_heel.png",
+    "status": "copied",
+    "beforeSha256": "fe44afd1c95b8851e4339197d0242eea899971ea8e87865555611bf2063c2aa0",
+    "afterSha256": "324cb24ca1c6faac998314dbb04d5e0d3c9362d998044faae2190a306bc9d7ce"
+  },
+  {
+    "id": "shoes_pair",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/shoes_pair.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/shoes_pair.png",
+    "status": "copied",
+    "beforeSha256": "6bf83cfd760197b59365fdc25c987bfb9ae51946c9dac3f76c60d660f3ad424f",
+    "afterSha256": "412b6d67b7ebcd10d8b9f5e89f096b24c4f3bfa168af1dd9a4feed7ab9b8ef9f"
+  },
+  {
+    "id": "shoes_sandal",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/shoes_sandal.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/shoes_sandal.png",
+    "status": "copied",
+    "beforeSha256": "e43ea15d4eb4e140f49e5b9a9c35778dea9470aa836e2dc53f45641fa4d038d7",
+    "afterSha256": "ee15a8a442c315420c704aaa4e9af88270ce4302ad71a2a24dd8d45143c68a91"
+  },
+  {
+    "id": "sport_field",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/sport_field.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/sport_field.png",
+    "status": "already_same",
+    "beforeSha256": "3eb2ce17f72e81d18bbe330dce59ae01131a3f44fffe85d351ebc5944d22d4fe",
+    "afterSha256": "3eb2ce17f72e81d18bbe330dce59ae01131a3f44fffe85d351ebc5944d22d4fe"
+  },
+  {
+    "id": "sport_race",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/sport_race.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/sport_race.png",
+    "status": "copied",
+    "beforeSha256": "20f50732213a24e513ac87d6f6d8eb914c31d0d4972b97a78823ad59cfe48ddd",
+    "afterSha256": "35a4534e32f599b2fb5eca80f8faff7e929dfed39520388324e80c8c6bca9d53"
+  },
+  {
+    "id": "sport_team",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/sport_team.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/sport_team.png",
+    "status": "copied",
+    "beforeSha256": "188ea8d5e9370d1365d357f4e981b8eae35758c335b9b87dc1fb4e40d562d9ed",
+    "afterSha256": "dc86a670e88ed2e9a7e1fcc64225c25f92278ad2817711efcee1a32d5cb4e9b6"
+  },
+  {
+    "id": "summer_hat",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/summer_hat.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/summer_hat.png",
+    "status": "copied",
+    "beforeSha256": "9b5eee250639b6acff3d24c435cfbf405d899f99a437879f9201f2acde3494e0",
+    "afterSha256": "78ec62846284aa2be561932e4ab20f99b147e6075da22bf0066c4a065460bf66"
+  },
+  {
+    "id": "summer_lake",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/summer_lake.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/summer_lake.png",
+    "status": "already_same",
+    "beforeSha256": "ef23df26aacd9660ff17c94ac411fcfe16b7c9abf25a147c0ffa3e052d4fa255",
+    "afterSha256": "ef23df26aacd9660ff17c94ac411fcfe16b7c9abf25a147c0ffa3e052d4fa255"
+  },
+  {
+    "id": "summer_sandals",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/summer_sandals.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/summer_sandals.png",
+    "status": "copied",
+    "beforeSha256": "0cb23a007b870299a814000b08eaaa3b0439342436cfaba9c7bce742cc789b82",
+    "afterSha256": "53d3748352f98dd13bed24b76635b65827573af1e7799061a76192d05cffd011"
+  },
+  {
+    "id": "summer_picnic",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/summer_picnic.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/summer_picnic.png",
+    "status": "copied",
+    "beforeSha256": "c626200b429ebcc7b5ee69cfb548ef48e1ece94e3209487c8363ffe20724962d",
+    "afterSha256": "749c9dad229d67bef4e925b4c437f882fe2d8721ea0f4bd7a2a1be5378e16b69"
+  },
+  {
+    "id": "technology_chip",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/technology_chip.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/technology_chip.png",
+    "status": "copied",
+    "beforeSha256": "a9d9abd1f000044de8b9b4420512ec15f44b307affe06c5e8dbc29db533aeb6f",
+    "afterSha256": "d2f2d8ada8276f77421a9bbd9275fc728a0cc4a6a477d95d0be473a0ba9f9fd5"
+  },
+  {
+    "id": "technology_drone",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/technology_drone.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/technology_drone.png",
+    "status": "copied",
+    "beforeSha256": "a493181cd3f61a4ec0c1d1ef184c26d67b83816923d219b1da99fd57cea30296",
+    "afterSha256": "b095319d9a2392eec564ad2f1ee04b65c501e8c0b97c3c968c82201b172026c9"
+  },
+  {
+    "id": "time_night",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/time_night.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/time_night.png",
+    "status": "copied",
+    "beforeSha256": "3d6d796748d83b9c25808a0f1543fbdf359bd1a6f5777af75315110f59c19fbb",
+    "afterSha256": "17665e5aed58e09518a69c7c364ec71b0355b226493aaac98f4fb2587d4bf660"
+  },
+  {
+    "id": "time_time",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/time_time.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/time_time.png",
+    "status": "copied",
+    "beforeSha256": "bbb0931239606c5a27953aefc013e9fd3976cb9d3895fd56d14d8764fd32cbec",
+    "afterSha256": "7352947bea96f0a4c259a644704226cf5c4dbdfa42b3490fee58a4bdeefc4eb2"
+  },
+  {
+    "id": "tools_drill",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/tools_drill.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/tools_drill.png",
+    "status": "copied",
+    "beforeSha256": "d1f6237a6fec3aad685593beca5bb7d63d91723d6904fe6c4db1d181386050f9",
+    "afterSha256": "4ee7a78c040240eaa94c9bb5139a63236b273b51f2c293b69300800b1c76cc40"
+  },
+  {
+    "id": "tools_saw",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/tools_saw.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/tools_saw.png",
+    "status": "copied",
+    "beforeSha256": "f6db3240593766070f0ea3073206cd7b5986b32c5dd3809256aabd11169e202e",
+    "afterSha256": "2f56104a7f922cec2a94b44ae41ae5aeff1644171752a2f2fb515700265b7edb"
+  },
+  {
+    "id": "toys_car",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/toys_car.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/toys_car.png",
+    "status": "already_same",
+    "beforeSha256": "5b3f3d2f33ae94910e7eb0fd3ae60651e7b47decd931d6a9445eaa6da8f5dbd9",
+    "afterSha256": "5b3f3d2f33ae94910e7eb0fd3ae60651e7b47decd931d6a9445eaa6da8f5dbd9"
+  },
+  {
+    "id": "toys_puzzle",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/toys_puzzle.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/toys_puzzle.png",
+    "status": "copied",
+    "beforeSha256": "cbdbd7595ab4b63b1eaeeb1a69ecbf7790940d125c4d6468cac4ae5d3d822ede",
+    "afterSha256": "825410918d664e9a3f818bb4de1abe56ab9777f7bdf05816e2bba70c09ccddcb"
+  },
+  {
+    "id": "toys_robot",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/toys_robot.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/toys_robot.png",
+    "status": "copied",
+    "beforeSha256": "707a1818564a663a98bd94f9482a3ce8cf94ac294f1de7dc90c02bbeb1df5ce4",
+    "afterSha256": "15c12db4b7d11e5a0631c4595e9b19166f0d58e941c4125d6bb145412b7d85e7"
+  },
+  {
+    "id": "winter_cocoa",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/winter_cocoa.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/winter_cocoa.png",
+    "status": "copied",
+    "beforeSha256": "2efffbb895539d04f86dc408be5d2fe53118ebdc79f440bb70f00d81b3e2c97b",
+    "afterSha256": "f86479662859dc5f4c0d53d136dd92cf7d28abd7467f1deefb386abae9ac4bee"
+  },
+  {
+    "id": "winter_sleigh",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/winter_sleigh.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/winter_sleigh.png",
+    "status": "copied",
+    "beforeSha256": "465300119845be5d25508085a0208edad9fcd42b8e769786400f81c640c42132",
+    "afterSha256": "5425ab95d3ee44aacecd773f4b7058f28d054c263c30433285c850d0c08407e2"
+  },
+  {
+    "id": "work_call",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/work_call.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/work_call.png",
+    "status": "copied",
+    "beforeSha256": "20cba3699adc3ee8ab4b3847057046d360ec30a7d481b2215ebe8c55ebd6ced6",
+    "afterSha256": "17619bb206c17286771abd4bd32885c41b5d46a1f449cf3173f6e699934891db"
+  },
+  {
+    "id": "work_manager",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/work_manager.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/work_manager.png",
+    "status": "copied",
+    "beforeSha256": "8ef46eef3c8f8d21bc56e8c1378f3d90f7f09b2593ce3299381ce319c5bb0da3",
+    "afterSha256": "c71d9b2dc53b8985d1543ffd6ea88050e3cdbbdff54916f1ee4e498abcf363be"
+  },
+  {
+    "id": "work_salary",
+    "source": "final_cleanup_latest",
+    "sourcePath": "Tools/ImageCardAudit/final_cleanup_latest/sliced/work_salary.png",
+    "runtimePath": "Assets/Resources/ImageCards/Premium/work_salary.png",
+    "status": "copied",
+    "beforeSha256": "9b12a3a2157cbb48fb8162e8614f386de69df2c7e985ce651f45a4590fe1ded2",
+    "afterSha256": "feacca737303997e205dc9fb64f0b5b9e41abe85ac9891ed7541c0414c7a1778"
+  }
+]

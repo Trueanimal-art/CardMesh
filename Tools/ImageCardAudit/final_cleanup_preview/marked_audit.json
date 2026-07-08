@@ -1,0 +1,437 @@
+[
+  {
+    "id": "books_cover",
+    "size": [
+      240,
+      240
+    ],
+    "bbox": [
+      55,
+      40,
+      183,
+      199
+    ],
+    "min_margin": 40,
+    "edge_alpha": false
+  },
+  {
+    "id": "camping_fire",
+    "size": [
+      240,
+      240
+    ],
+    "bbox": [
+      59,
+      40,
+      179,
+      199
+    ],
+    "min_margin": 40,
+    "edge_alpha": false
+  },
+  {
+    "id": "camping_backpack",
+    "size": [
+      240,
+      240
+    ],
+    "bbox": [
+      58,
+      40,
+      180,
+      197
+    ],
+    "min_margin": 40,
+    "edge_alpha": false
+  },
+  {
+    "id": "cinema_screen",
+    "size": [
+      240,
+      240
+    ],
+    "bbox": [
+      41,
+      42,
+      197,
+      196
+    ],
+    "min_margin": 41,
+    "edge_alpha": false
+  },
+  {
+    "id": "city_park",
+    "size": [
+      240,
+      240
+    ],
+    "bbox": [
+      65,
+      40,
+      174,
+      199
+    ],
+    "min_margin": 40,
+    "edge_alpha": false
+  },
+  {
+    "id": "city_square",
+    "size": [
+      240,
+      240
+    ],
+    "bbox": [
+      47,
+      40,
+      191,
+      198
+    ],
+    "min_margin": 40,
+    "edge_alpha": false
+  },
+  {
+    "id": "city_street",
+    "size": [
+      240,
+      240
+    ],
+    "bbox": [
+      58,
+      40,
+      181,
+      199
+    ],
+    "min_margin": 40,
+    "edge_alpha": false
+  },
+  {
+    "id": "colors_black",
+    "size": [
+      240,
+      240
+    ],
+    "bbox": [
+      62,
+      40,
+      176,
+      194
+    ],
+    "min_margin": 40,
+    "edge_alpha": false
+  },
+  {
+    "id": "colors_blue",
+    "size": [
+      240,
+      240
+    ],
+    "bbox": [
+      61,
+      40,
+      177,
+      195
+    ],
+    "min_margin": 40,
+    "edge_alpha": false
+  },
+  {
+    "id": "colors_green",
+    "size": [
+      240,
+      240
+    ],
+    "bbox": [
+      63,
+      40,
+      175,
+      195
+    ],
+    "min_margin": 40,
+    "edge_alpha": false
+  },
+  {
+    "id": "dessert_cookie",
+    "size": [
+      240,
+      240
+    ],
+    "bbox": [
+      59,
+      43,
+      180,
+      165
+    ],
+    "min_margin": 43,
+    "edge_alpha": false
+  },
+  {
+    "id": "emotions_calm",
+    "size": [
+      240,
+      240
+    ],
+    "bbox": [
+      46,
+      40,
+      193,
+      199
+    ],
+    "min_margin": 40,
+    "edge_alpha": false
+  },
+  {
+    "id": "emotions_warmth",
+    "size": [
+      240,
+      240
+    ],
+    "bbox": [
+      43,
+      46,
+      196,
+      193
+    ],
+    "min_margin": 43,
+    "edge_alpha": false
+  },
+  {
+    "id": "family_album",
+    "size": [
+      240,
+      240
+    ],
+    "bbox": [
+      50,
+      43,
+      188,
+      196
+    ],
+    "min_margin": 43,
+    "edge_alpha": false
+  },
+  {
+    "id": "garden_soil",
+    "size": [
+      240,
+      240
+    ],
+    "bbox": [
+      43,
+      59,
+      196,
+      179
+    ],
+    "min_margin": 43,
+    "edge_alpha": false
+  },
+  {
+    "id": "holidays_balloon",
+    "size": [
+      240,
+      240
+    ],
+    "bbox": [
+      58,
+      43,
+      180,
+      196
+    ],
+    "min_margin": 43,
+    "edge_alpha": false
+  },
+  {
+    "id": "home_key",
+    "size": [
+      240,
+      240
+    ],
+    "bbox": [
+      61,
+      40,
+      178,
+      199
+    ],
+    "min_margin": 40,
+    "edge_alpha": false
+  },
+  {
+    "id": "music_piano",
+    "size": [
+      240,
+      240
+    ],
+    "bbox": [
+      48,
+      43,
+      191,
+      196
+    ],
+    "min_margin": 43,
+    "edge_alpha": false
+  },
+  {
+    "id": "photo_album",
+    "size": [
+      240,
+      240
+    ],
+    "bbox": [
+      59,
+      40,
+      180,
+      198
+    ],
+    "min_margin": 40,
+    "edge_alpha": false
+  },
+  {
+    "id": "photo_shot",
+    "size": [
+      240,
+      240
+    ],
+    "bbox": [
+      49,
+      40,
+      190,
+      194
+    ],
+    "min_margin": 40,
+    "edge_alpha": false
+  },
+  {
+    "id": "school_desk",
+    "size": [
+      240,
+      240
+    ],
+    "bbox": [
+      57,
+      43,
+      181,
+      196
+    ],
+    "min_margin": 43,
+    "edge_alpha": false
+  },
+  {
+    "id": "shoes_pair",
+    "size": [
+      240,
+      240
+    ],
+    "bbox": [
+      40,
+      50,
+      199,
+      189
+    ],
+    "min_margin": 40,
+    "edge_alpha": false
+  },
+  {
+    "id": "sport_field",
+    "size": [
+      240,
+      240
+    ],
+    "bbox": [
+      43,
+      46,
+      196,
+      192
+    ],
+    "min_margin": 43,
+    "edge_alpha": false
+  },
+  {
+    "id": "sport_race",
+    "size": [
+      240,
+      240
+    ],
+    "bbox": [
+      43,
+      45,
+      196,
+      193
+    ],
+    "min_margin": 43,
+    "edge_alpha": false
+  },
+  {
+    "id": "sport_team",
+    "size": [
+      240,
+      240
+    ],
+    "bbox": [
+      45,
+      40,
+      193,
+      196
+    ],
+    "min_margin": 40,
+    "edge_alpha": false
+  },
+  {
+    "id": "summer_lake",
+    "size": [
+      240,
+      240
+    ],
+    "bbox": [
+      43,
+      50,
+      196,
+      189
+    ],
+    "min_margin": 43,
+    "edge_alpha": false
+  },
+  {
+    "id": "technology_code",
+    "size": [
+      240,
+      240
+    ],
+    "bbox": [
+      43,
+      46,
+      196,
+      192
+    ],
+    "min_margin": 43,
+    "edge_alpha": false
+  },
+  {
+    "id": "tools_pliers",
+    "size": [
+      240,
+      240
+    ],
+    "bbox": [
+      74,
+      43,
+      164,
+      196
+    ],
+    "min_margin": 43,
+    "edge_alpha": false
+  },
+  {
+    "id": "tools_saw",
+    "size": [
+      240,
+      240
+    ],
+    "bbox": [
+      73,
+      40,
+      165,
+      199
+    ],
+    "min_margin": 40,
+    "edge_alpha": false
+  }
+]

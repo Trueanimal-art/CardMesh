@@ -1,0 +1,626 @@
+[
+  {
+    "id": "breakfast_cereal",
+    "file": "Assets/Resources/ImageCards/Premium/breakfast_cereal.png",
+    "sourceBbox": [
+      43,
+      49,
+      197,
+      190
+    ],
+    "finalBbox": [
+      51,
+      57,
+      189,
+      183
+    ],
+    "margins": [
+      51,
+      57,
+      51,
+      57
+    ],
+    "maxSide": 138,
+    "result": "ok"
+  },
+  {
+    "id": "cinema_actor",
+    "file": "Assets/Resources/ImageCards/Premium/cinema_actor.png",
+    "sourceBbox": [
+      43,
+      40,
+      196,
+      196
+    ],
+    "finalBbox": [
+      52,
+      51,
+      187,
+      189
+    ],
+    "margins": [
+      52,
+      51,
+      53,
+      51
+    ],
+    "maxSide": 138,
+    "result": "ok"
+  },
+  {
+    "id": "city_park",
+    "file": "Assets/Resources/ImageCards/Premium/city_park.png",
+    "sourceBbox": [
+      65,
+      40,
+      175,
+      199
+    ],
+    "finalBbox": [
+      72,
+      51,
+      167,
+      189
+    ],
+    "margins": [
+      72,
+      51,
+      73,
+      51
+    ],
+    "maxSide": 138,
+    "result": "ok"
+  },
+  {
+    "id": "clothes_glove",
+    "file": "Assets/Resources/ImageCards/Premium/clothes_glove.png",
+    "sourceBbox": [
+      69,
+      40,
+      171,
+      200
+    ],
+    "finalBbox": [
+      76,
+      51,
+      164,
+      189
+    ],
+    "margins": [
+      76,
+      51,
+      76,
+      51
+    ],
+    "maxSide": 138,
+    "result": "ok"
+  },
+  {
+    "id": "dessert_waffle",
+    "file": "Assets/Resources/ImageCards/Premium/dessert_waffle.png",
+    "sourceBbox": [
+      45,
+      43,
+      195,
+      197
+    ],
+    "finalBbox": [
+      53,
+      51,
+      187,
+      189
+    ],
+    "margins": [
+      53,
+      51,
+      53,
+      51
+    ],
+    "maxSide": 138,
+    "result": "ok"
+  },
+  {
+    "id": "emotions_calm",
+    "file": "Assets/Resources/ImageCards/Premium/emotions_calm.png",
+    "sourceBbox": [
+      46,
+      40,
+      194,
+      199
+    ],
+    "finalBbox": [
+      56,
+      51,
+      184,
+      189
+    ],
+    "margins": [
+      56,
+      51,
+      56,
+      51
+    ],
+    "maxSide": 138,
+    "result": "ok"
+  },
+  {
+    "id": "emotions_warmth",
+    "file": "Assets/Resources/ImageCards/Premium/emotions_warmth.png",
+    "sourceBbox": [
+      43,
+      46,
+      197,
+      194
+    ],
+    "finalBbox": [
+      51,
+      53,
+      189,
+      186
+    ],
+    "margins": [
+      51,
+      53,
+      51,
+      54
+    ],
+    "maxSide": 138,
+    "result": "ok"
+  },
+  {
+    "id": "garden_soil",
+    "file": "Assets/Resources/ImageCards/Premium/garden_soil.png",
+    "sourceBbox": [
+      43,
+      59,
+      194,
+      180
+    ],
+    "finalBbox": [
+      51,
+      64,
+      189,
+      175
+    ],
+    "margins": [
+      51,
+      64,
+      51,
+      65
+    ],
+    "maxSide": 138,
+    "result": "ok"
+  },
+  {
+    "id": "hobbies_drawing",
+    "file": "Assets/Resources/ImageCards/Premium/hobbies_drawing.png",
+    "sourceBbox": [
+      54,
+      43,
+      185,
+      197
+    ],
+    "finalBbox": [
+      61,
+      51,
+      178,
+      189
+    ],
+    "margins": [
+      61,
+      51,
+      62,
+      51
+    ],
+    "maxSide": 138,
+    "result": "ok"
+  },
+  {
+    "id": "home_key",
+    "file": "Assets/Resources/ImageCards/Premium/home_key.png",
+    "sourceBbox": [
+      61,
+      40,
+      179,
+      200
+    ],
+    "finalBbox": [
+      69,
+      51,
+      171,
+      189
+    ],
+    "margins": [
+      69,
+      51,
+      69,
+      51
+    ],
+    "maxSide": 138,
+    "result": "ok"
+  },
+  {
+    "id": "insects_bee",
+    "file": "Assets/Resources/ImageCards/Premium/insects_bee.png",
+    "sourceBbox": [
+      51,
+      40,
+      188,
+      197
+    ],
+    "finalBbox": [
+      60,
+      51,
+      180,
+      189
+    ],
+    "margins": [
+      60,
+      51,
+      60,
+      51
+    ],
+    "maxSide": 138,
+    "result": "ok"
+  },
+  {
+    "id": "insects_butterfly",
+    "file": "Assets/Resources/ImageCards/Premium/insects_butterfly.png",
+    "sourceBbox": [
+      51,
+      43,
+      189,
+      197
+    ],
+    "finalBbox": [
+      58,
+      51,
+      182,
+      189
+    ],
+    "margins": [
+      58,
+      51,
+      58,
+      51
+    ],
+    "maxSide": 138,
+    "result": "ok"
+  },
+  {
+    "id": "kitchen_knife",
+    "file": "Assets/Resources/ImageCards/Premium/kitchen_knife.png",
+    "sourceBbox": [
+      81,
+      40,
+      159,
+      200
+    ],
+    "finalBbox": [
+      86,
+      51,
+      153,
+      189
+    ],
+    "margins": [
+      86,
+      51,
+      87,
+      51
+    ],
+    "maxSide": 138,
+    "result": "ok"
+  },
+  {
+    "id": "music_piano",
+    "file": "Assets/Resources/ImageCards/Premium/music_piano.png",
+    "sourceBbox": [
+      48,
+      43,
+      192,
+      197
+    ],
+    "finalBbox": [
+      55,
+      51,
+      184,
+      189
+    ],
+    "margins": [
+      55,
+      51,
+      56,
+      51
+    ],
+    "maxSide": 138,
+    "result": "ok"
+  },
+  {
+    "id": "nature_cloud",
+    "file": "Assets/Resources/ImageCards/Premium/nature_cloud.png",
+    "sourceBbox": [
+      43,
+      56,
+      197,
+      181
+    ],
+    "finalBbox": [
+      51,
+      64,
+      189,
+      176
+    ],
+    "margins": [
+      51,
+      64,
+      51,
+      64
+    ],
+    "maxSide": 138,
+    "result": "ok"
+  },
+  {
+    "id": "school_desk",
+    "file": "Assets/Resources/ImageCards/Premium/school_desk.png",
+    "sourceBbox": [
+      57,
+      43,
+      182,
+      197
+    ],
+    "finalBbox": [
+      64,
+      51,
+      176,
+      189
+    ],
+    "margins": [
+      64,
+      51,
+      64,
+      51
+    ],
+    "maxSide": 138,
+    "result": "ok"
+  },
+  {
+    "id": "shoes_pair",
+    "file": "Assets/Resources/ImageCards/Premium/shoes_pair.png",
+    "sourceBbox": [
+      40,
+      50,
+      200,
+      190
+    ],
+    "finalBbox": [
+      51,
+      59,
+      189,
+      180
+    ],
+    "margins": [
+      51,
+      59,
+      51,
+      60
+    ],
+    "maxSide": 138,
+    "result": "ok"
+  },
+  {
+    "id": "sport_field",
+    "file": "Assets/Resources/ImageCards/Premium/sport_field.png",
+    "sourceBbox": [
+      43,
+      46,
+      197,
+      193
+    ],
+    "finalBbox": [
+      51,
+      54,
+      189,
+      186
+    ],
+    "margins": [
+      51,
+      54,
+      51,
+      54
+    ],
+    "maxSide": 138,
+    "result": "ok"
+  },
+  {
+    "id": "sport_race",
+    "file": "Assets/Resources/ImageCards/Premium/sport_race.png",
+    "sourceBbox": [
+      43,
+      45,
+      197,
+      194
+    ],
+    "finalBbox": [
+      51,
+      53,
+      189,
+      187
+    ],
+    "margins": [
+      51,
+      53,
+      51,
+      53
+    ],
+    "maxSide": 138,
+    "result": "ok"
+  },
+  {
+    "id": "sport_team",
+    "file": "Assets/Resources/ImageCards/Premium/sport_team.png",
+    "sourceBbox": [
+      45,
+      40,
+      194,
+      197
+    ],
+    "finalBbox": [
+      54,
+      51,
+      185,
+      189
+    ],
+    "margins": [
+      54,
+      51,
+      55,
+      51
+    ],
+    "maxSide": 138,
+    "result": "ok"
+  },
+  {
+    "id": "summer_lake",
+    "file": "Assets/Resources/ImageCards/Premium/summer_lake.png",
+    "sourceBbox": [
+      43,
+      50,
+      197,
+      190
+    ],
+    "finalBbox": [
+      51,
+      57,
+      189,
+      182
+    ],
+    "margins": [
+      51,
+      57,
+      51,
+      58
+    ],
+    "maxSide": 138,
+    "result": "ok"
+  },
+  {
+    "id": "tools_drill",
+    "file": "Assets/Resources/ImageCards/Premium/tools_drill.png",
+    "sourceBbox": [
+      58,
+      43,
+      182,
+      196
+    ],
+    "finalBbox": [
+      64,
+      51,
+      176,
+      189
+    ],
+    "margins": [
+      64,
+      51,
+      64,
+      51
+    ],
+    "maxSide": 138,
+    "result": "ok"
+  },
+  {
+    "id": "tools_saw",
+    "file": "Assets/Resources/ImageCards/Premium/tools_saw.png",
+    "sourceBbox": [
+      73,
+      40,
+      166,
+      200
+    ],
+    "finalBbox": [
+      80,
+      51,
+      160,
+      189
+    ],
+    "margins": [
+      80,
+      51,
+      80,
+      51
+    ],
+    "maxSide": 138,
+    "result": "ok"
+  },
+  {
+    "id": "tools_wrench",
+    "file": "Assets/Resources/ImageCards/Premium/tools_wrench.png",
+    "sourceBbox": [
+      69,
+      43,
+      170,
+      197
+    ],
+    "finalBbox": [
+      74,
+      51,
+      165,
+      189
+    ],
+    "margins": [
+      74,
+      51,
+      75,
+      51
+    ],
+    "maxSide": 138,
+    "result": "ok"
+  },
+  {
+    "id": "toys_car",
+    "file": "Assets/Resources/ImageCards/Premium/toys_car.png",
+    "sourceBbox": [
+      43,
+      50,
+      197,
+      189
+    ],
+    "finalBbox": [
+      51,
+      57,
+      189,
+      182
+    ],
+    "margins": [
+      51,
+      57,
+      51,
+      58
+    ],
+    "maxSide": 138,
+    "result": "ok"
+  },
+  {
+    "id": "toys_train",
+    "file": "Assets/Resources/ImageCards/Premium/toys_train.png",
+    "sourceBbox": [
+      51,
+      43,
+      188,
+      193
+    ],
+    "finalBbox": [
+      57,
+      51,
+      183,
+      189
+    ],
+    "margins": [
+      57,
+      51,
+      57,
+      51
+    ],
+    "maxSide": 138,
+    "result": "ok"
+  }
+]

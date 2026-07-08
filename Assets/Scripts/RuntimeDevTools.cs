@@ -19,9 +19,9 @@ namespace SolitaireAssociations
         private const float HeaderHeight = 54f;
         private const float ButtonHeight = 58f;
         private const float LevelOptionButtonHeight = 48f;
-        private static readonly Vector2 ExpandedSize = new(330f, 602f);
-        private static readonly Vector2 ExpandedLevelMenuSize = new(330f, 762f);
-        private static readonly Vector2 ExpandedLevelNumberMenuSize = new(330f, 890f);
+        private static readonly Vector2 ExpandedSize = new(330f, 668f);
+        private static readonly Vector2 ExpandedLevelMenuSize = new(330f, 828f);
+        private static readonly Vector2 ExpandedLevelNumberMenuSize = new(330f, 956f);
         private static readonly Vector2 CollapsedSize = new(240f, HeaderHeight);
         private static readonly Color PanelColor = new(0.03f, 0.05f, 0.07f, 0.94f);
         private static readonly Color HeaderColor = new(0.11f, 0.18f, 0.24f, 0.98f);
@@ -40,6 +40,7 @@ namespace SolitaireAssociations
         private Button undoButton;
         private Button addMovesButton;
         private Button addCoinsButton;
+        private Button completeLevelButton;
         private Button levelMenuButton;
         private Button loadThreeColumnsButton;
         private Button loadFourColumnsButton;
@@ -240,6 +241,7 @@ namespace SolitaireAssociations
             undoButton = CreateBodyButton("UndoButton", "Отмена", UseUndo);
             addMovesButton = CreateBodyButton("AddMovesButton", $"+{DefaultMovesGrant} ходов", AddMoves);
             addCoinsButton = CreateBodyButton("AddCoinsButton", $"+{DefaultCoinsGrant} золота", AddCoins);
+            completeLevelButton = CreateBodyButton("CompleteLevelButton", "Пройти уровень", CompleteLevel);
             levelMenuButton = CreateBodyButton("LevelMenuButton", "Выбрать раскладку", ToggleLevelMenu);
             CreateLevelMenu();
             levelNumberMenuButton = CreateBodyButton("LevelNumberMenuButton", "Выбрать уровень", ToggleLevelNumberMenu);
@@ -671,6 +673,7 @@ namespace SolitaireAssociations
             SetInteractable(undoButton, hasGameManager);
             SetInteractable(addMovesButton, hasGameManager);
             SetInteractable(addCoinsButton, true);
+            SetInteractable(completeLevelButton, hasGameManager);
             SetInteractable(levelMenuButton, true);
             SetInteractable(loadThreeColumnsButton, true);
             SetInteractable(loadFourColumnsButton, true);
@@ -748,6 +751,19 @@ namespace SolitaireAssociations
             int added = coinsManager.AddCoins(DefaultCoinsGrant);
             SetStatus(added > 0 ? $"+{added} золота выдано." : "Золото не выдано.");
             Debug.Log($"[DEV] Grant: Coins +{added}, coins={coinsManager.CurrentCoins}");
+        }
+
+        private void CompleteLevel()
+        {
+            GameManager gameManager = FindActiveGameManager();
+            if (gameManager == null)
+            {
+                SetStatus("Game scene is not active.");
+                return;
+            }
+
+            bool completed = gameManager.CompleteLevelForDevTools();
+            SetStatus(completed ? "Уровень пройден." : "Уровень уже завершается.");
         }
 
         private void ToggleLevelMenu()

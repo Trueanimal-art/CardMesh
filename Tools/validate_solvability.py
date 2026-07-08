@@ -866,6 +866,8 @@ class SolvabilityValidator:
 
             moving_card = stack[-1] if self._is_gold(stack[-1]) else stack[0]
             for target_index, (target_cards, _) in enumerate(columns):
+                if self._is_gold_headed_stack(stack) and len(stack) > 1:
+                    continue
                 if column_index == target_index:
                     continue
                 if self._can_column_accept(target_cards, moving_card):
@@ -1080,6 +1082,8 @@ class SolvabilityValidator:
                         continue
                     moving_card = stack[-1] if self._is_gold_headed_stack(stack) else stack[0]
                     for target_index, target_column in enumerate(columns):
+                        if self._is_gold_headed_stack(stack) and len(stack) > 1:
+                            continue
                         if source_index == target_index:
                             continue
                         if not self._can_column_accept(tuple(target_column), moving_card):
@@ -1183,6 +1187,8 @@ class SolvabilityValidator:
 
             for target_index, (target_cards, _) in enumerate(columns):
                 if not allow_column_move:
+                    continue
+                if self._is_gold_headed_stack(stack) and len(stack) > 1:
                     continue
                 if source_kind == "column" and source_index == target_index:
                     continue
@@ -1333,7 +1339,7 @@ class SolvabilityValidator:
 
     def _can_column_accept(self, target_cards: tuple[str, ...], moving_card: str) -> bool:
         if not target_cards:
-            return not self._is_gold(moving_card)
+            return True
         top_card = target_cards[-1]
         if self._is_gold(top_card):
             return False

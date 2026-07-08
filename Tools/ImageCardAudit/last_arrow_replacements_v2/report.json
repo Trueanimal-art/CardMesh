@@ -1,0 +1,172 @@
+[
+  {
+    "id": "camping_backpack",
+    "file": "Assets/Resources/ImageCards/Premium/camping_backpack.png",
+    "bbox": [
+      66,
+      48,
+      173,
+      192
+    ],
+    "margins": [
+      66,
+      48,
+      67,
+      48
+    ],
+    "maxSide": 144
+  },
+  {
+    "id": "city_park",
+    "file": "Assets/Resources/ImageCards/Premium/city_park.png",
+    "bbox": [
+      53,
+      48,
+      186,
+      192
+    ],
+    "margins": [
+      53,
+      48,
+      54,
+      48
+    ],
+    "maxSide": 144
+  },
+  {
+    "id": "clothes_glove",
+    "file": "Assets/Resources/ImageCards/Premium/clothes_glove.png",
+    "bbox": [
+      74,
+      48,
+      165,
+      192
+    ],
+    "margins": [
+      74,
+      48,
+      75,
+      48
+    ],
+    "maxSide": 144
+  },
+  {
+    "id": "dessert_waffle",
+    "file": "Assets/Resources/ImageCards/Premium/dessert_waffle.png",
+    "bbox": [
+      63,
+      54,
+      176,
+      186
+    ],
+    "margins": [
+      63,
+      54,
+      64,
+      54
+    ],
+    "maxSide": 132
+  },
+  {
+    "id": "emotions_warmth",
+    "file": "Assets/Resources/ImageCards/Premium/emotions_warmth.png",
+    "bbox": [
+      61,
+      62,
+      178,
+      177
+    ],
+    "margins": [
+      61,
+      62,
+      62,
+      63
+    ],
+    "maxSide": 117
+  },
+  {
+    "id": "garden_bench",
+    "file": "Assets/Resources/ImageCards/Premium/garden_bench.png",
+    "bbox": [
+      58,
+      48,
+      181,
+      192
+    ],
+    "margins": [
+      58,
+      48,
+      59,
+      48
+    ],
+    "maxSide": 144
+  },
+  {
+    "id": "garden_soil",
+    "file": "Assets/Resources/ImageCards/Premium/garden_soil.png",
+    "bbox": [
+      60,
+      61,
+      179,
+      179
+    ],
+    "margins": [
+      60,
+      61,
+      61,
+      61
+    ],
+    "maxSide": 119
+  },
+  {
+    "id": "sport_field",
+    "file": "Assets/Resources/ImageCards/Premium/sport_field.png",
+    "bbox": [
+      57,
+      56,
+      182,
+      183
+    ],
+    "margins": [
+      57,
+      56,
+      58,
+      57
+    ],
+    "maxSide": 127
+  },
+  {
+    "id": "tools_saw",
+    "file": "Assets/Resources/ImageCards/Premium/tools_saw.png",
+    "bbox": [
+      74,
+      48,
+      166,
+      192
+    ],
+    "margins": [
+      74,
+      48,
+      74,
+      48
+    ],
+    "maxSide": 144
+  },
+  {
+    "id": "toys_train",
+    "file": "Assets/Resources/ImageCards/Premium/toys_train.png",
+    "bbox": [
+      53,
+      57,
+      186,
+      182
+    ],
+    "margins": [
+      53,
+      57,
+      54,
+      58
+    ],
+    "maxSide": 133
+  }
+]

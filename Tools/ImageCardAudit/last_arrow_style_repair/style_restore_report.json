@@ -1,0 +1,162 @@
+[
+  {
+    "id": "camping_backpack",
+    "source": "Tools/ImageCardAudit/final_cleanup_latest/sliced/camping_backpack.png",
+    "margins": [
+      58,
+      40,
+      59,
+      43
+    ],
+    "bbox": [
+      58,
+      40,
+      181,
+      197
+    ]
+  },
+  {
+    "id": "city_park",
+    "source": "Tools/ImageCardAudit/final_cleanup_latest/sliced/city_park.png",
+    "margins": [
+      65,
+      40,
+      65,
+      41
+    ],
+    "bbox": [
+      65,
+      40,
+      175,
+      199
+    ]
+  },
+  {
+    "id": "clothes_glove",
+    "source": "Tools/ImageCardAudit/final_cleanup_latest/sliced/clothes_glove.png",
+    "margins": [
+      69,
+      40,
+      69,
+      40
+    ],
+    "bbox": [
+      69,
+      40,
+      171,
+      200
+    ]
+  },
+  {
+    "id": "dessert_waffle",
+    "source": "Tools/ImageCardAudit/final_cleanup_latest/sliced/dessert_waffle.png",
+    "margins": [
+      55,
+      43,
+      55,
+      43
+    ],
+    "bbox": [
+      55,
+      43,
+      185,
+      197
+    ]
+  },
+  {
+    "id": "emotions_warmth",
+    "source": "Tools/ImageCardAudit/ai_atlas_repair/sliced/emotions_warmth.png",
+    "margins": [
+      43,
+      46,
+      43,
+      46
+    ],
+    "bbox": [
+      43,
+      46,
+      197,
+      194
+    ]
+  },
+  {
+    "id": "garden_bench",
+    "source": "Tools/ImageCardAudit/last_arrow_replacements_v2/before_apply/garden_bench.png",
+    "margins": [
+      68,
+      68,
+      68,
+      69
+    ],
+    "bbox": [
+      68,
+      68,
+      172,
+      171
+    ]
+  },
+  {
+    "id": "garden_soil",
+    "source": "Tools/ImageCardAudit/last_arrow_replacements_v2/before_apply/garden_soil.png",
+    "margins": [
+      68,
+      78,
+      68,
+      78
+    ],
+    "bbox": [
+      68,
+      78,
+      172,
+      162
+    ]
+  },
+  {
+    "id": "sport_field",
+    "source": "Tools/ImageCardAudit/final_cleanup_latest/sliced/sport_field.png",
+    "margins": [
+      49,
+      43,
+      49,
+      43
+    ],
+    "bbox": [
+      49,
+      43,
+      191,
+      197
+    ]
+  },
+  {
+    "id": "tools_saw",
+    "source": "Tools/ImageCardAudit/final_cleanup_latest/sliced/tools_saw.png",
+    "margins": [
+      73,
+      40,
+      74,
+      40
+    ],
+    "bbox": [
+      73,
+      40,
+      166,
+      200
+    ]
+  },
+  {
+    "id": "toys_train",
+    "source": "Tools/ImageCardAudit/final_cleanup_latest/sliced/toys_train.png",
+    "margins": [
+      51,
+      43,
+      52,
+      45
+    ],
+    "bbox": [
+      51,
+      43,
+      188,
+      195
+    ]
+  }
+]

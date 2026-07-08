@@ -1,0 +1,242 @@
+[
+  {
+    "id": "camping_backpack",
+    "file": "Assets/Resources/ImageCards/Premium/camping_backpack.png",
+    "sourceBbox": [
+      71,
+      58,
+      168,
+      182
+    ],
+    "finalBbox": [
+      79,
+      68,
+      160,
+      172
+    ],
+    "margins": [
+      79,
+      68,
+      80,
+      68
+    ],
+    "maxSide": 104,
+    "result": "ok"
+  },
+  {
+    "id": "city_park",
+    "file": "Assets/Resources/ImageCards/Premium/city_park.png",
+    "sourceBbox": [
+      72,
+      51,
+      167,
+      189
+    ],
+    "finalBbox": [
+      84,
+      68,
+      156,
+      172
+    ],
+    "margins": [
+      84,
+      68,
+      84,
+      68
+    ],
+    "maxSide": 104,
+    "result": "ok"
+  },
+  {
+    "id": "clothes_glove",
+    "file": "Assets/Resources/ImageCards/Premium/clothes_glove.png",
+    "sourceBbox": [
+      80,
+      58,
+      159,
+      182
+    ],
+    "finalBbox": [
+      87,
+      68,
+      153,
+      172
+    ],
+    "margins": [
+      87,
+      68,
+      87,
+      68
+    ],
+    "maxSide": 104,
+    "result": "ok"
+  },
+  {
+    "id": "dessert_waffle",
+    "file": "Assets/Resources/ImageCards/Premium/dessert_waffle.png",
+    "sourceBbox": [
+      60,
+      58,
+      180,
+      182
+    ],
+    "finalBbox": [
+      69,
+      68,
+      170,
+      172
+    ],
+    "margins": [
+      69,
+      68,
+      70,
+      68
+    ],
+    "maxSide": 104,
+    "result": "ok"
+  },
+  {
+    "id": "emotions_warmth",
+    "file": "Assets/Resources/ImageCards/Premium/emotions_warmth.png",
+    "sourceBbox": [
+      58,
+      60,
+      182,
+      179
+    ],
+    "finalBbox": [
+      68,
+      70,
+      172,
+      170
+    ],
+    "margins": [
+      68,
+      70,
+      68,
+      70
+    ],
+    "maxSide": 104,
+    "result": "ok"
+  },
+  {
+    "id": "garden_bench",
+    "file": "Assets/Resources/ImageCards/Premium/garden_bench.png",
+    "sourceBbox": [
+      43,
+      44,
+      197,
+      196
+    ],
+    "finalBbox": [
+      68,
+      68,
+      172,
+      171
+    ],
+    "margins": [
+      68,
+      68,
+      68,
+      69
+    ],
+    "maxSide": 104,
+    "result": "ok"
+  },
+  {
+    "id": "garden_soil",
+    "file": "Assets/Resources/ImageCards/Premium/garden_soil.png",
+    "sourceBbox": [
+      58,
+      70,
+      182,
+      170
+    ],
+    "finalBbox": [
+      68,
+      78,
+      172,
+      162
+    ],
+    "margins": [
+      68,
+      78,
+      68,
+      78
+    ],
+    "maxSide": 104,
+    "result": "ok"
+  },
+  {
+    "id": "sport_field",
+    "file": "Assets/Resources/ImageCards/Premium/sport_field.png",
+    "sourceBbox": [
+      58,
+      60,
+      182,
+      179
+    ],
+    "finalBbox": [
+      68,
+      70,
+      172,
+      170
+    ],
+    "margins": [
+      68,
+      70,
+      68,
+      70
+    ],
+    "maxSide": 104,
+    "result": "ok"
+  },
+  {
+    "id": "tools_saw",
+    "file": "Assets/Resources/ImageCards/Premium/tools_saw.png",
+    "sourceBbox": [
+      84,
+      58,
+      156,
+      182
+    ],
+    "finalBbox": [
+      90,
+      68,
+      150,
+      172
+    ],
+    "margins": [
+      90,
+      68,
+      90,
+      68
+    ],
+    "maxSide": 104,
+    "result": "ok"
+  },
+  {
+    "id": "toys_train",
+    "file": "Assets/Resources/ImageCards/Premium/toys_train.png",
+    "sourceBbox": [
+      63,
+      58,
+      176,
+      182
+    ],
+    "finalBbox": [
+      72,
+      68,
+      167,
+      172
+    ],
+    "margins": [
+      72,
+      68,
+      73,
+      68
+    ],
+    "maxSide": 104,
+    "result": "ok"
+  }
+]

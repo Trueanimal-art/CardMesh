@@ -1,0 +1,517 @@
+{
+  "sourceAtlas": "Tools/ImageCardAudit/full_set_final_source_atlas.png",
+  "sourceOrder": "sorted card ids from nested goldCards",
+  "applied": true,
+  "targets": {
+    "art_color": {
+      "sourceIndex": 2,
+      "source": "Tools/ImageCardAudit/full_set_final_source_atlas.png#2",
+      "runtimePath": "/Users/vnm/Documents/Solitaire/Assets/Resources/ImageCards/Premium/art_color.png",
+      "sourceBbox": [
+        58,
+        40,
+        182,
+        197
+      ],
+      "scaledSize": [
+        118,
+        150
+      ],
+      "finalBbox": [
+        61,
+        45,
+        179,
+        195
+      ],
+      "finalMargins": [
+        61,
+        45,
+        61,
+        45
+      ],
+      "removedTinyComponentsBefore": 6,
+      "removedFringeComponents": 13,
+      "removedTinyComponentsAfter": 1
+    },
+    "art_frame": {
+      "sourceIndex": 3,
+      "source": "Tools/ImageCardAudit/full_set_final_source_atlas.png#3",
+      "runtimePath": "/Users/vnm/Documents/Solitaire/Assets/Resources/ImageCards/Premium/art_frame.png",
+      "sourceBbox": [
+        60,
+        40,
+        180,
+        200
+      ],
+      "scaledSize": [
+        112,
+        150
+      ],
+      "finalBbox": [
+        64,
+        45,
+        176,
+        195
+      ],
+      "finalMargins": [
+        64,
+        45,
+        64,
+        45
+      ],
+      "removedTinyComponentsBefore": 8,
+      "removedFringeComponents": 30,
+      "removedTinyComponentsAfter": 0
+    },
+    "art_paint": {
+      "sourceIndex": 5,
+      "source": "Tools/ImageCardAudit/full_set_final_source_atlas.png#5",
+      "runtimePath": "/Users/vnm/Documents/Solitaire/Assets/Resources/ImageCards/Premium/art_paint.png",
+      "sourceBbox": [
+        58,
+        40,
+        181,
+        200
+      ],
+      "scaledSize": [
+        115,
+        150
+      ],
+      "finalBbox": [
+        62,
+        45,
+        177,
+        195
+      ],
+      "finalMargins": [
+        62,
+        45,
+        63,
+        45
+      ],
+      "removedTinyComponentsBefore": 6,
+      "removedFringeComponents": 22,
+      "removedTinyComponentsAfter": 2
+    },
+    "business_sale": {
+      "sourceIndex": 38,
+      "source": "Tools/ImageCardAudit/full_set_final_source_atlas.png#38",
+      "runtimePath": "/Users/vnm/Documents/Solitaire/Assets/Resources/ImageCards/Premium/business_sale.png",
+      "sourceBbox": [
+        64,
+        40,
+        175,
+        200
+      ],
+      "scaledSize": [
+        104,
+        150
+      ],
+      "finalBbox": [
+        68,
+        45,
+        172,
+        194
+      ],
+      "finalMargins": [
+        68,
+        45,
+        68,
+        46
+      ],
+      "removedTinyComponentsBefore": 3,
+      "removedFringeComponents": 29,
+      "removedTinyComponentsAfter": 5
+    },
+    "city_subway": {
+      "sourceIndex": 61,
+      "source": "Tools/ImageCardAudit/full_set_final_source_atlas.png#61",
+      "runtimePath": "/Users/vnm/Documents/Solitaire/Assets/Resources/ImageCards/Premium/city_subway.png",
+      "sourceBbox": [
+        56,
+        40,
+        184,
+        200
+      ],
+      "scaledSize": [
+        120,
+        150
+      ],
+      "finalBbox": [
+        60,
+        45,
+        180,
+        195
+      ],
+      "finalMargins": [
+        60,
+        45,
+        60,
+        45
+      ],
+      "removedTinyComponentsBefore": 0,
+      "removedFringeComponents": 6,
+      "removedTinyComponentsAfter": 0
+    },
+    "drinks_smoothie": {
+      "sourceIndex": 101,
+      "source": "Tools/ImageCardAudit/full_set_final_source_atlas.png#101",
+      "runtimePath": "/Users/vnm/Documents/Solitaire/Assets/Resources/ImageCards/Premium/drinks_smoothie.png",
+      "sourceBbox": [
+        65,
+        40,
+        175,
+        200
+      ],
+      "scaledSize": [
+        103,
+        150
+      ],
+      "finalBbox": [
+        68,
+        45,
+        171,
+        195
+      ],
+      "finalMargins": [
+        68,
+        45,
+        69,
+        45
+      ],
+      "removedTinyComponentsBefore": 3,
+      "removedFringeComponents": 22,
+      "removedTinyComponentsAfter": 2
+    },
+    "flowers_bouquet": {
+      "sourceIndex": 128,
+      "source": "Tools/ImageCardAudit/full_set_final_source_atlas.png#128",
+      "runtimePath": "/Users/vnm/Documents/Solitaire/Assets/Resources/ImageCards/Premium/flowers_bouquet.png",
+      "sourceBbox": [
+        66,
+        40,
+        174,
+        200
+      ],
+      "scaledSize": [
+        101,
+        150
+      ],
+      "finalBbox": [
+        69,
+        45,
+        170,
+        195
+      ],
+      "finalMargins": [
+        69,
+        45,
+        70,
+        45
+      ],
+      "removedTinyComponentsBefore": 0,
+      "removedFringeComponents": 12,
+      "removedTinyComponentsAfter": 0
+    },
+    "forest_fern": {
+      "sourceIndex": 145,
+      "source": "Tools/ImageCardAudit/full_set_final_source_atlas.png#145",
+      "runtimePath": "/Users/vnm/Documents/Solitaire/Assets/Resources/ImageCards/Premium/forest_fern.png",
+      "sourceBbox": [
+        60,
+        40,
+        180,
+        200
+      ],
+      "scaledSize": [
+        112,
+        150
+      ],
+      "finalBbox": [
+        64,
+        45,
+        176,
+        195
+      ],
+      "finalMargins": [
+        64,
+        45,
+        64,
+        45
+      ],
+      "removedTinyComponentsBefore": 5,
+      "removedFringeComponents": 39,
+      "removedTinyComponentsAfter": 5
+    },
+    "forest_stump": {
+      "sourceIndex": 151,
+      "source": "Tools/ImageCardAudit/full_set_final_source_atlas.png#151",
+      "runtimePath": "/Users/vnm/Documents/Solitaire/Assets/Resources/ImageCards/Premium/forest_stump.png",
+      "sourceBbox": [
+        40,
+        40,
+        200,
+        198
+      ],
+      "scaledSize": [
+        150,
+        148
+      ],
+      "finalBbox": [
+        45,
+        46,
+        195,
+        194
+      ],
+      "finalMargins": [
+        45,
+        46,
+        45,
+        46
+      ],
+      "removedTinyComponentsBefore": 7,
+      "removedFringeComponents": 46,
+      "removedTinyComponentsAfter": 3
+    },
+    "friendship_smile": {
+      "sourceIndex": 157,
+      "source": "Tools/ImageCardAudit/full_set_final_source_atlas.png#157",
+      "runtimePath": "/Users/vnm/Documents/Solitaire/Assets/Resources/ImageCards/Premium/friendship_smile.png",
+      "sourceBbox": [
+        46,
+        40,
+        193,
+        196
+      ],
+      "scaledSize": [
+        141,
+        150
+      ],
+      "finalBbox": [
+        49,
+        45,
+        190,
+        195
+      ],
+      "finalMargins": [
+        49,
+        45,
+        50,
+        45
+      ],
+      "removedTinyComponentsBefore": 14,
+      "removedFringeComponents": 18,
+      "removedTinyComponentsAfter": 0
+    },
+    "garden_path": {
+      "sourceIndex": 164,
+      "source": "Tools/ImageCardAudit/full_set_final_source_atlas.png#164",
+      "runtimePath": "/Users/vnm/Documents/Solitaire/Assets/Resources/ImageCards/Premium/garden_path.png",
+      "sourceBbox": [
+        44,
+        40,
+        195,
+        200
+      ],
+      "scaledSize": [
+        142,
+        150
+      ],
+      "finalBbox": [
+        49,
+        45,
+        191,
+        195
+      ],
+      "finalMargins": [
+        49,
+        45,
+        49,
+        45
+      ],
+      "removedTinyComponentsBefore": 6,
+      "removedFringeComponents": 24,
+      "removedTinyComponentsAfter": 4
+    },
+    "hobbies_dance": {
+      "sourceIndex": 178,
+      "source": "Tools/ImageCardAudit/full_set_final_source_atlas.png#178",
+      "runtimePath": "/Users/vnm/Documents/Solitaire/Assets/Resources/ImageCards/Premium/hobbies_dance.png",
+      "sourceBbox": [
+        61,
+        40,
+        179,
+        200
+      ],
+      "scaledSize": [
+        111,
+        150
+      ],
+      "finalBbox": [
+        64,
+        45,
+        175,
+        195
+      ],
+      "finalMargins": [
+        64,
+        45,
+        65,
+        45
+      ],
+      "removedTinyComponentsBefore": 3,
+      "removedFringeComponents": 28,
+      "removedTinyComponentsAfter": 2
+    },
+    "music_guitar": {
+      "sourceIndex": 226,
+      "source": "Tools/ImageCardAudit/full_set_final_source_atlas.png#226",
+      "runtimePath": "/Users/vnm/Documents/Solitaire/Assets/Resources/ImageCards/Premium/music_guitar.png",
+      "sourceBbox": [
+        70,
+        40,
+        169,
+        198
+      ],
+      "scaledSize": [
+        94,
+        150
+      ],
+      "finalBbox": [
+        73,
+        45,
+        167,
+        195
+      ],
+      "finalMargins": [
+        73,
+        45,
+        73,
+        45
+      ],
+      "removedTinyComponentsBefore": 7,
+      "removedFringeComponents": 4,
+      "removedTinyComponentsAfter": 0
+    },
+    "school_bell": {
+      "sourceIndex": 272,
+      "source": "Tools/ImageCardAudit/full_set_final_source_atlas.png#272",
+      "runtimePath": "/Users/vnm/Documents/Solitaire/Assets/Resources/ImageCards/Premium/school_bell.png",
+      "sourceBbox": [
+        72,
+        40,
+        168,
+        200
+      ],
+      "scaledSize": [
+        90,
+        150
+      ],
+      "finalBbox": [
+        75,
+        45,
+        165,
+        195
+      ],
+      "finalMargins": [
+        75,
+        45,
+        75,
+        45
+      ],
+      "removedTinyComponentsBefore": 0,
+      "removedFringeComponents": 5,
+      "removedTinyComponentsAfter": 0
+    },
+    "shapes_cube": {
+      "sourceIndex": 289,
+      "source": "Tools/ImageCardAudit/full_set_final_source_atlas.png#289",
+      "runtimePath": "/Users/vnm/Documents/Solitaire/Assets/Resources/ImageCards/Premium/shapes_cube.png",
+      "sourceBbox": [
+        47,
+        40,
+        192,
+        199
+      ],
+      "scaledSize": [
+        137,
+        150
+      ],
+      "finalBbox": [
+        51,
+        45,
+        188,
+        195
+      ],
+      "finalMargins": [
+        51,
+        45,
+        52,
+        45
+      ],
+      "removedTinyComponentsBefore": 9,
+      "removedFringeComponents": 10,
+      "removedTinyComponentsAfter": 7
+    },
+    "summer_beach": {
+      "sourceIndex": 320,
+      "source": "Tools/ImageCardAudit/full_set_final_source_atlas.png#320",
+      "runtimePath": "/Users/vnm/Documents/Solitaire/Assets/Resources/ImageCards/Premium/summer_beach.png",
+      "sourceBbox": [
+        59,
+        40,
+        180,
+        200
+      ],
+      "scaledSize": [
+        113,
+        150
+      ],
+      "finalBbox": [
+        63,
+        45,
+        176,
+        195
+      ],
+      "finalMargins": [
+        63,
+        45,
+        64,
+        45
+      ],
+      "removedTinyComponentsBefore": 3,
+      "removedFringeComponents": 29,
+      "removedTinyComponentsAfter": 0
+    },
+    "travel_map": {
+      "sourceIndex": 369,
+      "source": "Tools/ImageCardAudit/full_set_final_source_atlas.png#369",
+      "runtimePath": "/Users/vnm/Documents/Solitaire/Assets/Resources/ImageCards/Premium/travel_map.png",
+      "sourceBbox": [
+        40,
+        50,
+        200,
+        189
+      ],
+      "scaledSize": [
+        150,
+        130
+      ],
+      "finalBbox": [
+        45,
+        55,
+        195,
+        185
+      ],
+      "finalMargins": [
+        45,
+        55,
+        45,
+        55
+      ],
+      "removedTinyComponentsBefore": 13,
+      "removedFringeComponents": 35,
+      "removedTinyComponentsAfter": 7
+    }
+  }
+}

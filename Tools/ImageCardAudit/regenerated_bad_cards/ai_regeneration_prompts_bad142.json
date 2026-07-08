@@ -1,0 +1,1422 @@
+[
+  {
+    "id": "body_smile",
+    "title": "Улыбка",
+    "category": "body",
+    "categoryTitle": "Тело",
+    "englishHint": "simple recognizable icon representing smile (Улыбка)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing smile (Улыбка). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "body_smile.png"
+  },
+  {
+    "id": "books_chapter",
+    "title": "Глава",
+    "category": "books",
+    "categoryTitle": "Книги",
+    "englishHint": "simple recognizable icon representing chapter (Глава)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing chapter (Глава). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "books_chapter.png"
+  },
+  {
+    "id": "breakfast_butter",
+    "title": "Масло",
+    "category": "breakfast",
+    "categoryTitle": "Завтрак",
+    "englishHint": "yellow butter cube on a small plate",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of yellow butter cube on a small plate. Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "breakfast_butter.png"
+  },
+  {
+    "id": "breakfast_cereal",
+    "title": "Хлопья",
+    "category": "breakfast",
+    "categoryTitle": "Завтрак",
+    "englishHint": "bowl of colorful breakfast cereal",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of bowl of colorful breakfast cereal. Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "breakfast_cereal.png"
+  },
+  {
+    "id": "breakfast_porridge",
+    "title": "Каша",
+    "category": "breakfast",
+    "categoryTitle": "Завтрак",
+    "englishHint": "bowl of oatmeal porridge with berries",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of bowl of oatmeal porridge with berries. Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "breakfast_porridge.png"
+  },
+  {
+    "id": "breakfast_toast",
+    "title": "Тост",
+    "category": "breakfast",
+    "categoryTitle": "Завтрак",
+    "englishHint": "single golden-brown toast slice",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of single golden-brown toast slice. Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "breakfast_toast.png"
+  },
+  {
+    "id": "breakfast_yogurt",
+    "title": "Йогурт",
+    "category": "breakfast",
+    "categoryTitle": "Завтрак",
+    "englishHint": "small yogurt cup with pink yogurt and berries",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of small yogurt cup with pink yogurt and berries. Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "breakfast_yogurt.png"
+  },
+  {
+    "id": "business_team",
+    "title": "Команда",
+    "category": "business",
+    "categoryTitle": "Бизнес",
+    "englishHint": "simple recognizable icon representing team (Команда)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing team (Команда). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "business_team.png"
+  },
+  {
+    "id": "camping_lantern",
+    "title": "Фонарь",
+    "category": "camping",
+    "categoryTitle": "Поход",
+    "englishHint": "simple recognizable icon representing lantern (Фонарь)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing lantern (Фонарь). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "camping_lantern.png"
+  },
+  {
+    "id": "camping_map",
+    "title": "Карта",
+    "category": "camping",
+    "categoryTitle": "Поход",
+    "englishHint": "simple recognizable icon representing map (Карта)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing map (Карта). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "camping_map.png"
+  },
+  {
+    "id": "camping_tent",
+    "title": "Палатка",
+    "category": "camping",
+    "categoryTitle": "Поход",
+    "englishHint": "simple recognizable icon representing tent (Палатка)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing tent (Палатка). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "camping_tent.png"
+  },
+  {
+    "id": "camping_trail",
+    "title": "Тропа",
+    "category": "camping",
+    "categoryTitle": "Поход",
+    "englishHint": "simple recognizable icon representing trail (Тропа)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing trail (Тропа). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "camping_trail.png"
+  },
+  {
+    "id": "cinema_film",
+    "title": "Фильм",
+    "category": "cinema",
+    "categoryTitle": "Кино",
+    "englishHint": "film reel with a short film strip, full reel visible",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of film reel with a short film strip, full reel visible. Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "cinema_film.png"
+  },
+  {
+    "id": "cinema_ticket",
+    "title": "Билет",
+    "category": "cinema",
+    "categoryTitle": "Кино",
+    "englishHint": "orange cinema ticket with stars, full ticket visible",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of orange cinema ticket with stars, full ticket visible. Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "cinema_ticket.png"
+  },
+  {
+    "id": "cinema_trailer",
+    "title": "Трейлер",
+    "category": "cinema",
+    "categoryTitle": "Кино",
+    "englishHint": "simple recognizable icon representing trailer (Трейлер)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing trailer (Трейлер). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "cinema_trailer.png"
+  },
+  {
+    "id": "city_traffic",
+    "title": "Пробка",
+    "category": "city",
+    "categoryTitle": "Город",
+    "englishHint": "small traffic light with two tiny cars, complete base visible",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of small traffic light with two tiny cars, complete base visible. Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "city_traffic.png"
+  },
+  {
+    "id": "clothes_dress",
+    "title": "Платье",
+    "category": "clothes",
+    "categoryTitle": "Одежда",
+    "englishHint": "simple recognizable icon representing dress (Платье)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing dress (Платье). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "clothes_dress.png"
+  },
+  {
+    "id": "clothes_scarf",
+    "title": "Шарф",
+    "category": "clothes",
+    "categoryTitle": "Одежда",
+    "englishHint": "simple recognizable icon representing scarf (Шарф)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing scarf (Шарф). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "clothes_scarf.png"
+  },
+  {
+    "id": "colors_orange",
+    "title": "Оранжевый",
+    "category": "colors",
+    "categoryTitle": "Цвета",
+    "englishHint": "glossy orange paint drop, full teardrop visible",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of glossy orange paint drop, full teardrop visible. Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "colors_orange.png"
+  },
+  {
+    "id": "colors_pink",
+    "title": "Розовый",
+    "category": "colors",
+    "categoryTitle": "Цвета",
+    "englishHint": "glossy pink paint drop, full teardrop visible",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of glossy pink paint drop, full teardrop visible. Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "colors_pink.png"
+  },
+  {
+    "id": "colors_red",
+    "title": "Красный",
+    "category": "colors",
+    "categoryTitle": "Цвета",
+    "englishHint": "glossy red paint drop, full teardrop visible",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of glossy red paint drop, full teardrop visible. Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "colors_red.png"
+  },
+  {
+    "id": "dessert_cookie",
+    "title": "Печенье",
+    "category": "dessert",
+    "categoryTitle": "Десерт",
+    "englishHint": "simple recognizable icon representing cookie (Печенье)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing cookie (Печенье). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "dessert_cookie.png"
+  },
+  {
+    "id": "dessert_cream",
+    "title": "Крем",
+    "category": "dessert",
+    "categoryTitle": "Десерт",
+    "englishHint": "simple recognizable icon representing cream (Крем)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing cream (Крем). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "dessert_cream.png"
+  },
+  {
+    "id": "dessert_honey",
+    "title": "Мед",
+    "category": "dessert",
+    "categoryTitle": "Десерт",
+    "englishHint": "simple recognizable icon representing honey (Мед)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing honey (Мед). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "dessert_honey.png"
+  },
+  {
+    "id": "dessert_icecream",
+    "title": "Мороженое",
+    "category": "dessert",
+    "categoryTitle": "Десерт",
+    "englishHint": "simple recognizable icon representing icecream (Мороженое)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing icecream (Мороженое). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "dessert_icecream.png"
+  },
+  {
+    "id": "dessert_pie",
+    "title": "Пирог",
+    "category": "dessert",
+    "categoryTitle": "Десерт",
+    "englishHint": "simple recognizable icon representing pie (Пирог)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing pie (Пирог). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "dessert_pie.png"
+  },
+  {
+    "id": "dessert_waffle",
+    "title": "Вафля",
+    "category": "dessert",
+    "categoryTitle": "Десерт",
+    "englishHint": "simple recognizable icon representing waffle (Вафля)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing waffle (Вафля). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "dessert_waffle.png"
+  },
+  {
+    "id": "drinks_coffee",
+    "title": "Кофе",
+    "category": "drinks",
+    "categoryTitle": "Напитки",
+    "englishHint": "simple recognizable icon representing coffee (Кофе)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing coffee (Кофе). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "drinks_coffee.png"
+  },
+  {
+    "id": "drinks_lemonade",
+    "title": "Лимонад",
+    "category": "drinks",
+    "categoryTitle": "Напитки",
+    "englishHint": "simple recognizable icon representing lemonade (Лимонад)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing lemonade (Лимонад). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "drinks_lemonade.png"
+  },
+  {
+    "id": "emotions_interest",
+    "title": "Интерес",
+    "category": "emotions",
+    "categoryTitle": "Эмоции",
+    "englishHint": "simple recognizable icon representing interest (Интерес)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing interest (Интерес). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "emotions_interest.png"
+  },
+  {
+    "id": "emotions_joy",
+    "title": "Радость",
+    "category": "emotions",
+    "categoryTitle": "Эмоции",
+    "englishHint": "simple recognizable icon representing joy (Радость)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing joy (Радость). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "emotions_joy.png"
+  },
+  {
+    "id": "emotions_warmth",
+    "title": "Тепло",
+    "category": "emotions",
+    "categoryTitle": "Эмоции",
+    "englishHint": "simple recognizable icon representing warmth (Тепло)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing warmth (Тепло). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "emotions_warmth.png"
+  },
+  {
+    "id": "family_album",
+    "title": "Альбом",
+    "category": "family",
+    "categoryTitle": "Семья",
+    "englishHint": "simple recognizable icon representing album (Альбом)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing album (Альбом). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "family_album.png"
+  },
+  {
+    "id": "family_child",
+    "title": "Ребенок",
+    "category": "family",
+    "categoryTitle": "Семья",
+    "englishHint": "simple recognizable icon representing child (Ребенок)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing child (Ребенок). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "family_child.png"
+  },
+  {
+    "id": "family_dinner",
+    "title": "Ужин",
+    "category": "family",
+    "categoryTitle": "Семья",
+    "englishHint": "simple recognizable icon representing dinner (Ужин)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing dinner (Ужин). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "family_dinner.png"
+  },
+  {
+    "id": "family_home",
+    "title": "Дом",
+    "category": "family",
+    "categoryTitle": "Семья",
+    "englishHint": "simple recognizable icon representing home (Дом)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing home (Дом). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "family_home.png"
+  },
+  {
+    "id": "family_mother",
+    "title": "Мама",
+    "category": "family",
+    "categoryTitle": "Семья",
+    "englishHint": "simple recognizable icon representing mother (Мама)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing mother (Мама). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "family_mother.png"
+  },
+  {
+    "id": "family_sister",
+    "title": "Сестра",
+    "category": "family",
+    "categoryTitle": "Семья",
+    "englishHint": "simple recognizable icon representing sister (Сестра)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing sister (Сестра). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "family_sister.png"
+  },
+  {
+    "id": "farm_barn",
+    "title": "Амбар",
+    "category": "farm",
+    "categoryTitle": "Ферма",
+    "englishHint": "simple recognizable icon representing barn (Амбар)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing barn (Амбар). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "farm_barn.png"
+  },
+  {
+    "id": "farm_chicken",
+    "title": "Курица",
+    "category": "farm",
+    "categoryTitle": "Ферма",
+    "englishHint": "simple recognizable icon representing chicken (Курица)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing chicken (Курица). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "farm_chicken.png"
+  },
+  {
+    "id": "farm_cow",
+    "title": "Корова",
+    "category": "farm",
+    "categoryTitle": "Ферма",
+    "englishHint": "simple recognizable icon representing cow (Корова)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing cow (Корова). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "farm_cow.png"
+  },
+  {
+    "id": "farm_fence",
+    "title": "Забор",
+    "category": "farm",
+    "categoryTitle": "Ферма",
+    "englishHint": "simple recognizable icon representing fence (Забор)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing fence (Забор). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "farm_fence.png"
+  },
+  {
+    "id": "farm_field",
+    "title": "Поле",
+    "category": "farm",
+    "categoryTitle": "Ферма",
+    "englishHint": "simple recognizable icon representing field (Поле)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing field (Поле). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "farm_field.png"
+  },
+  {
+    "id": "farm_hay",
+    "title": "Сено",
+    "category": "farm",
+    "categoryTitle": "Ферма",
+    "englishHint": "simple recognizable icon representing hay (Сено)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing hay (Сено). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "farm_hay.png"
+  },
+  {
+    "id": "farm_tractor",
+    "title": "Трактор",
+    "category": "farm",
+    "categoryTitle": "Ферма",
+    "englishHint": "simple recognizable icon representing tractor (Трактор)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing tractor (Трактор). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "farm_tractor.png"
+  },
+  {
+    "id": "flowers_peony",
+    "title": "Пион",
+    "category": "flowers",
+    "categoryTitle": "Цветы",
+    "englishHint": "simple recognizable icon representing peony (Пион)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing peony (Пион). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "flowers_peony.png"
+  },
+  {
+    "id": "flowers_rose",
+    "title": "Роза",
+    "category": "flowers",
+    "categoryTitle": "Цветы",
+    "englishHint": "simple recognizable icon representing rose (Роза)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing rose (Роза). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "flowers_rose.png"
+  },
+  {
+    "id": "flowers_vase",
+    "title": "Ваза",
+    "category": "flowers",
+    "categoryTitle": "Цветы",
+    "englishHint": "simple recognizable icon representing vase (Ваза)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing vase (Ваза). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "flowers_vase.png"
+  },
+  {
+    "id": "forest_berry",
+    "title": "Ягода",
+    "category": "forest",
+    "categoryTitle": "Лес",
+    "englishHint": "simple recognizable icon representing berry (Ягода)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing berry (Ягода). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "forest_berry.png"
+  },
+  {
+    "id": "forest_fox",
+    "title": "Лиса",
+    "category": "forest",
+    "categoryTitle": "Лес",
+    "englishHint": "simple recognizable icon representing fox (Лиса)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing fox (Лиса). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "forest_fox.png"
+  },
+  {
+    "id": "forest_path",
+    "title": "Тропа",
+    "category": "forest",
+    "categoryTitle": "Лес",
+    "englishHint": "simple recognizable icon representing path (Тропа)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing path (Тропа). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "forest_path.png"
+  },
+  {
+    "id": "friendship_chat",
+    "title": "Общение",
+    "category": "friendship",
+    "categoryTitle": "Дружба",
+    "englishHint": "simple recognizable icon representing chat (Общение)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing chat (Общение). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "friendship_chat.png"
+  },
+  {
+    "id": "friendship_friend",
+    "title": "Друг",
+    "category": "friendship",
+    "categoryTitle": "Дружба",
+    "englishHint": "simple recognizable icon representing friend (Друг)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing friend (Друг). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "friendship_friend.png"
+  },
+  {
+    "id": "friendship_memory",
+    "title": "Воспоминание",
+    "category": "friendship",
+    "categoryTitle": "Дружба",
+    "englishHint": "simple recognizable icon representing memory (Воспоминание)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing memory (Воспоминание). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "friendship_memory.png"
+  },
+  {
+    "id": "friendship_secret",
+    "title": "Секрет",
+    "category": "friendship",
+    "categoryTitle": "Дружба",
+    "englishHint": "simple recognizable icon representing secret (Секрет)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing secret (Секрет). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "friendship_secret.png"
+  },
+  {
+    "id": "friendship_team",
+    "title": "Команда",
+    "category": "friendship",
+    "categoryTitle": "Дружба",
+    "englishHint": "simple recognizable icon representing team (Команда)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing team (Команда). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "friendship_team.png"
+  },
+  {
+    "id": "friendship_walk",
+    "title": "Прогулка",
+    "category": "friendship",
+    "categoryTitle": "Дружба",
+    "englishHint": "simple recognizable icon representing walk (Прогулка)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing walk (Прогулка). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "friendship_walk.png"
+  },
+  {
+    "id": "garden_bench",
+    "title": "Скамья",
+    "category": "garden",
+    "categoryTitle": "Сад",
+    "englishHint": "simple recognizable icon representing bench (Скамья)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing bench (Скамья). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "garden_bench.png"
+  },
+  {
+    "id": "garden_bush",
+    "title": "Куст",
+    "category": "garden",
+    "categoryTitle": "Сад",
+    "englishHint": "simple recognizable icon representing bush (Куст)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing bush (Куст). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "garden_bush.png"
+  },
+  {
+    "id": "garden_soil",
+    "title": "Почва",
+    "category": "garden",
+    "categoryTitle": "Сад",
+    "englishHint": "simple recognizable icon representing soil (Почва)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing soil (Почва). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "garden_soil.png"
+  },
+  {
+    "id": "health_care",
+    "title": "Забота",
+    "category": "health",
+    "categoryTitle": "Здоровье",
+    "englishHint": "simple recognizable icon representing care (Забота)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing care (Забота). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "health_care.png"
+  },
+  {
+    "id": "health_clinic",
+    "title": "Клиника",
+    "category": "health",
+    "categoryTitle": "Здоровье",
+    "englishHint": "simple recognizable icon representing clinic (Клиника)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing clinic (Клиника). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "health_clinic.png"
+  },
+  {
+    "id": "health_rest",
+    "title": "Отдых",
+    "category": "health",
+    "categoryTitle": "Здоровье",
+    "englishHint": "simple recognizable icon representing rest (Отдых)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing rest (Отдых). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "health_rest.png"
+  },
+  {
+    "id": "health_sleep",
+    "title": "Сон",
+    "category": "health",
+    "categoryTitle": "Здоровье",
+    "englishHint": "simple recognizable icon representing sleep (Сон)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing sleep (Сон). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "health_sleep.png"
+  },
+  {
+    "id": "hobbies_baking",
+    "title": "Выпечка",
+    "category": "hobbies",
+    "categoryTitle": "Хобби",
+    "englishHint": "simple recognizable icon representing baking (Выпечка)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing baking (Выпечка). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "hobbies_baking.png"
+  },
+  {
+    "id": "hobbies_drawing",
+    "title": "Рисование",
+    "category": "hobbies",
+    "categoryTitle": "Хобби",
+    "englishHint": "simple recognizable icon representing drawing (Рисование)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing drawing (Рисование). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "hobbies_drawing.png"
+  },
+  {
+    "id": "hobbies_music",
+    "title": "Музыка",
+    "category": "hobbies",
+    "categoryTitle": "Хобби",
+    "englishHint": "simple recognizable icon representing music (Музыка)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing music (Музыка). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "hobbies_music.png"
+  },
+  {
+    "id": "hobbies_puzzle",
+    "title": "Пазл",
+    "category": "hobbies",
+    "categoryTitle": "Хобби",
+    "englishHint": "simple recognizable icon representing puzzle (Пазл)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing puzzle (Пазл). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "hobbies_puzzle.png"
+  },
+  {
+    "id": "holidays_balloon",
+    "title": "Шарик",
+    "category": "holidays",
+    "categoryTitle": "Праздник",
+    "englishHint": "simple recognizable icon representing balloon (Шарик)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing balloon (Шарик). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "holidays_balloon.png"
+  },
+  {
+    "id": "holidays_candle",
+    "title": "Свеча",
+    "category": "holidays",
+    "categoryTitle": "Праздник",
+    "englishHint": "simple recognizable icon representing candle (Свеча)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing candle (Свеча). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "holidays_candle.png"
+  },
+  {
+    "id": "insects_butterfly",
+    "title": "Бабочка",
+    "category": "insects",
+    "categoryTitle": "Насекомые",
+    "englishHint": "simple recognizable icon representing butterfly (Бабочка)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing butterfly (Бабочка). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "insects_butterfly.png"
+  },
+  {
+    "id": "internet_chat",
+    "title": "Чат",
+    "category": "internet",
+    "categoryTitle": "Интернет",
+    "englishHint": "simple recognizable icon representing chat (Чат)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing chat (Чат). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "internet_chat.png"
+  },
+  {
+    "id": "internet_cloud",
+    "title": "Облако",
+    "category": "internet",
+    "categoryTitle": "Интернет",
+    "englishHint": "simple recognizable icon representing cloud (Облако)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing cloud (Облако). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "internet_cloud.png"
+  },
+  {
+    "id": "internet_mail",
+    "title": "Почта",
+    "category": "internet",
+    "categoryTitle": "Интернет",
+    "englishHint": "simple recognizable icon representing mail (Почта)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing mail (Почта). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "internet_mail.png"
+  },
+  {
+    "id": "kitchen_fork",
+    "title": "Вилка",
+    "category": "kitchen",
+    "categoryTitle": "Кухня",
+    "englishHint": "simple recognizable icon representing fork (Вилка)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing fork (Вилка). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "kitchen_fork.png"
+  },
+  {
+    "id": "kitchen_kettle",
+    "title": "Чайник",
+    "category": "kitchen",
+    "categoryTitle": "Кухня",
+    "englishHint": "simple recognizable icon representing kettle (Чайник)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing kettle (Чайник). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "kitchen_kettle.png"
+  },
+  {
+    "id": "kitchen_spoon",
+    "title": "Ложка",
+    "category": "kitchen",
+    "categoryTitle": "Кухня",
+    "englishHint": "simple recognizable icon representing spoon (Ложка)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing spoon (Ложка). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "kitchen_spoon.png"
+  },
+  {
+    "id": "music_concert",
+    "title": "Концерт",
+    "category": "music",
+    "categoryTitle": "Музыка",
+    "englishHint": "simple recognizable icon representing concert (Концерт)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing concert (Концерт). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "music_concert.png"
+  },
+  {
+    "id": "music_rhythm",
+    "title": "Ритм",
+    "category": "music",
+    "categoryTitle": "Музыка",
+    "englishHint": "simple recognizable icon representing rhythm (Ритм)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing rhythm (Ритм). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "music_rhythm.png"
+  },
+  {
+    "id": "music_piano",
+    "title": "Пианино",
+    "category": "music",
+    "categoryTitle": "Музыка",
+    "englishHint": "simple recognizable icon representing piano (Пианино)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing piano (Пианино). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "music_piano.png"
+  },
+  {
+    "id": "nature_cloud",
+    "title": "Облако",
+    "category": "nature",
+    "categoryTitle": "Природа",
+    "englishHint": "simple recognizable icon representing cloud (Облако)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing cloud (Облако). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "nature_cloud.png"
+  },
+  {
+    "id": "nature_meadow",
+    "title": "Луг",
+    "category": "nature",
+    "categoryTitle": "Природа",
+    "englishHint": "simple recognizable icon representing meadow (Луг)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing meadow (Луг). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "nature_meadow.png"
+  },
+  {
+    "id": "nature_river",
+    "title": "Река",
+    "category": "nature",
+    "categoryTitle": "Природа",
+    "englishHint": "simple recognizable icon representing river (Река)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing river (Река). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "nature_river.png"
+  },
+  {
+    "id": "nature_stone",
+    "title": "Камень",
+    "category": "nature",
+    "categoryTitle": "Природа",
+    "englishHint": "simple recognizable icon representing stone (Камень)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing stone (Камень). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "nature_stone.png"
+  },
+  {
+    "id": "office_badge",
+    "title": "Бейдж",
+    "category": "office",
+    "categoryTitle": "Офис",
+    "englishHint": "simple recognizable icon representing badge (Бейдж)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing badge (Бейдж). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "office_badge.png"
+  },
+  {
+    "id": "office_chair",
+    "title": "Стул",
+    "category": "office",
+    "categoryTitle": "Офис",
+    "englishHint": "simple recognizable icon representing chair (Стул)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing chair (Стул). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "office_chair.png"
+  },
+  {
+    "id": "office_paper",
+    "title": "Бумага",
+    "category": "office",
+    "categoryTitle": "Офис",
+    "englishHint": "simple recognizable icon representing paper (Бумага)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing paper (Бумага). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "office_paper.png"
+  },
+  {
+    "id": "office_printer",
+    "title": "Принтер",
+    "category": "office",
+    "categoryTitle": "Офис",
+    "englishHint": "simple recognizable icon representing printer (Принтер)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing printer (Принтер). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "office_printer.png"
+  },
+  {
+    "id": "office_screen",
+    "title": "Экран",
+    "category": "office",
+    "categoryTitle": "Офис",
+    "englishHint": "simple recognizable icon representing screen (Экран)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing screen (Экран). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "office_screen.png"
+  },
+  {
+    "id": "phone_camera",
+    "title": "Камера",
+    "category": "phone",
+    "categoryTitle": "Телефон",
+    "englishHint": "simple recognizable icon representing camera (Камера)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing camera (Камера). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "phone_camera.png"
+  },
+  {
+    "id": "phone_case",
+    "title": "Чехол",
+    "category": "phone",
+    "categoryTitle": "Телефон",
+    "englishHint": "simple recognizable icon representing case (Чехол)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing case (Чехол). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "phone_case.png"
+  },
+  {
+    "id": "phone_contact",
+    "title": "Контакт",
+    "category": "phone",
+    "categoryTitle": "Телефон",
+    "englishHint": "simple recognizable icon representing contact (Контакт)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing contact (Контакт). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "phone_contact.png"
+  },
+  {
+    "id": "phone_message",
+    "title": "Сообщение",
+    "category": "phone",
+    "categoryTitle": "Телефон",
+    "englishHint": "simple recognizable icon representing message (Сообщение)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing message (Сообщение). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "phone_message.png"
+  },
+  {
+    "id": "photo_focus",
+    "title": "Фокус",
+    "category": "photo",
+    "categoryTitle": "Фото",
+    "englishHint": "simple recognizable icon representing focus (Фокус)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing focus (Фокус). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "photo_focus.png"
+  },
+  {
+    "id": "photo_frame",
+    "title": "Рамка",
+    "category": "photo",
+    "categoryTitle": "Фото",
+    "englishHint": "simple recognizable icon representing frame (Рамка)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing frame (Рамка). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "photo_frame.png"
+  },
+  {
+    "id": "photo_portrait",
+    "title": "Портрет",
+    "category": "photo",
+    "categoryTitle": "Фото",
+    "englishHint": "simple recognizable icon representing portrait (Портрет)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing portrait (Портрет). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "photo_portrait.png"
+  },
+  {
+    "id": "photo_studio",
+    "title": "Студия",
+    "category": "photo",
+    "categoryTitle": "Фото",
+    "englishHint": "simple recognizable icon representing studio (Студия)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing studio (Студия). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "photo_studio.png"
+  },
+  {
+    "id": "school_board",
+    "title": "Доска",
+    "category": "school",
+    "categoryTitle": "Школа",
+    "englishHint": "simple recognizable icon representing board (Доска)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing board (Доска). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "school_board.png"
+  },
+  {
+    "id": "school_desk",
+    "title": "Парта",
+    "category": "school",
+    "categoryTitle": "Школа",
+    "englishHint": "simple recognizable icon representing desk (Парта)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing desk (Парта). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "school_desk.png"
+  },
+  {
+    "id": "shapes_circle",
+    "title": "Круг",
+    "category": "shapes",
+    "categoryTitle": "Фигуры",
+    "englishHint": "simple recognizable icon representing circle (Круг)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing circle (Круг). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "shapes_circle.png"
+  },
+  {
+    "id": "shapes_ring",
+    "title": "Кольцо",
+    "category": "shapes",
+    "categoryTitle": "Фигуры",
+    "englishHint": "simple recognizable icon representing ring (Кольцо)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing ring (Кольцо). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "shapes_ring.png"
+  },
+  {
+    "id": "shapes_triangle",
+    "title": "Треугольник",
+    "category": "shapes",
+    "categoryTitle": "Фигуры",
+    "englishHint": "simple recognizable icon representing triangle (Треугольник)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing triangle (Треугольник). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "shapes_triangle.png"
+  },
+  {
+    "id": "shoes_boot",
+    "title": "Ботинок",
+    "category": "shoes",
+    "categoryTitle": "Обувь",
+    "englishHint": "simple recognizable icon representing boot (Ботинок)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing boot (Ботинок). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "shoes_boot.png"
+  },
+  {
+    "id": "shoes_heel",
+    "title": "Каблук",
+    "category": "shoes",
+    "categoryTitle": "Обувь",
+    "englishHint": "simple recognizable icon representing heel (Каблук)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing heel (Каблук). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "shoes_heel.png"
+  },
+  {
+    "id": "shoes_sandal",
+    "title": "Сандал",
+    "category": "shoes",
+    "categoryTitle": "Обувь",
+    "englishHint": "simple recognizable icon representing sandal (Сандал)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing sandal (Сандал). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "shoes_sandal.png"
+  },
+  {
+    "id": "sport_field",
+    "title": "Поле",
+    "category": "sport",
+    "categoryTitle": "Спорт",
+    "englishHint": "simple recognizable icon representing field (Поле)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing field (Поле). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "sport_field.png"
+  },
+  {
+    "id": "sport_race",
+    "title": "Гонка",
+    "category": "sport",
+    "categoryTitle": "Спорт",
+    "englishHint": "simple recognizable icon representing race (Гонка)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing race (Гонка). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "sport_race.png"
+  },
+  {
+    "id": "summer_hat",
+    "title": "Панама",
+    "category": "summer",
+    "categoryTitle": "Лето",
+    "englishHint": "simple recognizable icon representing hat (Панама)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing hat (Панама). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "summer_hat.png"
+  },
+  {
+    "id": "summer_lake",
+    "title": "Озеро",
+    "category": "summer",
+    "categoryTitle": "Лето",
+    "englishHint": "simple recognizable icon representing lake (Озеро)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing lake (Озеро). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "summer_lake.png"
+  },
+  {
+    "id": "summer_sandals",
+    "title": "Сандалии",
+    "category": "summer",
+    "categoryTitle": "Лето",
+    "englishHint": "simple recognizable icon representing sandals (Сандалии)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing sandals (Сандалии). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "summer_sandals.png"
+  },
+  {
+    "id": "technology_chip",
+    "title": "Чип",
+    "category": "technology",
+    "categoryTitle": "Технологии",
+    "englishHint": "simple recognizable icon representing chip (Чип)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing chip (Чип). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "technology_chip.png"
+  },
+  {
+    "id": "winter_cocoa",
+    "title": "Какао",
+    "category": "winter",
+    "categoryTitle": "Зима",
+    "englishHint": "simple recognizable icon representing cocoa (Какао)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing cocoa (Какао). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "winter_cocoa.png"
+  },
+  {
+    "id": "winter_sleigh",
+    "title": "Санки",
+    "category": "winter",
+    "categoryTitle": "Зима",
+    "englishHint": "simple recognizable icon representing sleigh (Санки)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing sleigh (Санки). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "winter_sleigh.png"
+  },
+  {
+    "id": "work_call",
+    "title": "Звонок",
+    "category": "work",
+    "categoryTitle": "Работа",
+    "englishHint": "simple recognizable icon representing call (Звонок)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing call (Звонок). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "work_call.png"
+  },
+  {
+    "id": "work_desk",
+    "title": "Стол",
+    "category": "work",
+    "categoryTitle": "Работа",
+    "englishHint": "simple recognizable icon representing desk (Стол)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing desk (Стол). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "work_desk.png"
+  },
+  {
+    "id": "work_manager",
+    "title": "Менеджер",
+    "category": "work",
+    "categoryTitle": "Работа",
+    "englishHint": "simple recognizable icon representing manager (Менеджер)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing manager (Менеджер). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "work_manager.png"
+  },
+  {
+    "id": "work_salary",
+    "title": "Зарплата",
+    "category": "work",
+    "categoryTitle": "Работа",
+    "englishHint": "simple recognizable icon representing salary (Зарплата)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing salary (Зарплата). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "work_salary.png"
+  },
+  {
+    "id": "work_shift",
+    "title": "Смена",
+    "category": "work",
+    "categoryTitle": "Работа",
+    "englishHint": "simple recognizable icon representing shift (Смена)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing shift (Смена). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "work_shift.png"
+  },
+  {
+    "id": "technology_code",
+    "title": "Код",
+    "category": "technology",
+    "categoryTitle": "Технологии",
+    "englishHint": "simple recognizable icon representing code (Код)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing code (Код). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "technology_code.png"
+  },
+  {
+    "id": "technology_drone",
+    "title": "Дрон",
+    "category": "technology",
+    "categoryTitle": "Технологии",
+    "englishHint": "simple recognizable icon representing drone (Дрон)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing drone (Дрон). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "technology_drone.png"
+  },
+  {
+    "id": "technology_laser",
+    "title": "Лазер",
+    "category": "technology",
+    "categoryTitle": "Технологии",
+    "englishHint": "simple recognizable icon representing laser (Лазер)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing laser (Лазер). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "technology_laser.png"
+  },
+  {
+    "id": "technology_robot",
+    "title": "Робот",
+    "category": "technology",
+    "categoryTitle": "Технологии",
+    "englishHint": "simple recognizable icon representing robot (Робот)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing robot (Робот). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "technology_robot.png"
+  },
+  {
+    "id": "technology_sensor",
+    "title": "Датчик",
+    "category": "technology",
+    "categoryTitle": "Технологии",
+    "englishHint": "simple recognizable icon representing sensor (Датчик)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing sensor (Датчик). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "technology_sensor.png"
+  },
+  {
+    "id": "technology_server",
+    "title": "Сервер",
+    "category": "technology",
+    "categoryTitle": "Технологии",
+    "englishHint": "simple recognizable icon representing server (Сервер)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing server (Сервер). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "technology_server.png"
+  },
+  {
+    "id": "time_day",
+    "title": "День",
+    "category": "time",
+    "categoryTitle": "Время",
+    "englishHint": "simple recognizable icon representing day (День)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing day (День). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "time_day.png"
+  },
+  {
+    "id": "time_hour",
+    "title": "Час",
+    "category": "time",
+    "categoryTitle": "Время",
+    "englishHint": "simple recognizable icon representing hour (Час)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing hour (Час). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "time_hour.png"
+  },
+  {
+    "id": "time_minutes",
+    "title": "Минуты",
+    "category": "time",
+    "categoryTitle": "Время",
+    "englishHint": "simple recognizable icon representing minutes (Минуты)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing minutes (Минуты). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "time_minutes.png"
+  },
+  {
+    "id": "time_night",
+    "title": "Ночь",
+    "category": "time",
+    "categoryTitle": "Время",
+    "englishHint": "simple recognizable icon representing night (Ночь)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing night (Ночь). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "time_night.png"
+  },
+  {
+    "id": "time_time",
+    "title": "Время",
+    "category": "time",
+    "categoryTitle": "Время",
+    "englishHint": "simple recognizable icon representing time (Время)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing time (Время). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "time_time.png"
+  },
+  {
+    "id": "time_week",
+    "title": "Неделя",
+    "category": "time",
+    "categoryTitle": "Время",
+    "englishHint": "simple recognizable icon representing week (Неделя)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing week (Неделя). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "time_week.png"
+  },
+  {
+    "id": "tools_drill",
+    "title": "Дрель",
+    "category": "tools",
+    "categoryTitle": "Инструменты",
+    "englishHint": "simple recognizable icon representing drill (Дрель)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing drill (Дрель). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "tools_drill.png"
+  },
+  {
+    "id": "tools_hammer",
+    "title": "Молоток",
+    "category": "tools",
+    "categoryTitle": "Инструменты",
+    "englishHint": "simple recognizable icon representing hammer (Молоток)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing hammer (Молоток). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "tools_hammer.png"
+  },
+  {
+    "id": "tools_pliers",
+    "title": "Клещи",
+    "category": "tools",
+    "categoryTitle": "Инструменты",
+    "englishHint": "simple recognizable icon representing pliers (Клещи)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing pliers (Клещи). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "tools_pliers.png"
+  },
+  {
+    "id": "tools_wrench",
+    "title": "Ключ",
+    "category": "tools",
+    "categoryTitle": "Инструменты",
+    "englishHint": "simple recognizable icon representing wrench (Ключ)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing wrench (Ключ). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "tools_wrench.png"
+  },
+  {
+    "id": "toys_ball",
+    "title": "Мяч",
+    "category": "toys",
+    "categoryTitle": "Игрушки",
+    "englishHint": "simple recognizable icon representing ball (Мяч)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing ball (Мяч). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "toys_ball.png"
+  },
+  {
+    "id": "toys_blocks",
+    "title": "Кубики",
+    "category": "toys",
+    "categoryTitle": "Игрушки",
+    "englishHint": "simple recognizable icon representing blocks (Кубики)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing blocks (Кубики). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "toys_blocks.png"
+  },
+  {
+    "id": "toys_car",
+    "title": "Машинка",
+    "category": "toys",
+    "categoryTitle": "Игрушки",
+    "englishHint": "simple recognizable icon representing car (Машинка)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing car (Машинка). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "toys_car.png"
+  },
+  {
+    "id": "toys_doll",
+    "title": "Кукла",
+    "category": "toys",
+    "categoryTitle": "Игрушки",
+    "englishHint": "simple recognizable icon representing doll (Кукла)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing doll (Кукла). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "toys_doll.png"
+  },
+  {
+    "id": "toys_kite",
+    "title": "Воздушный змей",
+    "category": "toys",
+    "categoryTitle": "Игрушки",
+    "englishHint": "simple recognizable icon representing kite (Воздушный змей)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing kite (Воздушный змей). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "toys_kite.png"
+  },
+  {
+    "id": "toys_puzzle",
+    "title": "Пазл",
+    "category": "toys",
+    "categoryTitle": "Игрушки",
+    "englishHint": "simple recognizable icon representing puzzle (Пазл)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing puzzle (Пазл). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "toys_puzzle.png"
+  },
+  {
+    "id": "toys_robot",
+    "title": "Робот",
+    "category": "toys",
+    "categoryTitle": "Игрушки",
+    "englishHint": "simple recognizable icon representing robot (Робот)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing robot (Робот). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "toys_robot.png"
+  },
+  {
+    "id": "toys_train",
+    "title": "Поезд",
+    "category": "toys",
+    "categoryTitle": "Игрушки",
+    "englishHint": "simple recognizable icon representing train (Поезд)",
+    "prompt": "A single complete soft 3D casual mobile puzzle-game icon of simple recognizable icon representing train (Поезд). Centered on a square canvas. Full object visible. No part cropped, no part touching the image edge. Rounded toy-like commercial game asset style, clean high quality, consistent lighting, slight top-left highlight, soft ambient occlusion. Object occupies about 55 to 62 percent of the canvas with 22 percent empty safe margin on every side. No text, no letters, no label, no logo, no watermark, no UI frame. Solid pure chroma green background #00FF00, flat color, no gradient. Absolutely no shadow, no oval shadow, no contact shadow, no drop shadow, no reflection under the object.",
+    "negativePrompt": "cropped, cut off, truncated, close-up, zoomed-in, partial object, object touching edge, shadow cut off, base cut off, text, letters, label, logo, watermark, UI frame, card border, multiple unrelated objects, shadow, cast shadow, oval shadow, drop shadow, reflection, flat 2D, vector icon, pixel art, 8-bit, low detail",
+    "outputFile": "toys_train.png"
+  }
+]

@@ -1300,14 +1300,19 @@ namespace SolitaireAssociations
 
         private bool CanMoveStackTo(CardView cardView, ICardContainer targetContainer)
         {
+            List<CardView> stack = draggedStack.Count > 0
+                ? draggedStack
+                : BuildDragStack(cardView);
+
+            if (targetContainer is CardColumn && cardView.Data != null && cardView.Data.IsGold)
+            {
+                return stack.Count == 1;
+            }
+
             if (targetContainer is not GoalSlot)
             {
                 return true;
             }
-
-            List<CardView> stack = draggedStack.Count > 0
-                ? draggedStack
-                : BuildDragStack(cardView);
 
             if (targetContainer is GoalSlot targetGoalSlot)
             {
@@ -1592,6 +1597,21 @@ namespace SolitaireAssociations
             }
 
             levelRewardRoutine = StartCoroutine(EndLevelRewardSequence());
+        }
+
+        public bool CompleteLevelForDevTools()
+        {
+            InitializeDependencies();
+
+            if (levelCompletionInProgress || levelFinished)
+            {
+                return false;
+            }
+
+            CompleteLevel();
+            Debug.Log("[DEV] Complete level.");
+            platformService?.TrackEvent("dev_complete_level");
+            return true;
         }
 
         private IEnumerator EndLevelRewardSequence()

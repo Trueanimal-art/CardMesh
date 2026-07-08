@@ -1,0 +1,3694 @@
+[
+  {
+    "id": "business_team",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/business_team.png",
+    "sourceBbox": [
+      194,
+      320,
+      831,
+      890
+    ],
+    "finalBbox": [
+      38,
+      46,
+      202,
+      193
+    ],
+    "margins": [
+      38,
+      46,
+      38,
+      47
+    ],
+    "maxSide": 164,
+    "minSide": 147,
+    "warnings": []
+  },
+  {
+    "id": "time_time",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/time_time.png",
+    "sourceBbox": [
+      251,
+      235,
+      774,
+      888
+    ],
+    "finalBbox": [
+      54,
+      38,
+      185,
+      202
+    ],
+    "margins": [
+      54,
+      38,
+      55,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 131,
+    "warnings": []
+  },
+  {
+    "id": "time_minutes",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/time_minutes.png",
+    "sourceBbox": [
+      251,
+      235,
+      774,
+      888
+    ],
+    "finalBbox": [
+      54,
+      38,
+      185,
+      202
+    ],
+    "margins": [
+      54,
+      38,
+      55,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 131,
+    "warnings": []
+  },
+  {
+    "id": "time_day",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/time_day.png",
+    "sourceBbox": [
+      239,
+      205,
+      786,
+      886
+    ],
+    "finalBbox": [
+      54,
+      38,
+      186,
+      202
+    ],
+    "margins": [
+      54,
+      38,
+      54,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 132,
+    "warnings": []
+  },
+  {
+    "id": "time_night",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/time_night.png",
+    "sourceBbox": [
+      251,
+      235,
+      774,
+      888
+    ],
+    "finalBbox": [
+      54,
+      38,
+      185,
+      202
+    ],
+    "margins": [
+      54,
+      38,
+      55,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 131,
+    "warnings": []
+  },
+  {
+    "id": "time_week",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/time_week.png",
+    "sourceBbox": [
+      251,
+      226,
+      774,
+      888
+    ],
+    "finalBbox": [
+      55,
+      38,
+      185,
+      202
+    ],
+    "margins": [
+      55,
+      38,
+      55,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 130,
+    "warnings": []
+  },
+  {
+    "id": "time_hour",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/time_hour.png",
+    "sourceBbox": [
+      251,
+      235,
+      774,
+      888
+    ],
+    "finalBbox": [
+      54,
+      38,
+      185,
+      202
+    ],
+    "margins": [
+      54,
+      38,
+      55,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 131,
+    "warnings": []
+  },
+  {
+    "id": "music_rhythm",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/music_rhythm.png",
+    "sourceBbox": [
+      236,
+      247,
+      789,
+      888
+    ],
+    "finalBbox": [
+      49,
+      38,
+      190,
+      202
+    ],
+    "margins": [
+      49,
+      38,
+      50,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 141,
+    "warnings": []
+  },
+  {
+    "id": "music_piano",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/music_piano.png",
+    "sourceBbox": [
+      236,
+      354,
+      789,
+      888
+    ],
+    "finalBbox": [
+      38,
+      41,
+      202,
+      199
+    ],
+    "margins": [
+      38,
+      41,
+      38,
+      41
+    ],
+    "maxSide": 164,
+    "minSide": 158,
+    "warnings": []
+  },
+  {
+    "id": "music_concert",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/music_concert.png",
+    "sourceBbox": [
+      236,
+      247,
+      789,
+      888
+    ],
+    "finalBbox": [
+      49,
+      38,
+      190,
+      202
+    ],
+    "margins": [
+      49,
+      38,
+      50,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 141,
+    "warnings": []
+  },
+  {
+    "id": "sport_field",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/sport_field.png",
+    "sourceBbox": [
+      206,
+      329,
+      819,
+      890
+    ],
+    "finalBbox": [
+      38,
+      45,
+      202,
+      195
+    ],
+    "margins": [
+      38,
+      45,
+      38,
+      45
+    ],
+    "maxSide": 164,
+    "minSide": 150,
+    "warnings": []
+  },
+  {
+    "id": "sport_race",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/sport_race.png",
+    "sourceBbox": [
+      199,
+      303,
+      826,
+      890
+    ],
+    "finalBbox": [
+      38,
+      43,
+      202,
+      197
+    ],
+    "margins": [
+      38,
+      43,
+      38,
+      43
+    ],
+    "maxSide": 164,
+    "minSide": 154,
+    "warnings": []
+  },
+  {
+    "id": "nature_river",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/nature_river.png",
+    "sourceBbox": [
+      207,
+      227,
+      818,
+      884
+    ],
+    "finalBbox": [
+      43,
+      38,
+      196,
+      202
+    ],
+    "margins": [
+      43,
+      38,
+      44,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 153,
+    "warnings": []
+  },
+  {
+    "id": "nature_stone",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/nature_stone.png",
+    "sourceBbox": [
+      235,
+      235,
+      790,
+      894
+    ],
+    "finalBbox": [
+      51,
+      38,
+      189,
+      202
+    ],
+    "margins": [
+      51,
+      38,
+      51,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 138,
+    "warnings": []
+  },
+  {
+    "id": "nature_cloud",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/nature_cloud.png",
+    "sourceBbox": [
+      237,
+      205,
+      788,
+      884
+    ],
+    "finalBbox": [
+      53,
+      38,
+      186,
+      202
+    ],
+    "margins": [
+      53,
+      38,
+      54,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 133,
+    "warnings": []
+  },
+  {
+    "id": "nature_meadow",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/nature_meadow.png",
+    "sourceBbox": [
+      209,
+      384,
+      816,
+      886
+    ],
+    "finalBbox": [
+      38,
+      52,
+      202,
+      188
+    ],
+    "margins": [
+      38,
+      52,
+      38,
+      52
+    ],
+    "maxSide": 164,
+    "minSide": 136,
+    "warnings": []
+  },
+  {
+    "id": "city_traffic",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/city_traffic.png",
+    "sourceBbox": [
+      199,
+      218,
+      826,
+      890
+    ],
+    "finalBbox": [
+      43,
+      38,
+      196,
+      202
+    ],
+    "margins": [
+      43,
+      38,
+      44,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 153,
+    "warnings": []
+  },
+  {
+    "id": "kitchen_spoon",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/kitchen_spoon.png",
+    "sourceBbox": [
+      236,
+      222,
+      789,
+      886
+    ],
+    "finalBbox": [
+      51,
+      38,
+      188,
+      202
+    ],
+    "margins": [
+      51,
+      38,
+      52,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 137,
+    "warnings": []
+  },
+  {
+    "id": "kitchen_fork",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/kitchen_fork.png",
+    "sourceBbox": [
+      236,
+      239,
+      789,
+      886
+    ],
+    "finalBbox": [
+      50,
+      38,
+      190,
+      202
+    ],
+    "margins": [
+      50,
+      38,
+      50,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 140,
+    "warnings": []
+  },
+  {
+    "id": "kitchen_kettle",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/kitchen_kettle.png",
+    "sourceBbox": [
+      236,
+      204,
+      840,
+      886
+    ],
+    "finalBbox": [
+      47,
+      38,
+      192,
+      202
+    ],
+    "margins": [
+      47,
+      38,
+      48,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 145,
+    "warnings": []
+  },
+  {
+    "id": "school_desk",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/school_desk.png",
+    "sourceBbox": [
+      223,
+      307,
+      802,
+      888
+    ],
+    "finalBbox": [
+      38,
+      38,
+      201,
+      202
+    ],
+    "margins": [
+      38,
+      38,
+      39,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 163,
+    "warnings": []
+  },
+  {
+    "id": "school_board",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/school_board.png",
+    "sourceBbox": [
+      223,
+      265,
+      802,
+      888
+    ],
+    "finalBbox": [
+      44,
+      38,
+      196,
+      202
+    ],
+    "margins": [
+      44,
+      38,
+      44,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 152,
+    "warnings": []
+  },
+  {
+    "id": "books_chapter",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/books_chapter.png",
+    "sourceBbox": [
+      235,
+      320,
+      790,
+      888
+    ],
+    "finalBbox": [
+      40,
+      38,
+      200,
+      202
+    ],
+    "margins": [
+      40,
+      38,
+      40,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 160,
+    "warnings": []
+  },
+  {
+    "id": "cinema_film",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/cinema_film.png",
+    "sourceBbox": [
+      220,
+      235,
+      805,
+      888
+    ],
+    "finalBbox": [
+      46,
+      38,
+      193,
+      202
+    ],
+    "margins": [
+      46,
+      38,
+      47,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 147,
+    "warnings": []
+  },
+  {
+    "id": "cinema_ticket",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/cinema_ticket.png",
+    "sourceBbox": [
+      223,
+      346,
+      802,
+      888
+    ],
+    "finalBbox": [
+      38,
+      43,
+      202,
+      197
+    ],
+    "margins": [
+      38,
+      43,
+      38,
+      43
+    ],
+    "maxSide": 164,
+    "minSide": 154,
+    "warnings": []
+  },
+  {
+    "id": "cinema_trailer",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/cinema_trailer.png",
+    "sourceBbox": [
+      220,
+      235,
+      805,
+      888
+    ],
+    "finalBbox": [
+      46,
+      38,
+      193,
+      202
+    ],
+    "margins": [
+      46,
+      38,
+      47,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 147,
+    "warnings": []
+  },
+  {
+    "id": "family_mother",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/family_mother.png",
+    "sourceBbox": [
+      252,
+      222,
+      773,
+      890
+    ],
+    "finalBbox": [
+      56,
+      38,
+      184,
+      202
+    ],
+    "margins": [
+      56,
+      38,
+      56,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 128,
+    "warnings": []
+  },
+  {
+    "id": "family_child",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/family_child.png",
+    "sourceBbox": [
+      252,
+      222,
+      773,
+      890
+    ],
+    "finalBbox": [
+      56,
+      38,
+      184,
+      202
+    ],
+    "margins": [
+      56,
+      38,
+      56,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 128,
+    "warnings": []
+  },
+  {
+    "id": "family_sister",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/family_sister.png",
+    "sourceBbox": [
+      252,
+      222,
+      773,
+      890
+    ],
+    "finalBbox": [
+      56,
+      38,
+      184,
+      202
+    ],
+    "margins": [
+      56,
+      38,
+      56,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 128,
+    "warnings": []
+  },
+  {
+    "id": "family_dinner",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/family_dinner.png",
+    "sourceBbox": [
+      209,
+      363,
+      816,
+      884
+    ],
+    "finalBbox": [
+      38,
+      49,
+      202,
+      190
+    ],
+    "margins": [
+      38,
+      49,
+      38,
+      50
+    ],
+    "maxSide": 164,
+    "minSide": 141,
+    "warnings": []
+  },
+  {
+    "id": "family_home",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/family_home.png",
+    "sourceBbox": [
+      215,
+      205,
+      810,
+      890
+    ],
+    "finalBbox": [
+      49,
+      38,
+      191,
+      202
+    ],
+    "margins": [
+      49,
+      38,
+      49,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 142,
+    "warnings": []
+  },
+  {
+    "id": "family_album",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/family_album.png",
+    "sourceBbox": [
+      236,
+      235,
+      789,
+      888
+    ],
+    "finalBbox": [
+      50,
+      38,
+      189,
+      202
+    ],
+    "margins": [
+      50,
+      38,
+      51,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 139,
+    "warnings": []
+  },
+  {
+    "id": "garden_bench",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/garden_bench.png",
+    "sourceBbox": [
+      207,
+      401,
+      818,
+      888
+    ],
+    "finalBbox": [
+      38,
+      54,
+      202,
+      185
+    ],
+    "margins": [
+      38,
+      54,
+      38,
+      55
+    ],
+    "maxSide": 164,
+    "minSide": 131,
+    "warnings": []
+  },
+  {
+    "id": "garden_soil",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/garden_soil.png",
+    "sourceBbox": [
+      207,
+      401,
+      818,
+      888
+    ],
+    "finalBbox": [
+      38,
+      54,
+      202,
+      185
+    ],
+    "margins": [
+      38,
+      54,
+      38,
+      55
+    ],
+    "maxSide": 164,
+    "minSide": 131,
+    "warnings": []
+  },
+  {
+    "id": "garden_bush",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/garden_bush.png",
+    "sourceBbox": [
+      207,
+      222,
+      818,
+      888
+    ],
+    "finalBbox": [
+      45,
+      38,
+      195,
+      202
+    ],
+    "margins": [
+      45,
+      38,
+      45,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 150,
+    "warnings": []
+  },
+  {
+    "id": "colors_red",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/colors_red.png",
+    "sourceBbox": [
+      256,
+      160,
+      769,
+      892
+    ],
+    "finalBbox": [
+      62,
+      38,
+      177,
+      202
+    ],
+    "margins": [
+      62,
+      38,
+      63,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 115,
+    "warnings": []
+  },
+  {
+    "id": "colors_orange",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/colors_orange.png",
+    "sourceBbox": [
+      256,
+      160,
+      769,
+      892
+    ],
+    "finalBbox": [
+      62,
+      38,
+      177,
+      202
+    ],
+    "margins": [
+      62,
+      38,
+      63,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 115,
+    "warnings": []
+  },
+  {
+    "id": "colors_pink",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/colors_pink.png",
+    "sourceBbox": [
+      256,
+      160,
+      769,
+      892
+    ],
+    "finalBbox": [
+      62,
+      38,
+      177,
+      202
+    ],
+    "margins": [
+      62,
+      38,
+      63,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 115,
+    "warnings": []
+  },
+  {
+    "id": "shapes_circle",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/shapes_circle.png",
+    "sourceBbox": [
+      235,
+      235,
+      790,
+      894
+    ],
+    "finalBbox": [
+      51,
+      38,
+      189,
+      202
+    ],
+    "margins": [
+      51,
+      38,
+      51,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 138,
+    "warnings": []
+  },
+  {
+    "id": "shapes_triangle",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/shapes_triangle.png",
+    "sourceBbox": [
+      235,
+      203,
+      790,
+      894
+    ],
+    "finalBbox": [
+      54,
+      38,
+      186,
+      202
+    ],
+    "margins": [
+      54,
+      38,
+      54,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 132,
+    "warnings": []
+  },
+  {
+    "id": "shapes_ring",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/shapes_ring.png",
+    "sourceBbox": [
+      255,
+      243,
+      770,
+      886
+    ],
+    "finalBbox": [
+      54,
+      38,
+      185,
+      202
+    ],
+    "margins": [
+      54,
+      38,
+      55,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 131,
+    "warnings": []
+  },
+  {
+    "id": "clothes_scarf",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/clothes_scarf.png",
+    "sourceBbox": [
+      236,
+      277,
+      789,
+      888
+    ],
+    "finalBbox": [
+      46,
+      38,
+      194,
+      202
+    ],
+    "margins": [
+      46,
+      38,
+      46,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 148,
+    "warnings": []
+  },
+  {
+    "id": "clothes_dress",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/clothes_dress.png",
+    "sourceBbox": [
+      236,
+      235,
+      789,
+      888
+    ],
+    "finalBbox": [
+      50,
+      38,
+      189,
+      202
+    ],
+    "margins": [
+      50,
+      38,
+      51,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 139,
+    "warnings": []
+  },
+  {
+    "id": "shoes_boot",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/shoes_boot.png",
+    "sourceBbox": [
+      207,
+      329,
+      818,
+      888
+    ],
+    "finalBbox": [
+      38,
+      45,
+      202,
+      195
+    ],
+    "margins": [
+      38,
+      45,
+      38,
+      45
+    ],
+    "maxSide": 164,
+    "minSide": 150,
+    "warnings": []
+  },
+  {
+    "id": "shoes_sandal",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/shoes_sandal.png",
+    "sourceBbox": [
+      207,
+      329,
+      818,
+      888
+    ],
+    "finalBbox": [
+      38,
+      45,
+      202,
+      195
+    ],
+    "margins": [
+      38,
+      45,
+      38,
+      45
+    ],
+    "maxSide": 164,
+    "minSide": 150,
+    "warnings": []
+  },
+  {
+    "id": "shoes_heel",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/shoes_heel.png",
+    "sourceBbox": [
+      207,
+      435,
+      818,
+      888
+    ],
+    "finalBbox": [
+      38,
+      59,
+      202,
+      181
+    ],
+    "margins": [
+      38,
+      59,
+      38,
+      59
+    ],
+    "maxSide": 164,
+    "minSide": 122,
+    "warnings": []
+  },
+  {
+    "id": "health_clinic",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/health_clinic.png",
+    "sourceBbox": [
+      210,
+      290,
+      815,
+      890
+    ],
+    "finalBbox": [
+      38,
+      38,
+      202,
+      201
+    ],
+    "margins": [
+      38,
+      38,
+      38,
+      39
+    ],
+    "maxSide": 164,
+    "minSide": 163,
+    "warnings": []
+  },
+  {
+    "id": "health_rest",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/health_rest.png",
+    "sourceBbox": [
+      287,
+      201,
+      790,
+      884
+    ],
+    "finalBbox": [
+      59,
+      38,
+      180,
+      202
+    ],
+    "margins": [
+      59,
+      38,
+      60,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 121,
+    "warnings": []
+  },
+  {
+    "id": "health_sleep",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/health_sleep.png",
+    "sourceBbox": [
+      287,
+      201,
+      790,
+      884
+    ],
+    "finalBbox": [
+      59,
+      38,
+      180,
+      202
+    ],
+    "margins": [
+      59,
+      38,
+      60,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 121,
+    "warnings": []
+  },
+  {
+    "id": "health_care",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/health_care.png",
+    "sourceBbox": [
+      262,
+      286,
+      763,
+      888
+    ],
+    "finalBbox": [
+      52,
+      38,
+      188,
+      202
+    ],
+    "margins": [
+      52,
+      38,
+      52,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 136,
+    "warnings": []
+  },
+  {
+    "id": "body_smile",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/body_smile.png",
+    "sourceBbox": [
+      245,
+      252,
+      780,
+      888
+    ],
+    "finalBbox": [
+      51,
+      38,
+      189,
+      202
+    ],
+    "margins": [
+      51,
+      38,
+      51,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 138,
+    "warnings": []
+  },
+  {
+    "id": "work_salary",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/work_salary.png",
+    "sourceBbox": [
+      235,
+      235,
+      790,
+      894
+    ],
+    "finalBbox": [
+      51,
+      38,
+      189,
+      202
+    ],
+    "margins": [
+      51,
+      38,
+      51,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 138,
+    "warnings": []
+  },
+  {
+    "id": "work_shift",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/work_shift.png",
+    "sourceBbox": [
+      251,
+      235,
+      774,
+      888
+    ],
+    "finalBbox": [
+      54,
+      38,
+      185,
+      202
+    ],
+    "margins": [
+      54,
+      38,
+      55,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 131,
+    "warnings": []
+  },
+  {
+    "id": "work_manager",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/work_manager.png",
+    "sourceBbox": [
+      252,
+      222,
+      773,
+      890
+    ],
+    "finalBbox": [
+      56,
+      38,
+      184,
+      202
+    ],
+    "margins": [
+      56,
+      38,
+      56,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 128,
+    "warnings": []
+  },
+  {
+    "id": "work_call",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/work_call.png",
+    "sourceBbox": [
+      271,
+      192,
+      754,
+      888
+    ],
+    "finalBbox": [
+      63,
+      38,
+      177,
+      202
+    ],
+    "margins": [
+      63,
+      38,
+      63,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 114,
+    "warnings": []
+  },
+  {
+    "id": "work_desk",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/work_desk.png",
+    "sourceBbox": [
+      223,
+      307,
+      802,
+      888
+    ],
+    "finalBbox": [
+      38,
+      38,
+      201,
+      202
+    ],
+    "margins": [
+      38,
+      38,
+      39,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 163,
+    "warnings": []
+  },
+  {
+    "id": "office_chair",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/office_chair.png",
+    "sourceBbox": [
+      230,
+      269,
+      795,
+      888
+    ],
+    "finalBbox": [
+      45,
+      38,
+      195,
+      202
+    ],
+    "margins": [
+      45,
+      38,
+      45,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 150,
+    "warnings": []
+  },
+  {
+    "id": "office_printer",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/office_printer.png",
+    "sourceBbox": [
+      230,
+      235,
+      795,
+      888
+    ],
+    "finalBbox": [
+      49,
+      38,
+      191,
+      202
+    ],
+    "margins": [
+      49,
+      38,
+      49,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 142,
+    "warnings": []
+  },
+  {
+    "id": "office_paper",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/office_paper.png",
+    "sourceBbox": [
+      230,
+      210,
+      795,
+      888
+    ],
+    "finalBbox": [
+      51,
+      38,
+      188,
+      202
+    ],
+    "margins": [
+      51,
+      38,
+      52,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 137,
+    "warnings": []
+  },
+  {
+    "id": "office_badge",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/office_badge.png",
+    "sourceBbox": [
+      230,
+      256,
+      795,
+      888
+    ],
+    "finalBbox": [
+      46,
+      38,
+      193,
+      202
+    ],
+    "margins": [
+      46,
+      38,
+      47,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 147,
+    "warnings": []
+  },
+  {
+    "id": "office_screen",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/office_screen.png",
+    "sourceBbox": [
+      230,
+      286,
+      795,
+      888
+    ],
+    "finalBbox": [
+      43,
+      38,
+      197,
+      202
+    ],
+    "margins": [
+      43,
+      38,
+      43,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 154,
+    "warnings": []
+  },
+  {
+    "id": "technology_robot",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/technology_robot.png",
+    "sourceBbox": [
+      236,
+      149,
+      789,
+      888
+    ],
+    "finalBbox": [
+      58,
+      38,
+      181,
+      202
+    ],
+    "margins": [
+      58,
+      38,
+      59,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 123,
+    "warnings": []
+  },
+  {
+    "id": "technology_sensor",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/technology_sensor.png",
+    "sourceBbox": [
+      236,
+      260,
+      789,
+      888
+    ],
+    "finalBbox": [
+      48,
+      38,
+      192,
+      202
+    ],
+    "margins": [
+      48,
+      38,
+      48,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 144,
+    "warnings": []
+  },
+  {
+    "id": "technology_chip",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/technology_chip.png",
+    "sourceBbox": [
+      236,
+      307,
+      789,
+      888
+    ],
+    "finalBbox": [
+      42,
+      38,
+      198,
+      202
+    ],
+    "margins": [
+      42,
+      38,
+      42,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 156,
+    "warnings": []
+  },
+  {
+    "id": "technology_code",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/technology_code.png",
+    "sourceBbox": [
+      236,
+      303,
+      789,
+      888
+    ],
+    "finalBbox": [
+      42,
+      38,
+      197,
+      202
+    ],
+    "margins": [
+      42,
+      38,
+      43,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 155,
+    "warnings": []
+  },
+  {
+    "id": "technology_drone",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/technology_drone.png",
+    "sourceBbox": [
+      188,
+      303,
+      837,
+      888
+    ],
+    "finalBbox": [
+      38,
+      46,
+      202,
+      194
+    ],
+    "margins": [
+      38,
+      46,
+      38,
+      46
+    ],
+    "maxSide": 164,
+    "minSide": 148,
+    "warnings": []
+  },
+  {
+    "id": "technology_laser",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/technology_laser.png",
+    "sourceBbox": [
+      236,
+      388,
+      807,
+      888
+    ],
+    "finalBbox": [
+      38,
+      48,
+      202,
+      192
+    ],
+    "margins": [
+      38,
+      48,
+      38,
+      48
+    ],
+    "maxSide": 164,
+    "minSide": 144,
+    "warnings": []
+  },
+  {
+    "id": "technology_server",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/technology_server.png",
+    "sourceBbox": [
+      236,
+      265,
+      789,
+      888
+    ],
+    "finalBbox": [
+      47,
+      38,
+      193,
+      202
+    ],
+    "margins": [
+      47,
+      38,
+      47,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 146,
+    "warnings": []
+  },
+  {
+    "id": "internet_mail",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/internet_mail.png",
+    "sourceBbox": [
+      236,
+      354,
+      789,
+      888
+    ],
+    "finalBbox": [
+      38,
+      41,
+      202,
+      199
+    ],
+    "margins": [
+      38,
+      41,
+      38,
+      41
+    ],
+    "maxSide": 164,
+    "minSide": 158,
+    "warnings": []
+  },
+  {
+    "id": "internet_cloud",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/internet_cloud.png",
+    "sourceBbox": [
+      236,
+      205,
+      789,
+      888
+    ],
+    "finalBbox": [
+      53,
+      38,
+      186,
+      202
+    ],
+    "margins": [
+      53,
+      38,
+      54,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 133,
+    "warnings": []
+  },
+  {
+    "id": "internet_chat",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/internet_chat.png",
+    "sourceBbox": [
+      236,
+      320,
+      789,
+      888
+    ],
+    "finalBbox": [
+      40,
+      38,
+      200,
+      202
+    ],
+    "margins": [
+      40,
+      38,
+      40,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 160,
+    "warnings": []
+  },
+  {
+    "id": "phone_case",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/phone_case.png",
+    "sourceBbox": [
+      271,
+      192,
+      754,
+      888
+    ],
+    "finalBbox": [
+      63,
+      38,
+      177,
+      202
+    ],
+    "margins": [
+      63,
+      38,
+      63,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 114,
+    "warnings": []
+  },
+  {
+    "id": "phone_contact",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/phone_contact.png",
+    "sourceBbox": [
+      271,
+      192,
+      754,
+      888
+    ],
+    "finalBbox": [
+      63,
+      38,
+      177,
+      202
+    ],
+    "margins": [
+      63,
+      38,
+      63,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 114,
+    "warnings": []
+  },
+  {
+    "id": "phone_message",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/phone_message.png",
+    "sourceBbox": [
+      271,
+      192,
+      754,
+      888
+    ],
+    "finalBbox": [
+      63,
+      38,
+      177,
+      202
+    ],
+    "margins": [
+      63,
+      38,
+      63,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 114,
+    "warnings": []
+  },
+  {
+    "id": "phone_camera",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/phone_camera.png",
+    "sourceBbox": [
+      271,
+      192,
+      754,
+      888
+    ],
+    "finalBbox": [
+      63,
+      38,
+      177,
+      202
+    ],
+    "margins": [
+      63,
+      38,
+      63,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 114,
+    "warnings": []
+  },
+  {
+    "id": "photo_portrait",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/photo_portrait.png",
+    "sourceBbox": [
+      236,
+      222,
+      789,
+      890
+    ],
+    "finalBbox": [
+      52,
+      38,
+      188,
+      202
+    ],
+    "margins": [
+      52,
+      38,
+      52,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 136,
+    "warnings": []
+  },
+  {
+    "id": "photo_frame",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/photo_frame.png",
+    "sourceBbox": [
+      236,
+      260,
+      789,
+      888
+    ],
+    "finalBbox": [
+      48,
+      38,
+      192,
+      202
+    ],
+    "margins": [
+      48,
+      38,
+      48,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 144,
+    "warnings": []
+  },
+  {
+    "id": "photo_focus",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/photo_focus.png",
+    "sourceBbox": [
+      236,
+      282,
+      789,
+      888
+    ],
+    "finalBbox": [
+      45,
+      38,
+      195,
+      202
+    ],
+    "margins": [
+      45,
+      38,
+      45,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 150,
+    "warnings": []
+  },
+  {
+    "id": "photo_studio",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/photo_studio.png",
+    "sourceBbox": [
+      236,
+      331,
+      830,
+      888
+    ],
+    "finalBbox": [
+      38,
+      43,
+      202,
+      197
+    ],
+    "margins": [
+      38,
+      43,
+      38,
+      43
+    ],
+    "maxSide": 164,
+    "minSide": 154,
+    "warnings": []
+  },
+  {
+    "id": "holidays_candle",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/holidays_candle.png",
+    "sourceBbox": [
+      223,
+      181,
+      802,
+      890
+    ],
+    "finalBbox": [
+      53,
+      38,
+      187,
+      202
+    ],
+    "margins": [
+      53,
+      38,
+      53,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 134,
+    "warnings": []
+  },
+  {
+    "id": "holidays_balloon",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/holidays_balloon.png",
+    "sourceBbox": [
+      223,
+      222,
+      802,
+      890
+    ],
+    "finalBbox": [
+      49,
+      38,
+      191,
+      202
+    ],
+    "margins": [
+      49,
+      38,
+      49,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 142,
+    "warnings": []
+  },
+  {
+    "id": "winter_cocoa",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/winter_cocoa.png",
+    "sourceBbox": [
+      235,
+      92,
+      816,
+      892
+    ],
+    "finalBbox": [
+      60,
+      38,
+      179,
+      202
+    ],
+    "margins": [
+      60,
+      38,
+      61,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 119,
+    "warnings": []
+  },
+  {
+    "id": "winter_sleigh",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/winter_sleigh.png",
+    "sourceBbox": [
+      207,
+      439,
+      818,
+      888
+    ],
+    "finalBbox": [
+      38,
+      59,
+      202,
+      180
+    ],
+    "margins": [
+      38,
+      59,
+      38,
+      60
+    ],
+    "maxSide": 164,
+    "minSide": 121,
+    "warnings": []
+  },
+  {
+    "id": "summer_hat",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/summer_hat.png",
+    "sourceBbox": [
+      236,
+      316,
+      789,
+      888
+    ],
+    "finalBbox": [
+      40,
+      38,
+      199,
+      202
+    ],
+    "margins": [
+      40,
+      38,
+      41,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 159,
+    "warnings": []
+  },
+  {
+    "id": "summer_lake",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/summer_lake.png",
+    "sourceBbox": [
+      220,
+      401,
+      805,
+      884
+    ],
+    "finalBbox": [
+      38,
+      52,
+      202,
+      187
+    ],
+    "margins": [
+      38,
+      52,
+      38,
+      53
+    ],
+    "maxSide": 164,
+    "minSide": 135,
+    "warnings": []
+  },
+  {
+    "id": "summer_sandals",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/summer_sandals.png",
+    "sourceBbox": [
+      207,
+      329,
+      818,
+      888
+    ],
+    "finalBbox": [
+      38,
+      45,
+      202,
+      195
+    ],
+    "margins": [
+      38,
+      45,
+      38,
+      45
+    ],
+    "maxSide": 164,
+    "minSide": 150,
+    "warnings": []
+  },
+  {
+    "id": "breakfast_toast",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/breakfast_toast.png",
+    "sourceBbox": [
+      262,
+      209,
+      763,
+      888
+    ],
+    "finalBbox": [
+      59,
+      38,
+      180,
+      202
+    ],
+    "margins": [
+      59,
+      38,
+      60,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 121,
+    "warnings": []
+  },
+  {
+    "id": "breakfast_porridge",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/breakfast_porridge.png",
+    "sourceBbox": [
+      215,
+      320,
+      810,
+      892
+    ],
+    "finalBbox": [
+      38,
+      41,
+      202,
+      199
+    ],
+    "margins": [
+      38,
+      41,
+      38,
+      41
+    ],
+    "maxSide": 164,
+    "minSide": 158,
+    "warnings": []
+  },
+  {
+    "id": "breakfast_cereal",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/breakfast_cereal.png",
+    "sourceBbox": [
+      215,
+      320,
+      810,
+      892
+    ],
+    "finalBbox": [
+      38,
+      41,
+      202,
+      199
+    ],
+    "margins": [
+      38,
+      41,
+      38,
+      41
+    ],
+    "maxSide": 164,
+    "minSide": 158,
+    "warnings": []
+  },
+  {
+    "id": "breakfast_yogurt",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/breakfast_yogurt.png",
+    "sourceBbox": [
+      215,
+      320,
+      810,
+      892
+    ],
+    "finalBbox": [
+      38,
+      41,
+      202,
+      199
+    ],
+    "margins": [
+      38,
+      41,
+      38,
+      41
+    ],
+    "maxSide": 164,
+    "minSide": 158,
+    "warnings": []
+  },
+  {
+    "id": "breakfast_butter",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/breakfast_butter.png",
+    "sourceBbox": [
+      255,
+      422,
+      770,
+      886
+    ],
+    "finalBbox": [
+      38,
+      46,
+      202,
+      194
+    ],
+    "margins": [
+      38,
+      46,
+      38,
+      46
+    ],
+    "maxSide": 164,
+    "minSide": 148,
+    "warnings": []
+  },
+  {
+    "id": "dessert_cookie",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/dessert_cookie.png",
+    "sourceBbox": [
+      270,
+      265,
+      755,
+      886
+    ],
+    "finalBbox": [
+      56,
+      38,
+      184,
+      202
+    ],
+    "margins": [
+      56,
+      38,
+      56,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 128,
+    "warnings": []
+  },
+  {
+    "id": "dessert_pie",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/dessert_pie.png",
+    "sourceBbox": [
+      269,
+      380,
+      759,
+      699
+    ],
+    "finalBbox": [
+      38,
+      66,
+      202,
+      173
+    ],
+    "margins": [
+      38,
+      66,
+      38,
+      67
+    ],
+    "maxSide": 164,
+    "minSide": 107,
+    "warnings": []
+  },
+  {
+    "id": "dessert_cream",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/dessert_cream.png",
+    "sourceBbox": [
+      274,
+      226,
+      751,
+      884
+    ],
+    "finalBbox": [
+      60,
+      38,
+      179,
+      202
+    ],
+    "margins": [
+      60,
+      38,
+      61,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 119,
+    "warnings": []
+  },
+  {
+    "id": "dessert_icecream",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/dessert_icecream.png",
+    "sourceBbox": [
+      270,
+      243,
+      755,
+      886
+    ],
+    "finalBbox": [
+      58,
+      38,
+      182,
+      202
+    ],
+    "margins": [
+      58,
+      38,
+      58,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 124,
+    "warnings": []
+  },
+  {
+    "id": "dessert_waffle",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/dessert_waffle.png",
+    "sourceBbox": [
+      299,
+      311,
+      726,
+      709
+    ],
+    "finalBbox": [
+      38,
+      43,
+      202,
+      196
+    ],
+    "margins": [
+      38,
+      43,
+      38,
+      44
+    ],
+    "maxSide": 164,
+    "minSide": 153,
+    "warnings": []
+  },
+  {
+    "id": "dessert_honey",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/dessert_honey.png",
+    "sourceBbox": [
+      255,
+      212,
+      846,
+      886
+    ],
+    "finalBbox": [
+      48,
+      38,
+      192,
+      202
+    ],
+    "margins": [
+      48,
+      38,
+      48,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 144,
+    "warnings": []
+  },
+  {
+    "id": "drinks_coffee",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/drinks_coffee.png",
+    "sourceBbox": [
+      235,
+      92,
+      816,
+      892
+    ],
+    "finalBbox": [
+      60,
+      38,
+      179,
+      202
+    ],
+    "margins": [
+      60,
+      38,
+      61,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 119,
+    "warnings": []
+  },
+  {
+    "id": "drinks_lemonade",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/drinks_lemonade.png",
+    "sourceBbox": [
+      266,
+      134,
+      759,
+      888
+    ],
+    "finalBbox": [
+      66,
+      38,
+      173,
+      202
+    ],
+    "margins": [
+      66,
+      38,
+      67,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 107,
+    "warnings": []
+  },
+  {
+    "id": "farm_barn",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/farm_barn.png",
+    "sourceBbox": [
+      210,
+      201,
+      815,
+      890
+    ],
+    "finalBbox": [
+      48,
+      38,
+      192,
+      202
+    ],
+    "margins": [
+      48,
+      38,
+      48,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 144,
+    "warnings": []
+  },
+  {
+    "id": "farm_tractor",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/farm_tractor.png",
+    "sourceBbox": [
+      210,
+      341,
+      815,
+      890
+    ],
+    "finalBbox": [
+      38,
+      45,
+      202,
+      194
+    ],
+    "margins": [
+      38,
+      45,
+      38,
+      46
+    ],
+    "maxSide": 164,
+    "minSide": 149,
+    "warnings": []
+  },
+  {
+    "id": "farm_field",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/farm_field.png",
+    "sourceBbox": [
+      210,
+      388,
+      815,
+      890
+    ],
+    "finalBbox": [
+      38,
+      52,
+      202,
+      188
+    ],
+    "margins": [
+      38,
+      52,
+      38,
+      52
+    ],
+    "maxSide": 164,
+    "minSide": 136,
+    "warnings": []
+  },
+  {
+    "id": "farm_hay",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/farm_hay.png",
+    "sourceBbox": [
+      210,
+      367,
+      815,
+      890
+    ],
+    "finalBbox": [
+      38,
+      49,
+      202,
+      191
+    ],
+    "margins": [
+      38,
+      49,
+      38,
+      49
+    ],
+    "maxSide": 164,
+    "minSide": 142,
+    "warnings": []
+  },
+  {
+    "id": "farm_cow",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/farm_cow.png",
+    "sourceBbox": [
+      210,
+      303,
+      815,
+      890
+    ],
+    "finalBbox": [
+      38,
+      40,
+      202,
+      199
+    ],
+    "margins": [
+      38,
+      40,
+      38,
+      41
+    ],
+    "maxSide": 164,
+    "minSide": 159,
+    "warnings": []
+  },
+  {
+    "id": "farm_chicken",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/farm_chicken.png",
+    "sourceBbox": [
+      210,
+      179,
+      816,
+      890
+    ],
+    "finalBbox": [
+      50,
+      38,
+      190,
+      202
+    ],
+    "margins": [
+      50,
+      38,
+      50,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 140,
+    "warnings": []
+  },
+  {
+    "id": "farm_fence",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/farm_fence.png",
+    "sourceBbox": [
+      210,
+      350,
+      815,
+      890
+    ],
+    "finalBbox": [
+      38,
+      47,
+      202,
+      193
+    ],
+    "margins": [
+      38,
+      47,
+      38,
+      47
+    ],
+    "maxSide": 164,
+    "minSide": 146,
+    "warnings": []
+  },
+  {
+    "id": "forest_fox",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/forest_fox.png",
+    "sourceBbox": [
+      245,
+      231,
+      780,
+      888
+    ],
+    "finalBbox": [
+      53,
+      38,
+      187,
+      202
+    ],
+    "margins": [
+      53,
+      38,
+      53,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 134,
+    "warnings": []
+  },
+  {
+    "id": "forest_berry",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/forest_berry.png",
+    "sourceBbox": [
+      262,
+      346,
+      763,
+      886
+    ],
+    "finalBbox": [
+      44,
+      38,
+      196,
+      202
+    ],
+    "margins": [
+      44,
+      38,
+      44,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 152,
+    "warnings": []
+  },
+  {
+    "id": "forest_path",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/forest_path.png",
+    "sourceBbox": [
+      207,
+      283,
+      818,
+      888
+    ],
+    "finalBbox": [
+      38,
+      39,
+      202,
+      201
+    ],
+    "margins": [
+      38,
+      39,
+      38,
+      39
+    ],
+    "maxSide": 164,
+    "minSide": 162,
+    "warnings": []
+  },
+  {
+    "id": "flowers_rose",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/flowers_rose.png",
+    "sourceBbox": [
+      262,
+      255,
+      763,
+      886
+    ],
+    "finalBbox": [
+      55,
+      38,
+      185,
+      202
+    ],
+    "margins": [
+      55,
+      38,
+      55,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 130,
+    "warnings": []
+  },
+  {
+    "id": "flowers_peony",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/flowers_peony.png",
+    "sourceBbox": [
+      262,
+      255,
+      763,
+      886
+    ],
+    "finalBbox": [
+      55,
+      38,
+      185,
+      202
+    ],
+    "margins": [
+      55,
+      38,
+      55,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 130,
+    "warnings": []
+  },
+  {
+    "id": "flowers_vase",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/flowers_vase.png",
+    "sourceBbox": [
+      262,
+      197,
+      763,
+      886
+    ],
+    "finalBbox": [
+      60,
+      38,
+      179,
+      202
+    ],
+    "margins": [
+      60,
+      38,
+      61,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 119,
+    "warnings": []
+  },
+  {
+    "id": "insects_butterfly",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/insects_butterfly.png",
+    "sourceBbox": [
+      256,
+      277,
+      769,
+      884
+    ],
+    "finalBbox": [
+      50,
+      38,
+      189,
+      202
+    ],
+    "margins": [
+      50,
+      38,
+      51,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 139,
+    "warnings": []
+  },
+  {
+    "id": "emotions_joy",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/emotions_joy.png",
+    "sourceBbox": [
+      260,
+      243,
+      765,
+      888
+    ],
+    "finalBbox": [
+      56,
+      38,
+      184,
+      202
+    ],
+    "margins": [
+      56,
+      38,
+      56,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 128,
+    "warnings": []
+  },
+  {
+    "id": "emotions_interest",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/emotions_interest.png",
+    "sourceBbox": [
+      260,
+      243,
+      765,
+      888
+    ],
+    "finalBbox": [
+      56,
+      38,
+      184,
+      202
+    ],
+    "margins": [
+      56,
+      38,
+      56,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 128,
+    "warnings": []
+  },
+  {
+    "id": "emotions_warmth",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/emotions_warmth.png",
+    "sourceBbox": [
+      260,
+      243,
+      765,
+      888
+    ],
+    "finalBbox": [
+      56,
+      38,
+      184,
+      202
+    ],
+    "margins": [
+      56,
+      38,
+      56,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 128,
+    "warnings": []
+  },
+  {
+    "id": "friendship_friend",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/friendship_friend.png",
+    "sourceBbox": [
+      210,
+      235,
+      815,
+      892
+    ],
+    "finalBbox": [
+      44,
+      38,
+      195,
+      202
+    ],
+    "margins": [
+      44,
+      38,
+      45,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 151,
+    "warnings": []
+  },
+  {
+    "id": "friendship_chat",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/friendship_chat.png",
+    "sourceBbox": [
+      236,
+      320,
+      789,
+      888
+    ],
+    "finalBbox": [
+      40,
+      38,
+      200,
+      202
+    ],
+    "margins": [
+      40,
+      38,
+      40,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 160,
+    "warnings": []
+  },
+  {
+    "id": "friendship_walk",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/friendship_walk.png",
+    "sourceBbox": [
+      194,
+      320,
+      831,
+      890
+    ],
+    "finalBbox": [
+      38,
+      46,
+      202,
+      193
+    ],
+    "margins": [
+      38,
+      46,
+      38,
+      47
+    ],
+    "maxSide": 164,
+    "minSide": 147,
+    "warnings": []
+  },
+  {
+    "id": "friendship_team",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/friendship_team.png",
+    "sourceBbox": [
+      194,
+      320,
+      831,
+      890
+    ],
+    "finalBbox": [
+      38,
+      46,
+      202,
+      193
+    ],
+    "margins": [
+      38,
+      46,
+      38,
+      47
+    ],
+    "maxSide": 164,
+    "minSide": 147,
+    "warnings": []
+  },
+  {
+    "id": "friendship_secret",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/friendship_secret.png",
+    "sourceBbox": [
+      262,
+      313,
+      763,
+      886
+    ],
+    "finalBbox": [
+      48,
+      38,
+      191,
+      202
+    ],
+    "margins": [
+      48,
+      38,
+      49,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 143,
+    "warnings": []
+  },
+  {
+    "id": "friendship_memory",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/friendship_memory.png",
+    "sourceBbox": [
+      236,
+      235,
+      789,
+      888
+    ],
+    "finalBbox": [
+      50,
+      38,
+      189,
+      202
+    ],
+    "margins": [
+      50,
+      38,
+      51,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 139,
+    "warnings": []
+  },
+  {
+    "id": "hobbies_drawing",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/hobbies_drawing.png",
+    "sourceBbox": [
+      223,
+      158,
+      841,
+      890
+    ],
+    "finalBbox": [
+      51,
+      38,
+      189,
+      202
+    ],
+    "margins": [
+      51,
+      38,
+      51,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 138,
+    "warnings": []
+  },
+  {
+    "id": "hobbies_puzzle",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/hobbies_puzzle.png",
+    "sourceBbox": [
+      213,
+      320,
+      812,
+      890
+    ],
+    "finalBbox": [
+      38,
+      42,
+      202,
+      198
+    ],
+    "margins": [
+      38,
+      42,
+      38,
+      42
+    ],
+    "maxSide": 164,
+    "minSide": 156,
+    "warnings": []
+  },
+  {
+    "id": "hobbies_baking",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/hobbies_baking.png",
+    "sourceBbox": [
+      223,
+      226,
+      802,
+      890
+    ],
+    "finalBbox": [
+      48,
+      38,
+      191,
+      202
+    ],
+    "margins": [
+      48,
+      38,
+      49,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 143,
+    "warnings": []
+  },
+  {
+    "id": "hobbies_music",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/hobbies_music.png",
+    "sourceBbox": [
+      236,
+      260,
+      789,
+      888
+    ],
+    "finalBbox": [
+      48,
+      38,
+      192,
+      202
+    ],
+    "margins": [
+      48,
+      38,
+      48,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 144,
+    "warnings": []
+  },
+  {
+    "id": "camping_tent",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/camping_tent.png",
+    "sourceBbox": [
+      206,
+      261,
+      819,
+      890
+    ],
+    "finalBbox": [
+      40,
+      38,
+      200,
+      202
+    ],
+    "margins": [
+      40,
+      38,
+      40,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 160,
+    "warnings": []
+  },
+  {
+    "id": "camping_map",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/camping_map.png",
+    "sourceBbox": [
+      206,
+      252,
+      819,
+      890
+    ],
+    "finalBbox": [
+      41,
+      38,
+      199,
+      202
+    ],
+    "margins": [
+      41,
+      38,
+      41,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 158,
+    "warnings": []
+  },
+  {
+    "id": "camping_lantern",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/camping_lantern.png",
+    "sourceBbox": [
+      206,
+      176,
+      819,
+      890
+    ],
+    "finalBbox": [
+      49,
+      38,
+      190,
+      202
+    ],
+    "margins": [
+      49,
+      38,
+      50,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 141,
+    "warnings": []
+  },
+  {
+    "id": "camping_trail",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/camping_trail.png",
+    "sourceBbox": [
+      206,
+      283,
+      819,
+      890
+    ],
+    "finalBbox": [
+      38,
+      39,
+      202,
+      201
+    ],
+    "margins": [
+      38,
+      39,
+      38,
+      39
+    ],
+    "maxSide": 164,
+    "minSide": 162,
+    "warnings": []
+  },
+  {
+    "id": "toys_doll",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/toys_doll.png",
+    "sourceBbox": [
+      213,
+      222,
+      812,
+      890
+    ],
+    "finalBbox": [
+      46,
+      38,
+      193,
+      202
+    ],
+    "margins": [
+      46,
+      38,
+      47,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 147,
+    "warnings": []
+  },
+  {
+    "id": "toys_blocks",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/toys_blocks.png",
+    "sourceBbox": [
+      213,
+      341,
+      812,
+      890
+    ],
+    "finalBbox": [
+      38,
+      45,
+      202,
+      195
+    ],
+    "margins": [
+      38,
+      45,
+      38,
+      45
+    ],
+    "maxSide": 164,
+    "minSide": 150,
+    "warnings": []
+  },
+  {
+    "id": "toys_train",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/toys_train.png",
+    "sourceBbox": [
+      199,
+      311,
+      826,
+      890
+    ],
+    "finalBbox": [
+      38,
+      44,
+      202,
+      195
+    ],
+    "margins": [
+      38,
+      44,
+      38,
+      45
+    ],
+    "maxSide": 164,
+    "minSide": 151,
+    "warnings": []
+  },
+  {
+    "id": "toys_puzzle",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/toys_puzzle.png",
+    "sourceBbox": [
+      213,
+      320,
+      812,
+      890
+    ],
+    "finalBbox": [
+      38,
+      42,
+      202,
+      198
+    ],
+    "margins": [
+      38,
+      42,
+      38,
+      42
+    ],
+    "maxSide": 164,
+    "minSide": 156,
+    "warnings": []
+  },
+  {
+    "id": "toys_ball",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/toys_ball.png",
+    "sourceBbox": [
+      213,
+      243,
+      812,
+      890
+    ],
+    "finalBbox": [
+      44,
+      38,
+      196,
+      202
+    ],
+    "margins": [
+      44,
+      38,
+      44,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 152,
+    "warnings": []
+  },
+  {
+    "id": "toys_robot",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/toys_robot.png",
+    "sourceBbox": [
+      213,
+      149,
+      812,
+      890
+    ],
+    "finalBbox": [
+      53,
+      38,
+      186,
+      202
+    ],
+    "margins": [
+      53,
+      38,
+      54,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 133,
+    "warnings": []
+  },
+  {
+    "id": "toys_kite",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/toys_kite.png",
+    "sourceBbox": [
+      213,
+      206,
+      812,
+      890
+    ],
+    "finalBbox": [
+      48,
+      38,
+      192,
+      202
+    ],
+    "margins": [
+      48,
+      38,
+      48,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 144,
+    "warnings": []
+  },
+  {
+    "id": "toys_car",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/toys_car.png",
+    "sourceBbox": [
+      199,
+      303,
+      826,
+      890
+    ],
+    "finalBbox": [
+      38,
+      43,
+      202,
+      197
+    ],
+    "margins": [
+      38,
+      43,
+      38,
+      43
+    ],
+    "maxSide": 164,
+    "minSide": 154,
+    "warnings": []
+  },
+  {
+    "id": "tools_hammer",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/tools_hammer.png",
+    "sourceBbox": [
+      228,
+      286,
+      797,
+      888
+    ],
+    "finalBbox": [
+      42,
+      38,
+      197,
+      202
+    ],
+    "margins": [
+      42,
+      38,
+      43,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 155,
+    "warnings": []
+  },
+  {
+    "id": "tools_drill",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/tools_drill.png",
+    "sourceBbox": [
+      228,
+      380,
+      815,
+      888
+    ],
+    "finalBbox": [
+      38,
+      49,
+      202,
+      191
+    ],
+    "margins": [
+      38,
+      49,
+      38,
+      49
+    ],
+    "maxSide": 164,
+    "minSide": 142,
+    "warnings": []
+  },
+  {
+    "id": "tools_wrench",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/tools_wrench.png",
+    "sourceBbox": [
+      228,
+      286,
+      797,
+      888
+    ],
+    "finalBbox": [
+      42,
+      38,
+      197,
+      202
+    ],
+    "margins": [
+      42,
+      38,
+      43,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 155,
+    "warnings": []
+  },
+  {
+    "id": "tools_pliers",
+    "status": "processed",
+    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/tools_pliers.png",
+    "sourceBbox": [
+      228,
+      278,
+      797,
+      888
+    ],
+    "finalBbox": [
+      43,
+      38,
+      196,
+      202
+    ],
+    "margins": [
+      43,
+      38,
+      44,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 153,
+    "warnings": []
+  }
+]

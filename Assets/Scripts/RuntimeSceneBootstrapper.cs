@@ -134,7 +134,7 @@ namespace SolitaireAssociations
 
             foreach (Transform transform in Object.FindObjectsByType<Transform>(FindObjectsInactive.Include, FindObjectsSortMode.None))
             {
-                if (transform != null && transform.name == "PauseSettingsPopup")
+                if (transform != null && (transform.name == "PauseSettingsPopup" || transform.name == "WinScreen"))
                 {
                     transform.gameObject.SetActive(false);
                 }
@@ -450,7 +450,7 @@ namespace SolitaireAssociations
 
             CanvasGroup canvasGroup = root.gameObject.AddComponent<CanvasGroup>();
             Image overlay = root.gameObject.AddComponent<Image>();
-            overlay.color = new Color(0.01f, 0.06f, 0.03f, 0.62f);
+            overlay.color = new Color(0.01f, 0.045f, 0.028f, 0.66f);
 
             RectTransform panel = CreateRect(
                 "Panel",
@@ -458,14 +458,16 @@ namespace SolitaireAssociations
                 new Vector2(0.5f, 0.5f),
                 new Vector2(0.5f, 0.5f),
                 new Vector2(0.5f, 0.5f),
-                new Vector2(720f, 360f),
+                new Vector2(920f, 620f),
                 Vector2.zero);
             Image panelImage = panel.gameObject.AddComponent<Image>();
-            panelImage.color = new Color(1f, 0.96f, 0.72f, 0.08f);
+            panelImage.sprite = PremiumUISprites.PauseWindowCardMesh;
+            panelImage.type = panelImage.sprite != null ? Image.Type.Simple : Image.Type.Sliced;
+            panelImage.color = Color.white;
             panelImage.raycastTarget = false;
             Shadow panelShadow = panel.gameObject.AddComponent<Shadow>();
-            panelShadow.effectColor = new Color(0.08f, 0.05f, 0.01f, 0.35f);
-            panelShadow.effectDistance = new Vector2(0f, -10f);
+            panelShadow.effectColor = new Color(0.02f, 0.01f, 0f, 0.42f);
+            panelShadow.effectDistance = new Vector2(0f, -8f);
 
             TextMeshProUGUI titleText = CreateWinText(
                 "Title",
@@ -475,7 +477,7 @@ namespace SolitaireAssociations
                 new Vector2(0.5f, 1f),
                 new Vector2(0.5f, 1f),
                 new Vector2(680f, 92f),
-                new Vector2(0f, -116f),
+                new Vector2(0f, -112f),
                 58f,
                 new Color(1f, 0.88f, 0.28f, 1f));
             titleText.text = "\u0423\u0440\u043e\u0432\u0435\u043d\u044c \u043f\u0440\u043e\u0439\u0434\u0435\u043d!";
@@ -488,13 +490,13 @@ namespace SolitaireAssociations
                 new Vector2(0.5f, 0.5f),
                 new Vector2(0.5f, 0.5f),
                 new Vector2(520f, 54f),
-                new Vector2(0f, -28f),
+                new Vector2(0f, 30f),
                 32f,
                 new Color(1f, 0.98f, 0.78f, 1f));
             subtitleText.text = "\u041c\u043e\u043b\u043e\u0434\u0435\u0446!";
 
-            Button retryButton = CreateWinButton(panel, fontAsset, "\u041f\u043e\u0432\u0442\u043e\u0440\u0438\u0442\u044c", new Vector2(-122f, -128f));
-            Button menuButton = CreateWinButton(panel, fontAsset, "\u0412 \u043c\u0435\u043d\u044e", new Vector2(122f, -128f));
+            Button retryButton = CreateWinButton(panel, fontAsset, "\u041f\u043e\u0432\u0442\u043e\u0440\u0438\u0442\u044c", new Vector2(0f, -118f));
+            Button menuButton = CreateWinButton(panel, fontAsset, "\u0412 \u043c\u0435\u043d\u044e", new Vector2(0f, -238f));
 
             WinScreenView winScreen = root.gameObject.AddComponent<WinScreenView>();
             winScreen.ConfigureComponents(canvasGroup, panel, titleText, subtitleText, retryButton, menuButton);
@@ -533,15 +535,15 @@ namespace SolitaireAssociations
             RectTransform buttonRoot = CreateRect(
                 label,
                 parent,
-                new Vector2(0.5f, 0f),
-                new Vector2(0.5f, 0f),
                 new Vector2(0.5f, 0.5f),
-                new Vector2(190f, 62f),
+                new Vector2(0.5f, 0.5f),
+                new Vector2(0.5f, 0.5f),
+                new Vector2(560f, 96f),
                 position);
             Image image = buttonRoot.gameObject.AddComponent<Image>();
-            image.sprite = PremiumUISprites.PrimaryButton;
+            image.sprite = PremiumUISprites.GameplayActionButton;
             image.type = image.sprite != null ? Image.Type.Sliced : Image.Type.Simple;
-            image.color = new Color(1f, 0.64f, 0.08f, 1f);
+            image.color = new Color(0.92f, 0.92f, 0.88f, 1f);
 
             Button button = buttonRoot.gameObject.AddComponent<Button>();
             button.targetGraphic = image;
@@ -559,8 +561,8 @@ namespace SolitaireAssociations
                 new Vector2(0.5f, 0.5f),
                 Vector2.zero,
                 Vector2.zero,
-                24f,
-                new Color(0.22f, 0.18f, 0.08f, 1f));
+                36f,
+                new Color(1f, 0.89f, 0.42f, 1f));
             buttonText.rectTransform.offsetMin = Vector2.zero;
             buttonText.rectTransform.offsetMax = Vector2.zero;
             buttonText.text = label;

@@ -1,0 +1,392 @@
+[
+  {
+    "id": "time_day",
+    "status": "processed",
+    "source": "Tools/ImageCardAudit/final_arrow_regenerated/raw/time_day.png",
+    "sourceBbox": [
+      239,
+      205,
+      786,
+      886
+    ],
+    "finalBbox": [
+      54,
+      38,
+      186,
+      202
+    ],
+    "margins": [
+      54,
+      38,
+      54,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 132,
+    "warnings": []
+  },
+  {
+    "id": "sport_field",
+    "status": "processed",
+    "source": "Tools/ImageCardAudit/final_arrow_regenerated/raw/sport_field.png",
+    "sourceBbox": [
+      206,
+      329,
+      819,
+      890
+    ],
+    "finalBbox": [
+      38,
+      45,
+      202,
+      195
+    ],
+    "margins": [
+      38,
+      45,
+      38,
+      45
+    ],
+    "maxSide": 164,
+    "minSide": 150,
+    "warnings": []
+  },
+  {
+    "id": "cinema_film",
+    "status": "processed",
+    "source": "Tools/ImageCardAudit/final_arrow_regenerated/raw/cinema_film.png",
+    "sourceBbox": [
+      220,
+      235,
+      805,
+      888
+    ],
+    "finalBbox": [
+      46,
+      38,
+      193,
+      202
+    ],
+    "margins": [
+      46,
+      38,
+      47,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 147,
+    "warnings": []
+  },
+  {
+    "id": "garden_soil",
+    "status": "processed",
+    "source": "Tools/ImageCardAudit/final_arrow_regenerated/raw/garden_soil.png",
+    "sourceBbox": [
+      207,
+      401,
+      818,
+      888
+    ],
+    "finalBbox": [
+      38,
+      54,
+      202,
+      185
+    ],
+    "margins": [
+      38,
+      54,
+      38,
+      55
+    ],
+    "maxSide": 164,
+    "minSide": 131,
+    "warnings": []
+  },
+  {
+    "id": "clothes_glove",
+    "status": "processed",
+    "source": "Tools/ImageCardAudit/final_arrow_regenerated/raw/clothes_glove.png",
+    "sourceBbox": [
+      236,
+      354,
+      789,
+      888
+    ],
+    "finalBbox": [
+      38,
+      41,
+      202,
+      199
+    ],
+    "margins": [
+      38,
+      41,
+      38,
+      41
+    ],
+    "maxSide": 164,
+    "minSide": 158,
+    "warnings": []
+  },
+  {
+    "id": "summer_lake",
+    "status": "processed",
+    "source": "Tools/ImageCardAudit/final_arrow_regenerated/raw/summer_lake.png",
+    "sourceBbox": [
+      220,
+      401,
+      805,
+      884
+    ],
+    "finalBbox": [
+      38,
+      52,
+      202,
+      187
+    ],
+    "margins": [
+      38,
+      52,
+      38,
+      53
+    ],
+    "maxSide": 164,
+    "minSide": 135,
+    "warnings": []
+  },
+  {
+    "id": "dessert_waffle",
+    "status": "processed",
+    "source": "Tools/ImageCardAudit/final_arrow_regenerated/raw/dessert_waffle.png",
+    "sourceBbox": [
+      299,
+      311,
+      726,
+      709
+    ],
+    "finalBbox": [
+      38,
+      43,
+      202,
+      196
+    ],
+    "margins": [
+      38,
+      43,
+      38,
+      44
+    ],
+    "maxSide": 164,
+    "minSide": 153,
+    "warnings": []
+  },
+  {
+    "id": "insects_butterfly",
+    "status": "processed",
+    "source": "Tools/ImageCardAudit/final_arrow_regenerated/raw/insects_butterfly.png",
+    "sourceBbox": [
+      256,
+      277,
+      769,
+      884
+    ],
+    "finalBbox": [
+      50,
+      38,
+      189,
+      202
+    ],
+    "margins": [
+      50,
+      38,
+      51,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 139,
+    "warnings": []
+  },
+  {
+    "id": "emotions_warmth",
+    "status": "processed",
+    "source": "Tools/ImageCardAudit/final_arrow_regenerated/raw/emotions_warmth.png",
+    "sourceBbox": [
+      260,
+      243,
+      765,
+      888
+    ],
+    "finalBbox": [
+      56,
+      38,
+      184,
+      202
+    ],
+    "margins": [
+      56,
+      38,
+      56,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 128,
+    "warnings": []
+  },
+  {
+    "id": "camping_fire",
+    "status": "processed",
+    "source": "Tools/ImageCardAudit/final_arrow_regenerated/raw/camping_fire.png",
+    "sourceBbox": [
+      206,
+      258,
+      819,
+      890
+    ],
+    "finalBbox": [
+      40,
+      38,
+      199,
+      202
+    ],
+    "margins": [
+      40,
+      38,
+      41,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 159,
+    "warnings": []
+  },
+  {
+    "id": "camping_backpack",
+    "status": "processed",
+    "source": "Tools/ImageCardAudit/final_arrow_regenerated/raw/camping_backpack.png",
+    "sourceBbox": [
+      206,
+      209,
+      819,
+      890
+    ],
+    "finalBbox": [
+      46,
+      38,
+      194,
+      202
+    ],
+    "margins": [
+      46,
+      38,
+      46,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 148,
+    "warnings": []
+  },
+  {
+    "id": "toys_train",
+    "status": "processed",
+    "source": "Tools/ImageCardAudit/final_arrow_regenerated/raw/toys_train.png",
+    "sourceBbox": [
+      199,
+      311,
+      826,
+      890
+    ],
+    "finalBbox": [
+      38,
+      44,
+      202,
+      195
+    ],
+    "margins": [
+      38,
+      44,
+      38,
+      45
+    ],
+    "maxSide": 164,
+    "minSide": 151,
+    "warnings": []
+  },
+  {
+    "id": "toys_car",
+    "status": "processed",
+    "source": "Tools/ImageCardAudit/final_arrow_regenerated/raw/toys_car.png",
+    "sourceBbox": [
+      199,
+      303,
+      826,
+      890
+    ],
+    "finalBbox": [
+      38,
+      43,
+      202,
+      197
+    ],
+    "margins": [
+      38,
+      43,
+      38,
+      43
+    ],
+    "maxSide": 164,
+    "minSide": 154,
+    "warnings": []
+  },
+  {
+    "id": "tools_saw",
+    "status": "processed",
+    "source": "Tools/ImageCardAudit/final_arrow_regenerated/raw/tools_saw.png",
+    "sourceBbox": [
+      226,
+      295,
+      797,
+      888
+    ],
+    "finalBbox": [
+      41,
+      38,
+      199,
+      202
+    ],
+    "margins": [
+      41,
+      38,
+      41,
+      38
+    ],
+    "maxSide": 164,
+    "minSide": 158,
+    "warnings": []
+  },
+  {
+    "id": "tools_drill",
+    "status": "processed",
+    "source": "Tools/ImageCardAudit/final_arrow_regenerated/raw/tools_drill.png",
+    "sourceBbox": [
+      228,
+      380,
+      815,
+      888
+    ],
+    "finalBbox": [
+      38,
+      49,
+      202,
+      191
+    ],
+    "margins": [
+      38,
+      49,
+      38,
+      49
+    ],
+    "maxSide": 164,
+    "minSide": 142,
+    "warnings": []
+  }
+]

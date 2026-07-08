@@ -1,0 +1,44 @@
+[
+  {
+    "id": "kitchen_kettle",
+    "source": "/Users/vnm/Downloads/ChatGPT Image 7 июл. 2026 г., 14_42_20.png",
+    "sourceSize": [
+      1536,
+      1024
+    ],
+    "bbox": [
+      39,
+      36,
+      199,
+      204
+    ],
+    "margins": [
+      39,
+      36,
+      41,
+      36
+    ],
+    "maxSide": 168
+  },
+  {
+    "id": "music_piano",
+    "source": "/Users/vnm/Downloads/ChatGPT Image 7 июл. 2026 г., 14_44_50.png",
+    "sourceSize": [
+      1536,
+      1024
+    ],
+    "bbox": [
+      36,
+      46,
+      204,
+      193
+    ],
+    "margins": [
+      36,
+      46,
+      36,
+      47
+    ],
+    "maxSide": 168
+  }
+]

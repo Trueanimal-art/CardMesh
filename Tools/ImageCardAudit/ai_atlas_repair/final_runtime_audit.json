@@ -1,0 +1,10 @@
+{
+  "bad_size": [],
+  "empty_alpha": [],
+  "canvas_edge": [],
+  "counts": {
+    "bad_size": 0,
+    "empty_alpha": 0,
+    "canvas_edge": 0
+  }
+}

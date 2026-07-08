@@ -1,0 +1,2802 @@
+[
+  {
+    "id": "business_product",
+    "category": "business",
+    "token": "product",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/business_product.png"
+  },
+  {
+    "id": "business_client",
+    "category": "business",
+    "token": "client",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/business_client.png"
+  },
+  {
+    "id": "business_brand",
+    "category": "business",
+    "token": "brand",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/business_brand.png"
+  },
+  {
+    "id": "business_sale",
+    "category": "business",
+    "token": "sale",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/business_sale.png"
+  },
+  {
+    "id": "business_team",
+    "category": "business",
+    "token": "team",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/business_team.png"
+  },
+  {
+    "id": "business_office",
+    "category": "business",
+    "token": "office",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/business_office.png"
+  },
+  {
+    "id": "business_contract",
+    "category": "business",
+    "token": "contract",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/business_contract.png"
+  },
+  {
+    "id": "business_market",
+    "category": "business",
+    "token": "market",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/business_market.png"
+  },
+  {
+    "id": "cup_cup",
+    "category": "cup",
+    "token": "cup",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/cup_cup.png"
+  },
+  {
+    "id": "cup_mug",
+    "category": "cup",
+    "token": "mug",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/cup_mug.png"
+  },
+  {
+    "id": "cup_coffee",
+    "category": "cup",
+    "token": "coffee",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/cup_coffee.png"
+  },
+  {
+    "id": "cup_drink",
+    "category": "cup",
+    "token": "drink",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/cup_drink.png"
+  },
+  {
+    "id": "cup_tea",
+    "category": "cup",
+    "token": "tea",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/cup_tea.png"
+  },
+  {
+    "id": "cup_handle",
+    "category": "cup",
+    "token": "handle",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/cup_handle.png"
+  },
+  {
+    "id": "cup_saucer",
+    "category": "cup",
+    "token": "saucer",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/cup_saucer.png"
+  },
+  {
+    "id": "cup_thermos",
+    "category": "cup",
+    "token": "thermos",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/cup_thermos.png"
+  },
+  {
+    "id": "food_food",
+    "category": "food",
+    "token": "food",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/food_food.png"
+  },
+  {
+    "id": "food_plate",
+    "category": "food",
+    "token": "plate",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/food_plate.png"
+  },
+  {
+    "id": "food_lunch",
+    "category": "food",
+    "token": "lunch",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/food_lunch.png"
+  },
+  {
+    "id": "food_canteen",
+    "category": "food",
+    "token": "canteen",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/food_canteen.png"
+  },
+  {
+    "id": "food_soup",
+    "category": "food",
+    "token": "soup",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/food_soup.png"
+  },
+  {
+    "id": "food_bread",
+    "category": "food",
+    "token": "bread",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/food_bread.png"
+  },
+  {
+    "id": "food_fruit",
+    "category": "food",
+    "token": "fruit",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/food_fruit.png"
+  },
+  {
+    "id": "food_salad",
+    "category": "food",
+    "token": "salad",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/food_salad.png"
+  },
+  {
+    "id": "time_time",
+    "category": "time",
+    "token": "time",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/time_time.png"
+  },
+  {
+    "id": "time_clock",
+    "category": "time",
+    "token": "clock",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/time_clock.png"
+  },
+  {
+    "id": "time_alarm",
+    "category": "time",
+    "token": "alarm",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/time_alarm.png"
+  },
+  {
+    "id": "time_minutes",
+    "category": "time",
+    "token": "minutes",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/time_minutes.png"
+  },
+  {
+    "id": "time_day",
+    "category": "time",
+    "token": "day",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/time_day.png"
+  },
+  {
+    "id": "time_night",
+    "category": "time",
+    "token": "night",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/time_night.png"
+  },
+  {
+    "id": "time_week",
+    "category": "time",
+    "token": "week",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/time_week.png"
+  },
+  {
+    "id": "time_hour",
+    "category": "time",
+    "token": "hour",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/time_hour.png"
+  },
+  {
+    "id": "travel_ticket",
+    "category": "travel",
+    "token": "ticket",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/travel_ticket.png"
+  },
+  {
+    "id": "travel_hotel",
+    "category": "travel",
+    "token": "hotel",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/travel_hotel.png"
+  },
+  {
+    "id": "travel_route",
+    "category": "travel",
+    "token": "route",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/travel_route.png"
+  },
+  {
+    "id": "travel_suitcase",
+    "category": "travel",
+    "token": "suitcase",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/travel_suitcase.png"
+  },
+  {
+    "id": "travel_train",
+    "category": "travel",
+    "token": "train",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/travel_train.png"
+  },
+  {
+    "id": "travel_plane",
+    "category": "travel",
+    "token": "plane",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/travel_plane.png"
+  },
+  {
+    "id": "travel_map",
+    "category": "travel",
+    "token": "map",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/travel_map.png"
+  },
+  {
+    "id": "travel_passport",
+    "category": "travel",
+    "token": "passport",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/travel_passport.png"
+  },
+  {
+    "id": "music_song",
+    "category": "music",
+    "token": "song",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/music_song.png"
+  },
+  {
+    "id": "music_rhythm",
+    "category": "music",
+    "token": "rhythm",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/music_rhythm.png"
+  },
+  {
+    "id": "music_melody",
+    "category": "music",
+    "token": "melody",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/music_melody.png"
+  },
+  {
+    "id": "music_guitar",
+    "category": "music",
+    "token": "guitar",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/music_guitar.png"
+  },
+  {
+    "id": "music_piano",
+    "category": "music",
+    "token": "piano",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/music_piano.png"
+  },
+  {
+    "id": "music_note",
+    "category": "music",
+    "token": "note",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/music_note.png"
+  },
+  {
+    "id": "music_concert",
+    "category": "music",
+    "token": "concert",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/music_concert.png"
+  },
+  {
+    "id": "music_band",
+    "category": "music",
+    "token": "band",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/music_band.png"
+  },
+  {
+    "id": "sport_ball",
+    "category": "sport",
+    "token": "ball",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/sport_ball.png"
+  },
+  {
+    "id": "sport_coach",
+    "category": "sport",
+    "token": "coach",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/sport_coach.png"
+  },
+  {
+    "id": "sport_team",
+    "category": "sport",
+    "token": "team",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/sport_team.png"
+  },
+  {
+    "id": "sport_match",
+    "category": "sport",
+    "token": "match",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/sport_match.png"
+  },
+  {
+    "id": "sport_field",
+    "category": "sport",
+    "token": "field",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/sport_field.png"
+  },
+  {
+    "id": "sport_medal",
+    "category": "sport",
+    "token": "medal",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/sport_medal.png"
+  },
+  {
+    "id": "sport_race",
+    "category": "sport",
+    "token": "race",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/sport_race.png"
+  },
+  {
+    "id": "sport_player",
+    "category": "sport",
+    "token": "player",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/sport_player.png"
+  },
+  {
+    "id": "nature_tree",
+    "category": "nature",
+    "token": "tree",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/nature_tree.png"
+  },
+  {
+    "id": "nature_river",
+    "category": "nature",
+    "token": "river",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/nature_river.png"
+  },
+  {
+    "id": "nature_mountain",
+    "category": "nature",
+    "token": "mountain",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/nature_mountain.png"
+  },
+  {
+    "id": "nature_stone",
+    "category": "nature",
+    "token": "stone",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/nature_stone.png"
+  },
+  {
+    "id": "nature_leaf",
+    "category": "nature",
+    "token": "leaf",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/nature_leaf.png"
+  },
+  {
+    "id": "nature_cloud",
+    "category": "nature",
+    "token": "cloud",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/nature_cloud.png"
+  },
+  {
+    "id": "nature_meadow",
+    "category": "nature",
+    "token": "meadow",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/nature_meadow.png"
+  },
+  {
+    "id": "nature_sky",
+    "category": "nature",
+    "token": "sky",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/nature_sky.png"
+  },
+  {
+    "id": "weather_sun",
+    "category": "weather",
+    "token": "sun",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/weather_sun.png"
+  },
+  {
+    "id": "weather_rain",
+    "category": "weather",
+    "token": "rain",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/weather_rain.png"
+  },
+  {
+    "id": "weather_snow",
+    "category": "weather",
+    "token": "snow",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/weather_snow.png"
+  },
+  {
+    "id": "weather_wind",
+    "category": "weather",
+    "token": "wind",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/weather_wind.png"
+  },
+  {
+    "id": "weather_storm",
+    "category": "weather",
+    "token": "storm",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/weather_storm.png"
+  },
+  {
+    "id": "weather_fog",
+    "category": "weather",
+    "token": "fog",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/weather_fog.png"
+  },
+  {
+    "id": "weather_frost",
+    "category": "weather",
+    "token": "frost",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/weather_frost.png"
+  },
+  {
+    "id": "weather_heat",
+    "category": "weather",
+    "token": "heat",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/weather_heat.png"
+  },
+  {
+    "id": "city_street",
+    "category": "city",
+    "token": "street",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/city_street.png"
+  },
+  {
+    "id": "city_park",
+    "category": "city",
+    "token": "park",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/city_park.png"
+  },
+  {
+    "id": "city_bridge",
+    "category": "city",
+    "token": "bridge",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/city_bridge.png"
+  },
+  {
+    "id": "city_square",
+    "category": "city",
+    "token": "square",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/city_square.png"
+  },
+  {
+    "id": "city_subway",
+    "category": "city",
+    "token": "subway",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/city_subway.png"
+  },
+  {
+    "id": "city_cafe",
+    "category": "city",
+    "token": "cafe",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/city_cafe.png"
+  },
+  {
+    "id": "city_tower",
+    "category": "city",
+    "token": "tower",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/city_tower.png"
+  },
+  {
+    "id": "city_traffic",
+    "category": "city",
+    "token": "traffic",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/city_traffic.png"
+  },
+  {
+    "id": "home_sofa",
+    "category": "home",
+    "token": "sofa",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/home_sofa.png"
+  },
+  {
+    "id": "home_lamp",
+    "category": "home",
+    "token": "lamp",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/home_lamp.png"
+  },
+  {
+    "id": "home_window",
+    "category": "home",
+    "token": "window",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/home_window.png"
+  },
+  {
+    "id": "home_door",
+    "category": "home",
+    "token": "door",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/home_door.png"
+  },
+  {
+    "id": "home_carpet",
+    "category": "home",
+    "token": "carpet",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/home_carpet.png"
+  },
+  {
+    "id": "home_shelf",
+    "category": "home",
+    "token": "shelf",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/home_shelf.png"
+  },
+  {
+    "id": "home_pillow",
+    "category": "home",
+    "token": "pillow",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/home_pillow.png"
+  },
+  {
+    "id": "home_key",
+    "category": "home",
+    "token": "key",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/home_key.png"
+  },
+  {
+    "id": "kitchen_stove",
+    "category": "kitchen",
+    "token": "stove",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/kitchen_stove.png"
+  },
+  {
+    "id": "kitchen_spoon",
+    "category": "kitchen",
+    "token": "spoon",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/kitchen_spoon.png"
+  },
+  {
+    "id": "kitchen_fork",
+    "category": "kitchen",
+    "token": "fork",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/kitchen_fork.png"
+  },
+  {
+    "id": "kitchen_knife",
+    "category": "kitchen",
+    "token": "knife",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/kitchen_knife.png"
+  },
+  {
+    "id": "kitchen_pan",
+    "category": "kitchen",
+    "token": "pan",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/kitchen_pan.png"
+  },
+  {
+    "id": "kitchen_kettle",
+    "category": "kitchen",
+    "token": "kettle",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/kitchen_kettle.png"
+  },
+  {
+    "id": "kitchen_fridge",
+    "category": "kitchen",
+    "token": "fridge",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/kitchen_fridge.png"
+  },
+  {
+    "id": "kitchen_oven",
+    "category": "kitchen",
+    "token": "oven",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/kitchen_oven.png"
+  },
+  {
+    "id": "school_class",
+    "category": "school",
+    "token": "class",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/school_class.png"
+  },
+  {
+    "id": "school_teacher",
+    "category": "school",
+    "token": "teacher",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/school_teacher.png"
+  },
+  {
+    "id": "school_desk",
+    "category": "school",
+    "token": "desk",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/school_desk.png"
+  },
+  {
+    "id": "school_board",
+    "category": "school",
+    "token": "board",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/school_board.png"
+  },
+  {
+    "id": "school_lesson",
+    "category": "school",
+    "token": "lesson",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/school_lesson.png"
+  },
+  {
+    "id": "school_bell",
+    "category": "school",
+    "token": "bell",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/school_bell.png"
+  },
+  {
+    "id": "school_notebook",
+    "category": "school",
+    "token": "notebook",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/school_notebook.png"
+  },
+  {
+    "id": "school_marker",
+    "category": "school",
+    "token": "marker",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/school_marker.png"
+  },
+  {
+    "id": "books_novel",
+    "category": "books",
+    "token": "novel",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/books_novel.png"
+  },
+  {
+    "id": "books_page",
+    "category": "books",
+    "token": "page",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/books_page.png"
+  },
+  {
+    "id": "books_cover",
+    "category": "books",
+    "token": "cover",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/books_cover.png"
+  },
+  {
+    "id": "books_reader",
+    "category": "books",
+    "token": "reader",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/books_reader.png"
+  },
+  {
+    "id": "books_shelf",
+    "category": "books",
+    "token": "shelf",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/books_shelf.png"
+  },
+  {
+    "id": "books_author",
+    "category": "books",
+    "token": "author",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/books_author.png"
+  },
+  {
+    "id": "books_chapter",
+    "category": "books",
+    "token": "chapter",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/books_chapter.png"
+  },
+  {
+    "id": "books_bookmark",
+    "category": "books",
+    "token": "bookmark",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/books_bookmark.png"
+  },
+  {
+    "id": "art_paint",
+    "category": "art",
+    "token": "paint",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/art_paint.png"
+  },
+  {
+    "id": "art_brush",
+    "category": "art",
+    "token": "brush",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/art_brush.png"
+  },
+  {
+    "id": "art_canvas",
+    "category": "art",
+    "token": "canvas",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/art_canvas.png"
+  },
+  {
+    "id": "art_frame",
+    "category": "art",
+    "token": "frame",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/art_frame.png"
+  },
+  {
+    "id": "art_sketch",
+    "category": "art",
+    "token": "sketch",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/art_sketch.png"
+  },
+  {
+    "id": "art_gallery",
+    "category": "art",
+    "token": "gallery",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/art_gallery.png"
+  },
+  {
+    "id": "art_statue",
+    "category": "art",
+    "token": "statue",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/art_statue.png"
+  },
+  {
+    "id": "art_color",
+    "category": "art",
+    "token": "color",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/art_color.png"
+  },
+  {
+    "id": "cinema_film",
+    "category": "cinema",
+    "token": "film",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/cinema_film.png"
+  },
+  {
+    "id": "cinema_actor",
+    "category": "cinema",
+    "token": "actor",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/cinema_actor.png"
+  },
+  {
+    "id": "cinema_scene",
+    "category": "cinema",
+    "token": "scene",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/cinema_scene.png"
+  },
+  {
+    "id": "cinema_screen",
+    "category": "cinema",
+    "token": "screen",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/cinema_screen.png"
+  },
+  {
+    "id": "cinema_ticket",
+    "category": "cinema",
+    "token": "ticket",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/cinema_ticket.png"
+  },
+  {
+    "id": "cinema_popcorn",
+    "category": "cinema",
+    "token": "popcorn",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/cinema_popcorn.png"
+  },
+  {
+    "id": "cinema_trailer",
+    "category": "cinema",
+    "token": "trailer",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/cinema_trailer.png"
+  },
+  {
+    "id": "cinema_camera",
+    "category": "cinema",
+    "token": "camera",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/cinema_camera.png"
+  },
+  {
+    "id": "family_mother",
+    "category": "family",
+    "token": "mother",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/family_mother.png"
+  },
+  {
+    "id": "family_father",
+    "category": "family",
+    "token": "father",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/family_father.png"
+  },
+  {
+    "id": "family_child",
+    "category": "family",
+    "token": "child",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/family_child.png"
+  },
+  {
+    "id": "family_sister",
+    "category": "family",
+    "token": "sister",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/family_sister.png"
+  },
+  {
+    "id": "family_brother",
+    "category": "family",
+    "token": "brother",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/family_brother.png"
+  },
+  {
+    "id": "family_dinner",
+    "category": "family",
+    "token": "dinner",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/family_dinner.png"
+  },
+  {
+    "id": "family_home",
+    "category": "family",
+    "token": "home",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/family_home.png"
+  },
+  {
+    "id": "family_album",
+    "category": "family",
+    "token": "album",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/family_album.png"
+  },
+  {
+    "id": "pets_dog",
+    "category": "pets",
+    "token": "dog",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/pets_dog.png"
+  },
+  {
+    "id": "pets_cat",
+    "category": "pets",
+    "token": "cat",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/pets_cat.png"
+  },
+  {
+    "id": "pets_bowl",
+    "category": "pets",
+    "token": "bowl",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/pets_bowl.png"
+  },
+  {
+    "id": "pets_leash",
+    "category": "pets",
+    "token": "leash",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/pets_leash.png"
+  },
+  {
+    "id": "pets_toy",
+    "category": "pets",
+    "token": "toy",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/pets_toy.png"
+  },
+  {
+    "id": "pets_tail",
+    "category": "pets",
+    "token": "tail",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/pets_tail.png"
+  },
+  {
+    "id": "pets_paw",
+    "category": "pets",
+    "token": "paw",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/pets_paw.png"
+  },
+  {
+    "id": "pets_vet",
+    "category": "pets",
+    "token": "vet",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/pets_vet.png"
+  },
+  {
+    "id": "garden_bench",
+    "category": "garden",
+    "token": "bench",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/garden_bench.png"
+  },
+  {
+    "id": "garden_shovel",
+    "category": "garden",
+    "token": "shovel",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/garden_shovel.png"
+  },
+  {
+    "id": "garden_seed",
+    "category": "garden",
+    "token": "seed",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/garden_seed.png"
+  },
+  {
+    "id": "garden_soil",
+    "category": "garden",
+    "token": "soil",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/garden_soil.png"
+  },
+  {
+    "id": "garden_bush",
+    "category": "garden",
+    "token": "bush",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/garden_bush.png"
+  },
+  {
+    "id": "garden_hose",
+    "category": "garden",
+    "token": "hose",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/garden_hose.png"
+  },
+  {
+    "id": "garden_apple",
+    "category": "garden",
+    "token": "apple",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/garden_apple.png"
+  },
+  {
+    "id": "garden_path",
+    "category": "garden",
+    "token": "path",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/garden_path.png"
+  },
+  {
+    "id": "transport_bus",
+    "category": "transport",
+    "token": "bus",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/transport_bus.png"
+  },
+  {
+    "id": "transport_taxi",
+    "category": "transport",
+    "token": "taxi",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/transport_taxi.png"
+  },
+  {
+    "id": "transport_wheel",
+    "category": "transport",
+    "token": "wheel",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/transport_wheel.png"
+  },
+  {
+    "id": "transport_driver",
+    "category": "transport",
+    "token": "driver",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/transport_driver.png"
+  },
+  {
+    "id": "transport_route",
+    "category": "transport",
+    "token": "route",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/transport_route.png"
+  },
+  {
+    "id": "transport_station",
+    "category": "transport",
+    "token": "station",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/transport_station.png"
+  },
+  {
+    "id": "transport_road",
+    "category": "transport",
+    "token": "road",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/transport_road.png"
+  },
+  {
+    "id": "transport_stop",
+    "category": "transport",
+    "token": "stop",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/transport_stop.png"
+  },
+  {
+    "id": "sea_wave",
+    "category": "sea",
+    "token": "wave",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/sea_wave.png"
+  },
+  {
+    "id": "sea_shell",
+    "category": "sea",
+    "token": "shell",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/sea_shell.png"
+  },
+  {
+    "id": "sea_beach",
+    "category": "sea",
+    "token": "beach",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/sea_beach.png"
+  },
+  {
+    "id": "sea_boat",
+    "category": "sea",
+    "token": "boat",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/sea_boat.png"
+  },
+  {
+    "id": "sea_sail",
+    "category": "sea",
+    "token": "sail",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/sea_sail.png"
+  },
+  {
+    "id": "sea_island",
+    "category": "sea",
+    "token": "island",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/sea_island.png"
+  },
+  {
+    "id": "sea_fish",
+    "category": "sea",
+    "token": "fish",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/sea_fish.png"
+  },
+  {
+    "id": "sea_lighthouse",
+    "category": "sea",
+    "token": "lighthouse",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/sea_lighthouse.png"
+  },
+  {
+    "id": "space_star",
+    "category": "space",
+    "token": "star",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/space_star.png"
+  },
+  {
+    "id": "space_planet",
+    "category": "space",
+    "token": "planet",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/space_planet.png"
+  },
+  {
+    "id": "space_rocket",
+    "category": "space",
+    "token": "rocket",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/space_rocket.png"
+  },
+  {
+    "id": "space_moon",
+    "category": "space",
+    "token": "moon",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/space_moon.png"
+  },
+  {
+    "id": "space_orbit",
+    "category": "space",
+    "token": "orbit",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/space_orbit.png"
+  },
+  {
+    "id": "space_comet",
+    "category": "space",
+    "token": "comet",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/space_comet.png"
+  },
+  {
+    "id": "space_astronaut",
+    "category": "space",
+    "token": "astronaut",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/space_astronaut.png"
+  },
+  {
+    "id": "space_galaxy",
+    "category": "space",
+    "token": "galaxy",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/space_galaxy.png"
+  },
+  {
+    "id": "colors_red",
+    "category": "colors",
+    "token": "red",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/colors_red.png"
+  },
+  {
+    "id": "colors_blue",
+    "category": "colors",
+    "token": "blue",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/colors_blue.png"
+  },
+  {
+    "id": "colors_green",
+    "category": "colors",
+    "token": "green",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/colors_green.png"
+  },
+  {
+    "id": "colors_yellow",
+    "category": "colors",
+    "token": "yellow",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/colors_yellow.png"
+  },
+  {
+    "id": "colors_white",
+    "category": "colors",
+    "token": "white",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/colors_white.png"
+  },
+  {
+    "id": "colors_black",
+    "category": "colors",
+    "token": "black",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/colors_black.png"
+  },
+  {
+    "id": "colors_orange",
+    "category": "colors",
+    "token": "orange",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/colors_orange.png"
+  },
+  {
+    "id": "colors_pink",
+    "category": "colors",
+    "token": "pink",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/colors_pink.png"
+  },
+  {
+    "id": "shapes_circle",
+    "category": "shapes",
+    "token": "circle",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/shapes_circle.png"
+  },
+  {
+    "id": "shapes_square",
+    "category": "shapes",
+    "token": "square",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/shapes_square.png"
+  },
+  {
+    "id": "shapes_triangle",
+    "category": "shapes",
+    "token": "triangle",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/shapes_triangle.png"
+  },
+  {
+    "id": "shapes_line",
+    "category": "shapes",
+    "token": "line",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/shapes_line.png"
+  },
+  {
+    "id": "shapes_oval",
+    "category": "shapes",
+    "token": "oval",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/shapes_oval.png"
+  },
+  {
+    "id": "shapes_cube",
+    "category": "shapes",
+    "token": "cube",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/shapes_cube.png"
+  },
+  {
+    "id": "shapes_star",
+    "category": "shapes",
+    "token": "star",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/shapes_star.png"
+  },
+  {
+    "id": "shapes_ring",
+    "category": "shapes",
+    "token": "ring",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/shapes_ring.png"
+  },
+  {
+    "id": "clothes_shirt",
+    "category": "clothes",
+    "token": "shirt",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/clothes_shirt.png"
+  },
+  {
+    "id": "clothes_coat",
+    "category": "clothes",
+    "token": "coat",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/clothes_coat.png"
+  },
+  {
+    "id": "clothes_hat",
+    "category": "clothes",
+    "token": "hat",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/clothes_hat.png"
+  },
+  {
+    "id": "clothes_scarf",
+    "category": "clothes",
+    "token": "scarf",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/clothes_scarf.png"
+  },
+  {
+    "id": "clothes_dress",
+    "category": "clothes",
+    "token": "dress",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/clothes_dress.png"
+  },
+  {
+    "id": "clothes_jeans",
+    "category": "clothes",
+    "token": "jeans",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/clothes_jeans.png"
+  },
+  {
+    "id": "clothes_glove",
+    "category": "clothes",
+    "token": "glove",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/clothes_glove.png"
+  },
+  {
+    "id": "clothes_belt",
+    "category": "clothes",
+    "token": "belt",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/clothes_belt.png"
+  },
+  {
+    "id": "shoes_boot",
+    "category": "shoes",
+    "token": "boot",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/shoes_boot.png"
+  },
+  {
+    "id": "shoes_sneaker",
+    "category": "shoes",
+    "token": "sneaker",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/shoes_sneaker.png"
+  },
+  {
+    "id": "shoes_sandal",
+    "category": "shoes",
+    "token": "sandal",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/shoes_sandal.png"
+  },
+  {
+    "id": "shoes_lace",
+    "category": "shoes",
+    "token": "lace",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/shoes_lace.png"
+  },
+  {
+    "id": "shoes_heel",
+    "category": "shoes",
+    "token": "heel",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/shoes_heel.png"
+  },
+  {
+    "id": "shoes_sole",
+    "category": "shoes",
+    "token": "sole",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/shoes_sole.png"
+  },
+  {
+    "id": "shoes_pair",
+    "category": "shoes",
+    "token": "pair",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/shoes_pair.png"
+  },
+  {
+    "id": "shoes_size",
+    "category": "shoes",
+    "token": "size",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/shoes_size.png"
+  },
+  {
+    "id": "health_doctor",
+    "category": "health",
+    "token": "doctor",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/health_doctor.png"
+  },
+  {
+    "id": "health_clinic",
+    "category": "health",
+    "token": "clinic",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/health_clinic.png"
+  },
+  {
+    "id": "health_pill",
+    "category": "health",
+    "token": "pill",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/health_pill.png"
+  },
+  {
+    "id": "health_rest",
+    "category": "health",
+    "token": "rest",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/health_rest.png"
+  },
+  {
+    "id": "health_water",
+    "category": "health",
+    "token": "water",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/health_water.png"
+  },
+  {
+    "id": "health_sleep",
+    "category": "health",
+    "token": "sleep",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/health_sleep.png"
+  },
+  {
+    "id": "health_pulse",
+    "category": "health",
+    "token": "pulse",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/health_pulse.png"
+  },
+  {
+    "id": "health_care",
+    "category": "health",
+    "token": "care",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/health_care.png"
+  },
+  {
+    "id": "body_hand",
+    "category": "body",
+    "token": "hand",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/body_hand.png"
+  },
+  {
+    "id": "body_foot",
+    "category": "body",
+    "token": "foot",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/body_foot.png"
+  },
+  {
+    "id": "body_eye",
+    "category": "body",
+    "token": "eye",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/body_eye.png"
+  },
+  {
+    "id": "body_ear",
+    "category": "body",
+    "token": "ear",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/body_ear.png"
+  },
+  {
+    "id": "body_heart",
+    "category": "body",
+    "token": "heart",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/body_heart.png"
+  },
+  {
+    "id": "body_back",
+    "category": "body",
+    "token": "back",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/body_back.png"
+  },
+  {
+    "id": "body_finger",
+    "category": "body",
+    "token": "finger",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/body_finger.png"
+  },
+  {
+    "id": "body_smile",
+    "category": "body",
+    "token": "smile",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/body_smile.png"
+  },
+  {
+    "id": "work_task",
+    "category": "work",
+    "token": "task",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/work_task.png"
+  },
+  {
+    "id": "work_salary",
+    "category": "work",
+    "token": "salary",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/work_salary.png"
+  },
+  {
+    "id": "work_shift",
+    "category": "work",
+    "token": "shift",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/work_shift.png"
+  },
+  {
+    "id": "work_manager",
+    "category": "work",
+    "token": "manager",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/work_manager.png"
+  },
+  {
+    "id": "work_report",
+    "category": "work",
+    "token": "report",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/work_report.png"
+  },
+  {
+    "id": "work_call",
+    "category": "work",
+    "token": "call",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/work_call.png"
+  },
+  {
+    "id": "work_desk",
+    "category": "work",
+    "token": "desk",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/work_desk.png"
+  },
+  {
+    "id": "work_break",
+    "category": "work",
+    "token": "break",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/work_break.png"
+  },
+  {
+    "id": "office_chair",
+    "category": "office",
+    "token": "chair",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/office_chair.png"
+  },
+  {
+    "id": "office_printer",
+    "category": "office",
+    "token": "printer",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/office_printer.png"
+  },
+  {
+    "id": "office_paper",
+    "category": "office",
+    "token": "paper",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/office_paper.png"
+  },
+  {
+    "id": "office_folder",
+    "category": "office",
+    "token": "folder",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/office_folder.png"
+  },
+  {
+    "id": "office_pen",
+    "category": "office",
+    "token": "pen",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/office_pen.png"
+  },
+  {
+    "id": "office_coffee",
+    "category": "office",
+    "token": "coffee",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/office_coffee.png"
+  },
+  {
+    "id": "office_badge",
+    "category": "office",
+    "token": "badge",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/office_badge.png"
+  },
+  {
+    "id": "office_screen",
+    "category": "office",
+    "token": "screen",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/office_screen.png"
+  },
+  {
+    "id": "technology_robot",
+    "category": "technology",
+    "token": "robot",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/technology_robot.png"
+  },
+  {
+    "id": "technology_sensor",
+    "category": "technology",
+    "token": "sensor",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/technology_sensor.png"
+  },
+  {
+    "id": "technology_chip",
+    "category": "technology",
+    "token": "chip",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/technology_chip.png"
+  },
+  {
+    "id": "technology_code",
+    "category": "technology",
+    "token": "code",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/technology_code.png"
+  },
+  {
+    "id": "technology_drone",
+    "category": "technology",
+    "token": "drone",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/technology_drone.png"
+  },
+  {
+    "id": "technology_laser",
+    "category": "technology",
+    "token": "laser",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/technology_laser.png"
+  },
+  {
+    "id": "technology_server",
+    "category": "technology",
+    "token": "server",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/technology_server.png"
+  },
+  {
+    "id": "technology_battery",
+    "category": "technology",
+    "token": "battery",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/technology_battery.png"
+  },
+  {
+    "id": "internet_site",
+    "category": "internet",
+    "token": "site",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/internet_site.png"
+  },
+  {
+    "id": "internet_link",
+    "category": "internet",
+    "token": "link",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/internet_link.png"
+  },
+  {
+    "id": "internet_search",
+    "category": "internet",
+    "token": "search",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/internet_search.png"
+  },
+  {
+    "id": "internet_mail",
+    "category": "internet",
+    "token": "mail",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/internet_mail.png"
+  },
+  {
+    "id": "internet_video",
+    "category": "internet",
+    "token": "video",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/internet_video.png"
+  },
+  {
+    "id": "internet_blog",
+    "category": "internet",
+    "token": "blog",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/internet_blog.png"
+  },
+  {
+    "id": "internet_cloud",
+    "category": "internet",
+    "token": "cloud",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/internet_cloud.png"
+  },
+  {
+    "id": "internet_chat",
+    "category": "internet",
+    "token": "chat",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/internet_chat.png"
+  },
+  {
+    "id": "phone_call",
+    "category": "phone",
+    "token": "call",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/phone_call.png"
+  },
+  {
+    "id": "phone_screen",
+    "category": "phone",
+    "token": "screen",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/phone_screen.png"
+  },
+  {
+    "id": "phone_case",
+    "category": "phone",
+    "token": "case",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/phone_case.png"
+  },
+  {
+    "id": "phone_app",
+    "category": "phone",
+    "token": "app",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/phone_app.png"
+  },
+  {
+    "id": "phone_charge",
+    "category": "phone",
+    "token": "charge",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/phone_charge.png"
+  },
+  {
+    "id": "phone_contact",
+    "category": "phone",
+    "token": "contact",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/phone_contact.png"
+  },
+  {
+    "id": "phone_message",
+    "category": "phone",
+    "token": "message",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/phone_message.png"
+  },
+  {
+    "id": "phone_camera",
+    "category": "phone",
+    "token": "camera",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/phone_camera.png"
+  },
+  {
+    "id": "photo_lens",
+    "category": "photo",
+    "token": "lens",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/photo_lens.png"
+  },
+  {
+    "id": "photo_flash",
+    "category": "photo",
+    "token": "flash",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/photo_flash.png"
+  },
+  {
+    "id": "photo_album",
+    "category": "photo",
+    "token": "album",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/photo_album.png"
+  },
+  {
+    "id": "photo_portrait",
+    "category": "photo",
+    "token": "portrait",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/photo_portrait.png"
+  },
+  {
+    "id": "photo_frame",
+    "category": "photo",
+    "token": "frame",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/photo_frame.png"
+  },
+  {
+    "id": "photo_shot",
+    "category": "photo",
+    "token": "shot",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/photo_shot.png"
+  },
+  {
+    "id": "photo_focus",
+    "category": "photo",
+    "token": "focus",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/photo_focus.png"
+  },
+  {
+    "id": "photo_studio",
+    "category": "photo",
+    "token": "studio",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/photo_studio.png"
+  },
+  {
+    "id": "holidays_cake",
+    "category": "holidays",
+    "token": "cake",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/holidays_cake.png"
+  },
+  {
+    "id": "holidays_gift",
+    "category": "holidays",
+    "token": "gift",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/holidays_gift.png"
+  },
+  {
+    "id": "holidays_candle",
+    "category": "holidays",
+    "token": "candle",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/holidays_candle.png"
+  },
+  {
+    "id": "holidays_guest",
+    "category": "holidays",
+    "token": "guest",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/holidays_guest.png"
+  },
+  {
+    "id": "holidays_music",
+    "category": "holidays",
+    "token": "music",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/holidays_music.png"
+  },
+  {
+    "id": "holidays_table",
+    "category": "holidays",
+    "token": "table",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/holidays_table.png"
+  },
+  {
+    "id": "holidays_card",
+    "category": "holidays",
+    "token": "card",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/holidays_card.png"
+  },
+  {
+    "id": "holidays_balloon",
+    "category": "holidays",
+    "token": "balloon",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/holidays_balloon.png"
+  },
+  {
+    "id": "winter_snow",
+    "category": "winter",
+    "token": "snow",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/winter_snow.png"
+  },
+  {
+    "id": "winter_ski",
+    "category": "winter",
+    "token": "ski",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/winter_ski.png"
+  },
+  {
+    "id": "winter_scarf",
+    "category": "winter",
+    "token": "scarf",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/winter_scarf.png"
+  },
+  {
+    "id": "winter_ice",
+    "category": "winter",
+    "token": "ice",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/winter_ice.png"
+  },
+  {
+    "id": "winter_mitten",
+    "category": "winter",
+    "token": "mitten",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/winter_mitten.png"
+  },
+  {
+    "id": "winter_pine",
+    "category": "winter",
+    "token": "pine",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/winter_pine.png"
+  },
+  {
+    "id": "winter_cocoa",
+    "category": "winter",
+    "token": "cocoa",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/winter_cocoa.png"
+  },
+  {
+    "id": "winter_sleigh",
+    "category": "winter",
+    "token": "sleigh",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/winter_sleigh.png"
+  },
+  {
+    "id": "summer_sun",
+    "category": "summer",
+    "token": "sun",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/summer_sun.png"
+  },
+  {
+    "id": "summer_beach",
+    "category": "summer",
+    "token": "beach",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/summer_beach.png"
+  },
+  {
+    "id": "summer_hat",
+    "category": "summer",
+    "token": "hat",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/summer_hat.png"
+  },
+  {
+    "id": "summer_lake",
+    "category": "summer",
+    "token": "lake",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/summer_lake.png"
+  },
+  {
+    "id": "summer_berry",
+    "category": "summer",
+    "token": "berry",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/summer_berry.png"
+  },
+  {
+    "id": "summer_picnic",
+    "category": "summer",
+    "token": "picnic",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/summer_picnic.png"
+  },
+  {
+    "id": "summer_fan",
+    "category": "summer",
+    "token": "fan",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/summer_fan.png"
+  },
+  {
+    "id": "summer_sandals",
+    "category": "summer",
+    "token": "sandals",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/summer_sandals.png"
+  },
+  {
+    "id": "breakfast_toast",
+    "category": "breakfast",
+    "token": "toast",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/breakfast_toast.png"
+  },
+  {
+    "id": "breakfast_porridge",
+    "category": "breakfast",
+    "token": "porridge",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/breakfast_porridge.png"
+  },
+  {
+    "id": "breakfast_egg",
+    "category": "breakfast",
+    "token": "egg",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/breakfast_egg.png"
+  },
+  {
+    "id": "breakfast_jam",
+    "category": "breakfast",
+    "token": "jam",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/breakfast_jam.png"
+  },
+  {
+    "id": "breakfast_cereal",
+    "category": "breakfast",
+    "token": "cereal",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/breakfast_cereal.png"
+  },
+  {
+    "id": "breakfast_yogurt",
+    "category": "breakfast",
+    "token": "yogurt",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/breakfast_yogurt.png"
+  },
+  {
+    "id": "breakfast_tea",
+    "category": "breakfast",
+    "token": "tea",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/breakfast_tea.png"
+  },
+  {
+    "id": "breakfast_butter",
+    "category": "breakfast",
+    "token": "butter",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/breakfast_butter.png"
+  },
+  {
+    "id": "dessert_cake",
+    "category": "dessert",
+    "token": "cake",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/dessert_cake.png"
+  },
+  {
+    "id": "dessert_cookie",
+    "category": "dessert",
+    "token": "cookie",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/dessert_cookie.png"
+  },
+  {
+    "id": "dessert_candy",
+    "category": "dessert",
+    "token": "candy",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/dessert_candy.png"
+  },
+  {
+    "id": "dessert_pie",
+    "category": "dessert",
+    "token": "pie",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/dessert_pie.png"
+  },
+  {
+    "id": "dessert_cream",
+    "category": "dessert",
+    "token": "cream",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/dessert_cream.png"
+  },
+  {
+    "id": "dessert_icecream",
+    "category": "dessert",
+    "token": "icecream",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/dessert_icecream.png"
+  },
+  {
+    "id": "dessert_waffle",
+    "category": "dessert",
+    "token": "waffle",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/dessert_waffle.png"
+  },
+  {
+    "id": "dessert_honey",
+    "category": "dessert",
+    "token": "honey",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/dessert_honey.png"
+  },
+  {
+    "id": "drinks_juice",
+    "category": "drinks",
+    "token": "juice",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/drinks_juice.png"
+  },
+  {
+    "id": "drinks_tea",
+    "category": "drinks",
+    "token": "tea",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/drinks_tea.png"
+  },
+  {
+    "id": "drinks_coffee",
+    "category": "drinks",
+    "token": "coffee",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/drinks_coffee.png"
+  },
+  {
+    "id": "drinks_water",
+    "category": "drinks",
+    "token": "water",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/drinks_water.png"
+  },
+  {
+    "id": "drinks_cocoa",
+    "category": "drinks",
+    "token": "cocoa",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/drinks_cocoa.png"
+  },
+  {
+    "id": "drinks_milk",
+    "category": "drinks",
+    "token": "milk",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/drinks_milk.png"
+  },
+  {
+    "id": "drinks_lemonade",
+    "category": "drinks",
+    "token": "lemonade",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/drinks_lemonade.png"
+  },
+  {
+    "id": "drinks_smoothie",
+    "category": "drinks",
+    "token": "smoothie",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/drinks_smoothie.png"
+  },
+  {
+    "id": "farm_barn",
+    "category": "farm",
+    "token": "barn",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/farm_barn.png"
+  },
+  {
+    "id": "farm_tractor",
+    "category": "farm",
+    "token": "tractor",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/farm_tractor.png"
+  },
+  {
+    "id": "farm_field",
+    "category": "farm",
+    "token": "field",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/farm_field.png"
+  },
+  {
+    "id": "farm_hay",
+    "category": "farm",
+    "token": "hay",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/farm_hay.png"
+  },
+  {
+    "id": "farm_cow",
+    "category": "farm",
+    "token": "cow",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/farm_cow.png"
+  },
+  {
+    "id": "farm_chicken",
+    "category": "farm",
+    "token": "chicken",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/farm_chicken.png"
+  },
+  {
+    "id": "farm_grain",
+    "category": "farm",
+    "token": "grain",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/farm_grain.png"
+  },
+  {
+    "id": "farm_fence",
+    "category": "farm",
+    "token": "fence",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/farm_fence.png"
+  },
+  {
+    "id": "forest_pine",
+    "category": "forest",
+    "token": "pine",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/forest_pine.png"
+  },
+  {
+    "id": "forest_mushroom",
+    "category": "forest",
+    "token": "mushroom",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/forest_mushroom.png"
+  },
+  {
+    "id": "forest_fox",
+    "category": "forest",
+    "token": "fox",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/forest_fox.png"
+  },
+  {
+    "id": "forest_owl",
+    "category": "forest",
+    "token": "owl",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/forest_owl.png"
+  },
+  {
+    "id": "forest_fern",
+    "category": "forest",
+    "token": "fern",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/forest_fern.png"
+  },
+  {
+    "id": "forest_stump",
+    "category": "forest",
+    "token": "stump",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/forest_stump.png"
+  },
+  {
+    "id": "forest_berry",
+    "category": "forest",
+    "token": "berry",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/forest_berry.png"
+  },
+  {
+    "id": "forest_path",
+    "category": "forest",
+    "token": "path",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/forest_path.png"
+  },
+  {
+    "id": "flowers_rose",
+    "category": "flowers",
+    "token": "rose",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/flowers_rose.png"
+  },
+  {
+    "id": "flowers_tulip",
+    "category": "flowers",
+    "token": "tulip",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/flowers_tulip.png"
+  },
+  {
+    "id": "flowers_lily",
+    "category": "flowers",
+    "token": "lily",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/flowers_lily.png"
+  },
+  {
+    "id": "flowers_peony",
+    "category": "flowers",
+    "token": "peony",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/flowers_peony.png"
+  },
+  {
+    "id": "flowers_bouquet",
+    "category": "flowers",
+    "token": "bouquet",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/flowers_bouquet.png"
+  },
+  {
+    "id": "flowers_petal",
+    "category": "flowers",
+    "token": "petal",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/flowers_petal.png"
+  },
+  {
+    "id": "flowers_stem",
+    "category": "flowers",
+    "token": "stem",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/flowers_stem.png"
+  },
+  {
+    "id": "flowers_vase",
+    "category": "flowers",
+    "token": "vase",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/flowers_vase.png"
+  },
+  {
+    "id": "insects_bee",
+    "category": "insects",
+    "token": "bee",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/insects_bee.png"
+  },
+  {
+    "id": "insects_ant",
+    "category": "insects",
+    "token": "ant",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/insects_ant.png"
+  },
+  {
+    "id": "insects_butterfly",
+    "category": "insects",
+    "token": "butterfly",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/insects_butterfly.png"
+  },
+  {
+    "id": "insects_beetle",
+    "category": "insects",
+    "token": "beetle",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/insects_beetle.png"
+  },
+  {
+    "id": "insects_wing",
+    "category": "insects",
+    "token": "wing",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/insects_wing.png"
+  },
+  {
+    "id": "insects_hive",
+    "category": "insects",
+    "token": "hive",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/insects_hive.png"
+  },
+  {
+    "id": "insects_cocoon",
+    "category": "insects",
+    "token": "cocoon",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/insects_cocoon.png"
+  },
+  {
+    "id": "insects_ladybug",
+    "category": "insects",
+    "token": "ladybug",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/insects_ladybug.png"
+  },
+  {
+    "id": "emotions_joy",
+    "category": "emotions",
+    "token": "joy",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/emotions_joy.png"
+  },
+  {
+    "id": "emotions_calm",
+    "category": "emotions",
+    "token": "calm",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/emotions_calm.png"
+  },
+  {
+    "id": "emotions_surprise",
+    "category": "emotions",
+    "token": "surprise",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/emotions_surprise.png"
+  },
+  {
+    "id": "emotions_interest",
+    "category": "emotions",
+    "token": "interest",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/emotions_interest.png"
+  },
+  {
+    "id": "emotions_hope",
+    "category": "emotions",
+    "token": "hope",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/emotions_hope.png"
+  },
+  {
+    "id": "emotions_trust",
+    "category": "emotions",
+    "token": "trust",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/emotions_trust.png"
+  },
+  {
+    "id": "emotions_pride",
+    "category": "emotions",
+    "token": "pride",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/emotions_pride.png"
+  },
+  {
+    "id": "emotions_warmth",
+    "category": "emotions",
+    "token": "warmth",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/emotions_warmth.png"
+  },
+  {
+    "id": "friendship_friend",
+    "category": "friendship",
+    "token": "friend",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/friendship_friend.png"
+  },
+  {
+    "id": "friendship_chat",
+    "category": "friendship",
+    "token": "chat",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/friendship_chat.png"
+  },
+  {
+    "id": "friendship_walk",
+    "category": "friendship",
+    "token": "walk",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/friendship_walk.png"
+  },
+  {
+    "id": "friendship_smile",
+    "category": "friendship",
+    "token": "smile",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/friendship_smile.png"
+  },
+  {
+    "id": "friendship_help",
+    "category": "friendship",
+    "token": "help",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/friendship_help.png"
+  },
+  {
+    "id": "friendship_team",
+    "category": "friendship",
+    "token": "team",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/friendship_team.png"
+  },
+  {
+    "id": "friendship_secret",
+    "category": "friendship",
+    "token": "secret",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/friendship_secret.png"
+  },
+  {
+    "id": "friendship_memory",
+    "category": "friendship",
+    "token": "memory",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/friendship_memory.png"
+  },
+  {
+    "id": "hobbies_drawing",
+    "category": "hobbies",
+    "token": "drawing",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/hobbies_drawing.png"
+  },
+  {
+    "id": "hobbies_knitting",
+    "category": "hobbies",
+    "token": "knitting",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/hobbies_knitting.png"
+  },
+  {
+    "id": "hobbies_chess",
+    "category": "hobbies",
+    "token": "chess",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/hobbies_chess.png"
+  },
+  {
+    "id": "hobbies_puzzle",
+    "category": "hobbies",
+    "token": "puzzle",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/hobbies_puzzle.png"
+  },
+  {
+    "id": "hobbies_dance",
+    "category": "hobbies",
+    "token": "dance",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/hobbies_dance.png"
+  },
+  {
+    "id": "hobbies_baking",
+    "category": "hobbies",
+    "token": "baking",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/hobbies_baking.png"
+  },
+  {
+    "id": "hobbies_reading",
+    "category": "hobbies",
+    "token": "reading",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/hobbies_reading.png"
+  },
+  {
+    "id": "hobbies_music",
+    "category": "hobbies",
+    "token": "music",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/hobbies_music.png"
+  },
+  {
+    "id": "camping_tent",
+    "category": "camping",
+    "token": "tent",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/camping_tent.png"
+  },
+  {
+    "id": "camping_fire",
+    "category": "camping",
+    "token": "fire",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/camping_fire.png"
+  },
+  {
+    "id": "camping_map",
+    "category": "camping",
+    "token": "map",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/camping_map.png"
+  },
+  {
+    "id": "camping_compass",
+    "category": "camping",
+    "token": "compass",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/camping_compass.png"
+  },
+  {
+    "id": "camping_backpack",
+    "category": "camping",
+    "token": "backpack",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/camping_backpack.png"
+  },
+  {
+    "id": "camping_lantern",
+    "category": "camping",
+    "token": "lantern",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/camping_lantern.png"
+  },
+  {
+    "id": "camping_trail",
+    "category": "camping",
+    "token": "trail",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/camping_trail.png"
+  },
+  {
+    "id": "camping_mug",
+    "category": "camping",
+    "token": "mug",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/camping_mug.png"
+  },
+  {
+    "id": "toys_doll",
+    "category": "toys",
+    "token": "doll",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/toys_doll.png"
+  },
+  {
+    "id": "toys_blocks",
+    "category": "toys",
+    "token": "blocks",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/toys_blocks.png"
+  },
+  {
+    "id": "toys_train",
+    "category": "toys",
+    "token": "train",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/toys_train.png"
+  },
+  {
+    "id": "toys_puzzle",
+    "category": "toys",
+    "token": "puzzle",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/toys_puzzle.png"
+  },
+  {
+    "id": "toys_ball",
+    "category": "toys",
+    "token": "ball",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/toys_ball.png"
+  },
+  {
+    "id": "toys_robot",
+    "category": "toys",
+    "token": "robot",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/toys_robot.png"
+  },
+  {
+    "id": "toys_kite",
+    "category": "toys",
+    "token": "kite",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/toys_kite.png"
+  },
+  {
+    "id": "toys_car",
+    "category": "toys",
+    "token": "car",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/toys_car.png"
+  },
+  {
+    "id": "tools_hammer",
+    "category": "tools",
+    "token": "hammer",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/tools_hammer.png"
+  },
+  {
+    "id": "tools_saw",
+    "category": "tools",
+    "token": "saw",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/tools_saw.png"
+  },
+  {
+    "id": "tools_drill",
+    "category": "tools",
+    "token": "drill",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/tools_drill.png"
+  },
+  {
+    "id": "tools_wrench",
+    "category": "tools",
+    "token": "wrench",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/tools_wrench.png"
+  },
+  {
+    "id": "tools_nail",
+    "category": "tools",
+    "token": "nail",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/tools_nail.png"
+  },
+  {
+    "id": "tools_pliers",
+    "category": "tools",
+    "token": "pliers",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/tools_pliers.png"
+  },
+  {
+    "id": "tools_ruler",
+    "category": "tools",
+    "token": "ruler",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/tools_ruler.png"
+  },
+  {
+    "id": "tools_level",
+    "category": "tools",
+    "token": "level",
+    "status": "generated",
+    "file": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_all/tools_level.png"
+  }
+]
