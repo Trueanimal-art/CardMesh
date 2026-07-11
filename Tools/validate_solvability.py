@@ -53,6 +53,7 @@ class SolvabilityValidator:
         self.root = root
         self.cards_by_gold, self.gold_titles = self._load_cards()
         self.gold_ids = tuple(self.cards_by_gold)
+        self.recent_card_ids: frozenset[str] = frozenset()
         self.regular_to_gold = {
             card_id: gold_id
             for gold_id, cards in self.cards_by_gold.items()
@@ -166,8 +167,11 @@ class SolvabilityValidator:
 
                 ordinary_ids = list(self.cards_by_gold[selected_gold])
                 rng.shuffle(ordinary_ids)
-                assigned = ordinary_ids[:ordinary_per_gold]
-                remaining = ordinary_ids[ordinary_per_gold:]
+                preferred_ids = [card_id for card_id in ordinary_ids if card_id not in self.recent_card_ids]
+                assignment_pool = preferred_ids if len(preferred_ids) >= ordinary_per_gold else ordinary_ids
+                assigned = assignment_pool[:ordinary_per_gold]
+                assigned_set = set(assigned)
+                remaining = [card_id for card_id in ordinary_ids if card_id not in assigned_set]
 
                 selected.append(
                     {
@@ -287,8 +291,11 @@ class SolvabilityValidator:
         columns, stock = self._scatter_columns_and_stock(columns, stock, draft.required_by_gold, seed)
         max_gold_tops = 1 if layout.columns_count <= 3 else 2
         columns, stock = self._limit_initial_gold_tops(columns, stock, seed, max_gold_tops=max_gold_tops)
+        columns, stock = self._break_initial_tableau_cascade(columns, stock, seed)
         columns, stock = self._force_stock_dependent_tableau_card(columns, stock, draft.required_by_gold, seed)
+        columns, stock = self._bury_late_tableau_dependencies(columns, stock, draft.required_by_gold, seed)
         columns, stock = self._limit_initial_gold_tops(columns, stock, seed ^ 0xA11CE, max_gold_tops=max_gold_tops)
+        columns, stock = self._break_initial_tableau_cascade(columns, stock, seed ^ 0xCA5CADE)
         if layout.columns_count >= 4:
             stock = self._force_second_stock_pass(columns, stock, draft.required_by_gold, seed)
         if sum(len(column) for column in columns) + len(stock) != len(all_cards):
@@ -433,6 +440,151 @@ class SolvabilityValidator:
             swaps_remaining -= 1
 
         mutable_stock = self._rebalance_stock_runs(mutable_stock)
+        return [tuple(column) for column in mutable_columns], tuple(mutable_stock)
+
+    def _break_initial_tableau_cascade(
+        self,
+        columns: list[tuple[str, ...]],
+        stock: tuple[str, ...],
+        seed: int,
+    ) -> tuple[list[tuple[str, ...]], tuple[str, ...]]:
+        mutable_columns = [list(column) for column in columns]
+        mutable_stock = list(stock)
+        if not mutable_stock:
+            return columns, stock
+
+        top_gold_ids = {
+            column[-1]
+            for column in mutable_columns
+            if column and self._is_gold(column[-1])
+        }
+        if not top_gold_ids:
+            return columns, stock
+
+        rng = random.Random(seed ^ 0xCA5CADE)
+        stock_indices = list(range(len(mutable_stock)))
+        rng.shuffle(stock_indices)
+
+        for column in mutable_columns:
+            if not column:
+                continue
+            top_card = column[-1]
+            if self._is_gold(top_card) or self._card_association(top_card) not in top_gold_ids:
+                continue
+
+            replacement_index = next(
+                (
+                    index
+                    for index in stock_indices
+                    if not self._is_gold(mutable_stock[index])
+                    and self._card_association(mutable_stock[index]) not in top_gold_ids
+                ),
+                None,
+            )
+            if replacement_index is None:
+                continue
+
+            column[-1], mutable_stock[replacement_index] = mutable_stock[replacement_index], column[-1]
+            stock_indices.remove(replacement_index)
+
+        return [tuple(column) for column in mutable_columns], tuple(mutable_stock)
+
+    def find_initial_tableau_cascade(self, level: GeneratedLevel) -> dict | None:
+        top_gold_ids = {
+            column[-1]
+            for column in level.columns
+            if column and self._is_gold(column[-1])
+        }
+        if not top_gold_ids:
+            return None
+
+        matching_top_cards = []
+        for column_index, column in enumerate(level.columns):
+            if not column:
+                continue
+
+            top_card = column[-1]
+            if self._is_gold(top_card):
+                continue
+
+            association = self._card_association(top_card)
+            if association in top_gold_ids:
+                matching_top_cards.append(
+                    {
+                        "columnIndex": column_index,
+                        "cardId": top_card,
+                        "association": association,
+                    }
+                )
+
+        if not matching_top_cards:
+            return None
+
+        return {
+            "topGoldIds": sorted(top_gold_ids),
+            "matchingTopCards": matching_top_cards,
+        }
+
+    def _bury_late_tableau_dependencies(
+        self,
+        columns: list[tuple[str, ...]],
+        stock: tuple[str, ...],
+        required_by_gold: dict[str, int],
+        seed: int,
+    ) -> tuple[list[tuple[str, ...]], tuple[str, ...]]:
+        mutable_columns = [list(column) for column in columns]
+        mutable_stock = list(stock)
+        if not mutable_stock:
+            return columns, stock
+
+        hidden_positions = [
+            (column_index, card_index)
+            for column_index, column in enumerate(mutable_columns)
+            for card_index in range(0, max(0, len(column) - 1))
+        ]
+        if not hidden_positions:
+            return columns, stock
+
+        hidden_positions.sort(key=lambda item: (item[1], item[0]))
+        late_start = max(0, len(mutable_stock) // 2)
+        late_stock_indices = [
+            index
+            for index in range(late_start, len(mutable_stock))
+            if not self._is_gold(mutable_stock[index])
+            and self._card_association(mutable_stock[index]) in required_by_gold
+        ]
+        if not late_stock_indices:
+            return columns, stock
+
+        rng = random.Random(seed ^ 0x7A81EA)
+        rng.shuffle(late_stock_indices)
+        swaps_remaining = min(len(hidden_positions), len(late_stock_indices), max(1, len(mutable_columns)))
+        used_column_indices: set[int] = set()
+        for stock_index in late_stock_indices:
+            target = next(
+                (
+                    position
+                    for position in hidden_positions
+                    if position[0] not in used_column_indices
+                    and self._card_association(mutable_columns[position[0]][position[1]])
+                    != self._card_association(mutable_stock[stock_index])
+                ),
+                None,
+            )
+            if target is None:
+                continue
+
+            column_index, card_index = target
+            mutable_columns[column_index][card_index], mutable_stock[stock_index] = (
+                mutable_stock[stock_index],
+                mutable_columns[column_index][card_index],
+            )
+            used_column_indices.add(column_index)
+            hidden_positions.remove(target)
+            swaps_remaining -= 1
+            if swaps_remaining <= 0:
+                break
+
         return [tuple(column) for column in mutable_columns], tuple(mutable_stock)
 
     def _force_stock_dependent_tableau_card(
@@ -866,7 +1018,7 @@ class SolvabilityValidator:
 
             moving_card = stack[-1] if self._is_gold(stack[-1]) else stack[0]
             for target_index, (target_cards, _) in enumerate(columns):
-                if self._is_gold_headed_stack(stack) and len(stack) > 1:
+                if target_cards and self._is_gold_headed_stack(stack) and len(stack) > 1:
                     continue
                 if column_index == target_index:
                     continue
@@ -998,6 +1150,88 @@ class SolvabilityValidator:
         reason = "state_limit" if states >= max_states else "requires_more_stock_passes"
         return SolveResult(False, None, states, reason)
 
+    def find_stock_pressure_violation(self, level: GeneratedLevel, max_states: int) -> dict | None:
+        initial_columns = tuple((tuple(self._symbolize(card_id) for card_id in column), 1 if column else 0) for column in level.columns)
+        initial_stock = tuple(self._symbolize(card_id) for card_id in level.stock)
+        initial_state, initial_forced_moves = self._settle_forced_moves(
+            self._canonical_state(
+                initial_columns,
+                initial_stock,
+                tuple(),
+                tuple(None for _ in range(level.layout.columns_count)),
+                frozenset(),
+            ),
+            level,
+        )
+
+        tail_allowance = self._stock_pressure_tail_allowance(level.layout)
+        minimum_columns = self._minimum_tableau_cards_during_stock_pressure(level.layout)
+        min_remaining_columns = self._remaining_tableau_cards(initial_state)
+
+        queue: list[tuple[int, int, int, int, object]] = []
+        counter = 0
+        heapq.heappush(
+            queue,
+            (
+                min_remaining_columns,
+                0,
+                initial_forced_moves,
+                counter,
+                initial_state,
+            ),
+        )
+        best_moves_by_state = {initial_state: initial_forced_moves}
+        states = 0
+
+        while queue and states < max_states:
+            _, _, moves_used, _, state = heapq.heappop(queue)
+            if best_moves_by_state.get(state, 10**9) != moves_used:
+                continue
+
+            states += 1
+            columns, queued, _, _, completed = state
+            queued_count = len(queued)
+            remaining_columns = self._remaining_tableau_cards(state)
+            min_remaining_columns = min(min_remaining_columns, remaining_columns)
+            draws = max(0, len(level.stock) - queued_count)
+
+            if queued_count > tail_allowance and remaining_columns < minimum_columns:
+                return {
+                    "draws": draws,
+                    "states": states,
+                    "remainingColumns": remaining_columns,
+                    "remainingQueued": queued_count,
+                    "minimumColumns": minimum_columns,
+                    "stockPressureTailAllowance": tail_allowance,
+                    "minRemainingColumns": min_remaining_columns,
+                    "completedGoals": len(completed),
+                }
+
+            if queued_count <= tail_allowance:
+                continue
+
+            for raw_next_state in self._next_decision_states(state, level):
+                settled_next_state, forced_moves = self._settle_forced_moves(raw_next_state, level)
+                next_moves = moves_used + 1 + forced_moves
+                previous = best_moves_by_state.get(settled_next_state)
+                if previous is not None and previous <= next_moves:
+                    continue
+
+                best_moves_by_state[settled_next_state] = next_moves
+                counter += 1
+                heapq.heappush(
+                    queue,
+                    (
+                        self._remaining_tableau_cards(settled_next_state),
+                        max(0, len(level.stock) - len(settled_next_state[1])),
+                        next_moves,
+                        counter,
+                        settled_next_state,
+                    ),
+                )
+
+        return None
+
     def simulate_greedy_stock_passes(self, level: GeneratedLevel, max_passes: int) -> dict:
         columns = [list(column) for column in level.columns]
         queued = list(level.stock)
@@ -1007,9 +1241,37 @@ class SolvabilityValidator:
         passes_completed = 0
         draws = 0
         solved_before_first_pass_end = False
+        stock_pressure_tail_allowance = self._stock_pressure_tail_allowance(level.layout)
+        minimum_columns_during_stock_pressure = self._minimum_tableau_cards_during_stock_pressure(level.layout)
+        min_remaining_columns_during_stock_pressure = sum(len(column) for column in columns)
+        early_tableau_pressure_violation: dict | None = None
 
         def columns_empty() -> bool:
             return all(not column for column in columns)
+
+        def remaining_columns() -> int:
+            return sum(len(column) for column in columns)
+
+        def record_stock_pressure(stage: str) -> None:
+            nonlocal min_remaining_columns_during_stock_pressure
+            nonlocal early_tableau_pressure_violation
+            if passes_completed != 0 or len(queued) <= stock_pressure_tail_allowance:
+                return
+
+            remaining = remaining_columns()
+            min_remaining_columns_during_stock_pressure = min(
+                min_remaining_columns_during_stock_pressure,
+                remaining,
+            )
+            if remaining < minimum_columns_during_stock_pressure and early_tableau_pressure_violation is None:
+                early_tableau_pressure_violation = {
+                    "stage": stage,
+                    "draws": draws,
+                    "remainingColumns": remaining,
+                    "remainingQueued": len(queued),
+                    "minimumColumns": minimum_columns_during_stock_pressure,
+                    "stockPressureTailAllowance": stock_pressure_tail_allowance,
+                }
 
         def solved() -> bool:
             return len(completed) >= len(level.selected_gold)
@@ -1082,7 +1344,7 @@ class SolvabilityValidator:
                         continue
                     moving_card = stack[-1] if self._is_gold_headed_stack(stack) else stack[0]
                     for target_index, target_column in enumerate(columns):
-                        if self._is_gold_headed_stack(stack) and len(stack) > 1:
+                        if target_column and self._is_gold_headed_stack(stack) and len(stack) > 1:
                             continue
                         if source_index == target_index:
                             continue
@@ -1099,6 +1361,7 @@ class SolvabilityValidator:
                         break
 
         settle()
+        record_stock_pressure("initial_settle")
         while passes_completed < max_passes:
             if solved() or columns_empty():
                 if queued:
@@ -1109,15 +1372,20 @@ class SolvabilityValidator:
                     "solvedBeforeFirstPassEnd": solved_before_first_pass_end,
                     "passesCompleted": passes_completed,
                     "draws": draws,
-                    "remainingColumns": sum(len(column) for column in columns),
+                    "remainingColumns": remaining_columns(),
                     "remainingQueued": len(queued),
                     "remainingRevealed": len(revealed),
+                    "minimumColumnsDuringStockPressure": minimum_columns_during_stock_pressure,
+                    "stockPressureTailAllowance": stock_pressure_tail_allowance,
+                    "minRemainingColumnsDuringStockPressure": min_remaining_columns_during_stock_pressure,
+                    "earlyTableauPressureViolation": early_tableau_pressure_violation,
                 }
 
             if queued:
                 revealed.append(queued.pop(0))
                 draws += 1
                 settle()
+                record_stock_pressure("after_draw_settle")
                 if passes_completed == 0 and queued and (solved() or columns_empty()):
                     solved_before_first_pass_end = True
                 continue
@@ -1137,10 +1405,27 @@ class SolvabilityValidator:
             "solvedBeforeFirstPassEnd": solved_before_first_pass_end,
             "passesCompleted": passes_completed,
             "draws": draws,
-            "remainingColumns": sum(len(column) for column in columns),
+            "remainingColumns": remaining_columns(),
             "remainingQueued": len(queued),
             "remainingRevealed": len(revealed),
+            "minimumColumnsDuringStockPressure": minimum_columns_during_stock_pressure,
+            "stockPressureTailAllowance": stock_pressure_tail_allowance,
+            "minRemainingColumnsDuringStockPressure": min_remaining_columns_during_stock_pressure,
+            "earlyTableauPressureViolation": early_tableau_pressure_violation,
         }
+
+    @staticmethod
+    def _minimum_tableau_cards_during_stock_pressure(layout: Layout) -> int:
+        return 2 if layout.columns_count <= 4 else 3
+
+    @staticmethod
+    def _stock_pressure_tail_allowance(layout: Layout) -> int:
+        return max(4, math.ceil(layout.deck_count * 0.25))
+
+    @staticmethod
+    def _remaining_tableau_cards(state: object) -> int:
+        columns, _, _, _, _ = state
+        return sum(len(cards) for cards, _ in columns)
 
     def _next_states(self, state: object, level: GeneratedLevel, allow_draw: bool = True) -> Iterable[object]:
         columns, queued, revealed, goals, completed = state
@@ -1188,7 +1473,7 @@ class SolvabilityValidator:
             for target_index, (target_cards, _) in enumerate(columns):
                 if not allow_column_move:
                     continue
-                if self._is_gold_headed_stack(stack) and len(stack) > 1:
+                if target_cards and self._is_gold_headed_stack(stack) and len(stack) > 1:
                     continue
                 if source_kind == "column" and source_index == target_index:
                     continue

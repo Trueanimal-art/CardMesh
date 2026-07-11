@@ -1,424 +1,614 @@
 {
   "cardUsageTop": [
     {
-      "cardId": "time",
-      "count": 287
-    },
-    {
-      "cardId": "farm",
-      "count": 282
-    },
-    {
-      "cardId": "breakfast",
-      "count": 269
-    },
-    {
       "cardId": "pets",
-      "count": 267
-    },
-    {
-      "cardId": "food",
-      "count": 265
-    },
-    {
-      "cardId": "flowers",
-      "count": 263
-    },
-    {
-      "cardId": "drinks",
-      "count": 260
-    },
-    {
-      "cardId": "cup",
-      "count": 256
-    },
-    {
-      "cardId": "dessert",
-      "count": 254
-    },
-    {
-      "cardId": "garden",
-      "count": 254
-    },
-    {
-      "cardId": "travel",
-      "count": 254
-    },
-    {
-      "cardId": "colors",
-      "count": 251
-    },
-    {
-      "cardId": "family",
-      "count": 250
-    },
-    {
-      "cardId": "hobbies",
-      "count": 248
-    },
-    {
-      "cardId": "kitchen",
-      "count": 246
-    },
-    {
-      "cardId": "toys",
-      "count": 246
-    },
-    {
-      "cardId": "cinema",
-      "count": 246
-    },
-    {
-      "cardId": "music",
-      "count": 246
-    },
-    {
-      "cardId": "emotions",
-      "count": 245
-    },
-    {
-      "cardId": "shoes",
-      "count": 242
-    },
-    {
-      "cardId": "friendship",
-      "count": 239
-    },
-    {
-      "cardId": "weather",
-      "count": 239
-    },
-    {
-      "cardId": "camping",
-      "count": 239
-    },
-    {
-      "cardId": "sea",
-      "count": 239
-    },
-    {
-      "cardId": "winter",
-      "count": 237
+      "count": 58
     },
     {
       "cardId": "insects",
-      "count": 236
+      "count": 58
     },
     {
-      "cardId": "books",
-      "count": 236
+      "cardId": "shoes",
+      "count": 58
     },
     {
-      "cardId": "nature",
-      "count": 233
+      "cardId": "time",
+      "count": 58
+    },
+    {
+      "cardId": "emotions",
+      "count": 57
+    },
+    {
+      "cardId": "music",
+      "count": 57
+    },
+    {
+      "cardId": "forest",
+      "count": 57
+    },
+    {
+      "cardId": "toys",
+      "count": 57
+    },
+    {
+      "cardId": "home",
+      "count": 57
     },
     {
       "cardId": "school",
-      "count": 231
+      "count": 57
+    },
+    {
+      "cardId": "tools",
+      "count": 57
+    },
+    {
+      "cardId": "holidays",
+      "count": 57
+    },
+    {
+      "cardId": "hobbies",
+      "count": 57
+    },
+    {
+      "cardId": "sport",
+      "count": 57
+    },
+    {
+      "cardId": "winter",
+      "count": 57
+    },
+    {
+      "cardId": "camping",
+      "count": 57
+    },
+    {
+      "cardId": "garden",
+      "count": 57
+    },
+    {
+      "cardId": "office",
+      "count": 56
+    },
+    {
+      "cardId": "office_paper",
+      "count": 56
+    },
+    {
+      "cardId": "city",
+      "count": 56
+    },
+    {
+      "cardId": "farm",
+      "count": 56
+    },
+    {
+      "cardId": "breakfast",
+      "count": 56
+    },
+    {
+      "cardId": "friendship",
+      "count": 56
+    },
+    {
+      "cardId": "family",
+      "count": 56
+    },
+    {
+      "cardId": "sport_player",
+      "count": 56
+    },
+    {
+      "cardId": "dessert",
+      "count": 56
     },
     {
       "cardId": "clothes",
-      "count": 230
+      "count": 56
+    },
+    {
+      "cardId": "health",
+      "count": 56
+    },
+    {
+      "cardId": "cinema",
+      "count": 56
+    },
+    {
+      "cardId": "food",
+      "count": 56
     }
   ],
   "unusedCards": [],
   "unusedCardsCount": 0,
   "categoryUsage": {
-    "art": 1457,
-    "body": 795,
-    "books": 1596,
-    "breakfast": 1763,
-    "business": 888,
-    "camping": 1664,
-    "cinema": 1642,
-    "city": 1538,
-    "clothes": 1517,
-    "colors": 1708,
-    "cup": 1743,
-    "dessert": 1716,
-    "drinks": 1697,
-    "emotions": 1622,
-    "family": 1702,
-    "farm": 1935,
-    "flowers": 1741,
-    "food": 1826,
-    "forest": 1540,
-    "friendship": 1574,
-    "garden": 1674,
-    "health": 925,
-    "hobbies": 1641,
-    "holidays": 760,
-    "home": 1506,
-    "insects": 1529,
-    "internet": 776,
-    "kitchen": 1668,
-    "music": 1681,
-    "nature": 1576,
-    "office": 959,
-    "pets": 1750,
-    "phone": 915,
-    "photo": 823,
-    "school": 1565,
-    "sea": 1628,
-    "shapes": 776,
-    "shoes": 1594,
-    "space": 924,
-    "sport": 1540,
-    "summer": 1525,
-    "technology": 843,
-    "time": 1933,
-    "tools": 1512,
-    "toys": 1590,
-    "transport": 1515,
-    "travel": 1734,
-    "weather": 1587,
-    "winter": 1578,
-    "work": 1009
+    "agronomy": 215,
+    "alchemy": 220,
+    "anatomy": 467,
+    "ancient": 1362,
+    "animal": 246,
+    "apothecary": 211,
+    "archaeology": 173,
+    "architecture": 194,
+    "archive": 212,
+    "art": 480,
+    "astronomy": 673,
+    "aviation": 260,
+    "bakery": 205,
+    "ballet": 247,
+    "banking": 259,
+    "baroque": 221,
+    "barrel": 213,
+    "basketry": 218,
+    "beekeeping": 236,
+    "birds": 201,
+    "body": 484,
+    "book": 225,
+    "bookmaking": 227,
+    "books": 394,
+    "botany": 612,
+    "bread": 219,
+    "breakfast": 445,
+    "bridge": 222,
+    "business": 456,
+    "byzantium": 170,
+    "calligraphy": 209,
+    "camping": 726,
+    "caravan": 210,
+    "carpentry": 187,
+    "cart": 230,
+    "cartography": 231,
+    "cave": 205,
+    "ceramics": 224,
+    "cheese": 241,
+    "chemistry": 243,
+    "chess": 229,
+    "choir": 224,
+    "church": 220,
+    "cinema": 479,
+    "city": 469,
+    "classicist": 202,
+    "climate": 244,
+    "clockmaking": 194,
+    "clothes": 464,
+    "cloud": 241,
+    "coffee": 413,
+    "colors": 462,
+    "confectionery": 235,
+    "constellations": 239,
+    "courier": 196,
+    "court": 458,
+    "cuisine": 234,
+    "cup": 452,
+    "dairy": 221,
+    "desert": 474,
+    "dessert": 426,
+    "diplomatic": 228,
+    "drinks": 485,
+    "early": 223,
+    "education": 231,
+    "electricity": 248,
+    "embroidery": 223,
+    "emotions": 473,
+    "engraving": 188,
+    "etiquette": 211,
+    "expedition": 215,
+    "family": 466,
+    "farm": 462,
+    "festival": 236,
+    "film": 217,
+    "finance": 222,
+    "fish": 218,
+    "fishing": 243,
+    "flowers": 685,
+    "folk": 239,
+    "folklore": 216,
+    "food": 444,
+    "forest": 671,
+    "fortress": 238,
+    "friendship": 465,
+    "garden": 691,
+    "gem": 223,
+    "gems": 206,
+    "geology": 244,
+    "geometry": 252,
+    "glassmaking": 254,
+    "grammar": 212,
+    "harbor": 239,
+    "health": 484,
+    "heraldic": 229,
+    "heraldry": 257,
+    "herbs": 201,
+    "hobbies": 471,
+    "holidays": 464,
+    "home": 436,
+    "horse": 197,
+    "house": 225,
+    "hunting": 207,
+    "icon": 211,
+    "ink": 212,
+    "insect": 210,
+    "insects": 460,
+    "internet": 423,
+    "jewelry": 386,
+    "kitchen": 662,
+    "laboratory": 219,
+    "lacework": 181,
+    "law": 213,
+    "leathercraft": 196,
+    "library": 226,
+    "lighthouse": 223,
+    "linguistics": 212,
+    "literary": 233,
+    "logic": 224,
+    "manuscript": 451,
+    "map": 218,
+    "maritime": 217,
+    "market": 232,
+    "masonry": 213,
+    "math": 216,
+    "mechanics": 241,
+    "medicine": 212,
+    "medieval": 233,
+    "metallurgy": 211,
+    "meteorology": 193,
+    "military": 229,
+    "mineral": 185,
+    "mining": 207,
+    "monastery": 227,
+    "monastic": 213,
+    "mosaic": 217,
+    "mountain": 462,
+    "museum": 278,
+    "mushrooms": 239,
+    "music": 611,
+    "mythic": 261,
+    "mythology": 241,
+    "nature": 406,
+    "navigation": 216,
+    "newspaper": 258,
+    "noble": 240,
+    "numismatics": 222,
+    "office": 493,
+    "old": 3171,
+    "optics": 246,
+    "orchard": 229,
+    "organ": 246,
+    "painting": 207,
+    "paleontology": 210,
+    "paper": 234,
+    "perfume": 421,
+    "pets": 439,
+    "pharmacy": 200,
+    "philosophy": 190,
+    "phone": 484,
+    "photo": 465,
+    "photography": 254,
+    "physics": 265,
+    "plant": 238,
+    "poetry": 259,
+    "polar": 254,
+    "porridge": 214,
+    "pottery": 196,
+    "printing": 447,
+    "radio": 191,
+    "railway": 214,
+    "rare": 234,
+    "renaissance": 226,
+    "restoration": 229,
+    "rhetoric": 209,
+    "ritual": 221,
+    "river": 461,
+    "road": 451,
+    "roof": 224,
+    "rope": 249,
+    "sailing": 242,
+    "school": 467,
+    "script": 224,
+    "sculpting": 233,
+    "sea": 641,
+    "seal": 233,
+    "sewing": 203,
+    "shapes": 477,
+    "ship": 233,
+    "shoes": 458,
+    "silk": 202,
+    "slavic": 230,
+    "smithing": 230,
+    "soil": 254,
+    "space": 667,
+    "speleology": 241,
+    "spices": 226,
+    "sport": 487,
+    "stained": 232,
+    "strategy": 236,
+    "summer": 463,
+    "surgical": 245,
+    "swamp": 198,
+    "tailoring": 264,
+    "tea": 426,
+    "technology": 449,
+    "telegraph": 238,
+    "textile": 211,
+    "theater": 222,
+    "time": 416,
+    "timekeeping": 201,
+    "tools": 451,
+    "toys": 471,
+    "trade": 220,
+    "transport": 470,
+    "travel": 449,
+    "tundra": 223,
+    "typography": 227,
+    "urban": 204,
+    "viticulture": 253,
+    "volcano": 224,
+    "volcanoes": 221,
+    "weather": 677,
+    "weaving": 248,
+    "wild": 233,
+    "winemaking": 220,
+    "winter": 447,
+    "woodworking": 210,
+    "work": 468,
+    "workshop": 236
   },
   "imageCardUsageTop": [
     {
-      "cardId": "food_plate",
-      "count": 65
+      "cardId": "office_coffee",
+      "count": 53
     },
     {
-      "cardId": "food_salad",
-      "count": 65
+      "cardId": "office_paper",
+      "count": 53
     },
     {
-      "cardId": "food_food",
-      "count": 65
+      "cardId": "office_pen",
+      "count": 53
     },
     {
-      "cardId": "food_lunch",
-      "count": 65
+      "cardId": "office_screen",
+      "count": 53
     },
     {
-      "cardId": "food_fruit",
-      "count": 65
+      "cardId": "office_badge",
+      "count": 53
     },
     {
-      "cardId": "food_soup",
-      "count": 65
+      "cardId": "office_folder",
+      "count": 53
     },
     {
-      "cardId": "food_bread",
-      "count": 65
+      "cardId": "office_chair",
+      "count": 53
     },
     {
-      "cardId": "food_canteen",
-      "count": 65
+      "cardId": "office_printer",
+      "count": 53
     },
     {
-      "cardId": "farm_field",
-      "count": 61
+      "cardId": "phone_case",
+      "count": 52
     },
     {
-      "cardId": "farm_cow",
-      "count": 61
+      "cardId": "phone_charge",
+      "count": 52
     },
     {
-      "cardId": "farm_fence",
-      "count": 61
+      "cardId": "phone_app",
+      "count": 52
     },
     {
-      "cardId": "farm_barn",
-      "count": 61
+      "cardId": "phone_screen",
+      "count": 52
     },
     {
-      "cardId": "farm_hay",
-      "count": 61
+      "cardId": "phone_contact",
+      "count": 52
     },
     {
-      "cardId": "farm_grain",
-      "count": 61
+      "cardId": "phone_camera",
+      "count": 52
     },
     {
-      "cardId": "farm_chicken",
-      "count": 61
+      "cardId": "phone_message",
+      "count": 52
     },
     {
-      "cardId": "farm_tractor",
-      "count": 61
+      "cardId": "phone_call",
+      "count": 52
     },
     {
-      "cardId": "sport_field",
-      "count": 58
+      "cardId": "art_statue",
+      "count": 51
     },
     {
-      "cardId": "sport_medal",
-      "count": 58
+      "cardId": "art_frame",
+      "count": 51
     },
     {
-      "cardId": "sport_coach",
-      "count": 58
+      "cardId": "art_paint",
+      "count": 51
     },
     {
-      "cardId": "sport_ball",
-      "count": 58
+      "cardId": "art_canvas",
+      "count": 51
     },
     {
-      "cardId": "sport_player",
-      "count": 58
+      "cardId": "art_gallery",
+      "count": 51
     },
     {
-      "cardId": "sport_match",
-      "count": 58
+      "cardId": "art_brush",
+      "count": 51
     },
     {
-      "cardId": "sport_team",
-      "count": 58
+      "cardId": "art_sketch",
+      "count": 51
     },
     {
-      "cardId": "sport_race",
-      "count": 58
+      "cardId": "art_color",
+      "count": 51
     },
     {
-      "cardId": "time_minutes",
-      "count": 55
+      "cardId": "shapes_triangle",
+      "count": 51
     },
     {
-      "cardId": "time_time",
-      "count": 55
+      "cardId": "shapes_oval",
+      "count": 51
     },
     {
-      "cardId": "time_week",
-      "count": 55
+      "cardId": "shapes_circle",
+      "count": 51
     },
     {
-      "cardId": "time_hour",
-      "count": 55
+      "cardId": "shapes_square",
+      "count": 51
     },
     {
-      "cardId": "time_night",
-      "count": 55
+      "cardId": "shapes_ring",
+      "count": 51
     },
     {
-      "cardId": "time_day",
-      "count": 55
+      "cardId": "shapes_star",
+      "count": 51
     }
   ],
   "textCardUsageTop": [
     {
-      "cardId": "time_hour",
-      "count": 158
+      "cardId": "music_band",
+      "count": 27
     },
     {
-      "cardId": "time_week",
-      "count": 157
+      "cardId": "music_melody",
+      "count": 27
     },
     {
-      "cardId": "farm_chicken",
-      "count": 154
-    },
-    {
-      "cardId": "dessert_cake",
-      "count": 151
-    },
-    {
-      "cardId": "time_time",
-      "count": 151
-    },
-    {
-      "cardId": "pets_tail",
-      "count": 151
+      "cardId": "music_guitar",
+      "count": 26
     },
     {
       "cardId": "music_song",
-      "count": 151
-    },
-    {
-      "cardId": "time_night",
-      "count": 150
-    },
-    {
-      "cardId": "time_clock",
-      "count": 150
-    },
-    {
-      "cardId": "dessert_cream",
-      "count": 148
-    },
-    {
-      "cardId": "time_day",
-      "count": 148
-    },
-    {
-      "cardId": "farm_fence",
-      "count": 148
-    },
-    {
-      "cardId": "farm_barn",
-      "count": 148
-    },
-    {
-      "cardId": "farm_cow",
-      "count": 147
-    },
-    {
-      "cardId": "time_alarm",
-      "count": 147
-    },
-    {
-      "cardId": "dessert_pie",
-      "count": 146
-    },
-    {
-      "cardId": "farm_hay",
-      "count": 146
-    },
-    {
-      "cardId": "colors_orange",
-      "count": 146
-    },
-    {
-      "cardId": "winter_scarf",
-      "count": 146
-    },
-    {
-      "cardId": "breakfast_tea",
-      "count": 145
-    },
-    {
-      "cardId": "colors_blue",
-      "count": 145
-    },
-    {
-      "cardId": "time_minutes",
-      "count": 145
+      "count": 26
     },
     {
       "cardId": "pets_bowl",
-      "count": 144
+      "count": 26
     },
     {
-      "cardId": "farm_tractor",
-      "count": 144
+      "cardId": "music_concert",
+      "count": 25
     },
     {
-      "cardId": "flowers_rose",
-      "count": 144
+      "cardId": "insects_ant",
+      "count": 25
     },
     {
-      "cardId": "cup_handle",
-      "count": 143
+      "cardId": "insects_bee",
+      "count": 25
     },
     {
-      "cardId": "flowers_bouquet",
-      "count": 143
+      "cardId": "insects_ladybug",
+      "count": 24
     },
     {
-      "cardId": "garden_apple",
-      "count": 142
+      "cardId": "insects_cocoon",
+      "count": 24
     },
     {
-      "cardId": "garden_path",
-      "count": 142
+      "cardId": "pets_dog",
+      "count": 24
     },
     {
-      "cardId": "food_food",
-      "count": 142
+      "cardId": "pets_paw",
+      "count": 24
+    },
+    {
+      "cardId": "time_day",
+      "count": 23
+    },
+    {
+      "cardId": "books_shelf",
+      "count": 23
+    },
+    {
+      "cardId": "music_piano",
+      "count": 23
+    },
+    {
+      "cardId": "insects_hive",
+      "count": 23
+    },
+    {
+      "cardId": "insects_butterfly",
+      "count": 23
+    },
+    {
+      "cardId": "pets_vet",
+      "count": 23
+    },
+    {
+      "cardId": "books_novel",
+      "count": 22
+    },
+    {
+      "cardId": "insects_wing",
+      "count": 22
+    },
+    {
+      "cardId": "pets_tail",
+      "count": 22
+    },
+    {
+      "cardId": "time_hour",
+      "count": 22
+    },
+    {
+      "cardId": "pets_cat",
+      "count": 22
+    },
+    {
+      "cardId": "music_note",
+      "count": 21
+    },
+    {
+      "cardId": "books_chapter",
+      "count": 21
+    },
+    {
+      "cardId": "nature_stone",
+      "count": 21
+    },
+    {
+      "cardId": "books_reader",
+      "count": 21
+    },
+    {
+      "cardId": "books_page",
+      "count": 21
+    },
+    {
+      "cardId": "dessert_honey",
+      "count": 21
+    },
+    {
+      "cardId": "music_rhythm",
+      "count": 20
     }
   ],
   "imageCardsUsed": 400,
-  "textCardsUsed": 400
+  "textCardsUsed": 4783,
+  "categorySpacing": {
+    "hardExclusionLevels": 10,
+    "softExclusionLevels": 14,
+    "showcaseLevelLimit": 250,
+    "showcaseHardExclusionLevels": 20,
+    "showcaseSoftExclusionLevels": 25,
+    "cardHardExclusionLevels": 30,
+    "adjacentOverlapCount": 0,
+    "adjacentOverlaps": []
+  }
 }

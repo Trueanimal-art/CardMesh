@@ -68,6 +68,12 @@ namespace SolitaireAssociations
                 group.blocksRaycasts = true;
             }
 
+            Image image = popupRoot.GetComponent<Image>();
+            if (image != null)
+            {
+                image.raycastTarget = true;
+            }
+
             Time.timeScale = 0f;
             Debug.Log("RestartConfirmationPopupController: Restart confirmation opened.");
         }

@@ -1,0 +1,336 @@
+# Text Cards Apply Log
+
+- Source: `/Users/vnm/Downloads/text_cards_codex_fix_final_v3_no_double_words.md`
+- Target: `/Users/vnm/Documents/Solitaire/Assets/Resources/Data/cards.json`
+- Parsed card replacements: 178
+- Parsed category renames: 19
+- Conflicts: 0
+- Unknown ids in Markdown ignored because they are not present in project: 0
+
+## Applied Changes
+
+- Cards changed: 178
+- Cards already matched: 0
+- Categories renamed: 19
+- Categories already matched: 0
+- Final text card count: 4784
+
+## Changed Categories
+
+- `cup`: Чашка
+- `food`: Еда
+- `city`: Город
+- `home`: Дом
+- `books`: Книги
+- `cinema`: Кино
+- `family`: Семья
+- `pets`: Питомцы
+- `garden`: Сад
+- `sea`: Море
+- `shoes`: Обувь
+- `health`: Здоровье
+- `body`: Тело
+- `work`: Работа
+- `office`: Офис
+- `holidays`: Праздник
+- `winter`: Зима
+- `summer`: Лето
+- `dessert`: Десерт
+- `flowers`: Цветы
+- `insects`: Насекомые
+- `emotions`: Эмоции
+- `friendship`: Дружба
+- `camping`: Поход
+- `toys`: Игрушки
+- `tools`: Инструменты
+- `old_measures`: Старинные меры
+- `old_tools`: Старые инструменты
+- `horse_tack`: Конская сбруя
+- `fortress`: Крепость
+- `folklore`: Фольклор
+- `ballet`: Балет
+- `geology`: Геология
+- `herbs`: Травы
+- `tundra`: Тундра
+- `etiquette`: Этикет
+- `archaeology`: Археология
+- `cloud_types`: Облачность
+- `photography_terms`: Фотография
+- `maritime_knots`: Морские узлы
+- `leathercraft`: Кожевенное дело
+- `textile_dyes`: Красители ткани
+- `embroidery_terms`: Вышивка
+- `lacework`: Кружево
+- `ceramics_glaze`: Керамическая глазурь
+- `engraving`: Гравюра
+- `mosaic_art`: Мозаика
+- `old_instruments`: Старинные музыкальные инструменты
+- `education_terms`: Образование
+- `astronomy_objects`: Небесные объекты
+- `space_navigation`: Космонавтика
+- `climate_zones`: Климат
+- `alchemy`: Алхимия
+- `surgical_tools_old`: Старая хирургия
+- `anatomy_bones`: Кости
+- `botany_trees`: Деревья
+- `plant_diseases`: Защита растений
+- `heraldic_tinctures`: Геральдические элементы
+- `market_bazaar`: Базар
+- `caravan_trade`: Караванная торговля
+- `silk_road`: Шелковый путь
+- `polar_expedition`: Полярная экспедиция
+- `cave_terms`: Пещеры
+- `speleology`: Спелеология
+- `bridge_building`: Мостостроение
+- `urban_planning`: Градостроительство
+- `house_parts_old`: Части старого дома
+- `roof_terms`: Кровля
+- `woodworking_joints`: Столярное дело
+- `barrel_making`: Бондарное дело
+- `paper_making`: Бумажное дело
+- `ink_making`: Чернила
+- `diplomatic_terms`: Дипломатия
+- `old_calendar`: Старый календарь
+- `timekeeping_terms`: Измерение времени
+- `cuisine_tools_rare`: Редкая кухонная утварь
+- `jewelry_tools`: Ювелирное дело
+- `old_measure_volume`: Старые меры объема
+- `old_measure_weight`: Старые меры веса
+- `script_styles`: Виды письма
+- `baroque_art`: Барокко
+- `early_computing`: Ранние компьютеры
+- `astronomy_tools`: Астрономические инструменты
+- `fishing_tackle`: Рыбалка
+- `camping_gear_old`: Туризм
+- `apothecary_tools`: Аптекарство
+- `court_document`: Судебное дело
+- `sailing_rig`: Парусное судно
+- `volcano_rocks`: Вулканология
+- `tea_tools`: Чайная культура
+- `coffee_roasting`: Кофейное дело
+- `perfume_notes`: Парфюмерия
+
+## Already Matching Categories
+
+- None
+
+## Category Renames
+
+- `heraldic_tinctures`: Геральдические цвета -> Геральдические элементы
+- `climate_zones`: Климатические зоны -> Климат
+- `cloud_types`: Облака -> Облачность
+- `old_instruments`: Старинные инструменты -> Старинные музыкальные инструменты
+- `astronomy_tools`: Приборы астронома -> Астрономические инструменты
+- `space_navigation`: Космическая навигация -> Космонавтика
+- `fishing_tackle`: Рыболовные снасти -> Рыбалка
+- `camping_gear_old`: Походное снаряжение -> Туризм
+- `plant_diseases`: Болезни растений -> Защита растений
+- `apothecary_tools`: Аптекарские инструменты -> Аптекарство
+- `surgical_tools_old`: Старые хирургические инструменты -> Старая хирургия
+- `court_document`: Судебные документы -> Судебное дело
+- `sailing_rig`: Парусный такелаж -> Парусное судно
+- `volcano_rocks`: Вулканические породы -> Вулканология
+- `woodworking_joints`: Столярные соединения -> Столярное дело
+- `tea_tools`: Чайная утварь -> Чайная культура
+- `coffee_roasting`: Обжарка кофе -> Кофейное дело
+- `perfume_notes`: Парфюмерные ноты -> Парфюмерия
+- `jewelry_tools`: Ювелирные инструменты -> Ювелирное дело
+
+## Conflicts
+
+- None
+
+## Validation
+
+- cards_with_spaces: OK (0)
+- cards_with_hyphens: OK (0)
+- cards_with_latin: OK (0)
+- empty_cards: OK (0)
+- duplicates_inside_category: OK (0)
+- exact_card_mismatches: OK (0)
+- exact_category_mismatches: OK (0)
+
+## Recommendations
+
+- None
+
+## Changed Cards
+
+- `cup_coffee` (`cup` / Чашка): Бокал -> Кофе
+- `cup_tea` (`cup` / Чашка): Пиала -> Чай
+- `cup_handle` (`cup` / Чашка): Ободок -> Ручка
+- `cup_thermos` (`cup` / Чашка): Сервиз -> Термос
+- `food_plate` (`food` / Еда): Мясо -> Тарелка
+- `food_lunch` (`food` / Еда): Сыр -> Обед
+- `food_canteen` (`food` / Еда): Макароны -> Столовая
+- `city_traffic` (`city` / Город): Проспект -> Пробка
+- `home_key` (`home` / Дом): Крыша -> Ключ
+- `books_reader` (`books` / Книги): Букварь -> Читатель
+- `books_shelf` (`books` / Книги): Библиотека -> Полка
+- `books_author` (`books` / Книги): Словарь -> Автор
+- `cinema_ticket` (`cinema` / Кино): Режиссер -> Билет
+- `cinema_popcorn` (`cinema` / Кино): Сценарий -> Попкорн
+- `family_dinner` (`family` / Семья): Дедушка -> Ужин
+- `family_home` (`family` / Семья): Тетя -> Дом
+- `family_album` (`family` / Семья): Бабушка -> Альбом
+- `pets_bowl` (`pets` / Питомцы): Попугай -> Миска
+- `pets_leash` (`pets` / Питомцы): Кролик -> Поводок
+- `pets_toy` (`pets` / Питомцы): Хомяк -> Игрушка
+- `pets_tail` (`pets` / Питомцы): Рыбка -> Хвост
+- `pets_paw` (`pets` / Питомцы): Черепаха -> Лапа
+- `pets_vet` (`pets` / Питомцы): Хорек -> Ветеринар
+- `garden_apple` (`garden` / Сад): Грядка -> Яблоня
+- `sea_island` (`sea` / Море): Глубина -> Остров
+- `sea_lighthouse` (`sea` / Море): Прибой -> Маяк
+- `shoes_lace` (`shoes` / Обувь): Туфля -> Шнурок
+- `shoes_heel` (`shoes` / Обувь): Сапог -> Каблук
+- `shoes_sole` (`shoes` / Обувь): Кеды -> Подошва
+- `shoes_pair` (`shoes` / Обувь): Тапок -> Пара
+- `shoes_size` (`shoes` / Обувь): Сланцы -> Размер
+- `health_rest` (`health` / Здоровье): Лечение -> Отдых
+- `health_water` (`health` / Здоровье): Витамины -> Вода
+- `health_care` (`health` / Здоровье): Иммунитет -> Уход
+- `body_foot` (`body` / Тело): Нога -> Стопа
+- `body_smile` (`body` / Тело): Рот -> Улыбка
+- `work_call` (`work` / Работа): Совещание -> Звонок
+- `work_desk` (`work` / Работа): Проект -> Стол
+- `office_coffee` (`office` / Офис): Кабинет -> Кофе
+- `holidays_cake` (`holidays` / Праздник): Юбилей -> Торт
+- `holidays_candle` (`holidays` / Праздник): Конфетти -> Свеча
+- `holidays_music` (`holidays` / Праздник): Салют -> Музыка
+- `holidays_table` (`holidays` / Праздник): Гирлянда -> Стол
+- `winter_scarf` (`winter` / Зима): Иней -> Шарф
+- `winter_mitten` (`winter` / Зима): Снежинка -> Варежка
+- `winter_pine` (`winter` / Зима): Сугроб -> Сосна
+- `winter_cocoa` (`winter` / Зима): Метель -> Какао
+- `summer_hat` (`summer` / Лето): Июнь -> Шляпа
+- `summer_picnic` (`summer` / Лето): Каникулы -> Пикник
+- `summer_fan` (`summer` / Лето): Загар -> Веер
+- `summer_sandals` (`summer` / Лето): Жара -> Сандалии
+- `dessert_honey` (`dessert` / Десерт): Мармелад -> Мед
+- `flowers_bouquet` (`flowers` / Цветы): Ромашка -> Букет
+- `flowers_petal` (`flowers` / Цветы): Орхидея -> Лепесток
+- `flowers_stem` (`flowers` / Цветы): Гвоздика -> Стебель
+- `flowers_vase` (`flowers` / Цветы): Нарцисс -> Ваза
+- `insects_wing` (`insects` / Насекомые): Комар -> Крыло
+- `insects_hive` (`insects` / Насекомые): Оса -> Улей
+- `insects_cocoon` (`insects` / Насекомые): Стрекоза -> Кокон
+- `insects_ladybug` (`insects` / Насекомые): Божья коровка -> Коровка
+- `emotions_warmth` (`emotions` / Эмоции): Любовь -> Теплота
+- `friendship_walk` (`friendship` / Дружба): Поддержка -> Прогулка
+- `friendship_smile` (`friendship` / Дружба): Подруга -> Улыбка
+- `friendship_team` (`friendship` / Дружба): Доверие -> Команда
+- `friendship_secret` (`friendship` / Дружба): Товарищ -> Секрет
+- `friendship_memory` (`friendship` / Дружба): Верность -> Память
+- `camping_mug` (`camping` / Поход): Спальник -> Кружка
+- `toys_kite` (`toys` / Игрушки): Воздушный змей -> Змей
+- `tools_nail` (`tools` / Инструменты): Отвертка -> Гвоздь
+- `tools_level` (`tools` / Инструменты): Рубанок -> Уровень
+- `old_measures_12` (`old_measures` / Старинные меры): Косая сажень -> Дюйм
+- `old_tools_12` (`old_tools` / Старые инструменты): Лучковая пила -> Ножовка
+- `horse_tack_16` (`horse_tack` / Конская сбруя): Колесница -> Сбруя
+- `fortress_09` (`fortress` / Крепость): Подъемный мост -> Мост
+- `folklore_16` (`folklore` / Фольклор): Жар-птица -> Кощей
+- `ballet_09` (`ballet` / Балет): Корпус де балет -> Кордебалет
+- `geology_12` (`geology` / Геология): Фоссилия -> Окаменелость
+- `herbs_16` (`herbs` / Травы): Иван-чай -> Кипрей
+- `tundra_03` (`tundra` / Тундра): Карликовая береза -> Березка
+- `tundra_16` (`tundra` / Тундра): Полярная ива -> Ива
+- `etiquette_08` (`etiquette` / Этикет): Дресс-код -> Наряд
+- `archaeology_04` (`archaeology` / Археология): Культурный слой -> Слой
+- `cloud_types_04` (`cloud_types` / Облака): Дождевые облака -> Дождь
+- `cloud_types_05` (`cloud_types` / Облака): Грозовые облака -> Гроза
+- `cloud_types_06` (`cloud_types` / Облака): Высокий ярус -> Высота
+- `cloud_types_07` (`cloud_types` / Облака): Нижний ярус -> Основание
+- `cloud_types_08` (`cloud_types` / Облака): Фронтальные облака -> Фронт
+- `photography_terms_14` (`photography_terms` / Фотография): ISO -> Чувствительность
+- `maritime_knots_01` (`maritime_knots` / Морские узлы): Беседочный узел -> Булинь
+- `maritime_knots_02` (`maritime_knots` / Морские узлы): Шкотовый узел -> Шкотовый
+- `maritime_knots_03` (`maritime_knots` / Морские узлы): Прямой узел -> Прямой
+- `maritime_knots_04` (`maritime_knots` / Морские узлы): Рифовый узел -> Рифовый
+- `maritime_knots_05` (`maritime_knots` / Морские узлы): Стопорный узел -> Стопорный
+- `maritime_knots_06` (`maritime_knots` / Морские узлы): Выбленочный узел -> Выбленочный
+- `maritime_knots_07` (`maritime_knots` / Морские узлы): Брамшкотовый узел -> Брамшкотовый
+- `maritime_knots_08` (`maritime_knots` / Морские узлы): Встречный узел -> Встречный
+- `maritime_knots_09` (`maritime_knots` / Морские узлы): Затяжная петля -> Петля
+- `maritime_knots_11` (`maritime_knots` / Морские узлы): Ходовой конец -> Ходовой
+- `maritime_knots_12` (`maritime_knots` / Морские узлы): Коренной конец -> Коренной
+- `maritime_knots_14` (`maritime_knots` / Морские узлы): Гачный узел -> Гачный
+- `maritime_knots_15` (`maritime_knots` / Морские узлы): Калмыцкий узел -> Калмыцкий
+- `maritime_knots_16` (`maritime_knots` / Морские узлы): Такелажный узел -> Такелажный
+- `leathercraft_02` (`leathercraft` / Кожевенное дело): Сапожок -> Сапог
+- `textile_dyes_19` (`textile_dyes` / Красители ткани): Куб -> Синька
+- `embroidery_terms_24` (`embroidery_terms` / Вышивка): Стебельчатый шов -> Цепочка
+- `lacework_16` (`lacework` / Кружево): Игольное кружево -> Игла
+- `ceramics_glaze_13` (`ceramics_glaze` / Керамическая глазурь): Полевой шпат -> Шпат
+- `engraving_08` (`engraving` / Гравюра): Меццо-тинто -> Меццотинто
+- `mosaic_art_13` (`mosaic_art` / Мозаика): Картон -> Шаблон
+- `old_instruments_08` (`old_instruments` / Старинные инструменты): Колесная лира -> Лира
+- `old_instruments_11` (`old_instruments` / Старинные инструменты): Цинк -> Корнет
+- `education_terms_21` (`education_terms` / Образование): Лабораторная работа -> Опыт
+- `astronomy_objects_12` (`astronomy_objects` / Небесные объекты): Красный карлик -> Солнце
+- `astronomy_objects_15` (`astronomy_objects` / Небесные объекты): Черная дыра -> Сингулярность
+- `astronomy_objects_16` (`astronomy_objects` / Небесные объекты): Белый карлик -> Сверхгигант
+- `astronomy_objects_17` (`astronomy_objects` / Небесные объекты): Нейтронная звезда -> Магнетар
+- `astronomy_objects_18` (`astronomy_objects` / Небесные объекты): Аккреционный диск -> Планетоид
+- `astronomy_objects_19` (`astronomy_objects` / Небесные объекты): Корона -> Звезда
+- `astronomy_objects_20` (`astronomy_objects` / Небесные объекты): Фотосфера -> Сверхскопление
+- `astronomy_objects_21` (`astronomy_objects` / Небесные объекты): Хромосфера -> Гипергигант
+- `astronomy_objects_22` (`astronomy_objects` / Небесные объекты): Протуберанец -> Метеорит
+- `astronomy_objects_23` (`astronomy_objects` / Небесные объекты): Парсек -> Экзопланета
+- `astronomy_objects_24` (`astronomy_objects` / Небесные объекты): Орбита -> Созвездие
+- `space_navigation_19` (`space_navigation` / Космическая навигация): ЦУП -> Центр
+- `space_navigation_21` (`space_navigation` / Космическая навигация): Солнечная панель -> Батарея
+- `climate_zones_04` (`climate_zones` / Климатические зоны): Умеренный пояс -> Умеренный
+- `climate_zones_15` (`climate_zones` / Климатические зоны): Морской климат -> Морской
+- `climate_zones_16` (`climate_zones` / Климатические зоны): Континентальный климат -> Континентальный
+- `climate_zones_17` (`climate_zones` / Климатические зоны): Высотная поясность -> Горный
+- `climate_zones_22` (`climate_zones` / Климатические зоны): Паводок -> Осадки
+- `alchemy_04` (`alchemy` / Алхимия): Философский камень -> Камень
+- `surgical_tools_old_22` (`surgical_tools_old` / Старые хирургические инструменты): Проба -> Пробник
+- `anatomy_bones_07` (`anatomy_bones` / Кости): Плечевая кость -> Плечо
+- `anatomy_bones_08` (`anatomy_bones` / Кости): Локтевая кость -> Локоть
+- `anatomy_bones_09` (`anatomy_bones` / Кости): Лучевая кость -> Предплечье
+- `anatomy_bones_10` (`anatomy_bones` / Кости): Запястные кости -> Запястье
+- `anatomy_bones_14` (`anatomy_bones` / Кости): Бедренная кость -> Бедро
+- `anatomy_bones_15` (`anatomy_bones` / Кости): Коленная чашечка -> Колено
+- `anatomy_bones_16` (`anatomy_bones` / Кости): Большеберцовая кость -> Голень
+- `anatomy_bones_17` (`anatomy_bones` / Кости): Малоберцовая кость -> Фибула
+- `anatomy_bones_19` (`anatomy_bones` / Кости): Пяточная кость -> Пятка
+- `anatomy_bones_23` (`anatomy_bones` / Кости): Скуловая кость -> Скула
+- `anatomy_bones_24` (`anatomy_bones` / Кости): Теменная кость -> Темя
+- `botany_trees_07` (`botany_trees` / Деревья): Годичное кольцо -> Кольцо
+- `botany_trees_10` (`botany_trees` / Деревья): Сук -> Сучок
+- `plant_diseases_23` (`plant_diseases` / Болезни растений): Мучнистая роса -> Налет
+- `heraldic_tinctures_23` (`heraldic_tinctures` / Геральдические цвета): Вилообразный крест -> Развилка
+- `market_bazaar_18` (`market_bazaar` / Базар): Гостиный двор -> Рынок
+- `caravan_trade_07` (`caravan_trade` / Караванная торговля): Караван-сарай -> Каравансарай
+- `silk_road_20` (`silk_road` / Шелковый путь): Сарай -> Рабат
+- `polar_expedition_03` (`polar_expedition` / Полярная экспедиция): Пак -> Льдина
+- `cave_terms_13` (`cave_terms` / Пещеры): Подземный -> Подземелье
+- `speleology_09` (`speleology` / Спелеология): Кроль -> Подъем
+- `bridge_building_22` (`bridge_building` / Мостостроение): Пятка -> Опалубка
+- `urban_planning_12` (`urban_planning` / Градостроительство): Красная линия -> Граница
+- `house_parts_old_11` (`house_parts_old` / Части старого дома): Красный угол -> Угол
+- `roof_terms_16` (`roof_terms` / Кровля): Слуховое окно -> Слуховик
+- `woodworking_joints_03` (`woodworking_joints` / Столярные соединения): Ласточкин хвост -> Шпонка
+- `woodworking_joints_08` (`woodworking_joints` / Столярные соединения): Ус -> Скос
+- `barrel_making_15` (`barrel_making` / Бондарное дело): Заклепка -> Шпунт
+- `barrel_making_24` (`barrel_making` / Бондарное дело): Соль -> Стружка
+- `paper_making_07` (`paper_making` / Бумажное дело): Водяной знак -> Филигрань
+- `paper_making_08` (`paper_making` / Бумажное дело): Черпальная форма -> Черпак
+- `ink_making_16` (`ink_making` / Чернила): Темпера -> Синька
+- `diplomatic_terms_04` (`diplomatic_terms` / Дипломатия): Верительная грамота -> Грамота
+- `old_calendar_14` (`old_calendar` / Старый календарь): Круг Солнца -> Цикл
+- `timekeeping_terms_02` (`timekeeping_terms` / Измерение времени): Песочные часы -> Песочник
+- `timekeeping_terms_03` (`timekeeping_terms` / Измерение времени): Солнечные часы -> Циферблат
+- `cuisine_tools_rare_23` (`cuisine_tools_rare` / Редкая кухонная утварь): Кондитерский мешок -> Корнетик
+- `jewelry_tools_19` (`jewelry_tools` / Ювелирные инструменты): Крапана -> Крапан
+- `old_measure_volume_23` (`old_measure_volume` / Старые меры объема): Литр -> Кварта
+- `old_measure_volume_24` (`old_measure_volume` / Старые меры объема): Гектолитр -> Пинта
+- `old_measure_weight_20` (`old_measure_weight` / Старые меры веса): Проба -> Скрупул
+- `old_measure_weight_24` (`old_measure_weight` / Старые меры веса): Пондер -> Кантар
+- `script_styles_09` (`script_styles` / Виды письма): Каролингский минускул -> Минускул
+- `baroque_art_12` (`baroque_art` / Барокко): Рокайль -> Волюта
+- `early_computing_13` (`early_computing` / Ранние компьютеры): Магнитный барабан -> Барабан
+- `early_computing_14` (`early_computing` / Ранние компьютеры): Ферритовое ядро -> Ядро

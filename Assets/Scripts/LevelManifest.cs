@@ -96,6 +96,38 @@ namespace SolitaireAssociations
             return LevelsByNumber.TryGetValue(Mathf.Max(1, levelNumber), out entry);
         }
 
+        public static bool TryGetLevelWithColumns(int columnsCount, int preferredLevelNumber, out LevelManifestEntry entry)
+        {
+            EnsureLoaded();
+            entry = null;
+            if (cachedManifest?.levels == null || cachedManifest.levels.Count == 0)
+            {
+                return false;
+            }
+
+            int safeColumnsCount = Mathf.Clamp(columnsCount, 3, 5);
+            int safePreferredLevel = Mathf.Max(1, preferredLevelNumber);
+            foreach (LevelManifestEntry level in cachedManifest.levels)
+            {
+                if (level != null && level.levelNumber >= safePreferredLevel && level.columns == safeColumnsCount)
+                {
+                    entry = level;
+                    return true;
+                }
+            }
+
+            foreach (LevelManifestEntry level in cachedManifest.levels)
+            {
+                if (level != null && level.columns == safeColumnsCount)
+                {
+                    entry = level;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public static bool TryGetManifest(out LevelManifestData manifest)
         {
             EnsureLoaded();

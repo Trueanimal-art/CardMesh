@@ -143,25 +143,10 @@ namespace SolitaireAssociations
         {
             Time.timeScale = 1f;
 
-            if (pausePopup != null)
-            {
-                pausePopup.SetActive(false);
-            }
-
-            if (restartConfirmationPopup != null)
-            {
-                restartConfirmationPopup.SetActive(false);
-            }
-
-            if (livesEmptyPopup != null)
-            {
-                livesEmptyPopup.SetActive(false);
-            }
-
-            if (levelFailedPopup != null)
-            {
-                levelFailedPopup.SetActive(false);
-            }
+            pausePopup = HideModalImmediate(pausePopup, "PauseSettingsPopup");
+            restartConfirmationPopup = HideModalImmediate(restartConfirmationPopup, "RestartConfirmationPopup");
+            livesEmptyPopup = HideModalImmediate(livesEmptyPopup, "LivesEmptyPopup");
+            levelFailedPopup = HideModalImmediate(levelFailedPopup, "LevelFailedPopup");
 
             if (livesEmptyTimerRoutine != null)
             {
@@ -359,7 +344,17 @@ namespace SolitaireAssociations
         {
             if (deckCounterLabel != null)
             {
+                bool hasCards = remainingCards > 0;
                 deckCounterLabel.text = remainingCards.ToString();
+                deckCounterLabel.gameObject.SetActive(hasCards);
+
+                Transform badge = deckCounterLabel.transform.parent != null
+                    ? deckCounterLabel.transform.parent.Find("DeckCounterBadgeBg")
+                    : null;
+                if (badge != null)
+                {
+                    badge.gameObject.SetActive(hasCards);
+                }
             }
         }
 
@@ -452,8 +447,7 @@ namespace SolitaireAssociations
                 }
                 else
                 {
-                    restartConfirmationPopup.transform.SetAsLastSibling();
-                    restartConfirmationPopup.SetActive(true);
+                    ShowModalImmediate(restartConfirmationPopup);
                     Time.timeScale = 0f;
                 }
             }
@@ -470,8 +464,7 @@ namespace SolitaireAssociations
 
             if (levelFailedPopup != null)
             {
-                levelFailedPopup.transform.SetAsLastSibling();
-                levelFailedPopup.SetActive(true);
+                ShowModalImmediate(levelFailedPopup);
                 Time.timeScale = 0f;
             }
 
@@ -489,8 +482,7 @@ namespace SolitaireAssociations
 
             if (livesEmptyPopup != null)
             {
-                livesEmptyPopup.transform.SetAsLastSibling();
-                livesEmptyPopup.SetActive(true);
+                ShowModalImmediate(livesEmptyPopup);
                 Time.timeScale = 0f;
             }
 
@@ -1032,6 +1024,8 @@ namespace SolitaireAssociations
                 ConfigureText(deckCounterLabel, 32f, 22f, TextAlignmentOptions.Center, new Color(0.12f, 0.18f, 0.25f, 1f));
                 deckCounterLabel.fontStyle = FontStyles.Bold;
                 EnsureDeckCounterBadge(counterRect);
+                bool hasCards = int.TryParse(deckCounterLabel.text, out int remainingCards) && remainingCards > 0;
+                deckCounterLabel.gameObject.SetActive(hasCards);
                 counterRect.SetAsLastSibling();
             }
         }
@@ -1059,6 +1053,9 @@ namespace SolitaireAssociations
             counterImage.color = new Color(1f, 1f, 0.96f, 0.96f);
             counterImage.raycastTarget = false;
             AddShadow(badgeRect.gameObject, new Color(0f, 0.04f, 0.1f, 0.28f), new Vector2(0f, -2f));
+            TMP_Text counterText = counterRect.GetComponent<TMP_Text>();
+            bool hasCards = counterText != null && int.TryParse(counterText.text, out int remainingCards) && remainingCards > 0;
+            badgeRect.gameObject.SetActive(hasCards);
             badgeRect.SetSiblingIndex(counterRect.GetSiblingIndex());
         }
 
@@ -1507,8 +1504,9 @@ namespace SolitaireAssociations
             StretchToFill(tableWash, 0f, 0f, 0f, 0f);
             Image washImage = EnsureGraphic<Image>(tableWash.gameObject);
             washImage.sprite = null;
-            washImage.color = new Color(0.04f, 0.78f, 0.34f, 0.24f);
+            washImage.color = Color.clear;
             washImage.raycastTarget = false;
+            tableWash.gameObject.SetActive(false);
 
             if (background != null)
             {
@@ -1527,7 +1525,7 @@ namespace SolitaireAssociations
             Image image = EnsureGraphic<Image>(existing.gameObject);
             image.sprite = GetVignetteSprite();
             image.type = Image.Type.Simple;
-            image.color = new Color(1f, 1f, 1f, 0.58f);
+            image.color = new Color(1f, 1f, 1f, 0.18f);
             image.raycastTarget = false;
 
             if (tableWash != null)
@@ -1630,19 +1628,10 @@ namespace SolitaireAssociations
                     pausePopup.transform.SetParent(safeAreaRoot, false);
                 }
 
-                pausePopup.SetActive(true);
-                pausePopup.transform.SetAsLastSibling();
+                ShowModalImmediate(pausePopup);
                 if (pausePopup.transform is RectTransform popupRect)
                 {
                     StretchToFill(popupRect, 0f, 0f, 0f, 0f);
-                }
-
-                CanvasGroup popupGroup = pausePopup.GetComponent<CanvasGroup>();
-                if (popupGroup != null)
-                {
-                    popupGroup.alpha = 1f;
-                    popupGroup.interactable = true;
-                    popupGroup.blocksRaycasts = true;
                 }
 
                 Debug.Log($"UIManager: Pause menu opened via authored {GetHierarchyPath(pausePopup.transform)}.");
@@ -1818,21 +1807,17 @@ namespace SolitaireAssociations
                 }
 
                 confirmConsumed = true;
+                HideModal(restartConfirmationPopup);
+                NotifyClosed();
+
                 bool restarted = onConfirmed?.Invoke() == true;
-                if (restarted)
-                {
-                    HideModal(restartConfirmationPopup);
-                    NotifyClosed();
-                }
-                else if (restartConfirmationPopup != null)
+                if (!restarted && restartConfirmationPopup != null)
                 {
                     restartConfirmationPopup.SetActive(false);
                     if (!HasActiveModal())
                     {
                         Time.timeScale = 1f;
                     }
-
-                    NotifyClosed();
                 }
             };
 
@@ -2024,10 +2009,7 @@ namespace SolitaireAssociations
 
         private void HideModal(GameObject popup)
         {
-            if (popup != null)
-            {
-                popup.SetActive(false);
-            }
+            SetModalHidden(popup);
 
             if (popup == livesEmptyPopup && livesEmptyTimerRoutine != null)
             {
@@ -2039,6 +2021,86 @@ namespace SolitaireAssociations
             {
                 Time.timeScale = 1f;
             }
+        }
+
+        private static void ShowModalImmediate(GameObject popup)
+        {
+            if (popup == null)
+            {
+                return;
+            }
+
+            popup.SetActive(true);
+            popup.transform.SetAsLastSibling();
+
+            CanvasGroup group = popup.GetComponent<CanvasGroup>();
+            if (group != null)
+            {
+                group.alpha = 1f;
+                group.interactable = true;
+                group.blocksRaycasts = true;
+            }
+
+            Image image = popup.GetComponent<Image>();
+            if (image != null)
+            {
+                image.raycastTarget = true;
+            }
+        }
+
+        private GameObject HideModalImmediate(GameObject cachedPopup, string modalName)
+        {
+            GameObject popup = cachedPopup != null ? cachedPopup : FindModalObjectByName(modalName);
+            SetModalHidden(popup);
+            return popup;
+        }
+
+        private static void SetModalHidden(GameObject popup)
+        {
+            if (popup == null)
+            {
+                return;
+            }
+
+            CanvasGroup group = popup.GetComponent<CanvasGroup>();
+            if (group != null)
+            {
+                group.alpha = 0f;
+                group.interactable = false;
+                group.blocksRaycasts = false;
+            }
+
+            Image image = popup.GetComponent<Image>();
+            if (image != null)
+            {
+                image.raycastTarget = false;
+            }
+
+            popup.SetActive(false);
+        }
+
+        private GameObject FindModalObjectByName(string modalName)
+        {
+            if (string.IsNullOrEmpty(modalName))
+            {
+                return null;
+            }
+
+            GameObject authored = FindAuthoredModal(modalName);
+            if (authored != null)
+            {
+                return authored;
+            }
+
+            foreach (Transform candidate in UnityEngine.Object.FindObjectsByType<Transform>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            {
+                if (candidate != null && candidate.name == modalName)
+                {
+                    return candidate.gameObject;
+                }
+            }
+
+            return null;
         }
 
         private bool HasActiveModal()

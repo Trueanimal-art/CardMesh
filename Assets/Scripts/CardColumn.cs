@@ -11,8 +11,9 @@ namespace SolitaireAssociations
         private const float StackSpacingMultiplier = 1.2f;
         private const float MaxVisualStackOffset = 50f;
         private const float MinReadableStackOffset = 16f;
-        private const float LinkedStackPeekHeight = 32f;
-        private const float LinkedStackStepHeight = 28f;
+        private const float LinkedStackPeekHeight = 40f;
+        private const float LinkedStackStepHeight = 40f;
+        private const float PeekCornerMaskOverflow = 14f;
         private static readonly Color EmptyFrameFillColor = Color.white;
 
         [SerializeField] private Image backgroundImage;
@@ -446,11 +447,14 @@ namespace SolitaireAssociations
                 bool isPeekCard = !isTopCard;
                 bool isLinkedStackPeek = IsLinkedStackPeek(index, topLayoutCardIndex);
                 float stepHeight = isLinkedStackPeek
-                    ? Mathf.Min(LinkedStackStepHeight, resolvedVerticalOffset)
+                    ? LinkedStackStepHeight
                     : shouldFaceUp ? resolvedVerticalOffset : resolvedVerticalOffset * FaceDownOffsetFactor;
                 float visibleHeight = isLinkedStackPeek ? LinkedStackPeekHeight : stepHeight;
+                float maskOverflowHeight = isPeekCard && index + 1 <= topLayoutCardIndex
+                    ? PeekCornerMaskOverflow
+                    : 0f;
                 card.SetFaceUp(shouldFaceUp);
-                card.SetRevealHistoryLayout(isPeekCard, visibleHeight, shouldFaceUp && isPeekCard);
+                card.SetRevealHistoryLayout(isPeekCard, visibleHeight, shouldFaceUp && isPeekCard, maskOverflowHeight);
                 card.SetVisible(true);
                 card.SetRaycastBlocks(true);
                 currentOffset += stepHeight;

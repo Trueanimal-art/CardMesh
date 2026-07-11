@@ -8,7 +8,7 @@ import struct
 import sys
 import uuid
 import zlib
-from collections import Counter, defaultdict
+from collections import Counter, defaultdict, deque
 from dataclasses import asdict, dataclass, replace
 from datetime import datetime, timezone
 from pathlib import Path
@@ -27,6 +27,12 @@ DEFAULT_MAX_ATTEMPTS = 20
 DEFAULT_REGEN_ATTEMPTS = 40
 DEFAULT_PLUS10_TARGET_PERCENT = 20
 DEFAULT_PLUS10_TARGET_START_LEVEL = 1
+RECENT_CATEGORY_HARD_EXCLUSION_LEVELS = 10
+RECENT_CATEGORY_SOFT_EXCLUSION_LEVELS = 14
+SHOWCASE_LEVEL_LIMIT = 250
+SHOWCASE_CATEGORY_HARD_EXCLUSION_LEVELS = 20
+SHOWCASE_CATEGORY_SOFT_EXCLUSION_LEVELS = 25
+RECENT_CARD_HARD_EXCLUSION_LEVELS = 30
 PROJECT_IMAGE_WIDTH_RANGE = (150, 280)
 PROJECT_IMAGE_HEIGHT_RANGE = (190, 300)
 
@@ -333,14 +339,24 @@ def build_content_metadata(root: Path, validator: SolvabilityValidator) -> tuple
         for card in gold["cards"]:
             card_id = card["id"]
             word = card["title"]
+            card_difficulty = card.get("difficulty", difficulty)
+            card_tags = list(
+                dict.fromkeys(
+                    [
+                        category_id,
+                        base_pack.replace("Pack", "").lower(),
+                        *card.get("tags", []),
+                    ]
+                )
+            )
             text_cards.append(
                 {
                     "id": card_id,
                     "word": word,
                     "category": category_id,
                     "categoryTitle": category_title,
-                    "difficulty": difficulty,
-                    "tags": [category_id, base_pack.replace("Pack", "").lower()],
+                    "difficulty": card_difficulty,
+                    "tags": card_tags,
                     "allowedFromLevel": allowed,
                     "type": "TextCard",
                 }
@@ -507,6 +523,9 @@ def select_layout_id(level_number: int, layouts_by_id: dict[str, Layout]) -> str
 
 
 def allowed_gold_ids_for_level(level_number: int, validator: SolvabilityValidator) -> tuple[str, ...]:
+    if level_number <= 250:
+        return tuple(validator.gold_ids)
+
     if level_number <= 50:
         allowed = EARLY_CATEGORIES
     elif level_number <= 500:
@@ -518,6 +537,57 @@ def allowed_gold_ids_for_level(level_number: int, validator: SolvabilityValidato
     if len(selected) < 15:
         selected = list(validator.gold_ids)
     return tuple(selected)
+
+
+def required_gold_count_for_layout(layout: Layout) -> int:
+    return sum(gold_count for gold_count, _ in layout.groups)
+
+
+def apply_recent_category_spacing(
+    allowed_gold_ids: tuple[str, ...],
+    fallback_gold_ids: tuple[str, ...],
+    recent_gold_history: tuple[frozenset[str], ...],
+    required_gold_count: int,
+    level_number: int,
+    layout_id: str,
+) -> tuple[str, ...]:
+    if not recent_gold_history:
+        return allowed_gold_ids
+
+    hard_window = (
+        SHOWCASE_CATEGORY_HARD_EXCLUSION_LEVELS
+        if level_number <= SHOWCASE_LEVEL_LIMIT
+        else RECENT_CATEGORY_HARD_EXCLUSION_LEVELS
+    )
+    soft_window = (
+        SHOWCASE_CATEGORY_SOFT_EXCLUSION_LEVELS
+        if level_number <= SHOWCASE_LEVEL_LIMIT
+        else RECENT_CATEGORY_SOFT_EXCLUSION_LEVELS
+    )
+
+    hard_recent = recent_gold_history[-hard_window:]
+    hard_blocked = set().union(*hard_recent) if hard_recent else set()
+    hard_filtered = tuple(gold_id for gold_id in allowed_gold_ids if gold_id not in hard_blocked)
+    if len(hard_filtered) < required_gold_count:
+        expanded_allowed = tuple(dict.fromkeys((*allowed_gold_ids, *fallback_gold_ids)))
+        hard_filtered = tuple(gold_id for gold_id in expanded_allowed if gold_id not in hard_blocked)
+    if len(hard_filtered) < required_gold_count:
+        raise RuntimeError(
+            "Not enough categories to keep adjacent levels unique: "
+            f"level={level_number} layout={layout_id} required={required_gold_count} "
+            f"available={len(hard_filtered)} blocked={len(hard_blocked)}"
+        )
+
+    soft_recent = recent_gold_history[-soft_window:]
+    soft_blocked = set().union(*soft_recent) if soft_recent else set()
+    soft_filtered = tuple(gold_id for gold_id in allowed_gold_ids if gold_id not in soft_blocked)
+    if len(soft_filtered) < required_gold_count:
+        expanded_allowed = tuple(dict.fromkeys((*allowed_gold_ids, *fallback_gold_ids)))
+        soft_filtered = tuple(gold_id for gold_id in expanded_allowed if gold_id not in soft_blocked)
+    if len(soft_filtered) >= required_gold_count:
+        return soft_filtered
+
+    return hard_filtered
 
 
 def difficulty_for_level(level_number: int) -> str:
@@ -556,22 +626,51 @@ def generate_levels_manifest(
     solver_states: list[int] = []
     generation_attempt_counts: list[int] = []
     move_budget_tiers: Counter[str] = Counter()
+    recent_gold_history: deque[frozenset[str]] = deque(maxlen=SHOWCASE_CATEGORY_SOFT_EXCLUSION_LEVELS)
+    recent_card_history: deque[frozenset[str]] = deque(maxlen=RECENT_CARD_HARD_EXCLUSION_LEVELS)
+    plus10_eligible_levels = 0
 
     for level_number in range(1, total_levels + 1):
         layout_id = select_layout_id(level_number, layouts_by_id)
         layout = layouts_by_id[layout_id]
+        plus10_eligible = layout.columns_count >= 4 and level_number >= plus10_target_start_level
         generated = None
         result = None
         source_seed = 0
+        print(
+            f"[generate] level {level_number}/{total_levels} layout={layout_id} "
+            f"columns={layout.columns_count}",
+            file=sys.stderr,
+            flush=True,
+        )
 
         for regen_attempt in range(1, regen_attempts + 1):
             source_seed = seed_start + (level_number * 100_003) + (regen_attempt * 1_000_003)
+            if regen_attempt == 1 or regen_attempt % 5 == 0:
+                print(
+                    f"[generate] level {level_number}/{total_levels} "
+                    f"attempt {regen_attempt}/{regen_attempts} failedSeeds={len(failed_seeds)}",
+                    file=sys.stderr,
+                    flush=True,
+                )
+
             original_gold_ids = validator.gold_ids
-            validator.gold_ids = allowed_gold_ids_for_level(level_number, validator)
+            original_recent_card_ids = validator.recent_card_ids
+            allowed_gold_ids = allowed_gold_ids_for_level(level_number, validator)
+            validator.gold_ids = apply_recent_category_spacing(
+                allowed_gold_ids,
+                original_gold_ids,
+                tuple(recent_gold_history),
+                required_gold_count_for_layout(layout),
+                level_number,
+                layout_id,
+            )
+            validator.recent_card_ids = frozenset().union(*recent_card_history) if recent_card_history else frozenset()
             try:
                 generated = validator.generate_guaranteed(layout, source_seed, level_number, max_attempts)
             finally:
                 validator.gold_ids = original_gold_ids
+                validator.recent_card_ids = original_recent_card_ids
             if generated is None:
                 failed_seeds.append(
                     {
@@ -603,13 +702,48 @@ def generate_levels_manifest(
                 min(max_states, budget_max_states),
                 include_unlimited=False,
             )
+            if layout.columns_count <= 3 and original_budget["tier"] != "base":
+                failed_seeds.append(
+                    {
+                        "levelNumber": level_number,
+                        "seed": source_seed,
+                        "layoutId": layout_id,
+                        "reason": "three_column_level_must_fit_base_moves",
+                        "states": original_budget["states"],
+                        "moves": original_budget["moves"],
+                        "limit": original_budget["limit"],
+                    }
+                )
+                generated = None
+                result = None
+                continue
+
             if original_budget["tier"] in {"base", "plus10"}:
                 target_plus10_count = 0
-                eligible_count = max(0, level_number - plus10_target_start_level + 1)
-                if eligible_count > 0:
+                if plus10_eligible:
+                    eligible_count = plus10_eligible_levels + 1
                     target_plus10_count = round(eligible_count * (plus10_target_percent / 100.0))
+                if (
+                    plus10_eligible
+                    and original_budget["tier"] == "plus10"
+                    and move_budget_tiers["plus10"] >= target_plus10_count
+                ):
+                    failed_seeds.append(
+                        {
+                            "levelNumber": level_number,
+                            "seed": source_seed,
+                            "layoutId": layout_id,
+                            "reason": "plus10_quota_prefers_base_level",
+                            "currentPlus10": move_budget_tiers["plus10"],
+                            "targetPlus10": target_plus10_count,
+                        }
+                    )
+                    generated = None
+                    result = None
+                    continue
+
                 needs_plus10 = (
-                    level_number >= plus10_target_start_level
+                    plus10_eligible
                     and move_budget_tiers["plus10"] < target_plus10_count
                 )
                 move_budget = assign_gameplay_move_budget(
@@ -662,11 +796,24 @@ def generate_levels_manifest(
 
         entry = build_level_entry(level_number, source_seed, generated, result.moves or 0, result.states, validator, move_budget)
         levels.append(entry)
+        print(
+            f"[generate] accepted level {level_number}/{total_levels} "
+            f"seed={entry['seed']} attempts={entry['generationAttempts']} "
+            f"moves={entry['solverMoves']} budget={entry['moveBudgetTier']} "
+            f"failedSeeds={len(failed_seeds)}",
+            file=sys.stderr,
+            flush=True,
+        )
+
+        recent_gold_history.append(frozenset(entry["goldCards"]))
+        recent_card_history.append(frozenset(card_id for card_id in entry["cards"] if card_id not in entry["goldCards"]))
         layout_counter[entry["layoutId"]] += 1
         generation_attempt_counts.append(entry["generationAttempts"])
         solver_moves.append(entry["solverMoves"])
         solver_states.append(entry["solverStates"])
         move_budget_tiers[entry["moveBudgetTier"]] += 1
+        if plus10_eligible:
+            plus10_eligible_levels += 1
 
         for card_id in entry["cards"]:
             usage_counter[card_id] += 1
@@ -684,6 +831,17 @@ def generate_levels_manifest(
         {"cardId": card_id, "count": count}
         for card_id, count in usage_counter.most_common(30)
     ]
+    adjacent_overlaps = []
+    for previous, current in zip(levels, levels[1:]):
+        overlap = sorted(set(previous["goldCards"]) & set(current["goldCards"]))
+        if overlap:
+            adjacent_overlaps.append(
+                {
+                    "previousLevel": previous["levelNumber"],
+                    "currentLevel": current["levelNumber"],
+                    "overlap": overlap,
+                }
+            )
 
     manifest = {
         "schemaVersion": 1,
@@ -712,6 +870,16 @@ def generate_levels_manifest(
             "textCardUsageTop": [{"cardId": card_id, "count": count} for card_id, count in text_counter.most_common(30)],
             "imageCardsUsed": len(image_counter),
             "textCardsUsed": len(text_counter),
+            "categorySpacing": {
+                "hardExclusionLevels": RECENT_CATEGORY_HARD_EXCLUSION_LEVELS,
+                "softExclusionLevels": RECENT_CATEGORY_SOFT_EXCLUSION_LEVELS,
+                "showcaseLevelLimit": SHOWCASE_LEVEL_LIMIT,
+                "showcaseHardExclusionLevels": SHOWCASE_CATEGORY_HARD_EXCLUSION_LEVELS,
+                "showcaseSoftExclusionLevels": SHOWCASE_CATEGORY_SOFT_EXCLUSION_LEVELS,
+                "cardHardExclusionLevels": RECENT_CARD_HARD_EXCLUSION_LEVELS,
+                "adjacentOverlapCount": len(adjacent_overlaps),
+                "adjacentOverlaps": adjacent_overlaps[:50],
+            },
         },
         "failedSeeds": failed_seeds,
         "failedSeedsCount": len(failed_seeds),
@@ -732,6 +900,36 @@ def validate_stock_pass_difficulty(
         }
 
     first_pass = validator.simulate_greedy_stock_passes(generated, max_passes=1)
+    initial_cascade = validator.find_initial_tableau_cascade(generated)
+    if initial_cascade is not None:
+        return False, {
+            "reason": "initial_tableau_cascade",
+            "cascadeReport": initial_cascade,
+            "passReport": first_pass,
+        }
+
+    if first_pass["earlyTableauPressureViolation"] is not None:
+        return False, {
+            "reason": "tableau_collapses_before_stock_pressure_ends",
+            "passReport": first_pass,
+        }
+
+    pressure_violation = validator.find_stock_pressure_violation(generated, min(max_states, 20_000))
+    if pressure_violation is not None:
+        return False, {
+            "reason": "tableau_can_collapse_before_stock_pressure_ends",
+            "pressureReport": pressure_violation,
+            "passReport": first_pass,
+        }
+
+    min_tableau_after_first_pass = minimum_tableau_cards_after_first_pass(generated.layout)
+    if first_pass["remainingColumns"] < min_tableau_after_first_pass:
+        return False, {
+            "reason": "tableau_thins_out_before_stock_pressure",
+            "minimumRemainingColumns": min_tableau_after_first_pass,
+            "passReport": first_pass,
+        }
+
     if generated.layout.columns_count <= 3:
         if not first_pass["solvedBeforeFirstPassEnd"]:
             return True, {
@@ -753,6 +951,10 @@ def validate_stock_pass_difficulty(
         "reason": "large_layout_requires_multiple_stock_passes",
         "passReport": first_pass,
     }
+
+
+def minimum_tableau_cards_after_first_pass(layout: Layout) -> int:
+    return 3
 
 
 def assess_move_budget(
@@ -962,7 +1164,16 @@ def validate_manifest(root: Path, max_states: int) -> dict:
     move_budget_tiers: Counter[str] = Counter()
     move_budget_examples: list[dict] = []
 
-    for entry in manifest["levels"]:
+    total_levels = len(manifest["levels"])
+    for index, entry in enumerate(manifest["levels"], start=1):
+        if index == 1 or index % 50 == 0 or index == total_levels:
+            print(
+                f"[validate] level {index}/{total_levels} "
+                f"id={entry['levelId']} layout={entry['layoutId']}",
+                file=sys.stderr,
+                flush=True,
+            )
+
         duplicate_card_ids = {
             card_id: count
             for card_id, count in Counter(entry["cards"]).items()
@@ -1000,7 +1211,7 @@ def validate_manifest(root: Path, max_states: int) -> dict:
         move_budget = assess_move_budget(
             validator,
             generated,
-            min(max_states, DEFAULT_BUDGET_MAX_STATES),
+            max_states,
             include_unlimited=False,
         )
         move_budget_tiers[move_budget["tier"]] += 1

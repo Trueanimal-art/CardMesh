@@ -18,9 +18,13 @@ namespace SolitaireAssociations
         private const float HintLiftOffset = 42f;
         private const float HintColumnDropOffset = 58f;
         private const float HintDeckDuration = 1f;
+        private const float DragStackDefaultPeekHeight = 40f;
+        private const float DragStackPeekPadding = 4f;
+        private const float DragStackMaskOverflowHeight = 14f;
         private const float GoalCollapseDuration = 0.24f;
         private const float GoalCloudDuration = 0.22f;
         private const float RestartLifeSpendLockSeconds = 0.75f;
+        private const int FirstManifestLevelNumber = 1;
 
         public readonly struct ObjectiveState
         {
@@ -466,11 +470,13 @@ namespace SolitaireAssociations
                 draggedStackOffsets[stackCard] = stackCard.RectTransform.position - anchorPosition;
                 stackCard.SetRaycastBlocks(false);
                 stackCard.SetDragDetached(true);
-                stackCard.SetRevealHistoryLayout(false);
                 stackCard.SetDraggingVisual(true);
+                ApplyDragStackTitleLayout(draggedStack, stackCard);
                 stackCard.transform.SetParent(dragLayer, true);
                 stackCard.transform.SetAsLastSibling();
             }
+
+            ApplyDraggedStackProgressFooter();
 
             if (sourceContainer is CardColumn sourceColumn)
             {
@@ -738,6 +744,7 @@ namespace SolitaireAssociations
                 return;
             }
 
+            uiManager?.ResetPauseState();
             ClearBoard();
             moveHistory.Clear();
             completedAssociations.Clear();
@@ -776,6 +783,12 @@ namespace SolitaireAssociations
                 ? devOverrideSeed.GetValueOrDefault(Random.Range(1, int.MaxValue))
                 : progressionManager != null ? progressionManager.GetOrCreateSeed(currentLevelNumber) : Random.Range(1, int.MaxValue);
             bool generatedFromManifest = TryCreateManifestLevelForRestart(useDevColumnsOverride, currentLevelNumber, out generatedLevelData);
+            if (useDevColumnsOverride && !generatedFromManifest)
+            {
+                Debug.LogError($"GameManager: cannot load verified manifest level for DEV columns={targetColumnsCount}. Runtime random fallback is disabled for balanced layouts.");
+                return;
+            }
+
             if (!generatedFromManifest
                 && !LevelGenerator.TryGenerate(levelDefinition, cardDatabase, targetLayoutId, targetColumnsCount, layoutVariantIndex, levelSeed, currentLevelNumber, out generatedLevelData))
             {
@@ -817,7 +830,10 @@ namespace SolitaireAssociations
         {
             if (useDevColumnsOverride)
             {
-                return string.Empty;
+                return devOverrideTargetColumns.HasValue
+                    && LevelManifestDatabase.TryGetLevelWithColumns(devOverrideTargetColumns.Value, FirstManifestLevelNumber, out LevelManifestEntry entry)
+                    ? entry.layoutId
+                    : string.Empty;
             }
 
             if (devOverrideLevelNumber.HasValue)
@@ -835,6 +851,17 @@ namespace SolitaireAssociations
             manifestLevelData = null;
             if (useDevColumnsOverride)
             {
+                if (devOverrideTargetColumns.HasValue
+                    && LevelManifestDatabase.TryGetLevelWithColumns(devOverrideTargetColumns.Value, FirstManifestLevelNumber, out LevelManifestEntry entry)
+                    && LevelManifestDatabase.TryCreateGeneratedLevelData(entry, out manifestLevelData))
+                {
+                    Debug.Log(
+                        $"GameManager: Loaded manifest dev layout. requestedColumns={devOverrideTargetColumns.Value}, manifestLevel={entry.levelNumber}, layout={entry.layoutId}, deck={entry.deckCount}, moves={entry.startingMoves}, goldCards={entry.goldenCards}.");
+                    return true;
+                }
+
+                Debug.LogWarning(
+                    $"GameManager: no manifest level found for DEV columns={devOverrideTargetColumns.GetValueOrDefault()}.");
                 return false;
             }
 
@@ -896,8 +923,11 @@ namespace SolitaireAssociations
             }
 
             int textCards = Mathf.Max(0, columnCards - imageCards - goldCards);
+            string goalCategoryIds = objectiveOrder != null && objectiveOrder.Count > 0
+                ? string.Join(",", objectiveOrder)
+                : string.Empty;
             Debug.Log(
-                $"GameManager: Level generation diagnostics. level={levelNumber}, seed={generatedLevelData.GenerationSeed}, layout={generatedLevelData.LayoutId}, cards={columnCards}, imageCards={imageCards}, textCards={textCards}, goalSlots={generatedLevelData.ColumnsCount}, goldCards={goldCards}, attempts={generatedLevelData.GenerationAttempts}, solverVerified={generatedLevelData.SolverVerified}, solverResult={generatedLevelData.SolverResult}, solverMoves={generatedLevelData.SolverMoves}, solverStates={generatedLevelData.SolverStates}.");
+                $"GameManager: Level generation diagnostics. level={levelNumber}, seed={generatedLevelData.GenerationSeed}, layout={generatedLevelData.LayoutId}, cards={columnCards}, imageCards={imageCards}, textCards={textCards}, goalSlots={generatedLevelData.ColumnsCount}, goalCategories={objectiveOrder.Count}, goldCards={goldCards}, goalIds={goalCategoryIds}, attempts={generatedLevelData.GenerationAttempts}, solverVerified={generatedLevelData.SolverVerified}, solverResult={generatedLevelData.SolverResult}, solverMoves={generatedLevelData.SolverMoves}, solverStates={generatedLevelData.SolverStates}.");
         }
 
         private void ApplyLayout()
@@ -970,7 +1000,11 @@ namespace SolitaireAssociations
         private static ColumnLayoutProfile NormalizeGameplayProfile(ColumnLayoutProfile profile, int visibleColumnsCount)
         {
             Vector2 targetCardSize = new(170f, 248f);
-            float targetSpacing = 48f;
+            float targetSpacing = visibleColumnsCount <= 3
+                ? 72f
+                : visibleColumnsCount == 4
+                    ? 56f
+                    : 48f;
             float targetVerticalOffset = 40f;
 
             profile.columnCount = visibleColumnsCount;
@@ -1304,9 +1338,19 @@ namespace SolitaireAssociations
                 ? draggedStack
                 : BuildDragStack(cardView);
 
-            if (targetContainer is CardColumn && cardView.Data != null && cardView.Data.IsGold)
+            if (targetContainer is CardColumn targetColumn)
             {
-                return stack.Count == 1;
+                if (targetColumn.TopCard == null)
+                {
+                    return IsValidStackForEmptyColumn(stack);
+                }
+
+                if (cardView.Data != null && cardView.Data.IsGold && stack.Count > 1)
+                {
+                    return false;
+                }
+
+                return true;
             }
 
             if (targetContainer is not GoalSlot)
@@ -1320,6 +1364,57 @@ namespace SolitaireAssociations
             }
 
             return stack.Count == 1 && (cardView.Container == null || cardView.Container.IsTopCard(cardView));
+        }
+
+        private static bool IsValidStackForEmptyColumn(List<CardView> stack)
+        {
+            if (stack == null || stack.Count == 0)
+            {
+                return false;
+            }
+
+            CardData firstData = stack[0]?.Data;
+            if (firstData == null)
+            {
+                return false;
+            }
+
+            string associationId = firstData.AssociationId;
+            bool stackUsesImages = firstData.IsGold ? firstData.IsImageGoal : firstData.IsImageCard;
+            bool hasGold = false;
+
+            for (int index = 0; index < stack.Count; index++)
+            {
+                CardView stackCard = stack[index];
+                if (stackCard == null || stackCard.Data == null || !stackCard.IsFaceUp)
+                {
+                    return false;
+                }
+
+                CardData data = stackCard.Data;
+                if (data.AssociationId != associationId)
+                {
+                    return false;
+                }
+
+                if (data.IsGold)
+                {
+                    if (hasGold || index != stack.Count - 1 || data.IsImageGoal != stackUsesImages)
+                    {
+                        return false;
+                    }
+
+                    hasGold = true;
+                    continue;
+                }
+
+                if (data.IsImageCard != stackUsesImages)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         private Dictionary<CardView, Vector3> CaptureMoveStartPositions(CardView cardView)
@@ -1404,7 +1499,7 @@ namespace SolitaireAssociations
                 stackCard.PlayAcceptedFeedback();
                 stackCard.SetRaycastBlocks(false);
                 stackCard.SetDragDetached(true);
-                stackCard.SetRevealHistoryLayout(false);
+                ApplyDragStackTitleLayout(animatedCards, stackCard);
                 stackRect.SetParent(animationParent, true);
                 stackRect.SetAsLastSibling();
             }
@@ -1905,10 +2000,11 @@ namespace SolitaireAssociations
 
             int safeColumnsCount = Mathf.Clamp(columnsCount, 3, 5);
             devOverrideTargetColumns = safeColumnsCount;
-            devOverrideSeed = Random.Range(1, int.MaxValue);
+            devOverrideLevelNumber = null;
+            devOverrideSeed = null;
             RestartLevel();
             uiManager?.ShowStatus($"DEV: {safeColumnsCount} столб.", new Color(0.76f, 0.96f, 0.74f, 1f));
-            Debug.Log($"[DEV] Load level: columns={safeColumnsCount}, seed={devOverrideSeed.Value}");
+            Debug.Log($"[DEV] Load level: columns={safeColumnsCount}");
             platformService?.TrackEvent($"dev_load_{safeColumnsCount}_columns");
         }
 
@@ -2003,9 +2099,150 @@ namespace SolitaireAssociations
                 bool isGameplayCard = stackCard.gameObject.activeInHierarchy &&
                     stackCard.Container != null &&
                     stackCard.Container is not GoalSlot;
+                stackCard.SetFooterTextOverride(null);
                 stackCard.SetRaycastBlocks(isGameplayCard);
                 stackCard.SetDraggingVisual(false);
             }
+        }
+
+        private void ApplyDraggedStackProgressFooter()
+        {
+            foreach (CardView stackCard in draggedStack)
+            {
+                stackCard?.SetFooterTextOverride(null);
+            }
+
+            CardView progressCard = GetDragStackProgressCard(draggedStack);
+            if (progressCard == null || progressCard.Data == null)
+            {
+                return;
+            }
+
+            string associationId = progressCard.Data.AssociationId;
+            if (string.IsNullOrEmpty(associationId)
+                || !goalCardsByAssociation.TryGetValue(associationId, out CardData goalCard)
+                || goalCard.RequiredCount <= 0)
+            {
+                return;
+            }
+
+            int draggedCount = CountRegularCardsForAssociation(draggedStack, associationId, goalCard.IsImageGoal);
+            if (draggedCount <= 0)
+            {
+                return;
+            }
+
+            progressCard.SetFooterTextOverride($"{Mathf.Min(draggedCount, goalCard.RequiredCount)}/{goalCard.RequiredCount}");
+        }
+
+        private static CardView GetDragStackProgressCard(IReadOnlyList<CardView> stack)
+        {
+            if (stack == null)
+            {
+                return null;
+            }
+
+            for (int index = stack.Count - 1; index >= 0; index--)
+            {
+                CardView stackCard = stack[index];
+                if (stackCard != null && stackCard.Data != null && stackCard.IsFaceUp)
+                {
+                    return stackCard;
+                }
+            }
+
+            return null;
+        }
+
+        private static int CountRegularCardsForAssociation(
+            IReadOnlyList<CardView> stack,
+            string associationId,
+            bool expectsImageCard)
+        {
+            if (stack == null || string.IsNullOrEmpty(associationId))
+            {
+                return 0;
+            }
+
+            int count = 0;
+            foreach (CardView stackCard in stack)
+            {
+                CardData data = stackCard != null ? stackCard.Data : null;
+                if (data == null
+                    || data.IsGold
+                    || data.AssociationId != associationId
+                    || data.IsImageCard != expectsImageCard)
+                {
+                    continue;
+                }
+
+                count++;
+            }
+
+            return count;
+        }
+
+        private static void ApplyDragStackTitleLayout(IReadOnlyList<CardView> stack, CardView stackCard)
+        {
+            if (stack == null || stackCard == null)
+            {
+                return;
+            }
+
+            int index = IndexOfCard(stack, stackCard);
+            bool isPeekCard = index >= 0 && index < stack.Count - 1;
+            if (!isPeekCard)
+            {
+                stackCard.SetRevealHistoryLayout(false);
+                return;
+            }
+
+            stackCard.SetRevealHistoryLayout(
+                true,
+                ResolveDragStackPeekHeight(stack, index),
+                stackCard.IsFaceUp,
+                DragStackMaskOverflowHeight);
+        }
+
+        private static float ResolveDragStackPeekHeight(IReadOnlyList<CardView> stack, int index)
+        {
+            if (stack == null || index < 0 || index + 1 >= stack.Count)
+            {
+                return DragStackDefaultPeekHeight;
+            }
+
+            RectTransform currentRect = stack[index] != null ? stack[index].RectTransform : null;
+            RectTransform nextRect = stack[index + 1] != null ? stack[index + 1].RectTransform : null;
+            if (currentRect == null || nextRect == null)
+            {
+                return DragStackDefaultPeekHeight;
+            }
+
+            float verticalGap = Mathf.Abs(currentRect.position.y - nextRect.position.y);
+            if (verticalGap <= 0.01f)
+            {
+                return DragStackDefaultPeekHeight;
+            }
+
+            return Mathf.Clamp(verticalGap + DragStackPeekPadding, DragStackDefaultPeekHeight, 52f);
+        }
+
+        private static int IndexOfCard(IReadOnlyList<CardView> stack, CardView stackCard)
+        {
+            if (stack == null || stackCard == null)
+            {
+                return -1;
+            }
+
+            for (int index = 0; index < stack.Count; index++)
+            {
+                if (stack[index] == stackCard)
+                {
+                    return index;
+                }
+            }
+
+            return -1;
         }
 
         private bool TryResolveLooseDrop(CardView cardView, Vector2 screenPoint, Camera eventCamera)
@@ -2557,6 +2794,7 @@ namespace SolitaireAssociations
 
                 cardView.SetDragDetached(false);
                 cardView.SetDraggingVisual(false);
+                cardView.SetFooterTextOverride(null);
                 cardView.SetRevealHistoryLayout(false);
                 cardView.BindToContainer(null);
 

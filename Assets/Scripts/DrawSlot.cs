@@ -13,18 +13,26 @@ namespace SolitaireAssociations
         private const float RevealedCardsBaseOffsetY = -8f;
         private const float RevealedCardsStepX = 12f;
         private const float RevealedCardsStepY = -50f;
+        private const string EmptySlotRootName = "DeckEmptySlot";
 
         [SerializeField] private Image backgroundImage;
         [SerializeField] private LayoutElement layoutElement;
         [SerializeField] private TMP_Text countLabel;
         [SerializeField] private Transform cardRoot;
         [SerializeField] private CardVisualConfig visualConfig;
+        [SerializeField] private RectTransform deckFaceClipRoot;
+        [SerializeField] private Image deckFaceClipMaskImage;
+        [SerializeField] private Image deckFaceImage;
+        [SerializeField] private Mask deckFaceMask;
+
+        private static Sprite roundedEmptySlotSprite;
 
         private readonly List<CardView> queuedCards = new();
         private readonly List<CardView> revealedCards = new();
 
         private GameManager gameManager;
         private Vector2 cardSize;
+        private RectTransform emptySlotRoot;
 
         public int CardCount => queuedCards.Count + revealedCards.Count;
         public CardView TopCard => revealedCards.Count > 0 ? revealedCards[^1] : null;
@@ -335,9 +343,11 @@ namespace SolitaireAssociations
 
             if (backgroundImage != null)
             {
-                backgroundImage.enabled = HasDrawableCards;
+                backgroundImage.enabled = true;
                 ApplyDeckBackVisual();
             }
+
+            RefreshEmptySlotVisual();
         }
 
         public void OnPointerClick(PointerEventData eventData)
@@ -349,8 +359,22 @@ namespace SolitaireAssociations
         {
             if (countLabel != null)
             {
+                bool hasQueuedCards = queuedCards.Count > 0;
                 countLabel.text = queuedCards.Count.ToString();
-                countLabel.transform.SetAsLastSibling();
+                countLabel.gameObject.SetActive(hasQueuedCards);
+
+                Transform badge = countLabel.transform.parent != null
+                    ? countLabel.transform.parent.Find("DeckCounterBadgeBg")
+                    : null;
+                if (badge != null)
+                {
+                    badge.gameObject.SetActive(hasQueuedCards);
+                }
+
+                if (hasQueuedCards)
+                {
+                    countLabel.transform.SetAsLastSibling();
+                }
             }
         }
 
@@ -413,13 +437,261 @@ namespace SolitaireAssociations
                 return;
             }
 
+            if (queuedCards.Count <= 0)
+            {
+                SetDeckFaceVisible(false);
+                backgroundImage.sprite = GetRoundedEmptySlotSprite();
+                backgroundImage.color = new Color(0.02f, 0.21f, 0.12f, 0.64f);
+                backgroundImage.type = Image.Type.Sliced;
+                backgroundImage.preserveAspect = false;
+                return;
+            }
+
             Sprite cardBackSprite = visualConfig != null ? visualConfig.CardBackSprite : null;
-            backgroundImage.sprite = cardBackSprite;
+            backgroundImage.sprite = CardView.GetRoundedCardSprite();
             backgroundImage.color = cardBackSprite != null
                 ? Color.white
                 : visualConfig != null ? visualConfig.CardBackColor : new Color(0.2f, 0.62f, 0.98f, 1f);
-            backgroundImage.type = Image.Type.Simple;
+            backgroundImage.type = Image.Type.Sliced;
             backgroundImage.preserveAspect = false;
+            ApplyDeckFaceSprite(cardBackSprite);
+        }
+
+        private void ApplyDeckFaceSprite(Sprite sprite)
+        {
+            EnsureDeckFaceClip();
+            if (deckFaceClipRoot == null || deckFaceImage == null)
+            {
+                return;
+            }
+
+            bool isVisible = sprite != null;
+            deckFaceClipRoot.gameObject.SetActive(isVisible);
+            deckFaceImage.enabled = isVisible;
+            deckFaceImage.sprite = sprite;
+            deckFaceImage.color = Color.white;
+            deckFaceImage.type = Image.Type.Simple;
+            deckFaceImage.preserveAspect = false;
+        }
+
+        private void SetDeckFaceVisible(bool isVisible)
+        {
+            if (deckFaceClipRoot != null)
+            {
+                deckFaceClipRoot.gameObject.SetActive(isVisible);
+            }
+
+            if (deckFaceImage != null)
+            {
+                deckFaceImage.enabled = isVisible;
+            }
+        }
+
+        private void EnsureDeckFaceClip()
+        {
+            if (backgroundImage == null || transform is not RectTransform deckRect)
+            {
+                return;
+            }
+
+            if (deckFaceClipRoot == null)
+            {
+                Transform existingClip = deckRect.Find("DeckFaceClip");
+                if (existingClip is RectTransform existingClipRect)
+                {
+                    deckFaceClipRoot = existingClipRect;
+                    deckFaceClipMaskImage = existingClip.GetComponent<Image>();
+                    deckFaceMask = existingClip.GetComponent<Mask>();
+                }
+            }
+
+            if (deckFaceClipRoot == null)
+            {
+                GameObject clipObject = new("DeckFaceClip", typeof(RectTransform), typeof(Image), typeof(Mask));
+                deckFaceClipRoot = clipObject.GetComponent<RectTransform>();
+                deckFaceClipRoot.SetParent(deckRect, false);
+                deckFaceClipMaskImage = clipObject.GetComponent<Image>();
+                deckFaceMask = clipObject.GetComponent<Mask>();
+            }
+
+            StretchToParent(deckFaceClipRoot, Vector2.zero, Vector2.zero);
+            deckFaceClipRoot.SetAsFirstSibling();
+
+            if (deckFaceClipMaskImage != null)
+            {
+                deckFaceClipMaskImage.sprite = CardView.GetRoundedCardSprite();
+                deckFaceClipMaskImage.type = Image.Type.Sliced;
+                deckFaceClipMaskImage.color = Color.white;
+                deckFaceClipMaskImage.raycastTarget = false;
+            }
+
+            if (deckFaceMask != null)
+            {
+                deckFaceMask.showMaskGraphic = false;
+            }
+
+            if (deckFaceImage == null)
+            {
+                Transform existingFace = deckFaceClipRoot.Find("DeckFaceImage");
+                deckFaceImage = existingFace != null ? existingFace.GetComponent<Image>() : null;
+            }
+
+            if (deckFaceImage == null)
+            {
+                GameObject faceObject = new("DeckFaceImage", typeof(RectTransform), typeof(Image));
+                RectTransform faceRect = faceObject.GetComponent<RectTransform>();
+                faceRect.SetParent(deckFaceClipRoot, false);
+                deckFaceImage = faceObject.GetComponent<Image>();
+            }
+
+            StretchToParent(deckFaceImage.rectTransform, Vector2.zero, Vector2.zero);
+            deckFaceImage.raycastTarget = false;
+        }
+
+        private void RefreshEmptySlotVisual()
+        {
+            EnsureEmptySlotVisual();
+
+            if (emptySlotRoot == null)
+            {
+                return;
+            }
+
+            bool isEmptyStock = queuedCards.Count <= 0;
+            emptySlotRoot.gameObject.SetActive(isEmptyStock);
+            if (isEmptyStock)
+            {
+                emptySlotRoot.SetAsFirstSibling();
+            }
+        }
+
+        private void EnsureEmptySlotVisual()
+        {
+            if (backgroundImage == null || transform is not RectTransform deckRect)
+            {
+                return;
+            }
+
+            if (emptySlotRoot == null)
+            {
+                Transform existing = deckRect.Find(EmptySlotRootName);
+                emptySlotRoot = existing as RectTransform;
+            }
+
+            if (emptySlotRoot == null)
+            {
+                GameObject rootObject = new(EmptySlotRootName, typeof(RectTransform));
+                emptySlotRoot = rootObject.GetComponent<RectTransform>();
+                emptySlotRoot.SetParent(deckRect, false);
+            }
+
+            StretchToParent(emptySlotRoot, Vector2.zero, Vector2.zero);
+
+            Image rim = EnsureLayer("DeckEmptySlotGoldRim", Vector2.zero, Vector2.zero);
+            rim.sprite = GetRoundedEmptySlotSprite();
+            rim.type = Image.Type.Sliced;
+            rim.color = new Color(0.95f, 0.66f, 0.16f, 0.42f);
+
+            Image baseImage = EnsureLayer("DeckEmptySlotBase", new Vector2(4f, 4f), new Vector2(-4f, -4f));
+            baseImage.sprite = GetRoundedEmptySlotSprite();
+            baseImage.type = Image.Type.Sliced;
+            baseImage.color = new Color(0.02f, 0.18f, 0.1f, 0.72f);
+
+            Image innerShadow = EnsureLayer("DeckEmptySlotInnerShadow", new Vector2(8f, 2f), new Vector2(-8f, -2f));
+            innerShadow.sprite = GetRoundedEmptySlotSprite();
+            innerShadow.type = Image.Type.Sliced;
+            innerShadow.color = new Color(0f, 0.03f, 0.01f, 0.46f);
+
+            Image innerPlate = EnsureLayer("DeckEmptySlotInnerPlate", new Vector2(12f, 10f), new Vector2(-12f, -10f));
+            innerPlate.sprite = GetRoundedEmptySlotSprite();
+            innerPlate.type = Image.Type.Sliced;
+            innerPlate.color = new Color(0.03f, 0.29f, 0.15f, 0.38f);
+
+            Image topGlint = EnsureLayer("DeckEmptySlotTopGlint", new Vector2(14f, 226f), new Vector2(-14f, -14f));
+            topGlint.sprite = GetRoundedEmptySlotSprite();
+            topGlint.type = Image.Type.Sliced;
+            topGlint.color = new Color(1f, 0.88f, 0.34f, 0.18f);
+
+            Image bottomShade = EnsureLayer("DeckEmptySlotBottomShade", new Vector2(14f, 14f), new Vector2(-14f, -220f));
+            bottomShade.sprite = GetRoundedEmptySlotSprite();
+            bottomShade.type = Image.Type.Sliced;
+            bottomShade.color = new Color(0f, 0f, 0f, 0.22f);
+        }
+
+        private Image EnsureLayer(string layerName, Vector2 offsetMin, Vector2 offsetMax)
+        {
+            Transform existing = emptySlotRoot.Find(layerName);
+            RectTransform rectTransform;
+            Image image;
+            if (existing == null)
+            {
+                GameObject layerObject = new(layerName, typeof(RectTransform), typeof(Image));
+                rectTransform = layerObject.GetComponent<RectTransform>();
+                rectTransform.SetParent(emptySlotRoot, false);
+                image = layerObject.GetComponent<Image>();
+            }
+            else
+            {
+                rectTransform = (RectTransform)existing;
+                image = existing.GetComponent<Image>();
+                if (image == null)
+                {
+                    image = existing.gameObject.AddComponent<Image>();
+                }
+            }
+
+            StretchToParent(rectTransform, offsetMin, offsetMax);
+            image.raycastTarget = false;
+            return image;
+        }
+
+        private static void StretchToParent(RectTransform rectTransform, Vector2 offsetMin, Vector2 offsetMax)
+        {
+            rectTransform.anchorMin = Vector2.zero;
+            rectTransform.anchorMax = Vector2.one;
+            rectTransform.pivot = new Vector2(0.5f, 0.5f);
+            rectTransform.offsetMin = offsetMin;
+            rectTransform.offsetMax = offsetMax;
+            rectTransform.localScale = Vector3.one;
+            rectTransform.localRotation = Quaternion.identity;
+        }
+
+        private static Sprite GetRoundedEmptySlotSprite()
+        {
+            if (roundedEmptySlotSprite != null)
+            {
+                return roundedEmptySlotSprite;
+            }
+
+            const int width = 64;
+            const int height = 96;
+            const int radius = 8;
+            Texture2D texture = new(width, height, TextureFormat.RGBA32, false)
+            {
+                name = "Runtime_DeckEmptySlotRounded",
+                wrapMode = TextureWrapMode.Clamp,
+                filterMode = FilterMode.Bilinear
+            };
+
+            Color32 clear = new(255, 255, 255, 0);
+            Color32 fill = new(255, 255, 255, 255);
+            Color32[] pixels = new Color32[width * height];
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    int dx = x < radius ? radius - x : x >= width - radius ? x - (width - radius - 1) : 0;
+                    int dy = y < radius ? radius - y : y >= height - radius ? y - (height - radius - 1) : 0;
+                    bool inside = dx == 0 && dy == 0 || (dx * dx) + (dy * dy) <= radius * radius;
+                    pixels[(y * width) + x] = inside ? fill : clear;
+                }
+            }
+
+            texture.SetPixels32(pixels);
+            texture.Apply(false, true);
+            roundedEmptySlotSprite = Sprite.Create(texture, new Rect(0f, 0f, width, height), new Vector2(0.5f, 0.5f), 100f, 0, SpriteMeshType.FullRect, new Vector4(radius, radius, radius, radius));
+            roundedEmptySlotSprite.name = "Runtime_DeckEmptySlotRoundedSprite";
+            return roundedEmptySlotSprite;
         }
     }
 }

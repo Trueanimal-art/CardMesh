@@ -696,10 +696,15 @@ namespace SolitaireAssociations
                 return;
             }
 
-            if (goldCard.Cards == null || goldCard.Cards.Count < 8 || goldCard.Cards.Count > 12)
+            if (goldCard.Cards == null || goldCard.Cards.Count < 1)
             {
-                Debug.LogWarning($"CardDatabase: gold card '{goldCard.Id}' should contain 8-12 cards.");
+                Debug.LogWarning($"CardDatabase: gold card '{goldCard.Id}' does not contain playable cards.");
                 return;
+            }
+
+            if (goldCard.Cards.Count < 8)
+            {
+                Debug.LogWarning($"CardDatabase: gold card '{goldCard.Id}' contains fewer than 8 cards.");
             }
 
             goldCardsById.Add(goldCard.Id, goldCard);
