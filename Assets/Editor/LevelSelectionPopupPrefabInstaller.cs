@@ -45,12 +45,11 @@ public static class LevelSelectionPopupPrefabInstaller
             throw new UnityException($"Cannot install {PrefabPath}: Canvas not found in {MainMenuScenePath}.");
         }
 
-        LevelSelectionPopup existing = Object.FindFirstObjectByType<LevelSelectionPopup>(FindObjectsInactive.Include);
         GameObject instance = null;
-        if (existing != null)
+        foreach (LevelSelectionPopup existing in Object.FindObjectsByType<LevelSelectionPopup>(FindObjectsInactive.Include, FindObjectsSortMode.None))
         {
             GameObject source = PrefabUtility.GetCorrespondingObjectFromSource(existing.gameObject);
-            if (source == prefab)
+            if (source == prefab && instance == null)
             {
                 instance = existing.gameObject;
             }

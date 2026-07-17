@@ -17,13 +17,15 @@ public static class RateUsUiPrefabInstaller
     private const string PrefabDirectory = "Assets/Prefabs/UI/MainMenu";
     private const string RateButtonPrefabPath = PrefabDirectory + "/RateUsButton.prefab";
     private const string PopupPrefabPath = PrefabDirectory + "/RateUsPopup.prefab";
-    private const string GameButtonPrefabPath = "Assets/Prefabs/UI/Game/BottomGameButton.prefab";
+    private const string PopupActionButtonPrefabPath = PrefabDirectory + "/PopupActionButton.prefab";
     private const string RateButtonName = "RateUsButton";
     private const string PopupName = "RateUsPopup";
+    private const string PopupActionButtonName = "PopupActionButton";
 
     private static readonly Vector2 ButtonSize = new(340f, 170f);
     private static readonly Vector2 PopupPanelSize = new(820f, 560f);
-    private static readonly Vector2 GameButtonSize = new(300f, 88f);
+    private static readonly Vector2 PopupActionButtonSize = new(300f, 66f);
+    private static readonly Vector2 RateButtonPosition = new(-245f, 247f);
 
     [MenuItem("Solitaire/Main Menu/Rebuild Rate Us UI")]
     public static void RebuildRateUsUi()
@@ -35,6 +37,7 @@ public static class RateUsUiPrefabInstaller
         Directory.CreateDirectory(PrefabDirectory);
 
         GameObject rateButtonPrefab = RebuildRateButtonPrefab();
+        RebuildPopupActionButtonPrefab();
         GameObject popupPrefab = RebuildPopupPrefab();
         InstallSceneObjects(rateButtonPrefab, popupPrefab);
     }
@@ -84,6 +87,14 @@ public static class RateUsUiPrefabInstaller
         return prefab;
     }
 
+    private static GameObject RebuildPopupActionButtonPrefab()
+    {
+        GameObject root = CreatePopupActionButtonRoot(PopupActionButtonName, "Кнопка");
+        GameObject prefab = PrefabUtility.SaveAsPrefabAsset(root, PopupActionButtonPrefabPath);
+        Object.DestroyImmediate(root);
+        return prefab;
+    }
+
     private static GameObject RebuildPopupPrefab()
     {
         GameObject root = new(PopupName, typeof(RectTransform), typeof(CanvasGroup), typeof(Image), typeof(RateUsPopupController));
@@ -114,13 +125,13 @@ public static class RateUsUiPrefabInstaller
         Button[] starButtons = new Button[5];
         for (int i = 0; i < starImages.Length; i++)
         {
-            Button starButton = CreateStarButton(panel, i, new Vector2(-232f + (i * 116f), 42f), filledStar);
+            Button starButton = CreateStarButton(panel, i, new Vector2(-232f + (i * 116f), 40f), filledStar);
             starButtons[i] = starButton;
             starImages[i] = starButton.transform.Find("StarImage")?.GetComponent<Image>();
         }
 
-        Button submitButton = CreateGameActionButton(panel, "SubmitButton", "ОТПРАВИТЬ", new Vector2(-170f, -170f));
-        Button cancelButton = CreateGameActionButton(panel, "CancelButton", "ОТМЕНА", new Vector2(170f, -170f));
+        Button cancelButton = CreatePopupActionButton(panel, "CancelButton", "Отмена", new Vector2(-170f, -170f));
+        Button submitButton = CreatePopupActionButton(panel, "SubmitButton", "Отправить", new Vector2(170f, -170f));
 
         RateUsPopupController controller = root.GetComponent<RateUsPopupController>();
         SerializedObject serialized = new(controller);
@@ -163,7 +174,6 @@ public static class RateUsUiPrefabInstaller
             throw new UnityException($"Cannot install rate UI: MainMenu parent or Canvas not found in {ScenePath}.");
         }
 
-        Vector2 contactPosition = GetContactPosition();
         RemoveExisting(RateButtonName);
         RemoveExisting(PopupName);
 
@@ -179,7 +189,7 @@ public static class RateUsUiPrefabInstaller
         button.layer = parent.gameObject.layer;
         SetLayerRecursively(button, button.layer);
         RectTransform buttonRect = button.GetComponent<RectTransform>();
-        buttonRect.anchoredPosition = new Vector2(contactPosition.x, contactPosition.y - 158f);
+        buttonRect.anchoredPosition = RateButtonPosition;
 
         RateUsButton opener = button.GetComponent<RateUsButton>();
         SerializedObject openerSerialized = new(opener);
@@ -193,13 +203,6 @@ public static class RateUsUiPrefabInstaller
         EditorSceneManager.MarkSceneDirty(scene);
         EditorSceneManager.SaveScene(scene);
         AssetDatabase.SaveAssets();
-    }
-
-    private static Vector2 GetContactPosition()
-    {
-        GameObject contact = GameObject.Find("ContactButton");
-        RectTransform rect = contact != null ? contact.GetComponent<RectTransform>() : null;
-        return rect != null ? rect.anchoredPosition : new Vector2(-245f, 405f);
     }
 
     private static Transform FindButtonParent()
@@ -222,10 +225,12 @@ public static class RateUsUiPrefabInstaller
 
     private static void RemoveExisting(string objectName)
     {
-        GameObject existing = GameObject.Find(objectName);
-        if (existing != null)
+        foreach (Transform existing in Object.FindObjectsByType<Transform>(FindObjectsInactive.Include, FindObjectsSortMode.None))
         {
-            Object.DestroyImmediate(existing);
+            if (existing != null && existing.name == objectName)
+            {
+                Object.DestroyImmediate(existing.gameObject);
+            }
         }
     }
 
@@ -428,55 +433,93 @@ public static class RateUsUiPrefabInstaller
         return (point - projection).sqrMagnitude;
     }
 
-    private static Button CreateGameActionButton(Transform parent, string name, string label, Vector2 position)
+    private static Button CreatePopupActionButton(Transform parent, string name, string label, Vector2 position)
     {
-        GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(GameButtonPrefabPath);
-        GameObject go = prefab != null ? PrefabUtility.InstantiatePrefab(prefab, parent) as GameObject : null;
+        GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(PopupActionButtonPrefabPath);
+        GameObject go = prefab != null ? PrefabUtility.InstantiatePrefab(prefab, parent) as GameObject : CreatePopupActionButtonRoot(name, label);
         if (go == null)
         {
-            go = new(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Button), typeof(UIJuicyButton));
-            go.transform.SetParent(parent, false);
+            go = CreatePopupActionButtonRoot(name, label);
         }
+
+        go.transform.SetParent(parent, false);
 
         go.name = name;
         RectTransform rect = go.GetComponent<RectTransform>();
         rect.anchorMin = new Vector2(0.5f, 0.5f);
         rect.anchorMax = new Vector2(0.5f, 0.5f);
         rect.pivot = new Vector2(0.5f, 0.5f);
-        rect.sizeDelta = GameButtonSize;
+        rect.sizeDelta = PopupActionButtonSize;
         rect.anchoredPosition = position;
         rect.localScale = Vector3.one;
         rect.localRotation = Quaternion.identity;
 
+        ConfigurePopupActionButton(go, label);
+
+        Button button = go.GetComponent<Button>();
+        button.onClick.RemoveAllListeners();
+        return button;
+    }
+
+    private static GameObject CreatePopupActionButtonRoot(string name, string label)
+    {
+        GameObject go = new(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Button), typeof(UIJuicyButton));
+        RectTransform rect = go.GetComponent<RectTransform>();
+        rect.anchorMin = new Vector2(0.5f, 0.5f);
+        rect.anchorMax = new Vector2(0.5f, 0.5f);
+        rect.pivot = new Vector2(0.5f, 0.5f);
+        rect.sizeDelta = PopupActionButtonSize;
+        ConfigurePopupActionButton(go, label);
+        return go;
+    }
+
+    private static void ConfigurePopupActionButton(GameObject go, string label)
+    {
         Image image = go.GetComponent<Image>() ?? go.AddComponent<Image>();
         image.sprite = PremiumUISprites.GameplayActionButton != null ? PremiumUISprites.GameplayActionButton : PremiumUISprites.PrimaryButton;
-        image.type = Image.Type.Sliced;
+        image.type = image.sprite != null ? Image.Type.Sliced : Image.Type.Simple;
         image.color = Color.white;
+        image.raycastTarget = true;
 
         Button button = go.GetComponent<Button>() ?? go.AddComponent<Button>();
         button.targetGraphic = image;
-        button.onClick.RemoveAllListeners();
 
-        TMP_Text text = go.GetComponentInChildren<TMP_Text>(true);
+        ColorBlock colors = button.colors;
+        colors.normalColor = Color.white;
+        colors.highlightedColor = new Color(1f, 0.94f, 0.68f, 1f);
+        colors.pressedColor = new Color(0.94f, 0.78f, 0.32f, 1f);
+        colors.selectedColor = colors.highlightedColor;
+        colors.disabledColor = new Color(1f, 1f, 1f, 0.45f);
+        colors.colorMultiplier = 1f;
+        button.colors = colors;
+
+        TMP_Text text = go.transform.Find("Label")?.GetComponent<TMP_Text>();
         if (text == null)
         {
-            text = CreateText(go.transform, "Label", label, 34f, 22f, Vector2.zero, new Vector2(240f, 54f));
+            text = CreateText(go.transform, "Label", label, 30f, 20f, Vector2.zero, new Vector2(250f, 48f));
         }
+
+        RectTransform textRect = text.GetComponent<RectTransform>();
+        textRect.anchorMin = new Vector2(0.5f, 0.5f);
+        textRect.anchorMax = new Vector2(0.5f, 0.5f);
+        textRect.pivot = new Vector2(0.5f, 0.5f);
+        textRect.anchoredPosition = Vector2.zero;
+        textRect.sizeDelta = new Vector2(250f, 48f);
 
         text.text = label;
         text.color = new Color(1f, 0.847f, 0.353f, 1f);
         text.enableAutoSizing = true;
-        text.fontSizeMax = 34f;
-        text.fontSizeMin = 22f;
+        text.fontSizeMax = 30f;
+        text.fontSizeMin = 20f;
         text.alignment = TextAlignmentOptions.Center;
+        text.enableWordWrapping = false;
+        text.raycastTarget = false;
         RuntimeCyrillicFontProvider.Apply(text, label);
 
         if (go.GetComponent<UIJuicyButton>() == null)
         {
             go.AddComponent<UIJuicyButton>();
         }
-
-        return button;
     }
 
     private static void SetLayerRecursively(GameObject root, int layer)

@@ -2112,6 +2112,11 @@ namespace SolitaireAssociations
                 stackCard?.SetFooterTextOverride(null);
             }
 
+            if (draggedStack.Count <= 1)
+            {
+                return;
+            }
+
             CardView progressCard = GetDragStackProgressCard(draggedStack);
             if (progressCard == null || progressCard.Data == null)
             {

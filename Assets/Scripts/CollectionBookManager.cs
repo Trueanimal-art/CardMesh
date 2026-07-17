@@ -22,7 +22,7 @@ namespace SolitaireAssociations
         [SerializeField, Min(1)] private int requiredPoints = 10;
         [SerializeField] private CollectionRewardType rewardType = CollectionRewardType.Undo;
         [SerializeField, Min(0)] private int amount = 1;
-        [SerializeField] private string title = "+1 Undo";
+        [SerializeField] private string title = "+1 Отмена";
         [SerializeField] private string shortLabel = "+1";
 
         public int RequiredPoints => Mathf.Max(1, requiredPoints);
@@ -45,7 +45,7 @@ namespace SolitaireAssociations
             return rewardType switch
             {
                 CollectionRewardType.Coins => $"{Amount} монет",
-                CollectionRewardType.Undo => $"+{Amount} Undo",
+                CollectionRewardType.Undo => $"+{Amount} Отмена",
                 CollectionRewardType.Hint => $"+{Amount} подсказка",
                 CollectionRewardType.ExtraMove => $"+{Amount} хода",
                 CollectionRewardType.SmallChest => "Малый сундук",
@@ -82,11 +82,11 @@ namespace SolitaireAssociations
 
         [SerializeField] private List<CollectionBookReward> rewards = new()
         {
-            new CollectionBookReward(10, CollectionRewardType.Undo, 1, "+1 Undo", "+1"),
+            new CollectionBookReward(10, CollectionRewardType.Undo, 1, "+1 Отмена", "+1"),
             new CollectionBookReward(25, CollectionRewardType.Hint, 1, "+1 Подсказка", "+1"),
             new CollectionBookReward(50, CollectionRewardType.Coins, 50, "50 монет", "50"),
-            new CollectionBookReward(75, CollectionRewardType.Undo, 2, "+2 Undo", "+2"),
-            new CollectionBookReward(100, CollectionRewardType.SmallChest, 1, "Малый сундук", "сундук"),
+            new CollectionBookReward(75, CollectionRewardType.Undo, 2, "+2 Отмены", "+2"),
+            new CollectionBookReward(100, CollectionRewardType.Hint, 2, "+2 Подсказки", "+2"),
             new CollectionBookReward(150, CollectionRewardType.ExtraMove, 3, "+3 хода", "+3"),
             new CollectionBookReward(250, CollectionRewardType.BigChest, 1, "Большой сундук", "сундук"),
             new CollectionBookReward(400, CollectionRewardType.Booster, 1, "Редкий бустер", "x1"),

@@ -58,6 +58,11 @@ public class SceneLoader : MonoBehaviour
     public void ShowSettingsPlaceholder()
     {
         settingsPopup = SettingsPopup.GetOrCreate();
+        if (settingsPopup == null)
+        {
+            return;
+        }
+
         settingsPopup.Show();
     }
 

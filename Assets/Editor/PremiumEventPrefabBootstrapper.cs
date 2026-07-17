@@ -40,24 +40,6 @@ namespace SolitaireAssociations.Editor
 
         private static void MaterializeScenePremiumPopups()
         {
-            foreach (CollectionBookPopup popup in Object.FindObjectsByType<CollectionBookPopup>(FindObjectsInactive.Include, FindObjectsSortMode.None))
-            {
-                popup.MaterializeAuthoringLayout();
-                EditorUtility.SetDirty(popup.gameObject);
-            }
-
-            foreach (ChestChasePopup popup in Object.FindObjectsByType<ChestChasePopup>(FindObjectsInactive.Include, FindObjectsSortMode.None))
-            {
-                popup.MaterializeAuthoringLayout();
-                EditorUtility.SetDirty(popup.gameObject);
-            }
-
-            foreach (DailyRewardsPopup popup in Object.FindObjectsByType<DailyRewardsPopup>(FindObjectsInactive.Include, FindObjectsSortMode.None))
-            {
-                popup.MaterializeAuthoringLayout();
-                EditorUtility.SetDirty(popup.gameObject);
-            }
-
             foreach (ShopPopup popup in Object.FindObjectsByType<ShopPopup>(FindObjectsInactive.Include, FindObjectsSortMode.None))
             {
                 popup.MaterializeAuthoringLayout();

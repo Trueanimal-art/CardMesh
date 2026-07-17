@@ -22,7 +22,12 @@ public class MainMenuController : MonoBehaviour
 
     private void OnEnable()
     {
-        ApplyPremiumStyles();
+#if UNITY_EDITOR
+        if (!Application.isPlaying)
+        {
+            ApplyPremiumStyles();
+        }
+#endif
         BindShopButton();
         BindChestChaseButton();
         BindDailyRewardsButton();
@@ -97,6 +102,11 @@ public class MainMenuController : MonoBehaviour
     public void OnSettingsClicked()
     {
         settingsPopup = SettingsPopup.GetOrCreate();
+        if (settingsPopup == null)
+        {
+            return;
+        }
+
         settingsPopup.Show();
     }
 

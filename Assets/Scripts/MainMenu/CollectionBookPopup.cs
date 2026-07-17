@@ -19,7 +19,9 @@ namespace SolitaireAssociations
         [SerializeField] private TMP_Text nextRewardText;
         [SerializeField] private TMP_Text levelTitleText;
         [SerializeField] private TMP_Text levelProgressText;
+        [SerializeField] private TMP_Text levelRemainingText;
         [SerializeField] private Image progressFill;
+        [SerializeField] private Image levelProgressFill;
         [SerializeField] private Button closeButton;
         [SerializeField] private Button infoButton;
         [SerializeField] private RectTransform rewardCardsRoot;
@@ -31,6 +33,7 @@ namespace SolitaireAssociations
         private CollectionBookManager manager;
         private bool hasShownRuntime;
         private Coroutine openRoutine;
+        private static TMP_FontAsset rewardCardFont;
 #if UNITY_EDITOR
         private bool editorRefreshQueued;
 #endif
@@ -44,7 +47,6 @@ namespace SolitaireAssociations
             if (!Application.isPlaying)
             {
                 sharedPrefabs.AssignDefaultsIfMissing();
-                EnsureOpenBookButtonIsNonInteractive();
             }
 #endif
             BindSceneReferences();
@@ -53,9 +55,7 @@ namespace SolitaireAssociations
         private void Awake()
         {
             BindSceneReferences();
-            ApplyPopupPanelVisual();
             ApplyFontsToAllTexts();
-            EnsureOpenBookButtonIsNonInteractive();
             WireButtons();
 
             if (Application.isPlaying && !hasShownRuntime)
@@ -70,16 +70,13 @@ namespace SolitaireAssociations
             if (!Application.isPlaying)
             {
                 sharedPrefabs.AssignDefaultsIfMissing();
-                EnsureOpenBookButtonIsNonInteractive();
             }
 #endif
 
             if (Application.isPlaying)
             {
                 BindSceneReferences();
-                ApplyPopupPanelVisual();
                 ApplyFontsToAllTexts();
-                EnsureOpenBookButtonIsNonInteractive();
                 WireButtons();
                 Refresh();
             }
@@ -113,12 +110,9 @@ namespace SolitaireAssociations
             hasShownRuntime = true;
             gameObject.SetActive(true);
             BindSceneReferences();
-            ApplyPopupPanelVisual();
             ApplyFontsToAllTexts();
-            EnsureOpenBookButtonIsNonInteractive();
             WireButtons();
             Refresh();
-            DisableExternalGlow(transform);
 
             if (canvasGroup != null)
             {
@@ -154,7 +148,7 @@ namespace SolitaireAssociations
             }
 
             nextRewardText.text =
-                $"Обычная категория +{manager.NormalCategoryPoints}, категория с картинками +{manager.ImageCategoryPoints}, без подсказки +{manager.NoHintBonusPoints}, без Undo +{manager.NoUndoBonusPoints}.";
+                $"Обычная категория +{manager.NormalCategoryPoints}, категория с картинками +{manager.ImageCategoryPoints}, без подсказки +{manager.NoHintBonusPoints}, без отмены +{manager.NoUndoBonusPoints}.";
             RuntimeCyrillicFontProvider.Apply(nextRewardText, nextRewardText.text);
         }
 
@@ -178,38 +172,44 @@ namespace SolitaireAssociations
             SetText(progressValueText, next != null ? $"{manager.CurrentPoints} / {target}" : $"{manager.CurrentPoints}");
             SetText(nextRewardText, next != null ? $"Следующая награда: {next.Title}" : "Все текущие награды получены");
             SetText(levelTitleText, manager.GetLevelTitle().ToUpperInvariant());
-            SetText(levelProgressText, next != null ? $"{localProgress} / {span}" : "Максимум");
+            SetText(levelProgressText, next != null ? $"{localProgress} / {span} ОЧКОВ" : $"{manager.CurrentPoints} ОЧКОВ");
+            SetText(levelRemainingText, next != null
+                ? $"До следующего уровня: {Mathf.Max(0, span - localProgress)} очков"
+                : "Все уровни пройдены");
 
             if (progressFill != null)
             {
                 progressFill.fillAmount = next != null ? Mathf.Clamp01((float)localProgress / span) : 1f;
             }
 
-            bool canClaim = manager.HasAvailableReward;
-            EnsureOpenBookButtonIsNonInteractive();
+            if (levelProgressFill != null)
+            {
+                levelProgressFill.fillAmount = next != null ? Mathf.Clamp01((float)localProgress / span) : 1f;
+            }
+
             RefreshRewardCards();
-            ApplyRuntimeGridLayout();
-            DisableExternalGlow(transform);
         }
 
         private void RefreshEditorPreview()
         {
             SetText(titleText, "КНИГА КОЛЛЕКЦИЙ");
-            SetText(subtitleText, "Собирай категории, пополняй коллекцию и получай ценные награды!");
-            SetText(progressValueText, "28 / 50");
-            SetText(nextRewardText, "Следующая награда через: 22 очка");
-            SetText(levelTitleText, "ИССЛЕДОВАТЕЛЬ КАТЕГОРИЙ");
-            SetText(levelProgressText, "28 / 50");
-            EnsureOpenBookButtonIsNonInteractive();
-
+            SetText(subtitleText, "Собирай категории, пополняй книгу и получай ценные награды!");
+            SetText(progressValueText, "0 / 10");
+            SetText(nextRewardText, "Следующая награда: +1 Отмена");
+            SetText(levelTitleText, "КОЛЛЕКЦИОНЕР I");
+            SetText(levelProgressText, "0 / 10 ОЧКОВ");
+            SetText(levelRemainingText, "До следующего уровня: 10 очков");
             if (progressFill != null)
             {
-                progressFill.fillAmount = 0.56f;
+                progressFill.fillAmount = 0f;
+            }
+
+            if (levelProgressFill != null)
+            {
+                levelProgressFill.fillAmount = 0f;
             }
 
             RefreshRewardCards();
-            ApplyRuntimeGridLayout();
-            DisableExternalGlow(transform);
         }
 
         private void RefreshRewardCards()
@@ -224,35 +224,13 @@ namespace SolitaireAssociations
                 Transform card = rewardCardsRoot.GetChild(i);
                 CollectionBookReward reward = manager != null ? manager.GetReward(i) : null;
                 int required = reward != null ? reward.RequiredPoints : new[] { 10, 25, 50, 75, 100, 150 }[Mathf.Min(i, 5)];
-                string rewardTitle = reward != null ? reward.Title : new[] { "+1 Undo", "+1 Подсказка", "50 монет", "+2 Undo", "Малый сундук", "+3 хода" }[Mathf.Min(i, 5)];
+                string rewardTitle = reward != null ? reward.Title : new[] { "+1 Отмена", "+1 Подсказка", "50 монет", "+2 Отмены", "+2 Подсказки", "+3 хода" }[Mathf.Min(i, 5)];
                 bool claimed = manager != null && i < manager.ClaimedRewardsCount;
                 bool current = manager == null ? i == 2 : i == manager.ClaimedRewardsCount;
 
-                Image cardImage = card.GetComponent<Image>();
-                if (cardImage != null)
-                {
-                    cardImage.sprite = RoyalEventSprites.RewardCard;
-                    cardImage.color = Color.white;
-                    cardImage.type = Image.Type.Sliced;
-                }
-
                 SetText(card.Find("Points")?.GetComponent<TMP_Text>(), required.ToString());
-                SetText(card.Find("Reward")?.GetComponent<TMP_Text>(), rewardTitle);
+                SetRewardCardText(card.Find("Reward")?.GetComponent<TMP_Text>(), rewardTitle);
                 SetText(card.Find("Status")?.GetComponent<TMP_Text>(), claimed ? "ПОЛУЧЕНО" : current ? "СЛЕДУЮЩАЯ" : "ЗАБЛОКИРОВАНО");
-
-                Transform glow = card.Find("ActiveGlow");
-                if (glow != null)
-                {
-                    Image glowImage = glow.GetComponent<Image>();
-                    if (glowImage != null)
-                    {
-                        Color color = glowImage.color;
-                        color.a = 0f;
-                        glowImage.color = color;
-                    }
-
-                    glow.gameObject.SetActive(false);
-                }
             }
         }
 
@@ -260,14 +238,6 @@ namespace SolitaireAssociations
         {
             float duration = 0.18f;
             float elapsed = 0f;
-            Vector3 from = Vector3.one * 0.96f;
-            Vector3 to = Vector3.one;
-
-            if (panel != null)
-            {
-                panel.localScale = from;
-            }
-
             while (elapsed < duration)
             {
                 elapsed += Time.unscaledDeltaTime;
@@ -279,22 +249,12 @@ namespace SolitaireAssociations
                     canvasGroup.alpha = eased;
                 }
 
-                if (panel != null)
-                {
-                    panel.localScale = Vector3.LerpUnclamped(from, to, eased);
-                }
-
                 yield return null;
             }
 
             if (canvasGroup != null)
             {
                 canvasGroup.alpha = 1f;
-            }
-
-            if (panel != null)
-            {
-                panel.localScale = to;
             }
 
             openRoutine = null;
@@ -310,7 +270,9 @@ namespace SolitaireAssociations
             nextRewardText = FindTMP("Panel/ProgressBlock/NextReward");
             levelTitleText = FindTMP("Panel/LevelBlock/LevelTitle");
             levelProgressText = FindTMP("Panel/LevelBlock/LevelProgress");
+            levelRemainingText = FindTMP("Panel/LevelBlock/LevelRemaining");
             progressFill = transform.Find("Panel/ProgressBlock/ProgressTrack/ProgressFill")?.GetComponent<Image>();
+            levelProgressFill = transform.Find("Panel/LevelBlock/LevelProgressTrack/LevelProgressFill")?.GetComponent<Image>();
             closeButton = transform.Find("Panel/CloseButton")?.GetComponent<Button>();
             infoButton = transform.Find("Panel/InfoButton")?.GetComponent<Button>();
             rewardCardsRoot = FindRect("Panel/RewardStages");
@@ -371,106 +333,41 @@ namespace SolitaireAssociations
             RuntimeCyrillicFontProvider.Apply(text, value);
         }
 
-        private void ApplyRuntimeGridLayout()
+        private static void SetRewardCardText(TMP_Text text, string value)
         {
-            RuntimeSetAnchored(panel, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(1510f, 980f), Vector2.zero);
-
-            RectTransform header = transform.Find("Panel/Header") as RectTransform;
-            RuntimeSetAnchored(header, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(1220f, 260f), new Vector2(0f, -34f));
-            RuntimeSetActiveIfExists(header, "Crown", false);
-            RuntimeSetActiveIfExists(header, "HeaderCrown", false);
-
-            RectTransform headerIcon = transform.Find("Panel/HeaderIcon") as RectTransform;
-            RuntimeSetAnchored(headerIcon, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 0.5f), new Vector2(190f, 190f), new Vector2(0f, -50f));
-            if (headerIcon != null)
-            {
-                headerIcon.SetAsLastSibling();
-            }
-
-            RectTransform title = transform.Find("Panel/Header/Title") as RectTransform;
-            RuntimeSetTextRect(title, new Vector2(0f, -142f), new Vector2(1120f, 62f));
-            RuntimeTuneText(titleText, 52f, 34f, false);
-
-            RectTransform subtitle = transform.Find("Panel/Header/Subtitle") as RectTransform;
-            RuntimeSetTextRect(subtitle, new Vector2(0f, -202f), new Vector2(1040f, 42f));
-            RuntimeTuneText(subtitleText, 25f, 18f, false);
-
-            RectTransform bookHero = transform.Find("Panel/BookHero") as RectTransform;
-            RuntimeSetAnchored(bookHero, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(248f, 208f), new Vector2(254f, 0f));
-            RuntimeSetActiveIfExists(bookHero, "Book", false);
-            RectTransform bookIcon = bookHero != null ? bookHero.Find("BookIcon") as RectTransform : null;
-            RuntimeSetTextRect(bookIcon, Vector2.zero, new Vector2(184f, 184f));
-
-            RectTransform progressBlock = transform.Find("Panel/ProgressBlock") as RectTransform;
-            RuntimeSetAnchored(progressBlock, new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(452f, 142f), new Vector2(-362f, 0f));
-            Image progressImage = progressBlock != null ? progressBlock.GetComponent<Image>() : null;
-            if (progressImage != null)
-            {
-                progressImage.sprite = PremiumUISprites.EmeraldPanel;
-                progressImage.type = Image.Type.Sliced;
-                progressImage.color = new Color(0.045f, 0.24f, 0.12f, 0.76f);
-            }
-
-            RuntimeSetTextRect(progressBlock != null ? progressBlock.Find("ProgressTitle") as RectTransform : null, new Vector2(0f, 41f), new Vector2(392f, 28f));
-            RuntimeSetTextRect(progressBlock != null ? progressBlock.Find("ProgressValue") as RectTransform : null, new Vector2(0f, 5f), new Vector2(392f, 46f));
-            RuntimeSetTextRect(progressBlock != null ? progressBlock.Find("ProgressTrack") as RectTransform : null, new Vector2(0f, -28f), new Vector2(350f, 18f));
-            RuntimeSetTextRect(progressBlock != null ? progressBlock.Find("NextReward") as RectTransform : null, new Vector2(0f, -54f), new Vector2(398f, 26f));
-            RuntimeTuneText(progressBlock != null ? progressBlock.Find("ProgressTitle")?.GetComponent<TMP_Text>() : null, 22f, 16f, false);
-            RuntimeTuneText(progressValueText, 40f, 28f, false);
-            RuntimeTuneText(nextRewardText, 18f, 12f, false);
-
-            Transform rewardTitle = transform.Find("Panel/RewardTitle");
-            if (rewardTitle != null)
-            {
-                rewardTitle.gameObject.SetActive(false);
-            }
-
-            RectTransform rewardStages = transform.Find("Panel/RewardStages") as RectTransform;
-            RuntimeSetAnchored(rewardStages, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0.5f), new Vector2(1300f, 218f), new Vector2(0f, 284f));
-            ApplyRuntimeRewardCardLayout(rewardStages);
-
-            RectTransform scoreRules = transform.Find("Panel/ScoreRules") as RectTransform;
-            RuntimeSetAnchored(scoreRules, new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(0.5f, 0.5f), new Vector2(540f, 150f), new Vector2(330f, 112f));
-            RuntimeSetTextRect(scoreRules != null ? scoreRules.Find("Title") as RectTransform : null, new Vector2(0f, 48f), new Vector2(480f, 32f));
-            RuntimeSetTextRect(scoreRules != null ? scoreRules.Find("Rows") as RectTransform : null, new Vector2(0f, -22f), new Vector2(500f, 94f));
-            RuntimeTuneText(scoreRules != null ? scoreRules.Find("Title")?.GetComponent<TMP_Text>() : null, 23f, 17f, false);
-            RuntimeTuneText(scoreRules != null ? scoreRules.Find("Rows")?.GetComponent<TMP_Text>() : null, 18f, 13f, true);
-
-            RectTransform levelBlock = transform.Find("Panel/LevelBlock") as RectTransform;
-            RuntimeSetAnchored(levelBlock, new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0.5f), new Vector2(540f, 150f), new Vector2(-330f, 112f));
-            RuntimeSetTextRect(levelBlock != null ? levelBlock.Find("Title") as RectTransform : null, new Vector2(0f, 48f), new Vector2(480f, 32f));
-            RuntimeSetTextRect(levelBlock != null ? levelBlock.Find("LevelTitle") as RectTransform : null, new Vector2(70f, 2f), new Vector2(360f, 48f));
-            RuntimeSetTextRect(levelBlock != null ? levelBlock.Find("LevelProgress") as RectTransform : null, new Vector2(70f, -50f), new Vector2(280f, 28f));
-            RuntimeSetTextRect(levelBlock != null ? levelBlock.Find("Medal") as RectTransform : null, new Vector2(-180f, -6f), new Vector2(130f, 88f));
-            RuntimeTuneText(levelBlock != null ? levelBlock.Find("Title")?.GetComponent<TMP_Text>() : null, 23f, 17f, false);
-            RuntimeTuneText(levelTitleText, 25f, 16f, true);
-            RuntimeTuneText(levelProgressText, 19f, 13f, false);
-
-            EnsureOpenBookButtonIsNonInteractive();
-        }
-
-        private void ApplyRuntimeRewardCardLayout(RectTransform root)
-        {
-            if (root == null)
+            if (text == null)
             {
                 return;
             }
 
-            for (int i = 0; i < root.childCount; i++)
+            int separator = string.IsNullOrEmpty(value) ? -1 : value.IndexOf(' ');
+            string formatted = separator > 0
+                ? value.Substring(0, separator) + "\n" + value.Substring(separator + 1)
+                : value;
+
+            text.text = formatted;
+            rewardCardFont ??= Resources.Load<TMP_FontAsset>("Fonts & Materials/Roboto-Bold SDF");
+            if (rewardCardFont != null)
             {
-                Transform card = root.GetChild(i);
-                RectTransform cardRect = card as RectTransform;
-                RuntimeSetTextRect(cardRect, new Vector2(-540f + i * 216f, 0f), new Vector2(182f, 206f));
-                RuntimeSetTextRect(card.Find("Points") as RectTransform, new Vector2(0f, 68f), new Vector2(154f, 32f));
-                RuntimeSetTextRect(card.Find("RewardIcon") as RectTransform, new Vector2(0f, 22f), i == 4 ? new Vector2(56f, 56f) : new Vector2(50f, 50f));
-                RuntimeSetTextRect(card.Find("Reward") as RectTransform, new Vector2(0f, -42f), new Vector2(164f, 62f));
-                RuntimeSetTextRect(card.Find("Status") as RectTransform, new Vector2(0f, -86f), new Vector2(166f, 24f));
-                RuntimeTuneText(card.Find("Points")?.GetComponent<TMP_Text>(), 21f, 15f, false);
-                RuntimeTuneText(card.Find("Reward")?.GetComponent<TMP_Text>(), i == 4 ? 17f : 18f, 12f, true);
-                RuntimeTuneText(card.Find("Status")?.GetComponent<TMP_Text>(), 11.5f, 8.5f, false);
+                rewardCardFont.TryAddCharacters(formatted, out _);
+                text.font = rewardCardFont;
+                text.fontSharedMaterial = rewardCardFont.material;
             }
+            else
+            {
+                RuntimeCyrillicFontProvider.Apply(text, formatted);
+            }
+
+            text.enableAutoSizing = true;
+            text.fontSizeMin = 18f;
+            text.fontSizeMax = 23f;
+            text.fontStyle = FontStyles.Bold;
+            text.alignment = TextAlignmentOptions.Center;
+            text.enableWordWrapping = true;
+            text.lineSpacing = -8f;
         }
 
+#if UNITY_EDITOR
         private void EnsureOpenBookButtonIsNonInteractive()
         {
             RectTransform openButton = transform.Find("Panel/OpenBookButton") as RectTransform;
@@ -528,74 +425,8 @@ namespace SolitaireAssociations
                 return null;
             }
 
-            CanvasGroup[] groups = owner.GetComponents<CanvasGroup>();
-            for (int i = 0; i < groups.Length; i++)
-            {
-                if (groups[i] != null)
-                {
-                    return groups[i];
-                }
-            }
-
-            return owner.AddComponent<CanvasGroup>();
-        }
-
-        private static void RuntimeSetAnchored(RectTransform rect, Vector2 anchorMin, Vector2 anchorMax, Vector2 pivot, Vector2 size, Vector2 position)
-        {
-            if (rect == null)
-            {
-                return;
-            }
-
-            rect.anchorMin = anchorMin;
-            rect.anchorMax = anchorMax;
-            rect.pivot = pivot;
-            rect.sizeDelta = size;
-            rect.anchoredPosition = position;
-        }
-
-        private static void RuntimeSetTextRect(RectTransform rect, Vector2 position, Vector2 size)
-        {
-            if (rect == null)
-            {
-                return;
-            }
-
-            rect.sizeDelta = size;
-            rect.anchoredPosition = position;
-        }
-
-        private static void RuntimeTuneText(TMP_Text text, float maxSize, float minSize, bool wrap)
-        {
-            if (text == null)
-            {
-                return;
-            }
-
-            text.enableAutoSizing = true;
-            text.fontSizeMax = maxSize;
-            text.fontSizeMin = minSize;
-            text.enableWordWrapping = wrap;
-            text.lineSpacing = wrap ? 3f : 0f;
-            text.overflowMode = TextOverflowModes.Ellipsis;
-        }
-
-        private static void RuntimeSetActiveIfExists(Transform parent, string childName, bool active)
-        {
-            Transform child = parent != null ? parent.Find(childName) : null;
-            if (child != null)
-            {
-                child.gameObject.SetActive(active);
-            }
-        }
-
-        private void ApplyPopupPanelVisual()
-        {
-            Image panelImage = panel != null ? panel.GetComponent<Image>() : null;
-            if (panelImage != null)
-            {
-                ApplyPopupPanelVisual(panelImage);
-            }
+            CanvasGroup group = owner.GetComponent<CanvasGroup>();
+            return group != null ? group : owner.AddComponent<CanvasGroup>();
         }
 
         private static void ApplyPopupPanelVisual(Image panelImage)
@@ -614,13 +445,6 @@ namespace SolitaireAssociations
                     : PremiumUISprites.EmeraldPanel;
         }
 
-#if !UNITY_EDITOR
-        private static void DisableExternalGlow(Transform root)
-        {
-        }
-#endif
-
-#if UNITY_EDITOR
         public void MaterializeAuthoringLayout()
         {
             if (Application.isPlaying)
@@ -628,11 +452,7 @@ namespace SolitaireAssociations
                 return;
             }
 
-            EnsureAuthoringLayout();
             BindSceneReferences();
-            ApplyFontsToAllTexts();
-            WireButtons();
-            RefreshEditorPreview();
         }
 
         private void EnsureAuthoringLayout()
@@ -728,7 +548,7 @@ namespace SolitaireAssociations
             scoreImage.type = Image.Type.Sliced;
             scoreImage.color = new Color(0.01f, 0.11f, 0.06f, 0.86f);
             CreateText(scoreRowsRoot, "Title", "КАК ПОЛУЧАТЬ ОЧКИ?", 27f, new Color(1f, 0.78f, 0.23f, 1f), FontStyles.Bold, new Vector2(0f, 58f), new Vector2(500f, 42f));
-            CreateText(scoreRowsRoot, "Rows", "Обычная категория  +1 очко\nКатегория с картинками  +2 очка\nБез подсказок  +1 бонус\nБез Undo  +1 бонус", 22f, new Color(1f, 0.9f, 0.68f, 1f), FontStyles.Bold, new Vector2(0f, -30f), new Vector2(500f, 110f));
+            CreateText(scoreRowsRoot, "Rows", "Обычная категория  +1 очко\nКатегория с картинками  +2 очка\nБез подсказок  +1 бонус\nБез отмены  +1 бонус", 22f, new Color(1f, 0.9f, 0.68f, 1f), FontStyles.Bold, new Vector2(0f, -30f), new Vector2(500f, 110f));
 
             RectTransform levelBlock = CreateRect(panel, "LevelBlock", new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0.5f), new Vector2(575f, 180f), new Vector2(-340f, 116f));
             Image levelImage = levelBlock.gameObject.AddComponent<Image>();
@@ -780,32 +600,11 @@ namespace SolitaireAssociations
         private void UpgradeAuthoringLayout()
         {
             sharedPrefabs.AssignDefaultsIfMissing();
-
-            RectTransform existingPanel = transform.Find("Panel") as RectTransform;
-            if (existingPanel != null)
-            {
-                existingPanel.sizeDelta = new Vector2(1510f, 980f);
-                Image image = existingPanel.GetComponent<Image>();
-                if (image != null)
-                {
-                    ApplyPopupPanelVisual(image);
-                }
-
-                Shadow shadow = existingPanel.GetComponent<Shadow>() ?? existingPanel.gameObject.AddComponent<Shadow>();
-                shadow.effectColor = new Color(1f, 0.68f, 0.14f, 0f);
-                shadow.effectDistance = Vector2.zero;
-            }
-
-            StyleSharedButton(transform.Find("Panel/CloseButton") as RectTransform, "X", new Vector2(86f, 86f), new Vector2(-72f, -70f), true);
-            StyleSharedButton(transform.Find("Panel/InfoButton") as RectTransform, "i", new Vector2(66f, 66f), new Vector2(76f, -78f), false);
             HideOpenBookButton();
-            StyleHeader();
-            StyleHeaderIcon();
             UpgradeCollectionHero();
             UpgradeProgressBlock();
             UpgradeRewardCards();
             UpgradeBottomBlocks();
-            DisableExternalGlow(transform);
         }
 
         private void StyleHeader()
@@ -887,20 +686,17 @@ namespace SolitaireAssociations
                 return;
             }
 
-            SetAnchored(bookHero, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(248f, 208f), new Vector2(254f, 0f));
-            SetActiveIfExists(bookHero, "Book", false);
-            Image icon = bookHero.Find("BookIcon")?.GetComponent<Image>();
-            if (icon == null)
+            foreach (Image image in bookHero.GetComponentsInChildren<Image>(true))
             {
-                icon = CreateImage(bookHero, "BookIcon", LoadSprite("Assets/Art/Button/CollectionIcon.png"), Color.white, Vector2.zero, new Vector2(184f, 184f), Image.Type.Simple);
+                image.enabled = false;
+                image.raycastTarget = false;
             }
 
-            icon.sprite = LoadSprite("Assets/Art/Button/CollectionIcon.png");
-            icon.color = Color.white;
-            icon.preserveAspect = true;
-            RectTransform iconRect = icon.rectTransform;
-            iconRect.sizeDelta = new Vector2(184f, 184f);
-            iconRect.anchoredPosition = Vector2.zero;
+            foreach (TMP_Text text in bookHero.GetComponentsInChildren<TMP_Text>(true))
+            {
+                text.enabled = false;
+                text.raycastTarget = false;
+            }
         }
 
         private void UpgradeProgressBlock()
@@ -908,22 +704,28 @@ namespace SolitaireAssociations
             RectTransform progressBlock = transform.Find("Panel/ProgressBlock") as RectTransform;
             if (progressBlock != null)
             {
-                SetAnchored(progressBlock, new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(452f, 142f), new Vector2(-362f, 0f));
+                SetAnchored(progressBlock, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(520f, 118f), new Vector2(0f, 22f));
                 Image progressImage = progressBlock.GetComponent<Image>();
                 if (progressImage != null)
                 {
                     progressImage.sprite = PremiumUISprites.EmeraldPanel;
                     progressImage.type = Image.Type.Sliced;
-                    progressImage.color = new Color(0.045f, 0.24f, 0.12f, 0.76f);
+                    progressImage.color = new Color(0.38f, 0.68f, 0.48f, 0.88f);
+                    progressImage.raycastTarget = false;
                 }
 
-                SetTextRect(progressBlock.Find("ProgressTitle") as RectTransform, new Vector2(0f, 41f), new Vector2(392f, 28f));
-                SetTextRect(progressBlock.Find("ProgressValue") as RectTransform, new Vector2(0f, 5f), new Vector2(392f, 46f));
-                SetTextRect(progressBlock.Find("ProgressTrack") as RectTransform, new Vector2(0f, -28f), new Vector2(350f, 18f));
-                SetTextRect(progressBlock.Find("NextReward") as RectTransform, new Vector2(0f, -54f), new Vector2(398f, 26f));
-                TuneText(progressBlock.Find("ProgressTitle")?.GetComponent<TMP_Text>(), 22f, 16f, false);
-                TuneText(progressBlock.Find("ProgressValue")?.GetComponent<TMP_Text>(), 44f, 30f, false);
-                TuneText(progressBlock.Find("NextReward")?.GetComponent<TMP_Text>(), 18f, 12f, false);
+                SetTextRect(progressBlock.Find("ProgressTitle") as RectTransform, new Vector2(0f, 37f), new Vector2(440f, 24f));
+                SetTextRect(progressBlock.Find("ProgressValue") as RectTransform, new Vector2(0f, 9f), new Vector2(440f, 50f));
+                SetTextRect(progressBlock.Find("ProgressTrack") as RectTransform, new Vector2(0f, -15f), new Vector2(370f, 9f));
+                SetTextRect(progressBlock.Find("NextReward") as RectTransform, new Vector2(0f, -38f), new Vector2(420f, 35f));
+                TuneText(progressBlock.Find("ProgressTitle")?.GetComponent<TMP_Text>(), 20f, 16f, false);
+                TuneText(progressBlock.Find("ProgressValue")?.GetComponent<TMP_Text>(), 58f, 42f, false);
+                TMP_Text nextReward = progressBlock.Find("NextReward")?.GetComponent<TMP_Text>();
+                TuneText(nextReward, 16.5f, 13f, true);
+                if (nextReward != null)
+                {
+                    nextReward.lineSpacing = -5f;
+                }
             }
 
             RectTransform rewardTitle = transform.Find("Panel/RewardTitle") as RectTransform;
@@ -935,7 +737,7 @@ namespace SolitaireAssociations
             RectTransform rewardStages = transform.Find("Panel/RewardStages") as RectTransform;
             if (rewardStages != null)
             {
-                SetAnchored(rewardStages, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(1300f, 236f), new Vector2(0f, 246f));
+                SetAnchored(rewardStages, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(1300f, 236f), new Vector2(0f, 170f));
             }
         }
 
@@ -957,33 +759,77 @@ namespace SolitaireAssociations
                     cardRect.anchoredPosition = new Vector2(-540f + (i * 216f), 0f);
                 }
 
+                Image cardImage = card.GetComponent<Image>();
+                if (cardImage != null)
+                {
+                    cardImage.sprite = PremiumUISprites.EmeraldPanel;
+                    cardImage.type = Image.Type.Sliced;
+                    cardImage.color = new Color(0.45f, 0.78f, 0.55f, 0.94f);
+                    cardImage.raycastTarget = false;
+                }
+
+                foreach (Shadow shadow in card.GetComponents<Shadow>())
+                {
+                    shadow.effectColor = new Color(shadow.effectColor.r, shadow.effectColor.g, shadow.effectColor.b, 0f);
+                    shadow.effectDistance = Vector2.zero;
+                }
+
                 TMP_Text oldIcon = card.Find("Icon")?.GetComponent<TMP_Text>();
                 if (oldIcon != null)
                 {
                     oldIcon.gameObject.SetActive(false);
                 }
 
-                SetTextRect(card.Find("Points") as RectTransform, new Vector2(0f, 72f), new Vector2(154f, 34f));
+                SetTextRect(card.Find("Points") as RectTransform, new Vector2(0f, 139f), new Vector2(154f, 30f));
                 TuneText(card.Find("Points")?.GetComponent<TMP_Text>(), 21f, 15f, false);
+
+                Image milestone = card.Find("MilestoneDiamond")?.GetComponent<Image>();
+                if (milestone == null)
+                {
+                    milestone = CreateImage(
+                        card,
+                        "MilestoneDiamond",
+                        LoadSprite("Assets/Resources/UI/DailyRewards/DailyRewards/DailyRewardsTopFrameJewel.asset"),
+                        Color.white,
+                        new Vector2(0f, 109f),
+                        new Vector2(30f, 34f),
+                        Image.Type.Simple);
+                }
+
+                milestone.color = Color.white;
+                milestone.preserveAspect = true;
+                milestone.raycastTarget = false;
+                SetTextRect(milestone.rectTransform, new Vector2(0f, 109f), new Vector2(30f, 34f));
+
                 Image icon = card.Find("RewardIcon")?.GetComponent<Image>();
                 if (icon == null)
                 {
-                    icon = CreateImage(card, "RewardIcon", GetCollectionRewardIcon(i), Color.white, new Vector2(0f, 22f), new Vector2(58f, 58f), Image.Type.Simple);
+                    icon = CreateImage(card, "RewardIcon", GetCollectionRewardIcon(i), Color.white, new Vector2(0f, 29f), new Vector2(58f, 58f), Image.Type.Simple);
                 }
 
                 icon.sprite = GetCollectionRewardIcon(i);
                 icon.preserveAspect = true;
                 icon.color = Color.white;
-                icon.rectTransform.sizeDelta = i == 4 ? new Vector2(56f, 56f) : new Vector2(50f, 50f);
-                icon.rectTransform.anchoredPosition = new Vector2(0f, 24f);
+                icon.rectTransform.sizeDelta = i == 4 ? new Vector2(59f, 59f) : new Vector2(53f, 53f);
+                icon.rectTransform.anchoredPosition = new Vector2(0f, 29f);
 
                 RectTransform reward = card.Find("Reward") as RectTransform;
-                SetTextRect(reward, new Vector2(0f, -42f), new Vector2(164f, 68f));
+                SetTextRect(reward, new Vector2(0f, -45f), new Vector2(148f, 62f));
                 TMP_Text rewardText = reward != null ? reward.GetComponent<TMP_Text>() : null;
-                TuneText(rewardText, i == 4 ? 17f : 18f, 12f, true);
+                TuneText(rewardText, i == 4 ? 16.5f : 17.5f, 12f, true);
+                if (rewardText != null)
+                {
+                    rewardText.margin = new Vector4(8f, 5f, 8f, 5f);
+                    rewardText.lineSpacing = -3f;
+                }
 
                 SetTextRect(card.Find("Status") as RectTransform, new Vector2(0f, -91f), new Vector2(166f, 24f));
                 TuneText(card.Find("Status")?.GetComponent<TMP_Text>(), 11.5f, 8.5f, false);
+                Transform status = card.Find("Status");
+                if (status != null)
+                {
+                    status.gameObject.SetActive(false);
+                }
 
                 Image glow = card.Find("ActiveGlow")?.GetComponent<Image>();
                 if (glow != null)
@@ -1001,36 +847,51 @@ namespace SolitaireAssociations
             RectTransform scoreRules = transform.Find("Panel/ScoreRules") as RectTransform;
             if (scoreRules != null)
             {
-                SetAnchored(scoreRules, new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(0.5f, 0.5f), new Vector2(540f, 172f), new Vector2(330f, 126f));
+                SetAnchored(scoreRules, new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(0.5f, 0.5f), new Vector2(560f, 82f), new Vector2(350f, 105f));
                 Image scoreImage = scoreRules.GetComponent<Image>();
                 if (scoreImage != null)
                 {
-                    scoreImage.color = new Color(0.035f, 0.2f, 0.1f, 0.88f);
+                    scoreImage.sprite = PremiumUISprites.EmeraldPanel;
+                    scoreImage.type = Image.Type.Sliced;
+                    scoreImage.color = new Color(0.42f, 0.72f, 0.52f, 0.84f);
+                    scoreImage.raycastTarget = false;
                 }
 
-                SetTextRect(scoreRules.Find("Title") as RectTransform, new Vector2(0f, 56f), new Vector2(480f, 34f));
-                SetTextRect(scoreRules.Find("Rows") as RectTransform, new Vector2(0f, -26f), new Vector2(500f, 108f));
-                TuneText(scoreRules.Find("Title")?.GetComponent<TMP_Text>(), 24f, 17f, false);
-                TuneText(scoreRules.Find("Rows")?.GetComponent<TMP_Text>(), 19f, 13f, true);
+                SetTextRect(scoreRules.Find("Title") as RectTransform, new Vector2(0f, 25f), new Vector2(500f, 24f));
+                SetTextRect(scoreRules.Find("Rows") as RectTransform, new Vector2(0f, -13f), new Vector2(510f, 48f));
+                TuneText(scoreRules.Find("Title")?.GetComponent<TMP_Text>(), 24f, 18f, false);
+                TMP_Text rules = scoreRules.Find("Rows")?.GetComponent<TMP_Text>();
+                SetText(rules, "• Обычная категория  +1 очко\n• Категория с картинками  +2 очка\n• Без подсказок  +1 бонус\n• Без отмены  +1 бонус");
+                TuneText(rules, 15f, 12f, true);
+                if (rules != null)
+                {
+                    rules.alignment = TextAlignmentOptions.Left;
+                    rules.lineSpacing = -8f;
+                    rules.margin = new Vector4(34f, 2f, 24f, 2f);
+                }
             }
 
             RectTransform levelBlock = transform.Find("Panel/LevelBlock") as RectTransform;
             if (levelBlock != null)
             {
-                SetAnchored(levelBlock, new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0.5f), new Vector2(540f, 172f), new Vector2(-330f, 126f));
+                SetAnchored(levelBlock, new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0.5f), new Vector2(560f, 82f), new Vector2(-350f, 105f));
                 Image levelImage = levelBlock.GetComponent<Image>();
                 if (levelImage != null)
                 {
-                    levelImage.color = new Color(0.035f, 0.2f, 0.1f, 0.88f);
+                    levelImage.sprite = PremiumUISprites.EmeraldPanel;
+                    levelImage.type = Image.Type.Sliced;
+                    levelImage.color = new Color(0.42f, 0.72f, 0.52f, 0.84f);
+                    levelImage.raycastTarget = false;
                 }
 
-                SetTextRect(levelBlock.Find("Title") as RectTransform, new Vector2(0f, 56f), new Vector2(480f, 34f));
-                SetTextRect(levelBlock.Find("LevelTitle") as RectTransform, new Vector2(70f, 4f), new Vector2(360f, 54f));
-                SetTextRect(levelBlock.Find("LevelProgress") as RectTransform, new Vector2(70f, -58f), new Vector2(280f, 30f));
-                SetTextRect(levelBlock.Find("Medal") as RectTransform, new Vector2(-180f, -8f), new Vector2(130f, 96f));
-                TuneText(levelBlock.Find("Title")?.GetComponent<TMP_Text>(), 24f, 17f, false);
-                TuneText(levelBlock.Find("LevelTitle")?.GetComponent<TMP_Text>(), 26f, 16f, true);
-                TuneText(levelBlock.Find("LevelProgress")?.GetComponent<TMP_Text>(), 20f, 14f, false);
+                SetTextRect(levelBlock.Find("Title") as RectTransform, new Vector2(0f, 25f), new Vector2(500f, 24f));
+                SetTextRect(levelBlock.Find("Medal") as RectTransform, new Vector2(-172f, -8f), new Vector2(150f, 54f));
+                SetTextRect(levelBlock.Find("LevelTitle") as RectTransform, new Vector2(82f, 1f), new Vector2(340f, 32f));
+                SetTextRect(levelBlock.Find("LevelProgress") as RectTransform, new Vector2(82f, -24f), new Vector2(280f, 20f));
+                TuneText(levelBlock.Find("Title")?.GetComponent<TMP_Text>(), 23f, 17f, false);
+                TuneText(levelBlock.Find("Medal")?.GetComponent<TMP_Text>(), 66f, 52f, false);
+                TuneText(levelBlock.Find("LevelTitle")?.GetComponent<TMP_Text>(), 22f, 16f, false);
+                TuneText(levelBlock.Find("LevelProgress")?.GetComponent<TMP_Text>(), 16f, 13f, false);
             }
 
             HideOpenBookButton();
@@ -1150,7 +1011,7 @@ namespace SolitaireAssociations
                 0 or 3 => PremiumUISprites.UndoIcon,
                 1 => PremiumUISprites.HintBulbIcon,
                 2 => RoyalEventSprites.CoinIcon,
-                4 => LoadSprite("Assets/Art/Button/CrownIcon.png"),
+                4 => PremiumUISprites.HintBulbIcon,
                 _ => PremiumUISprites.BoosterRocketIcon
             };
         }
@@ -1250,7 +1111,7 @@ namespace SolitaireAssociations
             CreateText(card, "Points", new[] { "10", "25", "50", "75", "100", "150" }[index], 28f, new Color(1f, 0.89f, 0.62f, 1f), FontStyles.Bold, new Vector2(0f, 74f), new Vector2(130f, 42f));
             TMP_Text oldIcon = CreateText(card, "Icon", string.Empty, 42f, new Color(1f, 0.78f, 0.19f, 1f), FontStyles.Bold, new Vector2(0f, 18f), new Vector2(120f, 58f));
             oldIcon.gameObject.SetActive(false);
-            CreateText(card, "Reward", new[] { "+1 Undo", "+1 Подсказка", "50 монет", "+2 Undo", "Малый сундук", "+3 хода" }[index], 23f, new Color(1f, 0.9f, 0.68f, 1f), FontStyles.Bold, new Vector2(0f, -48f), new Vector2(140f, 62f));
+            CreateText(card, "Reward", new[] { "+1 Отмена", "+1 Подсказка", "50 монет", "+2 Отмены", "+2 Подсказки", "+3 хода" }[index], 23f, new Color(1f, 0.9f, 0.68f, 1f), FontStyles.Bold, new Vector2(0f, -48f), new Vector2(140f, 62f));
             CreateText(card, "Status", index < 2 ? "ПОЛУЧЕНО" : index == 2 ? "СЛЕДУЮЩАЯ" : "ЗАБЛОКИРОВАНО", 15f, new Color(1f, 0.82f, 0.36f, 1f), FontStyles.Bold, new Vector2(0f, -92f), new Vector2(140f, 28f));
         }
 

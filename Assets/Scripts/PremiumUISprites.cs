@@ -23,10 +23,19 @@ namespace SolitaireAssociations
         private static Sprite boosterRocketIcon;
         private static Sprite coinIcon;
         private static Sprite categorySlot;
+        private static Sprite categorySlotEmerald;
         private static Sprite emptyColumnSlot;
         private static Sprite categoryLabel;
         private static Sprite softVignette;
         private static Sprite pauseWindowCardMesh;
+        private static Sprite settingsWindowCardMesh;
+        private static Sprite levelScrollbarTrack;
+        private static Sprite levelScrollbarHandle;
+        private static Sprite levelListFadeTop;
+        private static Sprite levelListFadeBottom;
+        private static Sprite settingsSliderTrack;
+        private static Sprite settingsSliderFill;
+        private static Sprite settingsSliderHandle;
 
         public static Sprite PrimaryButton => primaryButton ??= Load("button_primary_gold");
         public static Sprite CleanGoldButton => cleanGoldButton ??= Load("button_gold_clean");
@@ -45,10 +54,19 @@ namespace SolitaireAssociations
         public static Sprite BoosterRocketIcon => boosterRocketIcon ??= Load("icon_booster_rocket");
         public static Sprite CoinIcon => coinIcon ??= Load("icon_coin_stack");
         public static Sprite CategorySlot => categorySlot ??= Load("category_slot_cardmesh");
+        public static Sprite CategorySlotEmerald => categorySlotEmerald ??= Load("category_slot_emerald");
         public static Sprite EmptyColumnSlot => emptyColumnSlot ??= Load("empty_column_slot_gray");
         public static Sprite CategoryLabel => categoryLabel ??= Load("category_label_gold");
         public static Sprite SoftVignette => softVignette ??= Load("vignette_soft");
         public static Sprite PauseWindowCardMesh => pauseWindowCardMesh ??= Load("pause_window_cardmesh");
+        public static Sprite SettingsWindowCardMesh => settingsWindowCardMesh ??= Load("settings_window_cardmesh");
+        public static Sprite LevelScrollbarTrack => levelScrollbarTrack ??= Load("level_scrollbar_track");
+        public static Sprite LevelScrollbarHandle => levelScrollbarHandle ??= Load("level_scrollbar_handle");
+        public static Sprite LevelListFadeTop => levelListFadeTop ??= Load("level_list_fade_top");
+        public static Sprite LevelListFadeBottom => levelListFadeBottom ??= Load("level_list_fade_bottom");
+        public static Sprite SettingsSliderTrack => settingsSliderTrack ??= Load("settings_slider_track");
+        public static Sprite SettingsSliderFill => settingsSliderFill ??= Load("settings_slider_fill");
+        public static Sprite SettingsSliderHandle => settingsSliderHandle ??= Load("settings_slider_handle");
 
         private static Sprite Load(string assetName)
         {
