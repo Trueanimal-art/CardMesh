@@ -203,7 +203,9 @@ namespace SolitaireAssociations
                 return CurrentPoints;
             }
 
+            SynchronizeClaimedRewards(applyNewRewards: false);
             CurrentPoints += safeAmount;
+            SynchronizeClaimedRewards(applyNewRewards: true);
             Save();
             StateChanged?.Invoke();
             return CurrentPoints;
@@ -294,6 +296,38 @@ namespace SolitaireAssociations
         {
             CurrentPoints = Mathf.Max(0, PlayerPrefs.GetInt(PointsKey, 0));
             ClaimedRewardsCount = Mathf.Clamp(PlayerPrefs.GetInt(ClaimedCountKey, 0), 0, rewards != null ? rewards.Count : 0);
+            if (SynchronizeClaimedRewards(applyNewRewards: false))
+            {
+                Save();
+            }
+        }
+
+        private bool SynchronizeClaimedRewards(bool applyNewRewards)
+        {
+            if (rewards == null || rewards.Count == 0)
+            {
+                bool changed = ClaimedRewardsCount != 0;
+                ClaimedRewardsCount = 0;
+                return changed;
+            }
+
+            int reachedCount = 0;
+            while (reachedCount < rewards.Count && CurrentPoints >= rewards[reachedCount].RequiredPoints)
+            {
+                reachedCount++;
+            }
+
+            int previousClaimedCount = Mathf.Clamp(ClaimedRewardsCount, 0, rewards.Count);
+            if (applyNewRewards && reachedCount > previousClaimedCount)
+            {
+                for (int index = previousClaimedCount; index < reachedCount; index++)
+                {
+                    ApplyReward(rewards[index]);
+                }
+            }
+
+            ClaimedRewardsCount = reachedCount;
+            return ClaimedRewardsCount != previousClaimedCount;
         }
 
         private void Save()

@@ -8,6 +8,9 @@
 [Mm]emoryCaptures/
 [Rr]ecordings/
 
+# Local image-processing Python environment
+Tools/.image_bg_deps/
+
 # Visual Studio / Rider
 .vs/
 .vscode/

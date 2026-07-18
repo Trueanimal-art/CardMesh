@@ -22,6 +22,8 @@ namespace SolitaireAssociations
         [SerializeField] private TMP_Text levelRemainingText;
         [SerializeField] private Image progressFill;
         [SerializeField] private Image levelProgressFill;
+        [SerializeField] private Image rewardProgressLine;
+        [SerializeField] private Image rewardProgressMarker;
         [SerializeField] private Button closeButton;
         [SerializeField] private Button infoButton;
         [SerializeField] private RectTransform rewardCardsRoot;
@@ -179,7 +181,7 @@ namespace SolitaireAssociations
 
             if (progressFill != null)
             {
-                progressFill.fillAmount = next != null ? Mathf.Clamp01((float)localProgress / span) : 1f;
+                progressFill.fillAmount = next != null ? Mathf.Clamp01((float)manager.CurrentPoints / target) : 1f;
             }
 
             if (levelProgressFill != null)
@@ -188,6 +190,7 @@ namespace SolitaireAssociations
             }
 
             RefreshRewardCards();
+            RefreshRewardProgressMarker();
         }
 
         private void RefreshEditorPreview()
@@ -219,19 +222,130 @@ namespace SolitaireAssociations
                 return;
             }
 
-            for (int i = 0; i < rewardCardsRoot.childCount; i++)
+            int rewardIndex = 0;
+            for (int childIndex = 0; childIndex < rewardCardsRoot.childCount; childIndex++)
             {
-                Transform card = rewardCardsRoot.GetChild(i);
-                CollectionBookReward reward = manager != null ? manager.GetReward(i) : null;
-                int required = reward != null ? reward.RequiredPoints : new[] { 10, 25, 50, 75, 100, 150 }[Mathf.Min(i, 5)];
-                string rewardTitle = reward != null ? reward.Title : new[] { "+1 Отмена", "+1 Подсказка", "50 монет", "+2 Отмены", "+2 Подсказки", "+3 хода" }[Mathf.Min(i, 5)];
-                bool claimed = manager != null && i < manager.ClaimedRewardsCount;
-                bool current = manager == null ? i == 2 : i == manager.ClaimedRewardsCount;
+                Transform card = rewardCardsRoot.GetChild(childIndex);
+                if (!card.name.StartsWith("RewardStage_"))
+                {
+                    continue;
+                }
+
+                CollectionBookReward reward = manager != null ? manager.GetReward(rewardIndex) : null;
+                int required = reward != null ? reward.RequiredPoints : new[] { 10, 25, 50, 75, 100, 150 }[Mathf.Min(rewardIndex, 5)];
+                string rewardTitle = reward != null ? reward.Title : new[] { "+1 Отмена", "+1 Подсказка", "50 монет", "+2 Отмены", "+2 Подсказки", "+3 хода" }[Mathf.Min(rewardIndex, 5)];
+                bool claimed = manager != null && rewardIndex < manager.ClaimedRewardsCount;
+                bool current = manager == null ? rewardIndex == 0 : rewardIndex == manager.ClaimedRewardsCount;
 
                 SetText(card.Find("Points")?.GetComponent<TMP_Text>(), required.ToString());
                 SetRewardCardText(card.Find("Reward")?.GetComponent<TMP_Text>(), rewardTitle);
                 SetText(card.Find("Status")?.GetComponent<TMP_Text>(), claimed ? "ПОЛУЧЕНО" : current ? "СЛЕДУЮЩАЯ" : "ЗАБЛОКИРОВАНО");
+                rewardIndex++;
             }
+        }
+
+        private void RefreshRewardProgressMarker()
+        {
+            if (rewardCardsRoot == null || manager == null)
+            {
+                return;
+            }
+
+            RectTransform firstCard = rewardCardsRoot.Find("RewardStage_1") as RectTransform;
+            Image firstMilestone = firstCard != null ? firstCard.Find("MilestoneDiamond")?.GetComponent<Image>() : null;
+            if (firstCard == null || firstMilestone == null)
+            {
+                return;
+            }
+
+            if (rewardProgressMarker == null)
+            {
+                Transform existing = rewardCardsRoot.Find("CurrentProgressMarker");
+                rewardProgressMarker = existing != null ? existing.GetComponent<Image>() : null;
+            }
+
+            if (rewardProgressMarker == null)
+            {
+                GameObject markerObject = new("CurrentProgressMarker", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+                markerObject.transform.SetParent(rewardCardsRoot, false);
+                rewardProgressMarker = markerObject.GetComponent<Image>();
+            }
+
+            if (rewardProgressLine == null)
+            {
+                Transform existing = rewardCardsRoot.Find("CurrentProgressLine");
+                rewardProgressLine = existing != null ? existing.GetComponent<Image>() : null;
+            }
+
+            if (rewardProgressLine == null)
+            {
+                GameObject lineObject = new("CurrentProgressLine", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+                lineObject.transform.SetParent(rewardCardsRoot, false);
+                rewardProgressLine = lineObject.GetComponent<Image>();
+            }
+
+            rewardProgressMarker.sprite = firstMilestone.sprite;
+            rewardProgressMarker.type = Image.Type.Simple;
+            rewardProgressMarker.preserveAspect = true;
+            rewardProgressMarker.raycastTarget = false;
+            rewardProgressMarker.color = new Color(0.35f, 1f, 0.55f, 1f);
+
+            RectTransform markerRect = rewardProgressMarker.rectTransform;
+            markerRect.anchorMin = new Vector2(0.5f, 0.5f);
+            markerRect.anchorMax = new Vector2(0.5f, 0.5f);
+            markerRect.pivot = new Vector2(0.5f, 0.5f);
+            markerRect.sizeDelta = new Vector2(40f, 44f);
+            markerRect.localScale = Vector3.one * 1.12f;
+            markerRect.SetAsLastSibling();
+
+            float markerX = firstCard.anchoredPosition.x - 108f;
+            int previousRequired = 0;
+            float previousX = markerX;
+            int visibleRewardCount = 0;
+
+            for (int index = 0; ; index++)
+            {
+                RectTransform card = rewardCardsRoot.Find($"RewardStage_{index + 1}") as RectTransform;
+                CollectionBookReward reward = manager.GetReward(index);
+                if (card == null || reward == null)
+                {
+                    break;
+                }
+
+                visibleRewardCount++;
+                if (manager.CurrentPoints <= reward.RequiredPoints)
+                {
+                    float segmentProgress = Mathf.InverseLerp(previousRequired, reward.RequiredPoints, manager.CurrentPoints);
+                    markerX = Mathf.Lerp(previousX, card.anchoredPosition.x, segmentProgress);
+                    break;
+                }
+
+                previousRequired = reward.RequiredPoints;
+                previousX = card.anchoredPosition.x;
+                markerX = previousX;
+            }
+
+            rewardProgressMarker.gameObject.SetActive(visibleRewardCount > 0);
+            float timelineY = firstMilestone.rectTransform.anchoredPosition.y;
+            float timelineStartX = firstCard.anchoredPosition.x - 108f;
+
+            rewardProgressLine.sprite = null;
+            rewardProgressLine.type = Image.Type.Simple;
+            rewardProgressLine.raycastTarget = false;
+            rewardProgressLine.color = new Color(0.2f, 0.95f, 0.43f, 1f);
+            rewardProgressLine.gameObject.SetActive(visibleRewardCount > 0);
+
+            RectTransform lineRect = rewardProgressLine.rectTransform;
+            lineRect.anchorMin = new Vector2(0.5f, 0.5f);
+            lineRect.anchorMax = new Vector2(0.5f, 0.5f);
+            lineRect.pivot = new Vector2(0f, 0.5f);
+            lineRect.anchoredPosition = new Vector2(timelineStartX, timelineY);
+            lineRect.sizeDelta = new Vector2(Mathf.Max(0f, markerX - timelineStartX), 6f);
+            lineRect.localScale = Vector3.one;
+            lineRect.SetAsLastSibling();
+
+            markerRect.anchoredPosition = new Vector2(markerX, timelineY);
+            markerRect.SetAsLastSibling();
         }
 
         private IEnumerator PlayOpenAnimation()
@@ -273,10 +387,25 @@ namespace SolitaireAssociations
             levelRemainingText = FindTMP("Panel/LevelBlock/LevelRemaining");
             progressFill = transform.Find("Panel/ProgressBlock/ProgressTrack/ProgressFill")?.GetComponent<Image>();
             levelProgressFill = transform.Find("Panel/LevelBlock/LevelProgressTrack/LevelProgressFill")?.GetComponent<Image>();
+            ConfigureProgressFill(progressFill);
+            ConfigureProgressFill(levelProgressFill);
             closeButton = transform.Find("Panel/CloseButton")?.GetComponent<Button>();
             infoButton = transform.Find("Panel/InfoButton")?.GetComponent<Button>();
             rewardCardsRoot = FindRect("Panel/RewardStages");
             scoreRowsRoot = FindRect("Panel/ScoreRules");
+        }
+
+        private static void ConfigureProgressFill(Image fill)
+        {
+            if (fill == null)
+            {
+                return;
+            }
+
+            fill.type = Image.Type.Filled;
+            fill.fillMethod = Image.FillMethod.Horizontal;
+            fill.fillOrigin = (int)Image.OriginHorizontal.Left;
+            fill.fillClockwise = true;
         }
 
         private void WireButtons()

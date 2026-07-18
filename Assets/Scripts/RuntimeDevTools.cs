@@ -19,9 +19,10 @@ namespace SolitaireAssociations
         private const float HeaderHeight = 54f;
         private const float ButtonHeight = 58f;
         private const float LevelOptionButtonHeight = 48f;
-        private static readonly Vector2 ExpandedSize = new(330f, 668f);
-        private static readonly Vector2 ExpandedLevelMenuSize = new(330f, 828f);
-        private static readonly Vector2 ExpandedLevelNumberMenuSize = new(330f, 956f);
+        private static readonly Vector2 ExpandedSize = new(330f, 734f);
+        private static readonly Vector2 ExpandedLevelMenuSize = new(330f, 894f);
+        private static readonly Vector2 ExpandedLevelNumberMenuSize = new(330f, 1022f);
+        private static readonly Vector2 ExpandedTestPopupMenuSize = new(330f, 947f);
         private static readonly Vector2 CollapsedSize = new(240f, HeaderHeight);
         private static readonly Color PanelColor = new(0.03f, 0.05f, 0.07f, 0.94f);
         private static readonly Color HeaderColor = new(0.11f, 0.18f, 0.24f, 0.98f);
@@ -41,6 +42,11 @@ namespace SolitaireAssociations
         private Button addMovesButton;
         private Button addCoinsButton;
         private Button completeLevelButton;
+        private Button testPopupMenuButton;
+        private Button testCollectionPopupButton;
+        private Button resetCollectionPopupButton;
+        private Button testRoyalPopupButton;
+        private Button testDailyPopupButton;
         private Button levelMenuButton;
         private Button loadThreeColumnsButton;
         private Button loadFourColumnsButton;
@@ -50,6 +56,7 @@ namespace SolitaireAssociations
         private Button imageCardsButton;
         private RectTransform levelMenuRoot;
         private RectTransform levelNumberMenuRoot;
+        private RectTransform testPopupMenuRoot;
         private RectTransform imageCardsViewerRoot;
         private RectTransform imageCardsGridRoot;
         private TextMeshProUGUI imageCardsTitleLabel;
@@ -61,6 +68,7 @@ namespace SolitaireAssociations
         private bool isCollapsed;
         private bool isLevelMenuOpen;
         private bool isLevelNumberMenuOpen;
+        private bool isTestPopupMenuOpen;
         private int imageCardsPageIndex;
         private int selectedLevelNumber = MinDevLevelNumber;
         private Vector2 dragStartPanelPosition;
@@ -242,6 +250,8 @@ namespace SolitaireAssociations
             addMovesButton = CreateBodyButton("AddMovesButton", $"+{DefaultMovesGrant} ходов", AddMoves);
             addCoinsButton = CreateBodyButton("AddCoinsButton", $"+{DefaultCoinsGrant} золота", AddCoins);
             completeLevelButton = CreateBodyButton("CompleteLevelButton", "Пройти уровень", CompleteLevel);
+            testPopupMenuButton = CreateBodyButton("TestPopupMenuButton", "Test Pop-up", ToggleTestPopupMenu);
+            CreateTestPopupMenu();
             levelMenuButton = CreateBodyButton("LevelMenuButton", "Выбрать раскладку", ToggleLevelMenu);
             CreateLevelMenu();
             levelNumberMenuButton = CreateBodyButton("LevelNumberMenuButton", "Выбрать уровень", ToggleLevelNumberMenu);
@@ -256,6 +266,7 @@ namespace SolitaireAssociations
             statusLayout.preferredHeight = 54f;
 
             RefreshButtonState();
+            SetCollapsed(true);
         }
 
         private void EnsureCanvas()
@@ -368,6 +379,31 @@ namespace SolitaireAssociations
             loadSelectedLevelButton = CreateMenuButton(levelNumberMenuRoot, "LoadSelectedLevelButton", "Загрузить", LoadSelectedLevel, LevelOptionButtonHeight);
             UpdateSelectedLevelNumber(selectedLevelNumber);
             levelNumberMenuRoot.gameObject.SetActive(false);
+        }
+
+        private void CreateTestPopupMenu()
+        {
+            testPopupMenuRoot = CreateRect("TestPopupMenu", bodyRoot);
+
+            VerticalLayoutGroup layout = testPopupMenuRoot.gameObject.AddComponent<VerticalLayoutGroup>();
+            layout.padding = new RectOffset(0, 0, 0, 0);
+            layout.spacing = 7f;
+            layout.childAlignment = TextAnchor.UpperCenter;
+            layout.childControlWidth = true;
+            layout.childForceExpandWidth = true;
+            layout.childControlHeight = true;
+            layout.childForceExpandHeight = false;
+
+            LayoutElement rootLayout = testPopupMenuRoot.gameObject.AddComponent<LayoutElement>();
+            rootLayout.minHeight = (LevelOptionButtonHeight * 4f) + (layout.spacing * 3f);
+            rootLayout.preferredHeight = rootLayout.minHeight;
+
+            testCollectionPopupButton = CreateMenuButton(testPopupMenuRoot, "TestCollectionPopupButton", "Книга: +1 очко", TestCollectionPopup, LevelOptionButtonHeight);
+            resetCollectionPopupButton = CreateMenuButton(testPopupMenuRoot, "ResetCollectionPopupButton", "Книга: сброс", ResetCollectionPopup, LevelOptionButtonHeight);
+            testRoyalPopupButton = CreateMenuButton(testPopupMenuRoot, "TestRoyalPopupButton", "Royal: +победа", TestRoyalPopup, LevelOptionButtonHeight);
+            testDailyPopupButton = CreateMenuButton(testPopupMenuRoot, "TestDailyPopupButton", "Daily: +день", TestDailyPopup, LevelOptionButtonHeight);
+
+            testPopupMenuRoot.gameObject.SetActive(false);
         }
 
         private TMP_InputField CreateLevelNumberInput()
@@ -649,7 +685,12 @@ namespace SolitaireAssociations
 
         private void ToggleCollapsed()
         {
-            isCollapsed = !isCollapsed;
+            SetCollapsed(!isCollapsed);
+        }
+
+        private void SetCollapsed(bool collapsed)
+        {
+            isCollapsed = collapsed;
             if (bodyRoot != null)
             {
                 bodyRoot.gameObject.SetActive(!isCollapsed);
@@ -674,6 +715,11 @@ namespace SolitaireAssociations
             SetInteractable(addMovesButton, hasGameManager);
             SetInteractable(addCoinsButton, true);
             SetInteractable(completeLevelButton, hasGameManager);
+            SetInteractable(testPopupMenuButton, true);
+            SetInteractable(testCollectionPopupButton, true);
+            SetInteractable(resetCollectionPopupButton, true);
+            SetInteractable(testRoyalPopupButton, true);
+            SetInteractable(testDailyPopupButton, true);
             SetInteractable(levelMenuButton, true);
             SetInteractable(loadThreeColumnsButton, true);
             SetInteractable(loadFourColumnsButton, true);
@@ -766,12 +812,109 @@ namespace SolitaireAssociations
             SetStatus(completed ? "Уровень пройден." : "Уровень уже завершается.");
         }
 
+        private void ToggleTestPopupMenu()
+        {
+            SetTestPopupMenuOpen(!isTestPopupMenuOpen);
+        }
+
+        private void SetTestPopupMenuOpen(bool isOpen)
+        {
+            isTestPopupMenuOpen = isOpen;
+            if (isTestPopupMenuOpen)
+            {
+                isLevelMenuOpen = false;
+                isLevelNumberMenuOpen = false;
+                if (levelMenuRoot != null)
+                {
+                    levelMenuRoot.gameObject.SetActive(false);
+                }
+
+                if (levelNumberMenuRoot != null)
+                {
+                    levelNumberMenuRoot.gameObject.SetActive(false);
+                }
+            }
+
+            if (testPopupMenuRoot != null)
+            {
+                testPopupMenuRoot.gameObject.SetActive(isTestPopupMenuOpen);
+            }
+
+            if (panelRoot != null && !isCollapsed)
+            {
+                panelRoot.sizeDelta = GetExpandedPanelSize();
+            }
+        }
+
+        private void TestCollectionPopup()
+        {
+            CollectionBookManager manager = CollectionBookManager.GetOrCreate(this);
+            int points = manager.AddPoints(1);
+            CollectionBookPopup popup = CollectionBookPopup.SceneInstance;
+            if (popup != null)
+            {
+                popup.Show(manager);
+                SetStatus($"Книга: {points} очков.");
+                return;
+            }
+
+            SetStatus($"Книга: {points} очков. Поп-ап не в этой сцене.");
+        }
+
+        private void ResetCollectionPopup()
+        {
+            CollectionBookManager manager = CollectionBookManager.GetOrCreate(this);
+            manager.DebugResetProgress();
+
+            CollectionBookPopup popup = CollectionBookPopup.SceneInstance;
+            if (popup != null)
+            {
+                popup.Show(manager);
+                SetStatus("Книга: прогресс сброшен.");
+                return;
+            }
+
+            SetStatus("Книга: прогресс сброшен. Поп-ап не в этой сцене.");
+        }
+
+        private void TestRoyalPopup()
+        {
+            ChestChaseManager manager = ChestChaseManager.GetOrCreate(this);
+            manager.RegisterLevelWon();
+
+            try
+            {
+                ChestChasePopup.GetOrCreate().Show(manager);
+                SetStatus($"Royal: побед {manager.CurrentStreak}, ключей {manager.CurrentKeys}/{manager.KeysRequired}.");
+            }
+            catch (UnityException)
+            {
+                SetStatus($"Royal: побед {manager.CurrentStreak}. Поп-ап не в этой сцене.");
+            }
+        }
+
+        private void TestDailyPopup()
+        {
+            DailyRewardsManager manager = DailyRewardsManager.GetOrCreate(this);
+            manager.DebugAddTestDay();
+            DailyRewardsPopup popup = DailyRewardsPopup.SceneInstance;
+            if (popup != null)
+            {
+                popup.Show(manager);
+                SetStatus($"Daily: день {manager.CurrentDay}.");
+                return;
+            }
+
+            SetStatus($"Daily: день {manager.CurrentDay}. Поп-ап не в этой сцене.");
+        }
+
         private void ToggleLevelMenu()
         {
             isLevelMenuOpen = !isLevelMenuOpen;
             if (isLevelMenuOpen)
             {
                 SetLevelNumberMenuOpen(false);
+                SetTestPopupMenuOpen(false);
             }
 
             if (levelMenuRoot != null)
@@ -796,9 +939,15 @@ namespace SolitaireAssociations
             if (isLevelNumberMenuOpen)
             {
                 isLevelMenuOpen = false;
+                isTestPopupMenuOpen = false;
                 if (levelMenuRoot != null)
                 {
                     levelMenuRoot.gameObject.SetActive(false);
+                }
+
+                if (testPopupMenuRoot != null)
+                {
+                    testPopupMenuRoot.gameObject.SetActive(false);
                 }
             }
 
@@ -818,6 +967,11 @@ namespace SolitaireAssociations
             if (isLevelNumberMenuOpen)
             {
                 return ExpandedLevelNumberMenuSize;
+            }
+
+            if (isTestPopupMenuOpen)
+            {
+                return ExpandedTestPopupMenuSize;
             }
 
             return isLevelMenuOpen ? ExpandedLevelMenuSize : ExpandedSize;
