@@ -27,6 +27,8 @@ namespace SolitaireAssociations
         [SerializeField] private string title = "Настройки";
         [SerializeField] private string subtitle;
         [SerializeField] private bool showIconMedallion;
+        [SerializeField] private bool showInnerBackground = true;
+        [SerializeField] private Vector2 titlePositionOffset;
         [SerializeField] private Sprite iconSprite;
 
         [Header("Shell bindings")]
@@ -71,13 +73,22 @@ namespace SolitaireAssociations
             closeButton != null &&
             contentRoot != null;
 
-        public void Configure(SizePreset preset, string titleValue, string subtitleValue = null, Sprite icon = null, bool useIconMedallion = false)
+        public void Configure(
+            SizePreset preset,
+            string titleValue,
+            string subtitleValue = null,
+            Sprite icon = null,
+            bool useIconMedallion = false,
+            bool useInnerBackground = true,
+            Vector2? customTitlePositionOffset = null)
         {
             sizePreset = preset;
             title = titleValue ?? string.Empty;
             subtitle = subtitleValue ?? string.Empty;
             iconSprite = icon;
             showIconMedallion = useIconMedallion || iconSprite != null;
+            showInnerBackground = useInnerBackground;
+            titlePositionOffset = customTitlePositionOffset ?? Vector2.zero;
             EnsureHierarchy();
         }
 
@@ -219,6 +230,7 @@ namespace SolitaireAssociations
             image.type = image.sprite != null ? Image.Type.Sliced : Image.Type.Simple;
             image.color = InnerPanelColor;
             image.raycastTarget = false;
+            image.enabled = showInnerBackground;
         }
 
         private void EnsureHeader()
@@ -293,7 +305,7 @@ namespace SolitaireAssociations
             StretchToFill(iconImage != null ? iconImage.rectTransform : null, layout.IconInset, layout.IconInset, layout.IconInset, layout.IconInset);
             iconMedallion.gameObject.SetActive(showIconMedallion);
 
-            SetAnchored(titleText.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 0.5f), layout.TitleSize, layout.TitlePosition);
+            SetAnchored(titleText.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 0.5f), layout.TitleSize, layout.TitlePosition + titlePositionOffset);
             SetAnchored(subtitleText.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 0.5f), layout.SubtitleSize, layout.SubtitlePosition);
             subtitleText.gameObject.SetActive(!string.IsNullOrWhiteSpace(subtitle));
 

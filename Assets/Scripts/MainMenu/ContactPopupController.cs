@@ -3,11 +3,13 @@ using System.Collections;
 using System.Text;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
 namespace SolitaireAssociations
 {
+    [DefaultExecutionOrder(-10000)]
     public sealed class ContactPopupController : MonoBehaviour
     {
         [SerializeField] private GameObject popupRoot;
@@ -29,6 +31,26 @@ namespace SolitaireAssociations
             if (messageInput != null)
             {
                 messageInput.characterLimit = Mathf.Max(1, maxMessageLength);
+                messageInput.onValidateInput = ValidateMessageCharacter;
+            }
+        }
+
+        private void Update()
+        {
+            GameObject root = popupRoot != null ? popupRoot : gameObject;
+            if (root.activeInHierarchy && Input.GetKeyDown(KeyCode.Escape))
+            {
+                if (messageInput != null)
+                {
+                    messageInput.DeactivateInputField();
+                    if (EventSystem.current != null &&
+                        EventSystem.current.currentSelectedGameObject == messageInput.gameObject)
+                    {
+                        EventSystem.current.SetSelectedGameObject(null);
+                    }
+                }
+
+                Close();
             }
         }
 
@@ -164,6 +186,20 @@ namespace SolitaireAssociations
             message = (message ?? string.Empty).Trim();
             int limit = Mathf.Max(1, maxMessageLength);
             return message.Length <= limit ? message : message.Substring(0, limit);
+        }
+
+        private static char ValidateMessageCharacter(string text, int charIndex, char addedChar)
+        {
+            // TMP forwards Escape to an active input field as U+001B. Reject it
+            // before font lookup so it cannot produce a missing-glyph warning.
+            if (addedChar == '\u001B')
+            {
+                return '\0';
+            }
+
+            return !char.IsControl(addedChar) || addedChar == '\n' || addedChar == '\r' || addedChar == '\t'
+                ? addedChar
+                : '\0';
         }
 
         private void SetSending(bool isSending)

@@ -113,6 +113,7 @@ namespace SolitaireAssociations
         public void Show()
         {
             BindSceneReferences();
+            ApplyShellVisualOverrides();
             if (panel == null || contentRoot == null)
             {
 #if UNITY_EDITOR
@@ -176,6 +177,7 @@ namespace SolitaireAssociations
         private void Awake()
         {
             BindSceneReferences();
+            ApplyShellVisualOverrides();
             if (!Application.isPlaying && (panel == null || contentRoot == null || !HasSettingsContent()))
             {
                 EnsureAuthoringHierarchy();
@@ -193,6 +195,7 @@ namespace SolitaireAssociations
             if (!Application.isPlaying)
             {
                 BindSceneReferences();
+                ApplyShellVisualOverrides();
                 CaptureShownPanelScale();
                 ApplyFontsToAllTexts();
                 WireStaticControls();
@@ -302,6 +305,32 @@ namespace SolitaireAssociations
             }
         }
 
+        private void ApplyShellVisualOverrides()
+        {
+            if (shell == null)
+            {
+                return;
+            }
+
+            shell.Configure(
+                PopupShell.SizePreset.Compact,
+                "Настройки",
+                useInnerBackground: false,
+                customTitlePositionOffset: new Vector2(0f, -160f));
+
+            Image backdropImage = shell.Backdrop != null ? shell.Backdrop.GetComponent<Image>() : null;
+            if (backdropImage != null)
+            {
+                backdropImage.enabled = false;
+            }
+
+            Shadow frameShadow = shell.Frame != null ? shell.Frame.GetComponent<Shadow>() : null;
+            if (frameShadow != null)
+            {
+                frameShadow.enabled = false;
+            }
+        }
+
         private void BuildUi()
         {
             canvasGroup = GetComponent<CanvasGroup>();
@@ -313,7 +342,11 @@ namespace SolitaireAssociations
                 shell = gameObject.AddComponent<PopupShell>();
             }
 
-            shell.Configure(PopupShell.SizePreset.Compact, "Настройки");
+            shell.Configure(
+                PopupShell.SizePreset.Compact,
+                "Настройки",
+                useInnerBackground: false,
+                customTitlePositionOffset: new Vector2(0f, -160f));
             panel = shell.PanelRoot;
             contentRoot = shell.ContentRoot;
             dimButton = shell.BackdropButton;

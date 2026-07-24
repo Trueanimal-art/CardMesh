@@ -167,11 +167,18 @@ public class MainMenuController : MonoBehaviour
         StyleButton("PlayButton", PremiumUISprites.PrimaryButton, menuTextColor, 42f, true);
         StyleButton("LevelsButton", PremiumUISprites.PrimaryButton, menuTextColor, 28f, true);
         StyleButton("SettingsButton", PremiumUISprites.PrimaryButton, menuTextColor, 28f, true);
-        StyleMainMenuButtonText("PlayButton", "ИГРАТЬ", 66f, 42f, 2f, 0f);
-        StyleMainMenuButtonText("LevelsButton", "УРОВНИ", 42f, 30f, 4f, -3f);
-        StyleMainMenuButtonText("SettingsButton", "НАСТРОЙКИ", 33f, 25f, 9f, -3f);
+        StyleMainMenuButtonText("PlayButton", "ИГРАТЬ", 60f, 40f, 2f, 0f);
+        StyleMainMenuButtonText("LevelsButton", "УРОВНИ", 38f, 27f, 4f, -3f);
+        StyleMainMenuButtonText("SettingsButton", "НАСТРОЙКИ", 30f, 22f, 9f, -3f);
         StyleTopEventButtons();
     }
+
+#if UNITY_EDITOR
+    public static void EditorApplyPremiumStyles()
+    {
+        ApplyPremiumStyles();
+    }
+#endif
 
     private static void StyleTopEventButtons()
     {

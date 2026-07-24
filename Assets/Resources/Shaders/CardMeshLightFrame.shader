@@ -142,20 +142,41 @@ Shader "CardMesh/UI/Light Frame"
 
                 if (_DividerOverlay > 0.5)
                 {
-                    half4 dividerColor = (tex2D(_MainTex, input.texcoord) + _TextureSampleAdd) * input.color;
-                    float dominant = max(dividerColor.r, dividerColor.g);
                     const float dividerCenter = 0.523;
+
+                    half4 dividerColor = (tex2D(_MainTex, input.texcoord) + _TextureSampleAdd) * input.color;
+                    float sourceDominant = max(dividerColor.r, dividerColor.g);
 
                     float lineMask = (1.0 - smoothstep(
                         0.012,
                         0.038,
                         abs(localUv.y - dividerCenter)))
-                        * smoothstep(0.20, 0.38, dominant - dividerColor.b * 0.20);
+                        * smoothstep(0.20, 0.38, sourceDominant - dividerColor.b * 0.20);
 
                     float diamondShape = saturate(1.0
                         - abs(localUv.x - 0.5) / 0.048
                         - abs(localUv.y - dividerCenter) / 0.43);
                     float diamondMask = smoothstep(0.0, 0.06, diamondShape);
+
+                    // The divider fragment baked into the source atlas has a complete
+                    // lower point, but its matching upper point is flattened in the
+                    // pixels themselves. Reconstruct only the upper half of the center
+                    // diamond from the intact lower half. Keeping the repair inside the
+                    // existing diamond mask preserves the line, size and placement.
+                    float2 mirroredLocalUv = float2(
+                        localUv.x,
+                        dividerCenter - (localUv.y - dividerCenter));
+                    float2 mirroredUv = _UvRect.xy + mirroredLocalUv * _UvRect.zw;
+                    half4 mirroredDividerColor =
+                        (tex2D(_MainTex, mirroredUv) + _TextureSampleAdd) * input.color;
+                    float upperDiamondRepair = step(dividerCenter + 0.002, localUv.y)
+                        * diamondMask;
+                    dividerColor = lerp(
+                        dividerColor,
+                        mirroredDividerColor,
+                        upperDiamondRepair);
+
+                    float dominant = max(dividerColor.r, dividerColor.g);
 
                     float centerDetails = (1.0 - smoothstep(0.065, 0.16, abs(localUv.x - 0.5)))
                         * smoothstep(0.28, 0.48, dominant)

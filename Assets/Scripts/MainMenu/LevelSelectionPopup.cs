@@ -164,6 +164,7 @@ namespace SolitaireAssociations
                 BindSceneReferences();
             }
 
+            RemoveUpperDivider();
             ConfigureScrollHierarchy();
             RestoreAuthoredPlayModeLayout();
             ApplyFontsToAllTexts();
@@ -181,6 +182,7 @@ namespace SolitaireAssociations
             BindSceneReferences();
             CaptureAuthoredPlayModeLayout();
             CaptureShownPanelScale();
+            RemoveUpperDivider();
             ConfigureScrollHierarchy();
             RestoreAuthoredPlayModeLayout();
             ApplyFontsToAllTexts();
@@ -194,6 +196,7 @@ namespace SolitaireAssociations
             {
                 BindSceneReferences();
                 CaptureShownPanelScale();
+                RemoveUpperDivider();
                 ConfigureScrollHierarchy();
                 ApplyFontsToAllTexts();
                 WireStaticButtons();
@@ -223,6 +226,24 @@ namespace SolitaireAssociations
             }
 
             fontAsset ??= ResolveFont();
+        }
+
+        private void RemoveUpperDivider()
+        {
+            Transform divider = panel != null ? panel.Find("DividerStrip") : null;
+            if (divider == null)
+            {
+                return;
+            }
+
+            if (Application.isPlaying)
+            {
+                Destroy(divider.gameObject);
+            }
+            else
+            {
+                DestroyImmediate(divider.gameObject);
+            }
         }
 
         private void WireStaticButtons()
