@@ -94,7 +94,7 @@ Build Settings currently include only these two scenes.
 - `RuntimeDevTools` not present/enabled in release.
 - Audio clips assigned to `MusicPlayer`.
 - Development Build off for store build.
-- Scripting define symbols for WebGL/Yandex or mobile ads.
+- Google Mobile Ads package/Android resolver state and production AdMob IDs.
 - Orientation/resolution/safe area settings.
 
 ## Правила дальнейшей разработки
@@ -116,4 +116,3 @@ Build Settings currently include only these two scenes.
 - Не удалять fallback paths в scene loading без проверки build settings.
 - Не предполагать, что runtime-created UI отсутствует в сцене. Сначала искать и authored, и generated paths.
 - Любое изменение монетизации требует target platform decision.
-

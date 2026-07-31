@@ -83,7 +83,7 @@
 
 ## Реклама/монетизация
 
-- `AdsManager`: central facade, mock provider outside WebGL, Yandex provider under `UNITY_WEBGL && !UNITY_EDITOR`.
+- `AdsManager`: central facade; Android использует `GoogleMobileAdsProvider`, Editor — mock, остальные production-платформы — unavailable.
 - `GameManager`: interstitial after level complete/restart and rewarded +moves.
 - `ShopPopup`: demo purchase UI only by log message; real payments not connected.
 - `InterstitialCounter`, `InterstitialOnRetryButton`, `SecretQuizButton`: legacy/adjacent ads helpers, not clearly part of main Card Mesh flow.
@@ -111,7 +111,7 @@
 - PlayerPrefs keys spread across many classes.
 - Runtime-generated UI/sprites/textures can hide missing prefab authoring problems.
 - No visible automated gameplay tests.
-- Real platform integrations are mostly stubs or build-target-specific.
+- Payments and analytics integrations are still stubs; Android ads use the official Google Mobile Ads SDK.
 
 ## Карта ключевых классов
 
@@ -132,7 +132,6 @@
 | `CoinsManager` | `Assets/Scripts/CoinsManager.cs` | Coins/economy version | `PlayerPrefs` | Economy reset on version bump |
 | `LivesManager` | `Assets/Scripts/LivesManager.cs` | Lives and timed restore | `PlayerPrefs`, time | Editor reset hook, clock manipulation risk |
 | `PlayerBoostInventory` | `Assets/Scripts/PlayerBoostInventory.cs` | Hint/undo inventory | `PlayerPrefs` | ExtraMoves reward not integrated |
-| `AdsManager` | `Assets/Scripts/Ads/AdsManager.cs` | Ads facade | Mock/Yandex provider, PlayerPrefs, AudioListener | Android/iOS provider absent |
+| `AdsManager` | `Assets/Scripts/Ads/AdsManager.cs` | Ads facade | AdMob/UMP provider, Editor mock, PlayerPrefs, AudioListener | Production AdMob IDs and Play declarations pending |
 | `MusicPlayer` | `Assets/Scripts/Music/MusicPlayer.cs` | Music/SFX singleton | AudioSource, PlayerPrefs | Global singleton, Update polling |
 | `MainMenuController` | `Assets/Scripts/MainMenuController.cs` | Main menu navigation/style/wiring | SceneManager, managers, GameObject names | Hardcoded names and scene fallback |
-

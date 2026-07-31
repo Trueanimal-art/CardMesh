@@ -9,7 +9,7 @@
 - `Assets/MainMenu.unity`
 - `Assets/Scenes/Main.unity`
 
-Unity версия проекта: `2022.3.43f1`.
+Unity версия проекта: `6000.3.21f1`.
 
 ## Стадия разработки
 
@@ -18,9 +18,9 @@ Unity версия проекта: `2022.3.43f1`.
 - Есть основной gameplay loop: старт уровня, раздача, drag & drop, stock, goal completion, win/lose, рестарт, автопереход на следующий уровень.
 - Есть 1000 предсгенерированных уровней в `Assets/Resources/GeneratedLevels/level_manifest.json`.
 - Есть main menu и несколько liveops/мета-попапов: Daily Rewards, Chest Chase, Collection Book, Shop, Settings, Level Selection.
-- Есть mock-реклама и WebGL/Yandex provider path.
+- Android-реклама подключена через Google Mobile Ads / AdMob с UMP consent.
 - Сохранение сессии доски не реализовано.
-- Реальная мобильная монетизация, аналитика, платежи и store readiness не выглядят завершенными.
+- AdMob integration готова для тестирования; production ID, аналитика, платежи и Play Console declarations еще требуют настройки владельцем.
 
 ## Основные игровые режимы
 
@@ -50,7 +50,7 @@ Unity версия проекта: `2022.3.43f1`.
 - Сохранение текущей игровой сессии: нет сериализации доски, stock/waste, undo history и remaining moves после выхода.
 - Analytics: `PlatformService.TrackEvent` пустой, `StubPlatformService` без реализации.
 - Store purchases: `ShopPopup` логирует demo UI, платежи не подключены.
-- Ads на Android/iOS: provider есть только mock и Yandex WebGL path. Требует проверки.
+- AdMob: development использует Google test IDs; production Android ID еще не внесены, release build намеренно блокируется.
 - Collection Book: менеджер и popup есть, но начисление очков из `GameManager` не видно.
 - UI goals/progress: `UIManager.UpdateGoalsSummary` и `UIManager.UpdateProgress` пустые.
 - Column hover highlight: `CardColumn.SetHighlight` пустой.
@@ -75,4 +75,3 @@ Unity версия проекта: `2022.3.43f1`.
 4. Читать `Assets/Scripts/LevelProgressionManager.cs`, `Assets/Scripts/LevelManifest.cs`, `Assets/Scripts/LevelGenerator.cs`.
 5. Проверить `Assets/Resources/GeneratedLevels/level_manifest.json` и `Assets/Resources/Data/cards.json`.
 6. Затем переходить к `UIManager`, `CardMeshSceneRefs`, `RuntimeSceneBootstrapper` и main-menu popup systems.
-

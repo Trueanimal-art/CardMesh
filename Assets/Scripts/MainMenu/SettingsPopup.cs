@@ -54,6 +54,7 @@ namespace CardMesh
         [SerializeField] private Button closeButton;
         [SerializeField] private Button howToButton;
         [SerializeField] private Button resetButton;
+        [SerializeField] private Button privacyButton;
         [SerializeField] private Button hintsToggleButton;
         [SerializeField] private Slider musicSlider;
         [SerializeField] private Slider sfxSlider;
@@ -137,6 +138,7 @@ namespace CardMesh
                 return;
             }
 
+            EnsureRuntimePrivacyButton();
             WireStaticControls();
             CloseModal();
             LoadSavedValues();
@@ -192,6 +194,7 @@ namespace CardMesh
 
             CaptureShownPanelScale();
             ApplyFontsToAllTexts();
+            EnsureRuntimePrivacyButton();
             WireStaticControls();
             ApplyInitialVisuals();
         }
@@ -237,6 +240,7 @@ namespace CardMesh
             closeButton = shell != null && shell.CloseButton != null ? shell.CloseButton : FindButton(transform, "CloseButton") ?? closeButton;
             howToButton = FindButton(contentRoot, "HowToPlayButton") ?? FindButton(transform, "HowToPlayButton") ?? howToButton;
             resetButton = FindButton(contentRoot, "ResetProgressButton") ?? FindButton(transform, "ResetProgressButton") ?? resetButton;
+            privacyButton = FindButton(contentRoot, "PrivacyOptionsButton") ?? FindButton(transform, "PrivacyOptionsButton") ?? privacyButton;
             hintsToggleButton = FindButton(contentRoot, "HintsToggle") ?? FindButton(transform, "HintsToggle") ?? hintsToggleButton;
             modalBlockerButton = FindButton(transform, "ModalBlocker") ?? modalBlockerButton;
             modalCloseButton = FindButton(transform, "ModalCloseButton") ?? modalCloseButton;
@@ -280,6 +284,12 @@ namespace CardMesh
                 resetButton.onClick.AddListener(ShowResetConfirmation);
             }
 
+            if (privacyButton != null)
+            {
+                privacyButton.onClick.RemoveListener(ShowPrivacyOptions);
+                privacyButton.onClick.AddListener(ShowPrivacyOptions);
+            }
+
             if (hintsToggleButton != null)
             {
                 hintsToggleButton.onClick.RemoveListener(ToggleHints);
@@ -309,6 +319,39 @@ namespace CardMesh
                 modalCloseButton.onClick.RemoveListener(CloseModal);
                 modalCloseButton.onClick.AddListener(CloseModal);
             }
+        }
+
+        private void EnsureRuntimePrivacyButton()
+        {
+            if (!Application.isPlaying
+                || privacyButton != null
+                || contentRoot == null)
+            {
+                return;
+            }
+
+            float top = -246f - SettingsButtonHeight * 2f;
+            privacyButton = CreateSettingsButton(
+                contentRoot,
+                "PrivacyOptionsButton",
+                "Конфиденциальность",
+                textGold,
+                top);
+
+            SetAnchored(
+                howToButton.transform as RectTransform,
+                new Vector2(0.5f, 1f),
+                new Vector2(0.5f, 1f),
+                new Vector2(0.5f, 1f),
+                new Vector2(560f, SettingsButtonHeight),
+                new Vector2(0f, -246f));
+            SetAnchored(
+                resetButton.transform as RectTransform,
+                new Vector2(0.5f, 1f),
+                new Vector2(0.5f, 1f),
+                new Vector2(0.5f, 1f),
+                new Vector2(560f, SettingsButtonHeight),
+                new Vector2(0f, -246f - SettingsButtonHeight));
         }
 
         private void ApplyShellVisualOverrides()
@@ -462,9 +505,12 @@ namespace CardMesh
             top -= SettingsRowHeight + SettingsRowSpacing;
             CreateHintsRow(contentRoot, top);
             top -= SettingsRowHeight + 24f;
+            top += 28f;
             howToButton = CreateSettingsButton(contentRoot, "HowToPlayButton", "Как играть", textGold, top);
-            top -= SettingsButtonHeight + SettingsRowSpacing;
+            top -= SettingsButtonHeight;
             resetButton = CreateSettingsButton(contentRoot, "ResetProgressButton", "Сброс прогресса", textGold, top);
+            top -= SettingsButtonHeight;
+            privacyButton = CreateSettingsButton(contentRoot, "PrivacyOptionsButton", "Конфиденциальность", textGold, top);
         }
 
         private bool HasSettingsContent()
@@ -473,7 +519,8 @@ namespace CardMesh
                 && FindChildRecursive<Slider>(contentRoot, "SfxSlider") != null
                 && FindButton(contentRoot, "HintsToggle") != null
                 && FindButton(contentRoot, "HowToPlayButton") != null
-                && FindButton(contentRoot, "ResetProgressButton") != null;
+                && FindButton(contentRoot, "ResetProgressButton") != null
+                && FindButton(contentRoot, "PrivacyOptionsButton") != null;
         }
 
         private Slider CreateSliderRow(RectTransform parent, string rowName, string label, float topY, string sliderName, string valueName, UnityEngine.Events.UnityAction<float> changed, out TextMeshProUGUI valueText)
@@ -795,6 +842,30 @@ namespace CardMesh
                 "Сбросить весь прогресс? Это действие нельзя отменить.",
                 ("Да", ConfirmResetProgress),
                 ("Нет", CloseModal));
+        }
+
+        private void ShowPrivacyOptions()
+        {
+            AdsManager manager = AdsManager.Instance
+                ?? FindFirstObjectByType<AdsManager>(FindObjectsInactive.Include);
+            if (manager == null)
+            {
+                ShowPrivacyOptionsUnavailable();
+                return;
+            }
+
+            manager.ShowPrivacyOptions(
+                onClosed: null,
+                onFailed: ShowPrivacyOptionsUnavailable);
+        }
+
+        private void ShowPrivacyOptionsUnavailable()
+        {
+            ShowModal(
+                "Конфиденциальность",
+                "Настройки рекламной конфиденциальности сейчас недоступны. Попробуйте ещё раз после подключения к интернету.",
+                ("Понятно", CloseModal),
+                null);
         }
 
         private void ConfirmResetProgress()

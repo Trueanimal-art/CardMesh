@@ -43,6 +43,18 @@ public class AdsManager : MonoBehaviour
         Log($"Provider selected: {provider.ProviderName}");
     }
 
+    private void OnDestroy()
+    {
+        if (Instance != this)
+        {
+            return;
+        }
+
+        provider?.Dispose();
+        provider = null;
+        Instance = null;
+    }
+
     public void ShowRewardedAddMoves(Action onCompleted, Action onFailed = null)
     {
         ShowRewarded(ReasonAddMoves, onCompleted, onFailed);
@@ -62,10 +74,17 @@ public class AdsManager : MonoBehaviour
 
         BeginAdAudioMute();
         adInProgress = true;
+        bool resolved = false;
 
         bool started = provider.ShowRewarded(
             onCompleted: () =>
             {
+                if (resolved)
+                {
+                    return;
+                }
+
+                resolved = true;
                 Log($"Rewarded completed: {safeReason}");
                 FinishAdAudioRestore();
                 adInProgress = false;
@@ -73,6 +92,12 @@ public class AdsManager : MonoBehaviour
             },
             onFailedOrClosed: () =>
             {
+                if (resolved)
+                {
+                    return;
+                }
+
+                resolved = true;
                 Log("Rewarded failed");
                 FinishAdAudioRestore();
                 adInProgress = false;
@@ -81,6 +106,12 @@ public class AdsManager : MonoBehaviour
 
         if (!started)
         {
+            if (resolved)
+            {
+                return;
+            }
+
+            resolved = true;
             Log("Rewarded failed");
             FinishAdAudioRestore();
             adInProgress = false;
@@ -120,10 +151,17 @@ public class AdsManager : MonoBehaviour
 
         BeginAdAudioMute();
         adInProgress = true;
+        bool resolved = false;
 
         bool started = provider.ShowInterstitial(
             onCompleted: () =>
             {
+                if (resolved)
+                {
+                    return;
+                }
+
+                resolved = true;
                 MarkInterstitialShown();
                 Log("Interstitial completed");
                 FinishAdAudioRestore();
@@ -132,6 +170,12 @@ public class AdsManager : MonoBehaviour
             },
             onFailed: () =>
             {
+                if (resolved)
+                {
+                    return;
+                }
+
+                resolved = true;
                 Log("Interstitial failed");
                 FinishAdAudioRestore();
                 adInProgress = false;
@@ -140,6 +184,12 @@ public class AdsManager : MonoBehaviour
 
         if (!started)
         {
+            if (resolved)
+            {
+                return false;
+            }
+
+            resolved = true;
             Log("Interstitial failed");
             FinishAdAudioRestore();
             adInProgress = false;
@@ -197,14 +247,25 @@ public class AdsManager : MonoBehaviour
         ShowRewarded("Rewarded", onSuccess, null);
     }
 
+    public bool PrivacyOptionsRequired =>
+        provider != null && provider.PrivacyOptionsRequired;
+
+    public void ShowPrivacyOptions(Action onClosed = null, Action onFailed = null)
+    {
+        if (provider == null || !provider.ShowPrivacyOptions(onClosed, onFailed))
+        {
+            onFailed?.Invoke();
+        }
+    }
+
     private IAdsProvider CreateProvider()
     {
-#if UNITY_WEBGL && !UNITY_EDITOR
-        return new YandexAdsProvider();
-#elif UNITY_ANDROID && !UNITY_EDITOR
-        return new UnavailableAndroidAdsProvider();
-#else
+#if UNITY_ANDROID && !UNITY_EDITOR
+        return new GoogleMobileAdsProvider();
+#elif UNITY_EDITOR
         return new MockAdsProvider(() => mockRewardedShouldFail, () => mockInterstitialShouldFail);
+#else
+        return new UnavailableAdsProvider();
 #endif
     }
 
@@ -253,13 +314,6 @@ public class AdsManager : MonoBehaviour
         return string.IsNullOrWhiteSpace(reason) ? fallback : reason.Trim();
     }
 
-    private interface IAdsProvider
-    {
-        string ProviderName { get; }
-        bool ShowRewarded(Action onCompleted, Action onFailedOrClosed);
-        bool ShowInterstitial(Action onCompleted, Action onFailed);
-    }
-
     private sealed class MockAdsProvider : IAdsProvider
     {
         private readonly Func<bool> shouldFailRewarded;
@@ -272,6 +326,7 @@ public class AdsManager : MonoBehaviour
         }
 
         public string ProviderName => "MockAdsProvider";
+        public bool PrivacyOptionsRequired => false;
 
         public bool ShowRewarded(Action onCompleted, Action onFailedOrClosed)
         {
@@ -296,83 +351,51 @@ public class AdsManager : MonoBehaviour
             onCompleted?.Invoke();
             return true;
         }
+
+        public bool ShowPrivacyOptions(Action onClosed, Action onFailed)
+        {
+            onClosed?.Invoke();
+            return true;
+        }
+
+        public void Dispose()
+        {
+        }
     }
 
-#if UNITY_ANDROID && !UNITY_EDITOR
-    private sealed class UnavailableAndroidAdsProvider : IAdsProvider
+    private sealed class UnavailableAdsProvider : IAdsProvider
     {
-        public string ProviderName => "AndroidAdsStub";
+        public string ProviderName => "UnavailableAdsProvider";
+        public bool PrivacyOptionsRequired => false;
 
-        public bool ShowRewarded(Action onCompleted, Action onFailedOrClosed)
+        public bool ShowRewarded(
+            Action onCompleted,
+            Action onFailedOrClosed)
         {
-            Debug.LogWarning(
-                "[ADS] Android rewarded ad is disabled until a Google Play-compatible "
-                + "ads SDK and production ad unit are configured.");
             return false;
         }
 
         public bool ShowInterstitial(Action onCompleted, Action onFailed)
         {
-            Debug.LogWarning(
-                "[ADS] Android interstitial is disabled until a Google Play-compatible "
-                + "ads SDK and production ad unit are configured.");
             return false;
         }
-    }
-#endif
 
-#if UNITY_WEBGL && !UNITY_EDITOR
-    private sealed class YandexAdsProvider : IAdsProvider
-    {
-        public string ProviderName => "YandexAdsProvider";
-
-        public bool ShowRewarded(Action onCompleted, Action onFailedOrClosed)
+        public bool ShowPrivacyOptions(Action onClosed, Action onFailed)
         {
-            YandexAdsBridge bridge = EnsureBridge();
-            if (bridge == null)
-            {
-                onFailedOrClosed?.Invoke();
-                return false;
-            }
-
-            bool rewardCompleted = false;
-            return bridge.ShowRewarded(
-                onSuccess: () =>
-                {
-                    rewardCompleted = true;
-                    onCompleted?.Invoke();
-                },
-                onClosed: () =>
-                {
-                    if (!rewardCompleted)
-                    {
-                        onFailedOrClosed?.Invoke();
-                    }
-                });
+            return false;
         }
 
-        public bool ShowInterstitial(Action onCompleted, Action onFailed)
+        public void Dispose()
         {
-            YandexAdsBridge bridge = EnsureBridge();
-            if (bridge == null)
-            {
-                onFailed?.Invoke();
-                return false;
-            }
-
-            return bridge.ShowInterstitial(onCompleted);
-        }
-
-        private static YandexAdsBridge EnsureBridge()
-        {
-            if (YandexAdsBridge.Instance != null)
-            {
-                return YandexAdsBridge.Instance;
-            }
-
-            GameObject bridgeObject = new("YandexAdsBridge");
-            return bridgeObject.AddComponent<YandexAdsBridge>();
         }
     }
-#endif
+}
+
+internal interface IAdsProvider : IDisposable
+{
+    string ProviderName { get; }
+    bool PrivacyOptionsRequired { get; }
+    bool ShowRewarded(Action onCompleted, Action onFailedOrClosed);
+    bool ShowInterstitial(Action onCompleted, Action onFailed);
+    bool ShowPrivacyOptions(Action onClosed, Action onFailed);
 }

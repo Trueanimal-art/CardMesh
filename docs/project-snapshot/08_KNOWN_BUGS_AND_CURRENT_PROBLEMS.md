@@ -12,7 +12,7 @@
 | BUG-006 | Collection Book points не начисляются из gameplay | `CollectionBookManager`, `GameManager` | Вызов `AddCategoryCompletion` в gameplay не найден | Meta-progression может не работать | High |
 | BUG-007 | Daily reward ExtraMoves записывается, но не потребляется | `DailyRewardsManager`, `GameManager` | `CardMesh.Boosts.ExtraMoves` не читается gameplay | Награда дня 5 может быть бесполезной | High |
 | BUG-008 | Shop не подключен к платежам | `ShopPopup` | Demo UI only, логирует покупки | Monetization not ready | High |
-| BUG-009 | Android/iOS ads provider не найден | `AdsManager` | Есть mock и Yandex WebGL only | Mobile ads not ready | High |
+| BUG-009 | Production AdMob IDs не настроены | `AdMobConfiguration` | ID должен создать владелец AdMob account | Release ads intentionally blocked | High |
 | BUG-010 | Analytics/service layer пустой | `PlatformService`, `StubPlatformService` | Нет реализации TrackEvent/SaveProgress | Нет продуктовой аналитики/progress sync | Medium |
 | BUG-011 | `GameManager` совмещает слишком много responsibilities | `Assets/Scripts/GameManager.cs` | God class | Высокая цена любых изменений | High |
 | BUG-012 | `UIManager` runtime-строит и рестайлит UI | `Assets/Scripts/UIManager.cs` | UI ownership смешан с code polish | Mobile stutters, prefab drift | High |
@@ -40,7 +40,7 @@
 
 - Current session save/load.
 - Real analytics.
-- Real mobile ads/provider config.
+- Production AdMob app/ad-unit IDs and Play Console ads/privacy configuration.
 - IAP/shop.
 - Safe area/device QA.
 - Collection Book gameplay integration.
@@ -54,4 +54,3 @@
 - Several systems auto-add managers to the current GameObject.
 - Popups rely on exact hierarchy names.
 - Worktree has many existing modified assets/scripts. Before fixing issues, isolate current branch scope.
-
