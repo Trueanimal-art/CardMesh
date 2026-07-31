@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SolitaireAssociations
+namespace CardMesh
 {
     [Serializable]
     public sealed class ChestChaseRewardTier
@@ -26,7 +26,7 @@ namespace SolitaireAssociations
         }
     }
 
-    [CreateAssetMenu(fileName = "ChestChaseRewardConfig", menuName = "Solitaire Associations/Rewards/Chest Chase Config")]
+    [CreateAssetMenu(fileName = "ChestChaseRewardConfig", menuName = "Card Mesh/Rewards/Chest Chase Config")]
     public sealed class ChestChaseRewardConfig : ScriptableObject
     {
         [SerializeField, Min(1)] private int eventDurationHours = 41;

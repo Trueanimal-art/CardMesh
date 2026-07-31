@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.TextCore.LowLevel;
 
-namespace SolitaireAssociations
+namespace CardMesh
 {
     public static class RuntimeCyrillicFontProvider
     {

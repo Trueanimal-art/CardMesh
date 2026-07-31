@@ -3,7 +3,7 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace SolitaireAssociations.Editor
+namespace CardMesh.Editor
 {
     public static class CollectionBookUiPolishInstaller
     {

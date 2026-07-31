@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.TextCore.LowLevel;
 using UnityEngine.UI;
 
-namespace SolitaireAssociations
+namespace CardMesh
 {
     [RequireComponent(typeof(RectTransform))]
     public sealed class CardView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler

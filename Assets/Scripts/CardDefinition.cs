@@ -1,8 +1,8 @@
 using UnityEngine;
 
-namespace SolitaireAssociations
+namespace CardMesh
 {
-    [CreateAssetMenu(fileName = "CardDefinition", menuName = "Solitaire Associations/Карты/Карта")]
+    [CreateAssetMenu(fileName = "CardDefinition", menuName = "Card Mesh/Карты/Карта")]
     public sealed class CardDefinition : ScriptableObject
     {
         [SerializeField] private string cardId = "card_id";

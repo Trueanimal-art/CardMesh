@@ -1,9 +1,9 @@
 using TMPro;
 using UnityEngine;
 
-namespace SolitaireAssociations
+namespace CardMesh
 {
-    [CreateAssetMenu(fileName = "CardVisualConfig", menuName = "Solitaire Associations/Card Visual Config")]
+    [CreateAssetMenu(fileName = "CardVisualConfig", menuName = "Card Mesh/Card Visual Config")]
     public sealed class CardVisualConfig : ScriptableObject
     {
         [Header("Sprites")]

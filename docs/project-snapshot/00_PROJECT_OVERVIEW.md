@@ -2,7 +2,7 @@
 
 ## Что это за игра
 
-Проект выглядит как мобильная/веб карточная игра CardMesh / Solitaire Associations, а не классический Klondike Solitaire. Игрок работает с колонками карт, stock/deck-слотом и goal/foundation слотами. Цель уровня: собрать обычные карты одной категории в соответствующую золотую goal-карту. Карты бывают текстовые и image-карты; image goal не должен смешиваться с text-картами.
+Проект выглядит как мобильная/веб карточная игра CardMesh / Card Mesh, а не классический Klondike Card Mesh. Игрок работает с колонками карт, stock/deck-слотом и goal/foundation слотами. Цель уровня: собрать обычные карты одной категории в соответствующую золотую goal-карту. Карты бывают текстовые и image-карты; image goal не должен смешиваться с text-картами.
 
 Основные сцены в Build Settings:
 
@@ -54,7 +54,7 @@ Unity версия проекта: `2022.3.43f1`.
 - Collection Book: менеджер и popup есть, но начисление очков из `GameManager` не видно.
 - UI goals/progress: `UIManager.UpdateGoalsSummary` и `UIManager.UpdateProgress` пустые.
 - Column hover highlight: `CardColumn.SetHighlight` пустой.
-- GoalSlot internal header создается, но `RefreshHeader` очищает и выключает его; фактический label идет через `SolitaireSceneRefs`.
+- GoalSlot internal header создается, но `RefreshHeader` очищает и выключает его; фактический label идет через `CardMeshSceneRefs`.
 - Safe area: объект называется `SafeAreaRoot`, но применения `Screen.safeArea` не видно.
 - Automated tests отсутствуют или не обнаружены в `Assets/Scripts`.
 
@@ -74,5 +74,5 @@ Unity версия проекта: `2022.3.43f1`.
 3. Читать `Assets/Scripts/CardColumn.cs`, `Assets/Scripts/GoalSlot.cs`, `Assets/Scripts/DrawSlot.cs`, `Assets/Scripts/CardView.cs`.
 4. Читать `Assets/Scripts/LevelProgressionManager.cs`, `Assets/Scripts/LevelManifest.cs`, `Assets/Scripts/LevelGenerator.cs`.
 5. Проверить `Assets/Resources/GeneratedLevels/level_manifest.json` и `Assets/Resources/Data/cards.json`.
-6. Затем переходить к `UIManager`, `SolitaireSceneRefs`, `RuntimeSceneBootstrapper` и main-menu popup systems.
+6. Затем переходить к `UIManager`, `CardMeshSceneRefs`, `RuntimeSceneBootstrapper` и main-menu popup systems.
 

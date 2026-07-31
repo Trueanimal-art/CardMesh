@@ -39,7 +39,7 @@
 - Chest Chase default tiers in `ChestChaseManager`.
 - Daily Rewards list in `DailyRewardsManager`.
 - Collection Book rewards/titles/scoring in `CollectionBookManager`.
-- Layout constants and UI sizes in `UIManager`, `SolitaireSceneRefs`, `CardColumn`, `GoalSlot`.
+- Layout constants and UI sizes in `UIManager`, `CardMeshSceneRefs`, `CardColumn`, `GoalSlot`.
 - Image key mapping dictionary in `CardDatabase`.
 - Ads cooldown/restart count defaults in `AdsManager`.
 

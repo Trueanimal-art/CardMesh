@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import sharp from "/Users/vnm/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/sharp/lib/index.js";
 
-const ROOT = "/Users/vnm/Documents/Solitaire";
+const ROOT = "/Users/vnm/Documents/CardMesh";
 const OUT = path.join(ROOT, "Artifacts/OneTapGarageSplash/PrototypeRound5");
 const MENU = path.join(ROOT, "Artifacts/MainMenuAmbient_GameView.png");
 const W = 1136;

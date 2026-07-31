@@ -3,7 +3,7 @@
 ## Экраны
 
 - Main Menu: `Assets/MainMenu.unity`, `MainMenuController`.
-- Gameplay: `Assets/Scenes/Main.unity`, `GameManager`, `UIManager`, `SolitaireSceneRefs`.
+- Gameplay: `Assets/Scenes/Main.unity`, `GameManager`, `UIManager`, `CardMeshSceneRefs`.
 - Level Selection popup: `LevelSelectionPopup`.
 - Settings popup: `SettingsPopup`.
 - Daily Rewards popup: `DailyRewardsPopup`.
@@ -19,7 +19,7 @@
 
 ## Панели
 
-Gameplay scene uses named RectTransforms resolved by `SolitaireSceneRefs`:
+Gameplay scene uses named RectTransforms resolved by `CardMeshSceneRefs`:
 
 - `SafeAreaRoot`
 - `TopHUD`
@@ -52,14 +52,14 @@ Gameplay scene uses named RectTransforms resolved by `SolitaireSceneRefs`:
 
 - `GameManager` calls `uiManager.Initialize`, `UpdateMoves`, `UpdateDeckCounter`, `UpdateCoins`, `UpdateHintCount`, `UpdateUndoCount`, `ShowStatus`, popup methods.
 - `UIManager` wires buttons to `GameManager` actions.
-- `SolitaireSceneRefs` also updates moves text directly.
+- `CardMeshSceneRefs` also updates moves text directly.
 - `CardView`, `CardColumn`, `GoalSlot`, `DrawSlot` are UI components and gameplay containers at the same time.
 
 ## Мобильная адаптация
 
 Факты:
 
-- CanvasScaler set to `ScaleWithScreenSize`, reference `1920x1080`, match 0.5 in `SolitaireSceneRefs.EnsureCanvasSetup`.
+- CanvasScaler set to `ScaleWithScreenSize`, reference `1920x1080`, match 0.5 in `CardMeshSceneRefs.EnsureCanvasSetup`.
 - `SafeAreaRoot` exists by name and is stretched to fill parent.
 - Layout supports 3, 4, 5 columns.
 - `UIManager.ResolveBottomButtonSize` sizes bottom buttons from available width.
@@ -83,7 +83,7 @@ Gameplay scene uses named RectTransforms resolved by `SolitaireSceneRefs`:
 
 - Fixed pixel constants dominate gameplay HUD and board positioning.
 - `GoalSlot`/`CardColumn` card size normalized to `170x248` in `GameManager.NormalizeGameplayProfile`, ignoring serialized layout profiles.
-- `SolitaireSceneRefs` has reference layout constants for 196x286, while `GameManager` normalizes to 170x248 for active gameplay.
+- `CardMeshSceneRefs` has reference layout constants for 196x286, while `GameManager` normalizes to 170x248 for active gameplay.
 - `DeckArea` alignment computes y from goal row, but fixed right inset remains.
 - Popups use large absolute window sizes, e.g. DailyRewards `1700x1060`.
 
@@ -106,11 +106,11 @@ Gameplay scene uses named RectTransforms resolved by `SolitaireSceneRefs`:
 | Экран / панель | Класс | Префаб / сцена | Назначение | Проблемы |
 | -------------- | ----- | -------------- | ---------- | -------- |
 | Main Menu | `MainMenuController` | `Assets/MainMenu.unity` | Entry menu, play, events, settings | Hardcoded object names, runtime styling |
-| Gameplay | `GameManager`, `UIManager`, `SolitaireSceneRefs` | `Assets/Scenes/Main.unity` | Core game | Large coupling, runtime layout |
+| Gameplay | `GameManager`, `UIManager`, `CardMeshSceneRefs` | `Assets/Scenes/Main.unity` | Core game | Large coupling, runtime layout |
 | Board columns | `CardColumn`, `CardView` | Gameplay scene/card prefab generated or bound | Card stacks | Empty column hover highlight missing |
 | Goal slots | `GoalSlot`, `ColumnRef` | Gameplay scene columns | Category/foundation slots | Header flow split between classes |
 | Stock/deck | `DrawSlot` | Gameplay scene `DeckCardBack` | Draw/recycle cards | Recycle order/performance requires check |
-| Moves HUD | `UIManager`, `SolitaireSceneRefs` | Gameplay scene | Remaining moves | Multiple writers update text |
+| Moves HUD | `UIManager`, `CardMeshSceneRefs` | Gameplay scene | Remaining moves | Multiple writers update text |
 | Coins HUD | `UIManager`, `CoinsManager` | Gameplay scene | Currency display | Runtime polish, no shop integration |
 | Lives HUD | `LivesHudView`, `UIManager` | Runtime or authored `LivesHud` | Lives count | Runtime cleanup of child texts/effects |
 | Bottom buttons | `UIManager`, `UIJuicyButton` | Gameplay scene / prefabs | hint, undo, +moves | Cost/boost states partially hardcoded |
@@ -125,5 +125,5 @@ Gameplay scene uses named RectTransforms resolved by `SolitaireSceneRefs`:
 | Chest Chase | `ChestChasePopup` | MainMenu scene | Streak/key event | Large code-driven UI |
 | Collection Book | `CollectionBookPopup` | MainMenu scene | Collection progression | Manager not clearly wired to gameplay |
 | Shop | `ShopPopup` | MainMenu scene | Demo shop | Payments not connected |
-| Ad placeholder | `UIManager`, `SolitaireSceneRefs` | `AdBannerPlaceholder` | Banner area | Hidden by `UIManager.HideAdPlaceholder` |
+| Ad placeholder | `UIManager`, `CardMeshSceneRefs` | `AdBannerPlaceholder` | Banner area | Hidden by `UIManager.HideAdPlaceholder` |
 

@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
-namespace SolitaireAssociations
+namespace CardMesh
 {
     [DefaultExecutionOrder(-10000)]
     public sealed class ContactPopupController : MonoBehaviour

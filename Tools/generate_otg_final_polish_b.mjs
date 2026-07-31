@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import sharp from "/Users/vnm/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/sharp/lib/index.js";
 
-const ROOT = "/Users/vnm/Documents/Solitaire";
+const ROOT = "/Users/vnm/Documents/CardMesh";
 const SOURCE_MENU = path.join(ROOT, "Artifacts/MainMenuAmbient_GameView.png");
 const CURRENT = path.join(ROOT, "Artifacts/OneTapGarageSplash/RefinedB/Refined_B_frames");
 const OUT = path.join(ROOT, "Artifacts/OneTapGarageSplash/FinalPolishB");

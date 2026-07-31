@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace SolitaireAssociations
+namespace CardMesh
 {
     [ExecuteAlways]
     public sealed class CollectionBookPopup : MonoBehaviour

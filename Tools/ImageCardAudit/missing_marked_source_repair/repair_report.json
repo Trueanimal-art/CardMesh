@@ -6,7 +6,7 @@
     "art_color": {
       "sourceIndex": 2,
       "source": "Tools/ImageCardAudit/full_set_before_sanitize_source_atlas.png#2",
-      "runtimePath": "/Users/vnm/Documents/Solitaire/Assets/Resources/ImageCards/Premium/art_color.png",
+      "runtimePath": "/Users/vnm/Documents/CardMesh/Assets/Resources/ImageCards/Premium/art_color.png",
       "sourceBbox": [
         45,
         24,
@@ -36,7 +36,7 @@
     "art_frame": {
       "sourceIndex": 3,
       "source": "Tools/ImageCardAudit/full_set_before_sanitize_source_atlas.png#3",
-      "runtimePath": "/Users/vnm/Documents/Solitaire/Assets/Resources/ImageCards/Premium/art_frame.png",
+      "runtimePath": "/Users/vnm/Documents/CardMesh/Assets/Resources/ImageCards/Premium/art_frame.png",
       "sourceBbox": [
         48,
         24,
@@ -66,7 +66,7 @@
     "art_paint": {
       "sourceIndex": 5,
       "source": "Tools/ImageCardAudit/full_set_before_sanitize_source_atlas.png#5",
-      "runtimePath": "/Users/vnm/Documents/Solitaire/Assets/Resources/ImageCards/Premium/art_paint.png",
+      "runtimePath": "/Users/vnm/Documents/CardMesh/Assets/Resources/ImageCards/Premium/art_paint.png",
       "sourceBbox": [
         47,
         24,
@@ -96,7 +96,7 @@
     "business_sale": {
       "sourceIndex": 38,
       "source": "Tools/ImageCardAudit/full_set_before_sanitize_source_atlas.png#38",
-      "runtimePath": "/Users/vnm/Documents/Solitaire/Assets/Resources/ImageCards/Premium/business_sale.png",
+      "runtimePath": "/Users/vnm/Documents/CardMesh/Assets/Resources/ImageCards/Premium/business_sale.png",
       "sourceBbox": [
         53,
         24,
@@ -126,7 +126,7 @@
     "city_subway": {
       "sourceIndex": 61,
       "source": "Tools/ImageCardAudit/full_set_before_sanitize_source_atlas.png#61",
-      "runtimePath": "/Users/vnm/Documents/Solitaire/Assets/Resources/ImageCards/Premium/city_subway.png",
+      "runtimePath": "/Users/vnm/Documents/CardMesh/Assets/Resources/ImageCards/Premium/city_subway.png",
       "sourceBbox": [
         43,
         24,
@@ -156,7 +156,7 @@
     "drinks_smoothie": {
       "sourceIndex": 101,
       "source": "Tools/ImageCardAudit/full_set_before_sanitize_source_atlas.png#101",
-      "runtimePath": "/Users/vnm/Documents/Solitaire/Assets/Resources/ImageCards/Premium/drinks_smoothie.png",
+      "runtimePath": "/Users/vnm/Documents/CardMesh/Assets/Resources/ImageCards/Premium/drinks_smoothie.png",
       "sourceBbox": [
         54,
         24,
@@ -186,7 +186,7 @@
     "flowers_bouquet": {
       "sourceIndex": 128,
       "source": "Tools/ImageCardAudit/full_set_before_sanitize_source_atlas.png#128",
-      "runtimePath": "/Users/vnm/Documents/Solitaire/Assets/Resources/ImageCards/Premium/flowers_bouquet.png",
+      "runtimePath": "/Users/vnm/Documents/CardMesh/Assets/Resources/ImageCards/Premium/flowers_bouquet.png",
       "sourceBbox": [
         55,
         24,
@@ -216,7 +216,7 @@
     "forest_fern": {
       "sourceIndex": 145,
       "source": "Tools/ImageCardAudit/full_set_before_sanitize_source_atlas.png#145",
-      "runtimePath": "/Users/vnm/Documents/Solitaire/Assets/Resources/ImageCards/Premium/forest_fern.png",
+      "runtimePath": "/Users/vnm/Documents/CardMesh/Assets/Resources/ImageCards/Premium/forest_fern.png",
       "sourceBbox": [
         48,
         24,
@@ -246,7 +246,7 @@
     "forest_stump": {
       "sourceIndex": 151,
       "source": "Tools/ImageCardAudit/full_set_before_sanitize_source_atlas.png#151",
-      "runtimePath": "/Users/vnm/Documents/Solitaire/Assets/Resources/ImageCards/Premium/forest_stump.png",
+      "runtimePath": "/Users/vnm/Documents/CardMesh/Assets/Resources/ImageCards/Premium/forest_stump.png",
       "sourceBbox": [
         24,
         24,
@@ -276,7 +276,7 @@
     "friendship_smile": {
       "sourceIndex": 157,
       "source": "Tools/ImageCardAudit/full_set_before_sanitize_source_atlas.png#157",
-      "runtimePath": "/Users/vnm/Documents/Solitaire/Assets/Resources/ImageCards/Premium/friendship_smile.png",
+      "runtimePath": "/Users/vnm/Documents/CardMesh/Assets/Resources/ImageCards/Premium/friendship_smile.png",
       "sourceBbox": [
         32,
         24,
@@ -306,7 +306,7 @@
     "garden_path": {
       "sourceIndex": 164,
       "source": "Tools/ImageCardAudit/full_set_before_sanitize_source_atlas.png#164",
-      "runtimePath": "/Users/vnm/Documents/Solitaire/Assets/Resources/ImageCards/Premium/garden_path.png",
+      "runtimePath": "/Users/vnm/Documents/CardMesh/Assets/Resources/ImageCards/Premium/garden_path.png",
       "sourceBbox": [
         29,
         24,
@@ -336,7 +336,7 @@
     "hobbies_dance": {
       "sourceIndex": 178,
       "source": "Tools/ImageCardAudit/full_set_before_sanitize_source_atlas.png#178",
-      "runtimePath": "/Users/vnm/Documents/Solitaire/Assets/Resources/ImageCards/Premium/hobbies_dance.png",
+      "runtimePath": "/Users/vnm/Documents/CardMesh/Assets/Resources/ImageCards/Premium/hobbies_dance.png",
       "sourceBbox": [
         49,
         24,
@@ -366,7 +366,7 @@
     "music_guitar": {
       "sourceIndex": 226,
       "source": "Tools/ImageCardAudit/full_set_before_sanitize_source_atlas.png#226",
-      "runtimePath": "/Users/vnm/Documents/Solitaire/Assets/Resources/ImageCards/Premium/music_guitar.png",
+      "runtimePath": "/Users/vnm/Documents/CardMesh/Assets/Resources/ImageCards/Premium/music_guitar.png",
       "sourceBbox": [
         60,
         24,
@@ -396,7 +396,7 @@
     "school_bell": {
       "sourceIndex": 272,
       "source": "Tools/ImageCardAudit/full_set_before_sanitize_source_atlas.png#272",
-      "runtimePath": "/Users/vnm/Documents/Solitaire/Assets/Resources/ImageCards/Premium/school_bell.png",
+      "runtimePath": "/Users/vnm/Documents/CardMesh/Assets/Resources/ImageCards/Premium/school_bell.png",
       "sourceBbox": [
         63,
         24,
@@ -426,7 +426,7 @@
     "shapes_cube": {
       "sourceIndex": 289,
       "source": "Tools/ImageCardAudit/full_set_before_sanitize_source_atlas.png#289",
-      "runtimePath": "/Users/vnm/Documents/Solitaire/Assets/Resources/ImageCards/Premium/shapes_cube.png",
+      "runtimePath": "/Users/vnm/Documents/CardMesh/Assets/Resources/ImageCards/Premium/shapes_cube.png",
       "sourceBbox": [
         34,
         24,
@@ -456,7 +456,7 @@
     "summer_beach": {
       "sourceIndex": 320,
       "source": "Tools/ImageCardAudit/full_set_before_sanitize_source_atlas.png#320",
-      "runtimePath": "/Users/vnm/Documents/Solitaire/Assets/Resources/ImageCards/Premium/summer_beach.png",
+      "runtimePath": "/Users/vnm/Documents/CardMesh/Assets/Resources/ImageCards/Premium/summer_beach.png",
       "sourceBbox": [
         47,
         24,
@@ -486,7 +486,7 @@
     "travel_map": {
       "sourceIndex": 369,
       "source": "Tools/ImageCardAudit/full_set_before_sanitize_source_atlas.png#369",
-      "runtimePath": "/Users/vnm/Documents/Solitaire/Assets/Resources/ImageCards/Premium/travel_map.png",
+      "runtimePath": "/Users/vnm/Documents/CardMesh/Assets/Resources/ImageCards/Premium/travel_map.png",
       "sourceBbox": [
         24,
         36,

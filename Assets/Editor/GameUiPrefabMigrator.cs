@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using SolitaireAssociations;
+using CardMesh;
 
 [InitializeOnLoad]
 public static class GameUiPrefabMigrator
@@ -112,7 +112,7 @@ public static class GameUiPrefabMigrator
                 }
                 ReplaceWithPrefabRect(safeArea, "CoinsPanel", coinsPath, true);
 
-                SolitaireSceneRefs sceneRefs = UnityEngine.Object.FindFirstObjectByType<SolitaireSceneRefs>();
+                CardMeshSceneRefs sceneRefs = UnityEngine.Object.FindFirstObjectByType<CardMeshSceneRefs>();
                 if (sceneRefs != null)
                 {
                     sceneRefs.ResolveSceneReferences();
@@ -133,7 +133,7 @@ public static class GameUiPrefabMigrator
     public static void ValidateMainRuntimeBinding()
     {
         EditorSceneManager.OpenScene(MainScenePath, OpenSceneMode.Single);
-        SolitaireSceneRefs refs = UnityEngine.Object.FindFirstObjectByType<SolitaireSceneRefs>();
+        CardMeshSceneRefs refs = UnityEngine.Object.FindFirstObjectByType<CardMeshSceneRefs>();
         bool refsValid = refs != null && refs.ResolveSceneReferences();
         GameManager gameManager = UnityEngine.Object.FindFirstObjectByType<GameManager>();
         RuntimeSceneBootstrapper.BindManualScene(gameManager);
@@ -898,11 +898,11 @@ public static class GameUiPrefabMigrator
         ScenePauseMenuButton pauseMenuButton = GetOrAdd<ScenePauseMenuButton>(menuRoot.gameObject);
         pauseMenuButton.SetPopup(pausePopup);
 
-        SolitaireSceneRefs refs = UnityEngine.Object.FindFirstObjectByType<SolitaireSceneRefs>();
+        CardMeshSceneRefs refs = UnityEngine.Object.FindFirstObjectByType<CardMeshSceneRefs>();
         if (refs == null)
         {
             GameObject gameRoot = GameObject.Find("GameRoot") ?? new GameObject("GameRoot");
-            refs = GetOrAdd<SolitaireSceneRefs>(gameRoot);
+            refs = GetOrAdd<CardMeshSceneRefs>(gameRoot);
         }
 
         GameObject runtimeRoot = refs.gameObject;

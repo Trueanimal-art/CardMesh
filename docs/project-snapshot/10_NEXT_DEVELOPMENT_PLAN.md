@@ -18,7 +18,7 @@
 | Подключить потребление `CardMesh.Boosts.ExtraMoves` или убрать reward из daily config | `DailyRewardsManager.cs`, `GameManager.cs`, `PlayerBoostInventory.cs` | Medium | High | Medium |
 | Связать Collection Book с завершением категорий/уровней или пометить feature disabled | `GameManager.cs`, `CollectionBookManager.cs` | Medium | High | Medium |
 | Реализовать column hover highlight или удалить ожидание подсветки | `CardColumn.cs` | Low | Medium | Small |
-| Решить ownership goal label/header | `GoalSlot.cs`, `SolitaireSceneRefs.cs` | Medium | Medium | Medium |
+| Решить ownership goal label/header | `GoalSlot.cs`, `CardMeshSceneRefs.cs` | Medium | Medium | Medium |
 
 ## Этап 3 - UI/UX polish
 
@@ -26,7 +26,7 @@
 | --- | --- | --- | --- | --- |
 | Реализовать или удалить пустые `UpdateGoalsSummary`/`UpdateProgress` | `UIManager.cs` | Medium | Medium | Small |
 | Провести QA всех popups на 16:9, 19.5:9, tablet | `UIManager.cs`, `MainMenu/*.cs`, scenes | Medium | High | Medium |
-| Проверить authored vs runtime UI ownership и убрать дублирующие элементы | `UIManager.cs`, `SolitaireSceneRefs.cs`, prefabs/scenes | High | Medium | Large |
+| Проверить authored vs runtime UI ownership и убрать дублирующие элементы | `UIManager.cs`, `CardMeshSceneRefs.cs`, prefabs/scenes | High | Medium | Large |
 | Добавить tap-to-move, если это требуется mobile UX | `CardView.cs`, `GameManager.cs` | High | Medium | Medium |
 | Проверить main menu navigation and popup lifecycle | `MainMenuController.cs`, `SceneLoader.cs`, popup classes | Medium | Medium | Medium |
 
@@ -34,7 +34,7 @@
 
 | Задача | Затронутые файлы | Риск | Приоритет | Сложность |
 | --- | --- | --- | --- | --- |
-| Реализовать real safe area application | `SolitaireSceneRefs.cs`, `UIManager.cs` | Medium | High | Medium |
+| Реализовать real safe area application | `CardMeshSceneRefs.cs`, `UIManager.cs` | Medium | High | Medium |
 | Профилировать restart and win on low-end Android/iOS | Gameplay scene | Medium | High | Medium |
 | Добавить pooling для cards/effects | `GameManager.cs`, `WinScreenView.cs`, `UIManager.cs` | High | Medium | Large |
 | Убрать LINQ allocations in gameplay hot paths | `GameManager.cs` | Medium | Medium | Small |

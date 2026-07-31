@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SolitaireAssociations
+namespace CardMesh
 {
-    [CreateAssetMenu(fileName = "AssociationDefinition", menuName = "Solitaire Associations/Карты/Ассоциация")]
+    [CreateAssetMenu(fileName = "AssociationDefinition", menuName = "Card Mesh/Карты/Ассоциация")]
     public sealed class AssociationDefinition : ScriptableObject
     {
         [SerializeField] private string associationId = "association_id";

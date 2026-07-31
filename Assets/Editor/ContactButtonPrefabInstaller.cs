@@ -1,5 +1,5 @@
 using System.IO;
-using SolitaireAssociations;
+using CardMesh;
 using TMPro;
 using UnityEditor;
 using UnityEditor.Events;
@@ -24,7 +24,7 @@ public static class ContactButtonPrefabInstaller
     private static readonly Vector2 PopupPanelSize = new(820f, 560f);
     private static readonly Vector2 PopupActionButtonSize = new(300f, 66f);
 
-    [MenuItem("Solitaire/Main Menu/Rebuild Contact Button")]
+    [MenuItem("Card Mesh/Main Menu/Rebuild Contact Button")]
     public static void RebuildContactButton()
     {
         ConfigureSpriteImport();

@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-namespace SolitaireAssociations
+namespace CardMesh
 {
     [Serializable]
     public sealed class PremiumEventPrefabReferences

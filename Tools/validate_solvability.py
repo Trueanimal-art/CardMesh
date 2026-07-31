@@ -1691,7 +1691,7 @@ class SolvabilityValidator:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Validate generated Solitaire association deals with a search solver.")
+    parser = argparse.ArgumentParser(description="Validate generated Card Mesh association deals with a search solver.")
     parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[1])
     parser.add_argument("--samples", type=int, default=100)
     parser.add_argument("--seed-start", type=int, default=1)

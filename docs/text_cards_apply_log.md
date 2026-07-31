@@ -1,7 +1,7 @@
 # Text Cards Apply Log
 
 - Source: `/Users/vnm/Downloads/text_cards_codex_fix_final_v3_no_double_words.md`
-- Target: `/Users/vnm/Documents/Solitaire/Assets/Resources/Data/cards.json`
+- Target: `/Users/vnm/Documents/CardMesh/Assets/Resources/Data/cards.json`
 - Parsed card replacements: 178
 - Parsed category renames: 19
 - Conflicts: 0

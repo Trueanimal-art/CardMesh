@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace SolitaireAssociations
+namespace CardMesh
 {
     [ExecuteAlways]
     public sealed class LevelSelectionPopup : MonoBehaviour

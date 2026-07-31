@@ -1,4 +1,4 @@
-# Аудит текстовых карт Solitaire
+# Аудит текстовых карт Card Mesh
 
 Файл выгружен из `Assets/Resources/Data/cards.json`.
 

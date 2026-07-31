@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace SolitaireAssociations
+namespace CardMesh
 {
     public abstract class PlatformService : MonoBehaviour
     {

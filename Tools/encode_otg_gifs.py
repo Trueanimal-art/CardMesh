@@ -1,7 +1,7 @@
 from pathlib import Path
 from PIL import Image
 
-ROOT = Path("/Users/vnm/Documents/Solitaire/Artifacts/OneTapGarageSplash/PrototypeRound5")
+ROOT = Path("/Users/vnm/Documents/CardMesh/Artifacts/OneTapGarageSplash/PrototypeRound5")
 FPS = 30
 
 for variant in ("A", "B"):

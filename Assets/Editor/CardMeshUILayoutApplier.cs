@@ -5,9 +5,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace SolitaireAssociations.Editor
+namespace CardMesh.Editor
 {
-    public static class SolitaireUILayoutApplier
+    public static class CardMeshUILayoutApplier
     {
         private const float TopHudHeight = 124f;
         private const float TopHudTopOffset = 32f;
@@ -58,12 +58,12 @@ namespace SolitaireAssociations.Editor
         private const float CardsStackWidth = 196f;
         private const float CardsStackHeight = 312f;
 
-        [MenuItem("Tools/Solitaire/Apply UI Layout")]
+        [MenuItem("Tools/Card Mesh/Apply UI Layout")]
         public static void ApplyUILayout()
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode)
             {
-                Debug.LogWarning("Solitaire UI layout can only be applied in Edit Mode.");
+                Debug.LogWarning("Card Mesh UI layout can only be applied in Edit Mode.");
                 return;
             }
 
@@ -75,7 +75,7 @@ namespace SolitaireAssociations.Editor
             }
 
             int undoGroup = Undo.GetCurrentGroup();
-            Undo.SetCurrentGroupName("Apply Solitaire UI Layout");
+            Undo.SetCurrentGroupName("Apply Card Mesh UI Layout");
 
             int missingCount = 0;
 
@@ -310,7 +310,7 @@ namespace SolitaireAssociations.Editor
             EditorSceneManager.MarkSceneDirty(scene);
             Undo.CollapseUndoOperations(undoGroup);
 
-            Debug.Log($"Solitaire UI layout applied to scene '{scene.name}'. Missing elements: {missingCount}");
+            Debug.Log($"Card Mesh UI layout applied to scene '{scene.name}'. Missing elements: {missingCount}");
         }
 
         private static void ApplyColumns(RectTransform columnSlotsRoot, ref int missingCount)

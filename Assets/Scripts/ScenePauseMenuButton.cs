@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace SolitaireAssociations
+namespace CardMesh
 {
     [RequireComponent(typeof(Button))]
     public sealed class ScenePauseMenuButton : MonoBehaviour

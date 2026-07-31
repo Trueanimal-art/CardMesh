@@ -1,4 +1,4 @@
-using SolitaireAssociations;
+using CardMesh;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -12,7 +12,7 @@ public static class RateUsUiPolishInstaller
         "Assets/Art/UI/MainMenuButtons/RatingStarFilled.png";
     private static readonly Vector2 Center = new(0.5f, 0.5f);
 
-    [MenuItem("Solitaire/Main Menu/Polish Rate Us Popup")]
+    [MenuItem("Card Mesh/Main Menu/Polish Rate Us Popup")]
     public static void Apply()
     {
         GameObject root = PrefabUtility.LoadPrefabContents(PrefabPath);

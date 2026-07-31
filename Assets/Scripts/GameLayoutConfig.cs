@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SolitaireAssociations
+namespace CardMesh
 {
     [Serializable]
     public struct ColumnLayoutProfile

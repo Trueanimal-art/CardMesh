@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace SolitaireAssociations
+namespace CardMesh
 {
     [DisallowMultipleComponent]
     public sealed class LivesHudView : MonoBehaviour

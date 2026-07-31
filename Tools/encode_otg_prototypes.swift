@@ -4,7 +4,7 @@ import AppKit
 import ImageIO
 import UniformTypeIdentifiers
 
-let root = "/Users/vnm/Documents/Solitaire/Artifacts/OneTapGarageSplash/PrototypeRound5"
+let root = "/Users/vnm/Documents/CardMesh/Artifacts/OneTapGarageSplash/PrototypeRound5"
 let width = 1136
 let height = 704
 let fps: Int32 = 30

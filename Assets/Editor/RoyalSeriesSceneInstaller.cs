@@ -10,7 +10,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace SolitaireAssociations.EditorTools
+namespace CardMesh.EditorTools
 {
     public static class RoyalSeriesSceneInstaller
     {

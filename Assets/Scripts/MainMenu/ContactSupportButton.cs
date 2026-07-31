@@ -2,7 +2,7 @@ using System;
 using System.Text;
 using UnityEngine;
 
-namespace SolitaireAssociations
+namespace CardMesh
 {
     public sealed class ContactSupportButton : MonoBehaviour
     {

@@ -35922,7 +35922,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6754173276589176624, guid: 57d26c212804640729d7805f3f4abe74, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: SolitaireAssociations.RateUsButton, Assembly-CSharp
+      value: CardMesh.RateUsButton, Assembly-CSharp
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -47490,7 +47490,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 3200000005}
-        m_TargetAssemblyTypeName: SolitaireAssociations.ChestChasePopup, Assembly-CSharp
+        m_TargetAssemblyTypeName: CardMesh.ChestChasePopup, Assembly-CSharp
         m_MethodName: Close
         m_Mode: 0
         m_Arguments:

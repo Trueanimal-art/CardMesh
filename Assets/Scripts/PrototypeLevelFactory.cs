@@ -1,5 +1,5 @@
 #if UNITY_EDITOR
-namespace SolitaireAssociations.Editor
+namespace CardMesh.Editor
 {
     internal static class PrototypeLevelFactory
     {

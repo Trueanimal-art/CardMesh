@@ -4,7 +4,7 @@ using System.Text;
 using UnityEditor;
 using UnityEngine;
 
-namespace SolitaireAssociations.EditorTools
+namespace CardMesh.EditorTools
 {
     public static class ImageCardImportDiagnostics
     {

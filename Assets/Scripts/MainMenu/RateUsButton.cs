@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace SolitaireAssociations
+namespace CardMesh
 {
     public sealed class RateUsButton : MonoBehaviour
     {

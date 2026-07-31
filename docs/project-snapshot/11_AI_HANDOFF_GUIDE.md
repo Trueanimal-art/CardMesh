@@ -2,7 +2,7 @@
 
 ## Краткое описание проекта
 
-Unity `2022.3.43f1` карточная игра CardMesh / Solitaire Associations. Игрок собирает обычные карты одной association/type в золотые goal cards. Уровни берутся из generated manifest на 1000 уровней или fallback generator. Есть main menu, meta events, coins/lives/boosts, mock/WebGL ads facade, audio and runtime UI polish.
+Unity `2022.3.43f1` карточная игра CardMesh / Card Mesh. Игрок собирает обычные карты одной association/type в золотые goal cards. Уровни берутся из generated manifest на 1000 уровней или fallback generator. Есть main menu, meta events, coins/lives/boosts, mock/WebGL ads facade, audio and runtime UI polish.
 
 ## Файлы, которые читать в первую очередь
 
@@ -14,7 +14,7 @@ Unity `2022.3.43f1` карточная игра CardMesh / Solitaire Association
 6. `Assets/Scripts/LevelManifest.cs`
 7. `Assets/Scripts/LevelProgressionManager.cs`
 8. `Assets/Scripts/UIManager.cs`
-9. `Assets/Scripts/SolitaireSceneRefs.cs`
+9. `Assets/Scripts/CardMeshSceneRefs.cs`
 10. `Assets/Resources/GeneratedLevels/level_manifest.json`
 
 ## Классы, которые нельзя менять без осторожности
@@ -25,7 +25,7 @@ Unity `2022.3.43f1` карточная игра CardMesh / Solitaire Association
 - `DrawSlot`: stock/waste semantics.
 - `CardView`: drag callbacks and visuals.
 - `LevelManifestDatabase` and `LevelGenerator`: level determinism.
-- `UIManager` and `SolitaireSceneRefs`: scene/prefab UI ownership.
+- `UIManager` and `CardMeshSceneRefs`: scene/prefab UI ownership.
 - `LevelProgressionManager`: progression and seed persistence.
 - `CoinsManager`, `LivesManager`, `PlayerBoostInventory`: saved economy.
 

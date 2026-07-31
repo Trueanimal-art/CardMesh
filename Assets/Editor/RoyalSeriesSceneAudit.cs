@@ -5,7 +5,7 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace SolitaireAssociations.Editor
+namespace CardMesh.Editor
 {
     public static class RoyalSeriesSceneAudit
     {

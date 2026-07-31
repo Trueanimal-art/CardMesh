@@ -292,7 +292,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 8888143618228344181}
-        m_TargetAssemblyTypeName: SolitaireAssociations.RateUsPopupController, Assembly-CSharp
+        m_TargetAssemblyTypeName: CardMesh.RateUsPopupController, Assembly-CSharp
         m_MethodName: SelectFive
         m_Mode: 0
         m_Arguments:
@@ -710,7 +710,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 8888143618228344181}
-        m_TargetAssemblyTypeName: SolitaireAssociations.RateUsPopupController, Assembly-CSharp
+        m_TargetAssemblyTypeName: CardMesh.RateUsPopupController, Assembly-CSharp
         m_MethodName: SelectOne
         m_Mode: 0
         m_Arguments:
@@ -939,7 +939,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 8888143618228344181}
-        m_TargetAssemblyTypeName: SolitaireAssociations.RateUsPopupController, Assembly-CSharp
+        m_TargetAssemblyTypeName: CardMesh.RateUsPopupController, Assembly-CSharp
         m_MethodName: SelectThree
         m_Mode: 0
         m_Arguments:
@@ -1800,7 +1800,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 8888143618228344181}
-        m_TargetAssemblyTypeName: SolitaireAssociations.RateUsPopupController, Assembly-CSharp
+        m_TargetAssemblyTypeName: CardMesh.RateUsPopupController, Assembly-CSharp
         m_MethodName: SelectFour
         m_Mode: 0
         m_Arguments:
@@ -2519,7 +2519,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 8888143618228344181}
-        m_TargetAssemblyTypeName: SolitaireAssociations.RateUsPopupController, Assembly-CSharp
+        m_TargetAssemblyTypeName: CardMesh.RateUsPopupController, Assembly-CSharp
         m_MethodName: SelectTwo
         m_Mode: 0
         m_Arguments:
@@ -3002,7 +3002,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6923336789838711410, guid: fdccc238851ab4110af101b0d03d1961, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: SolitaireAssociations.RateUsPopupController, Assembly-CSharp
+      value: CardMesh.RateUsPopupController, Assembly-CSharp
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3139,7 +3139,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6923336789838711410, guid: fdccc238851ab4110af101b0d03d1961, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: SolitaireAssociations.RateUsPopupController, Assembly-CSharp
+      value: CardMesh.RateUsPopupController, Assembly-CSharp
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

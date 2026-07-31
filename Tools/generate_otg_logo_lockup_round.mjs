@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import sharp from "/Users/vnm/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/sharp/lib/index.js";
 
-const ROOT = "/Users/vnm/Documents/Solitaire";
+const ROOT = "/Users/vnm/Documents/CardMesh";
 const OUT = path.join(ROOT, "Artifacts/OneTapGarageSplash/LogoLockupRound");
 const EXPORTS = path.join(OUT, "Exports");
 const BOARDS = path.join(OUT, "Boards");

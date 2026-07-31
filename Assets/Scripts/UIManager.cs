@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace SolitaireAssociations
+namespace CardMesh
 {
     public sealed class UIManager : MonoBehaviour
     {
@@ -47,7 +47,7 @@ namespace SolitaireAssociations
 
         private readonly HashSet<Button> wiredButtons = new();
 
-        private SolitaireSceneRefs sceneRefs;
+        private CardMeshSceneRefs sceneRefs;
         private RectTransform safeAreaRoot;
         private RectTransform coinsPanel;
         private RectTransform movesPanel;
@@ -87,7 +87,7 @@ namespace SolitaireAssociations
         private Material livesCountFontMaterial;
 
         public void Configure(
-            SolitaireSceneRefs sceneRefs,
+            CardMeshSceneRefs sceneRefs,
             TextMeshProUGUI targetStatusLabel,
             Button targetRestartButton)
         {

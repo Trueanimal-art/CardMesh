@@ -3,7 +3,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
-using SolitaireAssociations;
+using CardMesh;
 
 public class MainMenuController : MonoBehaviour
 {

@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace SolitaireAssociations.Editor
+namespace CardMesh.Editor
 {
     [InitializeOnLoad]
     public static class PremiumEventPrefabBootstrapper

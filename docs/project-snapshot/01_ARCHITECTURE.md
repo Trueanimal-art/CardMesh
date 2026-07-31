@@ -20,15 +20,15 @@
 
 ## Namespaces
 
-- `SolitaireAssociations`: основная runtime-логика, gameplay, data, UI helpers, meta managers.
-- `SolitaireAssociations.Editor`: `PrototypeLevelFactory`.
+- `CardMesh`: основная runtime-логика, gameplay, data, UI helpers, meta managers.
+- `CardMesh.Editor`: `PrototypeLevelFactory`.
 - Global namespace: `MainMenuController`, `SceneLoader`, `MusicPlayer`, `AdsManager`, ads helper classes, `ShareButton`, `SoundToggleButton`. Это повышает риск конфликтов и усложняет dependency discovery.
 
 ## Основные слои
 
 - Data/config layer: `CardData`, `GoldCardData`, `LevelDefinition`, `GeneratedLevelData`, `LevelManifest*`, JSON/resources.
 - Gameplay/domain layer: `GameManager`, `LevelGenerator`, `CardColumn`, `GoalSlot`, `DrawSlot`, `ICardContainer`.
-- Presentation layer: `CardView`, `UIManager`, `SolitaireSceneRefs`, `WinScreenView`, popup controllers.
+- Presentation layer: `CardView`, `UIManager`, `CardMeshSceneRefs`, `WinScreenView`, popup controllers.
 - Meta/economy layer: `LevelProgressionManager`, `CoinsManager`, `LivesManager`, `PlayerBoostInventory`, `DailyRewardsManager`, `ChestChaseManager`, `CollectionBookManager`.
 - Services layer: `PlatformService`, `StubPlatformService`, `AdsManager`, `MusicPlayer`.
 - Editor/dev layer: `RuntimeDevTools`, `Assets/Editor/*`, `Tools/*`.
@@ -46,7 +46,7 @@
 ## UI classes
 
 - `UIManager`: gameplay HUD, buttons, popups, runtime polish, status, lives empty, failed popup, pause/restart wiring.
-- `SolitaireSceneRefs`: scene reference resolver/layout normalizer for gameplay scene.
+- `CardMeshSceneRefs`: scene reference resolver/layout normalizer for gameplay scene.
 - `RuntimeSceneBootstrapper`: binds manual scene refs and can create runtime card prefab/win screen/event system.
 - `WinScreenView`: win overlay/confetti/buttons.
 - `PauseMenuPopupController`, `RestartConfirmationPopupController`, `ScenePauseMenuButton`: pause/restart flows.
@@ -86,13 +86,13 @@
 - `AdsManager`: central facade, mock provider outside WebGL, Yandex provider under `UNITY_WEBGL && !UNITY_EDITOR`.
 - `GameManager`: interstitial after level complete/restart and rewarded +moves.
 - `ShopPopup`: demo purchase UI only by log message; real payments not connected.
-- `InterstitialCounter`, `InterstitialOnRetryButton`, `SecretQuizButton`: legacy/adjacent ads helpers, not clearly part of main Solitaire flow.
+- `InterstitialCounter`, `InterstitialOnRetryButton`, `SecretQuizButton`: legacy/adjacent ads helpers, not clearly part of main Card Mesh flow.
 
 ## Зависимости между системами
 
 - `GameManager` depends on almost everything: UI, platform, layout, card DB, level, scene refs, progression, win screen, coins, lives, boosts, chest chase, ads.
 - `UIManager` depends on scene hierarchy names and gameplay manager callbacks.
-- `SolitaireSceneRefs` mutates scene layout and auto-adds buttons/components.
+- `CardMeshSceneRefs` mutates scene layout and auto-adds buttons/components.
 - `RuntimeSceneBootstrapper` can create missing runtime structures and attach managers.
 - Meta managers use `PlayerPrefs` and often find/create services automatically.
 - `MusicPlayer` and `AdsManager` are global singletons.
@@ -100,7 +100,7 @@
 ## Сильная связанность
 
 - Gameplay and economy are coupled in `GameManager` (`coinsManager`, `livesManager`, `boostInventory`, `chestChaseManager`, `adsManager`).
-- UI layout and gameplay references are mixed between `UIManager`, `SolitaireSceneRefs` and `RuntimeSceneBootstrapper`.
+- UI layout and gameplay references are mixed between `UIManager`, `CardMeshSceneRefs` and `RuntimeSceneBootstrapper`.
 - Main menu buttons search objects by hardcoded names.
 - Several systems create managers on the current context GameObject, which can accidentally duplicate responsibilities.
 
@@ -126,7 +126,7 @@
 | `LevelManifestDatabase` | `Assets/Scripts/LevelManifest.cs` | Load generated level manifest | `Resources`, `JsonUtility` | Static cache, parse failures silent-ish |
 | `CardDatabase` | `Assets/Scripts/CardDatabase.cs` | Load card data and image sprites | JSON, Resources, atlas/sprites | Runtime sprite creation, resource path dependency |
 | `UIManager` | `Assets/Scripts/UIManager.cs` | Gameplay HUD and modals | Scene names, TMP, sprites, `GameManager` | Very large, creates/destroys runtime UI |
-| `SolitaireSceneRefs` | `Assets/Scripts/SolitaireSceneRefs.cs` | Scene refs and layout normalization | Canvas hierarchy names | ExecuteAlways can mutate scene in editor |
+| `CardMeshSceneRefs` | `Assets/Scripts/CardMeshSceneRefs.cs` | Scene refs and layout normalization | Canvas hierarchy names | ExecuteAlways can mutate scene in editor |
 | `RuntimeSceneBootstrapper` | `Assets/Scripts/RuntimeSceneBootstrapper.cs` | Runtime scene binding/fallback objects | Scene refs, fonts, event system | Can mask missing authored setup |
 | `LevelProgressionManager` | `Assets/Scripts/LevelProgressionManager.cs` | Level progress and seeds | `PlayerPrefs`, manifest | No session state |
 | `CoinsManager` | `Assets/Scripts/CoinsManager.cs` | Coins/economy version | `PlayerPrefs` | Economy reset on version bump |

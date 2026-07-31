@@ -2,7 +2,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 
-namespace SolitaireAssociations
+namespace CardMesh
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(TMP_Text))]

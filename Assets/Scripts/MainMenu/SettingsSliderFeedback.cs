@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace SolitaireAssociations
+namespace CardMesh
 {
     public sealed class SettingsSliderFeedback : MonoBehaviour,
         IPointerDownHandler,

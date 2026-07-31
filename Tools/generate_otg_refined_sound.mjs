@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-const OUT = "/Users/vnm/Documents/Solitaire/Artifacts/OneTapGarageSplash/RefinedB";
+const OUT = "/Users/vnm/Documents/CardMesh/Artifacts/OneTapGarageSplash/RefinedB";
 const sampleRate = 48000;
 const duration = 2.05;
 const frames = Math.ceil(sampleRate * duration);

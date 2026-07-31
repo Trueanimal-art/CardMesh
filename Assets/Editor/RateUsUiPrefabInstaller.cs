@@ -1,5 +1,5 @@
 using System.IO;
-using SolitaireAssociations;
+using CardMesh;
 using TMPro;
 using UnityEditor;
 using UnityEditor.Events;
@@ -27,7 +27,7 @@ public static class RateUsUiPrefabInstaller
     private static readonly Vector2 PopupActionButtonSize = new(300f, 66f);
     private static readonly Vector2 RateButtonPosition = new(-245f, 247f);
 
-    [MenuItem("Solitaire/Main Menu/Rebuild Rate Us UI")]
+    [MenuItem("Card Mesh/Main Menu/Rebuild Rate Us UI")]
     public static void RebuildRateUsUi()
     {
         ConfigureSpriteImport(RateSpritePath);

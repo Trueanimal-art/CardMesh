@@ -5,7 +5,7 @@ using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
 
-namespace SolitaireAssociations.EditorTools
+namespace CardMesh.EditorTools
 {
     public static class AndroidPlayStoreConfigurator
     {
@@ -13,13 +13,13 @@ namespace SolitaireAssociations.EditorTools
         private const string AabPath = "Builds/Android/CardMesh.aab";
         private const string TestApkPath = "Builds/Android/CardMesh-test.apk";
 
-        [MenuItem("Tools/CardMesh/Android/Apply Google Play Settings")]
+        [MenuItem("Tools/Card Mesh/Android/Apply Google Play Settings")]
         public static void ApplyGooglePlaySettings()
         {
             PlayerSettings.companyName = "One Tap Garage";
-            PlayerSettings.productName = "CardMesh";
+            PlayerSettings.productName = "Card Mesh";
             PlayerSettings.bundleVersion = "1.0.0";
-            PlayerSettings.SetApplicationIdentifier(BuildTargetGroup.Android, PackageId);
+            PlayerSettings.SetApplicationIdentifier(NamedBuildTarget.Android, PackageId);
             PlayerSettings.defaultInterfaceOrientation = UIOrientation.Portrait;
             PlayerSettings.allowedAutorotateToPortrait = true;
             PlayerSettings.allowedAutorotateToPortraitUpsideDown = false;
@@ -27,53 +27,46 @@ namespace SolitaireAssociations.EditorTools
             PlayerSettings.allowedAutorotateToLandscapeRight = false;
 
             PlayerSettings.Android.bundleVersionCode = 1;
-            PlayerSettings.Android.minSdkVersion = AndroidSdkVersions.AndroidApiLevel23;
-            PlayerSettings.Android.targetSdkVersion = (AndroidSdkVersions)36;
+            PlayerSettings.Android.minSdkVersion = AndroidSdkVersions.AndroidApiLevel25;
+            PlayerSettings.Android.targetSdkVersion = AndroidSdkVersions.AndroidApiLevel36;
             PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARM64;
-            PlayerSettings.Android.androidIsGame = true;
+            PlayerSettings.Android.appCategory = "game";
             PlayerSettings.Android.androidTVCompatibility = false;
             PlayerSettings.Android.buildApkPerCpuArchitecture = false;
             PlayerSettings.Android.minifyRelease = false;
             PlayerSettings.Android.minifyDebug = false;
 
             PlayerSettings.SetScriptingBackend(
-                BuildTargetGroup.Android,
+                NamedBuildTarget.Android,
                 ScriptingImplementation.IL2CPP);
             PlayerSettings.SetManagedStrippingLevel(
-                BuildTargetGroup.Android,
+                NamedBuildTarget.Android,
                 ManagedStrippingLevel.Low);
 
             EditorUserBuildSettings.buildAppBundle = true;
             AssetDatabase.SaveAssets();
             Debug.Log(
-                $"CardMesh Google Play settings applied: package={PackageId}, "
+                $"Card Mesh Google Play settings applied: package={PackageId}, "
                 + "portrait, target API 36, IL2CPP, ARM64, AAB.");
         }
 
-        [MenuItem("Tools/CardMesh/Android/Build Test APK")]
+        [MenuItem("Tools/Card Mesh/Android/Build Test APK")]
         public static void BuildTestApk()
         {
             ApplyGooglePlaySettings();
-            AndroidSdkVersions releaseTarget = PlayerSettings.Android.targetSdkVersion;
             try
             {
-                // Unity 2022.3.43 ships AGP/aapt2 that cannot link the Android 36
-                // platform. API 34 is used only for a local device smoke APK;
-                // the source-controlled release target remains API 36.
-                PlayerSettings.Android.targetSdkVersion =
-                    AndroidSdkVersions.AndroidApiLevel34;
                 EditorUserBuildSettings.buildAppBundle = false;
                 Build(TestApkPath, BuildOptions.Development, requireUploadKeystore: false);
             }
             finally
             {
-                PlayerSettings.Android.targetSdkVersion = releaseTarget;
                 EditorUserBuildSettings.buildAppBundle = true;
                 AssetDatabase.SaveAssets();
             }
         }
 
-        [MenuItem("Tools/CardMesh/Android/Build Release AAB")]
+        [MenuItem("Tools/Card Mesh/Android/Build Release AAB")]
         public static void BuildReleaseAab()
         {
             ApplyGooglePlaySettings();

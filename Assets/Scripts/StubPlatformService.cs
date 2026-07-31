@@ -1,4 +1,4 @@
-namespace SolitaireAssociations
+namespace CardMesh
 {
     public sealed class StubPlatformService : PlatformService
     {

@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.TextCore.LowLevel;
 using UnityEngine.UI;
 
-namespace SolitaireAssociations
+namespace CardMesh
 {
     public static class RuntimeSceneBootstrapper
     {
@@ -78,13 +78,13 @@ namespace SolitaireAssociations
                 gameManager.SetLevelDefinition(Resources.Load<LevelDefinition>(DefaultLevelResourcePath));
             }
 
-            SolitaireSceneRefs sceneRefs = Object.FindFirstObjectByType<SolitaireSceneRefs>();
+            CardMeshSceneRefs sceneRefs = Object.FindFirstObjectByType<CardMeshSceneRefs>();
             if (sceneRefs == null)
             {
-                sceneRefs = gameManager.GetComponent<SolitaireSceneRefs>();
+                sceneRefs = gameManager.GetComponent<CardMeshSceneRefs>();
                 if (sceneRefs == null)
                 {
-                    sceneRefs = gameManager.gameObject.AddComponent<SolitaireSceneRefs>();
+                    sceneRefs = gameManager.gameObject.AddComponent<CardMeshSceneRefs>();
                 }
             }
 
@@ -229,7 +229,7 @@ namespace SolitaireAssociations
         }
 #endif
 
-        private static List<CardColumn> BuildColumns(SolitaireSceneRefs sceneRefs)
+        private static List<CardColumn> BuildColumns(CardMeshSceneRefs sceneRefs)
         {
             List<CardColumn> columns = new();
             foreach (ColumnRef columnRef in sceneRefs.Columns)
@@ -258,7 +258,7 @@ namespace SolitaireAssociations
             return columns;
         }
 
-        private static List<GoalSlot> BuildGoalSlots(SolitaireSceneRefs sceneRefs)
+        private static List<GoalSlot> BuildGoalSlots(CardMeshSceneRefs sceneRefs)
         {
             List<GoalSlot> goalSlots = new();
             foreach (ColumnRef columnRef in sceneRefs.Columns)
@@ -316,7 +316,7 @@ namespace SolitaireAssociations
             return cardsRoot;
         }
 
-        private static DrawSlot BuildDrawSlot(SolitaireSceneRefs sceneRefs)
+        private static DrawSlot BuildDrawSlot(CardMeshSceneRefs sceneRefs)
         {
             RectTransform deckCardBack = sceneRefs.DeckCardBack;
             EnsureRaycastGraphic(deckCardBack.gameObject);

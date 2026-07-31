@@ -96,7 +96,7 @@ Completion:
 
 Хрупкие места:
 
-- `GoalSlot.RefreshHeader` отключает `headerRoot` и очищает тексты. Фактический category label поддерживает `SolitaireSceneRefs.SetGoalLabel`.
+- `GoalSlot.RefreshHeader` отключает `headerRoot` и очищает тексты. Фактический category label поддерживает `CardMeshSceneRefs.SetGoalLabel`.
 - В goal slot визуально активной остается только top card, а progress берется из `GoalCard.Data`; эту связку нужно проверять при изменениях UI.
 
 ## Waste / stock

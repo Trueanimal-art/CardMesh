@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace SolitaireAssociations
+namespace CardMesh
 {
     [DisallowMultipleComponent]
     public sealed class RoyalEventPulse : MonoBehaviour

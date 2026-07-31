@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using SolitaireAssociations;
+using CardMesh;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -9,7 +9,7 @@ public static class MainMenuSceneReferenceSynchronizer
 {
     private const string MainMenuScenePath = "Assets/MainMenu.unity";
 
-    [MenuItem("Solitaire/Main Menu/Synchronize Popup References")]
+    [MenuItem("Card Mesh/Main Menu/Synchronize Popup References")]
     public static void SynchronizePopupReferences()
     {
         Scene scene = EditorSceneManager.OpenScene(MainMenuScenePath, OpenSceneMode.Single);

@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace SolitaireAssociations
+namespace CardMesh
 {
     public sealed class GameManager : MonoBehaviour
     {
@@ -110,7 +110,7 @@ namespace SolitaireAssociations
         [SerializeField] private CardVisualConfig visualConfig;
         [SerializeField] private CardDatabase cardDatabase;
         [SerializeField] private LevelDefinition levelDefinition;
-        [SerializeField] private SolitaireSceneRefs sceneRefs;
+        [SerializeField] private CardMeshSceneRefs sceneRefs;
         [SerializeField] private LevelProgressionManager progressionManager;
         [SerializeField] private WinScreenView winScreenView;
         [SerializeField] private CoinsManager coinsManager;
@@ -237,7 +237,7 @@ namespace SolitaireAssociations
             GameLayoutConfig targetLayoutConfig,
             CardDatabase targetCardDatabase,
             LevelDefinition targetLevelDefinition,
-            SolitaireSceneRefs targetSceneRefs)
+            CardMeshSceneRefs targetSceneRefs)
         {
             uiManager = targetUiManager;
             platformService = targetPlatformService;
@@ -1321,7 +1321,7 @@ namespace SolitaireAssociations
                     cardView.SetFaceUp(false);
                     columnCards.Add(cardView);
                     spawnedCards.Add(cardView);
-                    Debug.Log($"GameManager: Spawned card '{cardData.Id}' into {SolitaireSceneRefs.GetPath(cardsRoot)}.");
+                    Debug.Log($"GameManager: Spawned card '{cardData.Id}' into {CardMeshSceneRefs.GetPath(cardsRoot)}.");
                 }
 
                 activeColumns[columnIndex].AddCards(columnCards);
@@ -1345,7 +1345,7 @@ namespace SolitaireAssociations
                 cardView.Setup(cardData, this, dragLayer);
                 stockCardViews.Add(cardView);
                 spawnedCards.Add(cardView);
-                Debug.Log($"GameManager: Spawned stock card '{cardData.Id}' into {SolitaireSceneRefs.GetPath(cardRoot)}.");
+                Debug.Log($"GameManager: Spawned stock card '{cardData.Id}' into {CardMeshSceneRefs.GetPath(cardRoot)}.");
             }
 
             drawSlot?.SetStockCards(stockCardViews);

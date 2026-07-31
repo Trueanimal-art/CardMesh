@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.TextCore.LowLevel;
 using UnityEngine.UI;
 
-namespace SolitaireAssociations
+namespace CardMesh
 {
     public sealed class GoalSlot : MonoBehaviour, ICardContainer, IDropHandler, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
     {

@@ -2,7 +2,7 @@
   {
     "id": "business_team",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/business_team.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/business_team.png",
     "sourceBbox": [
       194,
       320,
@@ -28,7 +28,7 @@
   {
     "id": "time_time",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/time_time.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/time_time.png",
     "sourceBbox": [
       251,
       235,
@@ -54,7 +54,7 @@
   {
     "id": "time_minutes",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/time_minutes.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/time_minutes.png",
     "sourceBbox": [
       251,
       235,
@@ -80,7 +80,7 @@
   {
     "id": "time_day",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/time_day.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/time_day.png",
     "sourceBbox": [
       239,
       205,
@@ -106,7 +106,7 @@
   {
     "id": "time_night",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/time_night.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/time_night.png",
     "sourceBbox": [
       251,
       235,
@@ -132,7 +132,7 @@
   {
     "id": "time_week",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/time_week.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/time_week.png",
     "sourceBbox": [
       251,
       226,
@@ -158,7 +158,7 @@
   {
     "id": "time_hour",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/time_hour.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/time_hour.png",
     "sourceBbox": [
       251,
       235,
@@ -184,7 +184,7 @@
   {
     "id": "music_rhythm",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/music_rhythm.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/music_rhythm.png",
     "sourceBbox": [
       236,
       247,
@@ -210,7 +210,7 @@
   {
     "id": "music_piano",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/music_piano.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/music_piano.png",
     "sourceBbox": [
       236,
       354,
@@ -236,7 +236,7 @@
   {
     "id": "music_concert",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/music_concert.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/music_concert.png",
     "sourceBbox": [
       236,
       247,
@@ -262,7 +262,7 @@
   {
     "id": "sport_field",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/sport_field.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/sport_field.png",
     "sourceBbox": [
       206,
       329,
@@ -288,7 +288,7 @@
   {
     "id": "sport_race",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/sport_race.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/sport_race.png",
     "sourceBbox": [
       199,
       303,
@@ -314,7 +314,7 @@
   {
     "id": "nature_river",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/nature_river.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/nature_river.png",
     "sourceBbox": [
       207,
       227,
@@ -340,7 +340,7 @@
   {
     "id": "nature_stone",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/nature_stone.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/nature_stone.png",
     "sourceBbox": [
       235,
       235,
@@ -366,7 +366,7 @@
   {
     "id": "nature_cloud",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/nature_cloud.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/nature_cloud.png",
     "sourceBbox": [
       237,
       205,
@@ -392,7 +392,7 @@
   {
     "id": "nature_meadow",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/nature_meadow.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/nature_meadow.png",
     "sourceBbox": [
       209,
       384,
@@ -418,7 +418,7 @@
   {
     "id": "city_traffic",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/city_traffic.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/city_traffic.png",
     "sourceBbox": [
       199,
       218,
@@ -444,7 +444,7 @@
   {
     "id": "kitchen_spoon",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/kitchen_spoon.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/kitchen_spoon.png",
     "sourceBbox": [
       236,
       222,
@@ -470,7 +470,7 @@
   {
     "id": "kitchen_fork",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/kitchen_fork.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/kitchen_fork.png",
     "sourceBbox": [
       236,
       239,
@@ -496,7 +496,7 @@
   {
     "id": "kitchen_kettle",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/kitchen_kettle.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/kitchen_kettle.png",
     "sourceBbox": [
       236,
       204,
@@ -522,7 +522,7 @@
   {
     "id": "school_desk",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/school_desk.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/school_desk.png",
     "sourceBbox": [
       223,
       307,
@@ -548,7 +548,7 @@
   {
     "id": "school_board",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/school_board.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/school_board.png",
     "sourceBbox": [
       223,
       265,
@@ -574,7 +574,7 @@
   {
     "id": "books_chapter",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/books_chapter.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/books_chapter.png",
     "sourceBbox": [
       235,
       320,
@@ -600,7 +600,7 @@
   {
     "id": "cinema_film",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/cinema_film.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/cinema_film.png",
     "sourceBbox": [
       220,
       235,
@@ -626,7 +626,7 @@
   {
     "id": "cinema_ticket",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/cinema_ticket.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/cinema_ticket.png",
     "sourceBbox": [
       223,
       346,
@@ -652,7 +652,7 @@
   {
     "id": "cinema_trailer",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/cinema_trailer.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/cinema_trailer.png",
     "sourceBbox": [
       220,
       235,
@@ -678,7 +678,7 @@
   {
     "id": "family_mother",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/family_mother.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/family_mother.png",
     "sourceBbox": [
       252,
       222,
@@ -704,7 +704,7 @@
   {
     "id": "family_child",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/family_child.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/family_child.png",
     "sourceBbox": [
       252,
       222,
@@ -730,7 +730,7 @@
   {
     "id": "family_sister",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/family_sister.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/family_sister.png",
     "sourceBbox": [
       252,
       222,
@@ -756,7 +756,7 @@
   {
     "id": "family_dinner",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/family_dinner.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/family_dinner.png",
     "sourceBbox": [
       209,
       363,
@@ -782,7 +782,7 @@
   {
     "id": "family_home",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/family_home.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/family_home.png",
     "sourceBbox": [
       215,
       205,
@@ -808,7 +808,7 @@
   {
     "id": "family_album",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/family_album.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/family_album.png",
     "sourceBbox": [
       236,
       235,
@@ -834,7 +834,7 @@
   {
     "id": "garden_bench",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/garden_bench.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/garden_bench.png",
     "sourceBbox": [
       207,
       401,
@@ -860,7 +860,7 @@
   {
     "id": "garden_soil",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/garden_soil.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/garden_soil.png",
     "sourceBbox": [
       207,
       401,
@@ -886,7 +886,7 @@
   {
     "id": "garden_bush",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/garden_bush.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/garden_bush.png",
     "sourceBbox": [
       207,
       222,
@@ -912,7 +912,7 @@
   {
     "id": "colors_red",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/colors_red.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/colors_red.png",
     "sourceBbox": [
       256,
       160,
@@ -938,7 +938,7 @@
   {
     "id": "colors_orange",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/colors_orange.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/colors_orange.png",
     "sourceBbox": [
       256,
       160,
@@ -964,7 +964,7 @@
   {
     "id": "colors_pink",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/colors_pink.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/colors_pink.png",
     "sourceBbox": [
       256,
       160,
@@ -990,7 +990,7 @@
   {
     "id": "shapes_circle",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/shapes_circle.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/shapes_circle.png",
     "sourceBbox": [
       235,
       235,
@@ -1016,7 +1016,7 @@
   {
     "id": "shapes_triangle",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/shapes_triangle.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/shapes_triangle.png",
     "sourceBbox": [
       235,
       203,
@@ -1042,7 +1042,7 @@
   {
     "id": "shapes_ring",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/shapes_ring.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/shapes_ring.png",
     "sourceBbox": [
       255,
       243,
@@ -1068,7 +1068,7 @@
   {
     "id": "clothes_scarf",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/clothes_scarf.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/clothes_scarf.png",
     "sourceBbox": [
       236,
       277,
@@ -1094,7 +1094,7 @@
   {
     "id": "clothes_dress",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/clothes_dress.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/clothes_dress.png",
     "sourceBbox": [
       236,
       235,
@@ -1120,7 +1120,7 @@
   {
     "id": "shoes_boot",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/shoes_boot.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/shoes_boot.png",
     "sourceBbox": [
       207,
       329,
@@ -1146,7 +1146,7 @@
   {
     "id": "shoes_sandal",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/shoes_sandal.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/shoes_sandal.png",
     "sourceBbox": [
       207,
       329,
@@ -1172,7 +1172,7 @@
   {
     "id": "shoes_heel",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/shoes_heel.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/shoes_heel.png",
     "sourceBbox": [
       207,
       435,
@@ -1198,7 +1198,7 @@
   {
     "id": "health_clinic",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/health_clinic.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/health_clinic.png",
     "sourceBbox": [
       210,
       290,
@@ -1224,7 +1224,7 @@
   {
     "id": "health_rest",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/health_rest.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/health_rest.png",
     "sourceBbox": [
       287,
       201,
@@ -1250,7 +1250,7 @@
   {
     "id": "health_sleep",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/health_sleep.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/health_sleep.png",
     "sourceBbox": [
       287,
       201,
@@ -1276,7 +1276,7 @@
   {
     "id": "health_care",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/health_care.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/health_care.png",
     "sourceBbox": [
       262,
       286,
@@ -1302,7 +1302,7 @@
   {
     "id": "body_smile",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/body_smile.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/body_smile.png",
     "sourceBbox": [
       245,
       252,
@@ -1328,7 +1328,7 @@
   {
     "id": "work_salary",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/work_salary.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/work_salary.png",
     "sourceBbox": [
       235,
       235,
@@ -1354,7 +1354,7 @@
   {
     "id": "work_shift",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/work_shift.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/work_shift.png",
     "sourceBbox": [
       251,
       235,
@@ -1380,7 +1380,7 @@
   {
     "id": "work_manager",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/work_manager.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/work_manager.png",
     "sourceBbox": [
       252,
       222,
@@ -1406,7 +1406,7 @@
   {
     "id": "work_call",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/work_call.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/work_call.png",
     "sourceBbox": [
       271,
       192,
@@ -1432,7 +1432,7 @@
   {
     "id": "work_desk",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/work_desk.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/work_desk.png",
     "sourceBbox": [
       223,
       307,
@@ -1458,7 +1458,7 @@
   {
     "id": "office_chair",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/office_chair.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/office_chair.png",
     "sourceBbox": [
       230,
       269,
@@ -1484,7 +1484,7 @@
   {
     "id": "office_printer",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/office_printer.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/office_printer.png",
     "sourceBbox": [
       230,
       235,
@@ -1510,7 +1510,7 @@
   {
     "id": "office_paper",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/office_paper.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/office_paper.png",
     "sourceBbox": [
       230,
       210,
@@ -1536,7 +1536,7 @@
   {
     "id": "office_badge",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/office_badge.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/office_badge.png",
     "sourceBbox": [
       230,
       256,
@@ -1562,7 +1562,7 @@
   {
     "id": "office_screen",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/office_screen.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/office_screen.png",
     "sourceBbox": [
       230,
       286,
@@ -1588,7 +1588,7 @@
   {
     "id": "technology_robot",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/technology_robot.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/technology_robot.png",
     "sourceBbox": [
       236,
       149,
@@ -1614,7 +1614,7 @@
   {
     "id": "technology_sensor",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/technology_sensor.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/technology_sensor.png",
     "sourceBbox": [
       236,
       260,
@@ -1640,7 +1640,7 @@
   {
     "id": "technology_chip",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/technology_chip.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/technology_chip.png",
     "sourceBbox": [
       236,
       307,
@@ -1666,7 +1666,7 @@
   {
     "id": "technology_code",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/technology_code.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/technology_code.png",
     "sourceBbox": [
       236,
       303,
@@ -1692,7 +1692,7 @@
   {
     "id": "technology_drone",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/technology_drone.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/technology_drone.png",
     "sourceBbox": [
       188,
       303,
@@ -1718,7 +1718,7 @@
   {
     "id": "technology_laser",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/technology_laser.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/technology_laser.png",
     "sourceBbox": [
       236,
       388,
@@ -1744,7 +1744,7 @@
   {
     "id": "technology_server",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/technology_server.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/technology_server.png",
     "sourceBbox": [
       236,
       265,
@@ -1770,7 +1770,7 @@
   {
     "id": "internet_mail",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/internet_mail.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/internet_mail.png",
     "sourceBbox": [
       236,
       354,
@@ -1796,7 +1796,7 @@
   {
     "id": "internet_cloud",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/internet_cloud.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/internet_cloud.png",
     "sourceBbox": [
       236,
       205,
@@ -1822,7 +1822,7 @@
   {
     "id": "internet_chat",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/internet_chat.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/internet_chat.png",
     "sourceBbox": [
       236,
       320,
@@ -1848,7 +1848,7 @@
   {
     "id": "phone_case",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/phone_case.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/phone_case.png",
     "sourceBbox": [
       271,
       192,
@@ -1874,7 +1874,7 @@
   {
     "id": "phone_contact",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/phone_contact.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/phone_contact.png",
     "sourceBbox": [
       271,
       192,
@@ -1900,7 +1900,7 @@
   {
     "id": "phone_message",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/phone_message.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/phone_message.png",
     "sourceBbox": [
       271,
       192,
@@ -1926,7 +1926,7 @@
   {
     "id": "phone_camera",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/phone_camera.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/phone_camera.png",
     "sourceBbox": [
       271,
       192,
@@ -1952,7 +1952,7 @@
   {
     "id": "photo_portrait",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/photo_portrait.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/photo_portrait.png",
     "sourceBbox": [
       236,
       222,
@@ -1978,7 +1978,7 @@
   {
     "id": "photo_frame",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/photo_frame.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/photo_frame.png",
     "sourceBbox": [
       236,
       260,
@@ -2004,7 +2004,7 @@
   {
     "id": "photo_focus",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/photo_focus.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/photo_focus.png",
     "sourceBbox": [
       236,
       282,
@@ -2030,7 +2030,7 @@
   {
     "id": "photo_studio",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/photo_studio.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/photo_studio.png",
     "sourceBbox": [
       236,
       331,
@@ -2056,7 +2056,7 @@
   {
     "id": "holidays_candle",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/holidays_candle.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/holidays_candle.png",
     "sourceBbox": [
       223,
       181,
@@ -2082,7 +2082,7 @@
   {
     "id": "holidays_balloon",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/holidays_balloon.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/holidays_balloon.png",
     "sourceBbox": [
       223,
       222,
@@ -2108,7 +2108,7 @@
   {
     "id": "winter_cocoa",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/winter_cocoa.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/winter_cocoa.png",
     "sourceBbox": [
       235,
       92,
@@ -2134,7 +2134,7 @@
   {
     "id": "winter_sleigh",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/winter_sleigh.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/winter_sleigh.png",
     "sourceBbox": [
       207,
       439,
@@ -2160,7 +2160,7 @@
   {
     "id": "summer_hat",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/summer_hat.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/summer_hat.png",
     "sourceBbox": [
       236,
       316,
@@ -2186,7 +2186,7 @@
   {
     "id": "summer_lake",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/summer_lake.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/summer_lake.png",
     "sourceBbox": [
       220,
       401,
@@ -2212,7 +2212,7 @@
   {
     "id": "summer_sandals",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/summer_sandals.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/summer_sandals.png",
     "sourceBbox": [
       207,
       329,
@@ -2238,7 +2238,7 @@
   {
     "id": "breakfast_toast",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/breakfast_toast.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/breakfast_toast.png",
     "sourceBbox": [
       262,
       209,
@@ -2264,7 +2264,7 @@
   {
     "id": "breakfast_porridge",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/breakfast_porridge.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/breakfast_porridge.png",
     "sourceBbox": [
       215,
       320,
@@ -2290,7 +2290,7 @@
   {
     "id": "breakfast_cereal",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/breakfast_cereal.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/breakfast_cereal.png",
     "sourceBbox": [
       215,
       320,
@@ -2316,7 +2316,7 @@
   {
     "id": "breakfast_yogurt",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/breakfast_yogurt.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/breakfast_yogurt.png",
     "sourceBbox": [
       215,
       320,
@@ -2342,7 +2342,7 @@
   {
     "id": "breakfast_butter",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/breakfast_butter.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/breakfast_butter.png",
     "sourceBbox": [
       255,
       422,
@@ -2368,7 +2368,7 @@
   {
     "id": "dessert_cookie",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/dessert_cookie.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/dessert_cookie.png",
     "sourceBbox": [
       270,
       265,
@@ -2394,7 +2394,7 @@
   {
     "id": "dessert_pie",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/dessert_pie.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/dessert_pie.png",
     "sourceBbox": [
       269,
       380,
@@ -2420,7 +2420,7 @@
   {
     "id": "dessert_cream",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/dessert_cream.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/dessert_cream.png",
     "sourceBbox": [
       274,
       226,
@@ -2446,7 +2446,7 @@
   {
     "id": "dessert_icecream",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/dessert_icecream.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/dessert_icecream.png",
     "sourceBbox": [
       270,
       243,
@@ -2472,7 +2472,7 @@
   {
     "id": "dessert_waffle",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/dessert_waffle.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/dessert_waffle.png",
     "sourceBbox": [
       299,
       311,
@@ -2498,7 +2498,7 @@
   {
     "id": "dessert_honey",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/dessert_honey.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/dessert_honey.png",
     "sourceBbox": [
       255,
       212,
@@ -2524,7 +2524,7 @@
   {
     "id": "drinks_coffee",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/drinks_coffee.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/drinks_coffee.png",
     "sourceBbox": [
       235,
       92,
@@ -2550,7 +2550,7 @@
   {
     "id": "drinks_lemonade",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/drinks_lemonade.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/drinks_lemonade.png",
     "sourceBbox": [
       266,
       134,
@@ -2576,7 +2576,7 @@
   {
     "id": "farm_barn",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/farm_barn.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/farm_barn.png",
     "sourceBbox": [
       210,
       201,
@@ -2602,7 +2602,7 @@
   {
     "id": "farm_tractor",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/farm_tractor.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/farm_tractor.png",
     "sourceBbox": [
       210,
       341,
@@ -2628,7 +2628,7 @@
   {
     "id": "farm_field",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/farm_field.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/farm_field.png",
     "sourceBbox": [
       210,
       388,
@@ -2654,7 +2654,7 @@
   {
     "id": "farm_hay",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/farm_hay.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/farm_hay.png",
     "sourceBbox": [
       210,
       367,
@@ -2680,7 +2680,7 @@
   {
     "id": "farm_cow",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/farm_cow.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/farm_cow.png",
     "sourceBbox": [
       210,
       303,
@@ -2706,7 +2706,7 @@
   {
     "id": "farm_chicken",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/farm_chicken.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/farm_chicken.png",
     "sourceBbox": [
       210,
       179,
@@ -2732,7 +2732,7 @@
   {
     "id": "farm_fence",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/farm_fence.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/farm_fence.png",
     "sourceBbox": [
       210,
       350,
@@ -2758,7 +2758,7 @@
   {
     "id": "forest_fox",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/forest_fox.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/forest_fox.png",
     "sourceBbox": [
       245,
       231,
@@ -2784,7 +2784,7 @@
   {
     "id": "forest_berry",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/forest_berry.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/forest_berry.png",
     "sourceBbox": [
       262,
       346,
@@ -2810,7 +2810,7 @@
   {
     "id": "forest_path",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/forest_path.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/forest_path.png",
     "sourceBbox": [
       207,
       283,
@@ -2836,7 +2836,7 @@
   {
     "id": "flowers_rose",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/flowers_rose.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/flowers_rose.png",
     "sourceBbox": [
       262,
       255,
@@ -2862,7 +2862,7 @@
   {
     "id": "flowers_peony",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/flowers_peony.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/flowers_peony.png",
     "sourceBbox": [
       262,
       255,
@@ -2888,7 +2888,7 @@
   {
     "id": "flowers_vase",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/flowers_vase.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/flowers_vase.png",
     "sourceBbox": [
       262,
       197,
@@ -2914,7 +2914,7 @@
   {
     "id": "insects_butterfly",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/insects_butterfly.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/insects_butterfly.png",
     "sourceBbox": [
       256,
       277,
@@ -2940,7 +2940,7 @@
   {
     "id": "emotions_joy",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/emotions_joy.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/emotions_joy.png",
     "sourceBbox": [
       260,
       243,
@@ -2966,7 +2966,7 @@
   {
     "id": "emotions_interest",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/emotions_interest.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/emotions_interest.png",
     "sourceBbox": [
       260,
       243,
@@ -2992,7 +2992,7 @@
   {
     "id": "emotions_warmth",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/emotions_warmth.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/emotions_warmth.png",
     "sourceBbox": [
       260,
       243,
@@ -3018,7 +3018,7 @@
   {
     "id": "friendship_friend",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/friendship_friend.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/friendship_friend.png",
     "sourceBbox": [
       210,
       235,
@@ -3044,7 +3044,7 @@
   {
     "id": "friendship_chat",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/friendship_chat.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/friendship_chat.png",
     "sourceBbox": [
       236,
       320,
@@ -3070,7 +3070,7 @@
   {
     "id": "friendship_walk",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/friendship_walk.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/friendship_walk.png",
     "sourceBbox": [
       194,
       320,
@@ -3096,7 +3096,7 @@
   {
     "id": "friendship_team",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/friendship_team.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/friendship_team.png",
     "sourceBbox": [
       194,
       320,
@@ -3122,7 +3122,7 @@
   {
     "id": "friendship_secret",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/friendship_secret.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/friendship_secret.png",
     "sourceBbox": [
       262,
       313,
@@ -3148,7 +3148,7 @@
   {
     "id": "friendship_memory",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/friendship_memory.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/friendship_memory.png",
     "sourceBbox": [
       236,
       235,
@@ -3174,7 +3174,7 @@
   {
     "id": "hobbies_drawing",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/hobbies_drawing.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/hobbies_drawing.png",
     "sourceBbox": [
       223,
       158,
@@ -3200,7 +3200,7 @@
   {
     "id": "hobbies_puzzle",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/hobbies_puzzle.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/hobbies_puzzle.png",
     "sourceBbox": [
       213,
       320,
@@ -3226,7 +3226,7 @@
   {
     "id": "hobbies_baking",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/hobbies_baking.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/hobbies_baking.png",
     "sourceBbox": [
       223,
       226,
@@ -3252,7 +3252,7 @@
   {
     "id": "hobbies_music",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/hobbies_music.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/hobbies_music.png",
     "sourceBbox": [
       236,
       260,
@@ -3278,7 +3278,7 @@
   {
     "id": "camping_tent",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/camping_tent.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/camping_tent.png",
     "sourceBbox": [
       206,
       261,
@@ -3304,7 +3304,7 @@
   {
     "id": "camping_map",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/camping_map.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/camping_map.png",
     "sourceBbox": [
       206,
       252,
@@ -3330,7 +3330,7 @@
   {
     "id": "camping_lantern",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/camping_lantern.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/camping_lantern.png",
     "sourceBbox": [
       206,
       176,
@@ -3356,7 +3356,7 @@
   {
     "id": "camping_trail",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/camping_trail.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/camping_trail.png",
     "sourceBbox": [
       206,
       283,
@@ -3382,7 +3382,7 @@
   {
     "id": "toys_doll",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/toys_doll.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/toys_doll.png",
     "sourceBbox": [
       213,
       222,
@@ -3408,7 +3408,7 @@
   {
     "id": "toys_blocks",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/toys_blocks.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/toys_blocks.png",
     "sourceBbox": [
       213,
       341,
@@ -3434,7 +3434,7 @@
   {
     "id": "toys_train",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/toys_train.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/toys_train.png",
     "sourceBbox": [
       199,
       311,
@@ -3460,7 +3460,7 @@
   {
     "id": "toys_puzzle",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/toys_puzzle.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/toys_puzzle.png",
     "sourceBbox": [
       213,
       320,
@@ -3486,7 +3486,7 @@
   {
     "id": "toys_ball",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/toys_ball.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/toys_ball.png",
     "sourceBbox": [
       213,
       243,
@@ -3512,7 +3512,7 @@
   {
     "id": "toys_robot",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/toys_robot.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/toys_robot.png",
     "sourceBbox": [
       213,
       149,
@@ -3538,7 +3538,7 @@
   {
     "id": "toys_kite",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/toys_kite.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/toys_kite.png",
     "sourceBbox": [
       213,
       206,
@@ -3564,7 +3564,7 @@
   {
     "id": "toys_car",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/toys_car.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/toys_car.png",
     "sourceBbox": [
       199,
       303,
@@ -3590,7 +3590,7 @@
   {
     "id": "tools_hammer",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/tools_hammer.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/tools_hammer.png",
     "sourceBbox": [
       228,
       286,
@@ -3616,7 +3616,7 @@
   {
     "id": "tools_drill",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/tools_drill.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/tools_drill.png",
     "sourceBbox": [
       228,
       380,
@@ -3642,7 +3642,7 @@
   {
     "id": "tools_wrench",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/tools_wrench.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/tools_wrench.png",
     "sourceBbox": [
       228,
       286,
@@ -3668,7 +3668,7 @@
   {
     "id": "tools_pliers",
     "status": "processed",
-    "source": "/Users/vnm/Documents/Solitaire/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/tools_pliers.png",
+    "source": "/Users/vnm/Documents/CardMesh/Tools/ImageCardAudit/regenerated_bad_cards/raw_bad_from_atlas/tools_pliers.png",
     "sourceBbox": [
       228,
       278,

@@ -109,7 +109,7 @@ Needs Work:
 - Manifest level schema and `GeneratedLevelData`.
 - `PlayerBoostInventory`/hint/undo costs.
 - Restart/lives/ad callback flow.
-- Scene hierarchy names used by `SolitaireSceneRefs`/`UIManager`.
+- Scene hierarchy names used by `CardMeshSceneRefs`/`UIManager`.
 
 ## Что стоит улучшить первым
 

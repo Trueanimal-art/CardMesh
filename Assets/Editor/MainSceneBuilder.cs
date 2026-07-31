@@ -1,4 +1,4 @@
-using SolitaireAssociations;
+using CardMesh;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -6,14 +6,14 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace SolitaireAssociations.Editor
+namespace CardMesh.Editor
 {
     public static class MainSceneBuilder
     {
         private const string ScenePath = "Assets/Scenes/Main.unity";
         private const string LevelAssetPath = "Assets/Resources/Levels/Level_1.asset";
 
-        [MenuItem("Tools/Solitaire Associations/Build Main Scene")]
+        [MenuItem("Tools/Card Mesh/Build Main Scene")]
         public static void BuildMainScene()
         {
             BuildSceneInternal();

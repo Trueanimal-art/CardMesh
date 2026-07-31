@@ -25,7 +25,7 @@
 | `GameManager.TrySpendLifeAndRestart` | Restart/lives | `Assets/Scripts/GameManager.cs` | Spend life, optional ad, restart | `LivesManager`, `AdsManager` |
 | `GameManager.RequestReturnToMainMenu` | Navigation | `Assets/Scripts/GameManager.cs` | Return to main menu | Pause popup, win screen |
 | `UIManager.Initialize` | UI bootstrap | `Assets/Scripts/UIManager.cs` | Gameplay HUD polish/wiring | Gameplay buttons/modals |
-| `SolitaireSceneRefs.OnEnable` | Scene refs | `Assets/Scripts/SolitaireSceneRefs.cs` | Auto assign refs and preview columns | Gameplay scene layout |
+| `CardMeshSceneRefs.OnEnable` | Scene refs | `Assets/Scripts/CardMeshSceneRefs.cs` | Auto assign refs and preview columns | Gameplay scene layout |
 | `LevelProgressionManager.Awake` | Save bootstrap | `Assets/Scripts/LevelProgressionManager.cs` | Load level progress and seed | Gameplay/main menu |
 | `LevelManifestDatabase.TryGetLevel` | Data entry | `Assets/Scripts/LevelManifest.cs` | Lazy load generated levels | Progression/generation |
 | `CardDatabase.Awake` | Data entry | `Assets/Scripts/CardDatabase.cs` | Load card JSON | Gameplay/generator |

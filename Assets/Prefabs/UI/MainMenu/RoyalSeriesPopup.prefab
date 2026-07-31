@@ -7666,7 +7666,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 7626965356169885395}
-        m_TargetAssemblyTypeName: SolitaireAssociations.ChestChasePopup, Assembly-CSharp
+        m_TargetAssemblyTypeName: CardMesh.ChestChasePopup, Assembly-CSharp
         m_MethodName: Close
         m_Mode: 0
         m_Arguments:

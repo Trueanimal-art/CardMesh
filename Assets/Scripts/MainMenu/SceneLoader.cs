@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
-using SolitaireAssociations;
+using CardMesh;
 
 public class SceneLoader : MonoBehaviour
 {

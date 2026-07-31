@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SolitaireAssociations
+namespace CardMesh
 {
     public enum LevelGenerationMode
     {
@@ -10,7 +10,7 @@ namespace SolitaireAssociations
         GuaranteedSolvable = 1
     }
 
-    [CreateAssetMenu(fileName = "LevelDefinition", menuName = "Solitaire Associations/Уровни/Уровень")]
+    [CreateAssetMenu(fileName = "LevelDefinition", menuName = "Card Mesh/Уровни/Уровень")]
     public sealed class LevelDefinition : ScriptableObject
     {
         [SerializeField] private string levelName = "Уровень";

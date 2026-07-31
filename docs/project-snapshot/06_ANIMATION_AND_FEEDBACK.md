@@ -113,7 +113,7 @@ Flow:
 - Win confetti creates/destroys many GameObjects every win.
 - Goal completion cloud creates/destroys GameObject.
 - Coins/sparkles/floating text create/destroy GameObjects.
-- Runtime sprites/textures created in `UIManager`, `SolitaireSceneRefs`, `WinScreenView`.
+- Runtime sprites/textures created in `UIManager`, `CardMeshSceneRefs`, `WinScreenView`.
 - Many effects run on coroutines; conflicts handled locally by stopping previous coroutine, but not globally coordinated.
 
 ## Возможные конфликты анимаций и логики

@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace SolitaireAssociations
+namespace CardMesh
 {
     [DefaultExecutionOrder(-1000)]
     public sealed class MobileDisplayBootstrap : MonoBehaviour
@@ -189,7 +189,7 @@ namespace SolitaireAssociations
 
         private static void ApplyGameplayLayout(Scene scene)
         {
-            SolitaireSceneRefs sceneRefs = FindInScene<SolitaireSceneRefs>(scene);
+            CardMeshSceneRefs sceneRefs = FindInScene<CardMeshSceneRefs>(scene);
             if (sceneRefs == null || sceneRefs.SafeAreaRoot == null)
             {
                 return;

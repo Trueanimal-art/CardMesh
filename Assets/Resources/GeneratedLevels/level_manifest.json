@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "totalLevels": 1000,
   "generationDate": "2026-07-11T09:55:04Z",
-  "generatorVersion": "solitaire-content-pipeline-1.0",
+  "generatorVersion": "card-mesh-content-pipeline-1.0",
   "solverVersion": "validate_solvability.py-1.0",
   "contentPackVersions": {
     "BasePack": 1,

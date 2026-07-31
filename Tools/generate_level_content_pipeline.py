@@ -18,7 +18,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from validate_solvability import GeneratedLevel, Layout, SolveResult, SolvabilityValidator  # noqa: E402
 
 
-GENERATOR_VERSION = "solitaire-content-pipeline-1.0"
+GENERATOR_VERSION = "card-mesh-content-pipeline-1.0"
 SOLVER_VERSION = "validate_solvability.py-1.0"
 DEFAULT_LEVELS = 1000
 DEFAULT_MAX_STATES = 120_000
@@ -1389,7 +1389,7 @@ def print_report(manifest: dict, content_cards: dict | None) -> None:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Generate content metadata and verified Solitaire level manifests.")
+    parser = argparse.ArgumentParser(description="Generate content metadata and verified Card Mesh level manifests.")
     parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[1])
     subparsers = parser.add_subparsers(dest="command", required=True)
 

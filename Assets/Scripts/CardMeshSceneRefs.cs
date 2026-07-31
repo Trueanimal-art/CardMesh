@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace SolitaireAssociations
+namespace CardMesh
 {
     [Serializable]
     public sealed class ColumnRef
@@ -35,11 +35,11 @@ namespace SolitaireAssociations
         public bool Validate(int index)
         {
             bool isValid = true;
-            isValid &= SolitaireSceneRefs.ReportMissing(root, $"Columns[{index}].root");
-            isValid &= SolitaireSceneRefs.ReportMissing(crownSlotLabelBg, $"Columns[{index}].crownSlotLabelBg");
-            isValid &= SolitaireSceneRefs.ReportMissing(crownSlotLabelText, $"Columns[{index}].crownSlotLabelText");
-            isValid &= SolitaireSceneRefs.ReportMissing(crownSlot, $"Columns[{index}].crownSlot");
-            isValid &= SolitaireSceneRefs.ReportMissing(cardsStackRoot, $"Columns[{index}].cardsStackRoot");
+            isValid &= CardMeshSceneRefs.ReportMissing(root, $"Columns[{index}].root");
+            isValid &= CardMeshSceneRefs.ReportMissing(crownSlotLabelBg, $"Columns[{index}].crownSlotLabelBg");
+            isValid &= CardMeshSceneRefs.ReportMissing(crownSlotLabelText, $"Columns[{index}].crownSlotLabelText");
+            isValid &= CardMeshSceneRefs.ReportMissing(crownSlot, $"Columns[{index}].crownSlot");
+            isValid &= CardMeshSceneRefs.ReportMissing(cardsStackRoot, $"Columns[{index}].cardsStackRoot");
             return isValid;
         }
 
@@ -173,7 +173,7 @@ namespace SolitaireAssociations
     }
 
     [ExecuteAlways]
-    public sealed class SolitaireSceneRefs : MonoBehaviour
+    public sealed class CardMeshSceneRefs : MonoBehaviour
     {
         private const int MaxSupportedColumns = 5;
         private const float CrownSlotWidth = 196f;
@@ -332,7 +332,7 @@ namespace SolitaireAssociations
             if (isValid)
             {
                 Debug.Log(
-                    $"SolitaireSceneRefs: Found scene refs. " +
+                    $"CardMeshSceneRefs: Found scene refs. " +
                     $"Columns={columns.Count}, " +
                     $"SafeAreaRoot={GetPath(safeAreaRoot)}, " +
                     $"ColumnSlotsRoot={GetPath(columnSlotsRoot)}");
