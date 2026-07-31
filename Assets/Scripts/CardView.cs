@@ -9,7 +9,7 @@ using UnityEngine.UI;
 namespace SolitaireAssociations
 {
     [RequireComponent(typeof(RectTransform))]
-    public sealed class CardView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+    public sealed class CardView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
     {
         private const string RuntimeFontResourcePath = "Fonts/Roboto-Bold";
         private static readonly Color RegularColor = new(0.98f, 0.98f, 0.98f, 1f);
@@ -252,6 +252,19 @@ namespace SolitaireAssociations
             {
                 canvasGroup.blocksRaycasts = value;
             }
+        }
+
+        public void SetTouchSelected(bool value)
+        {
+            if (glowImage == null)
+            {
+                return;
+            }
+
+            glowImage.enabled = value;
+            glowImage.color = value
+                ? new Color(1f, 0.84f, 0.22f, 0.72f)
+                : new Color(1f, 0.82f, 0.18f, 0f);
         }
 
         public void SetDragDetached(bool value)
@@ -1842,7 +1855,10 @@ namespace SolitaireAssociations
 
         public void OnBeginDrag(PointerEventData eventData)
         {
-            if (gameManager == null || !gameManager.BeginDrag(this))
+            if (eventData == null
+                || eventData.button != PointerEventData.InputButton.Left
+                || gameManager == null
+                || !gameManager.BeginDrag(this, eventData.pointerId))
             {
                 return;
             }
@@ -1853,7 +1869,7 @@ namespace SolitaireAssociations
 
         public void OnDrag(PointerEventData eventData)
         {
-            if (!gameManager.IsDragging(this))
+            if (eventData == null || !gameManager.IsDragging(this, eventData.pointerId))
             {
                 return;
             }
@@ -1864,6 +1880,16 @@ namespace SolitaireAssociations
         public void OnEndDrag(PointerEventData eventData)
         {
             gameManager?.EndDrag(this, eventData);
+        }
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            if (eventData == null || eventData.button != PointerEventData.InputButton.Left)
+            {
+                return;
+            }
+
+            gameManager?.HandleCardTap(this, eventData.clickCount);
         }
 
         private void StartFeedbackCoroutine(IEnumerator routine)

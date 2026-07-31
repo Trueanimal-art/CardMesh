@@ -65,7 +65,7 @@ namespace CardMesh.OneTapGarage
 
         private void Awake()
         {
-            ForceLandscape();
+            ForcePortrait();
             ApplySafeArea(true);
 
             if (splashCanvasGroup != null)
@@ -543,13 +543,13 @@ namespace CardMesh.OneTapGarage
 #endif
         }
 
-        private static void ForceLandscape()
+        private static void ForcePortrait()
         {
-            Screen.autorotateToPortrait = false;
+            Screen.autorotateToPortrait = true;
             Screen.autorotateToPortraitUpsideDown = false;
-            Screen.autorotateToLandscapeLeft = true;
-            Screen.autorotateToLandscapeRight = true;
-            Screen.orientation = ScreenOrientation.AutoRotation;
+            Screen.autorotateToLandscapeLeft = false;
+            Screen.autorotateToLandscapeRight = false;
+            Screen.orientation = ScreenOrientation.Portrait;
         }
     }
 }

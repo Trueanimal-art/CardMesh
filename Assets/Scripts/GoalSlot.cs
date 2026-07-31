@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace SolitaireAssociations
 {
-    public sealed class GoalSlot : MonoBehaviour, ICardContainer, IDropHandler, IPointerEnterHandler, IPointerExitHandler
+    public sealed class GoalSlot : MonoBehaviour, ICardContainer, IDropHandler, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
     {
         private const float HeaderTopInset = 10f;
         private const float HeaderHeight = 34f;
@@ -390,6 +390,14 @@ namespace SolitaireAssociations
         public void OnPointerExit(PointerEventData eventData)
         {
             SetHighlight(false);
+        }
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            if (eventData != null && eventData.button == PointerEventData.InputButton.Left)
+            {
+                gameManager?.TryMoveSelectedCardTo(this);
+            }
         }
 
         private bool IsPointerOverDropArea(PointerEventData eventData)

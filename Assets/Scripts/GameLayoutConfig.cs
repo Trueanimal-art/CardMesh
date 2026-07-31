@@ -16,7 +16,7 @@ namespace SolitaireAssociations
     [Serializable]
     public sealed class GameLayoutConfig
     {
-        [SerializeField] private Vector2 referenceResolution = new(1920f, 1080f);
+        [SerializeField] private Vector2 referenceResolution = new(1080f, 1920f);
         [SerializeField, Range(0f, 1f)] private float matchWidthOrHeight = 0.5f;
         [SerializeField, Min(0f)] private float reservedBottomSpace = 72f;
         [SerializeField] private List<ColumnLayoutProfile> columnProfiles = new()

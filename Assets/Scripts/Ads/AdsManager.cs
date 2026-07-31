@@ -201,6 +201,8 @@ public class AdsManager : MonoBehaviour
     {
 #if UNITY_WEBGL && !UNITY_EDITOR
         return new YandexAdsProvider();
+#elif UNITY_ANDROID && !UNITY_EDITOR
+        return new UnavailableAndroidAdsProvider();
 #else
         return new MockAdsProvider(() => mockRewardedShouldFail, () => mockInterstitialShouldFail);
 #endif
@@ -295,6 +297,29 @@ public class AdsManager : MonoBehaviour
             return true;
         }
     }
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+    private sealed class UnavailableAndroidAdsProvider : IAdsProvider
+    {
+        public string ProviderName => "AndroidAdsStub";
+
+        public bool ShowRewarded(Action onCompleted, Action onFailedOrClosed)
+        {
+            Debug.LogWarning(
+                "[ADS] Android rewarded ad is disabled until a Google Play-compatible "
+                + "ads SDK and production ad unit are configured.");
+            return false;
+        }
+
+        public bool ShowInterstitial(Action onCompleted, Action onFailed)
+        {
+            Debug.LogWarning(
+                "[ADS] Android interstitial is disabled until a Google Play-compatible "
+                + "ads SDK and production ad unit are configured.");
+            return false;
+        }
+    }
+#endif
 
 #if UNITY_WEBGL && !UNITY_EDITOR
     private sealed class YandexAdsProvider : IAdsProvider

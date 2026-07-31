@@ -2061,6 +2061,8 @@ namespace SolitaireAssociations
             StyleCardText(card, day);
         }
 
+#endif
+
         private static Vector2 GetRewardCardPosition(int day)
         {
             return day switch
@@ -2097,6 +2099,7 @@ namespace SolitaireAssociations
                 : new Vector2(0f, -59f);
         }
 
+#if UNITY_EDITOR
         private static void SetTextRect(RectTransform rect, Vector2 position, Vector2 size)
         {
             if (rect == null)

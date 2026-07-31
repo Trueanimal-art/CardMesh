@@ -352,6 +352,7 @@ namespace SolitaireAssociations
 
         public void OnPointerClick(PointerEventData eventData)
         {
+            gameManager?.ClearTouchSelection();
             gameManager?.DrawNextStockCard();
         }
 

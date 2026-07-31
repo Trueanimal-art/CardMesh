@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace SolitaireAssociations
 {
-    public sealed class CardColumn : MonoBehaviour, ICardContainer, IDropHandler, IPointerEnterHandler, IPointerExitHandler
+    public sealed class CardColumn : MonoBehaviour, ICardContainer, IDropHandler, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
     {
         private const float FaceDownOffsetFactor = 0.65f;
         private const float StackSpacingMultiplier = 1.2f;
@@ -630,6 +630,14 @@ namespace SolitaireAssociations
             SetHighlight(false);
         }
 
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            if (eventData != null && eventData.button == PointerEventData.InputButton.Left)
+            {
+                gameManager?.TryMoveSelectedCardTo(this);
+            }
+        }
+
         private bool IsPointerOverDropArea(PointerEventData eventData)
         {
             RectTransform dropArea = CardsRoot as RectTransform;
@@ -649,6 +657,17 @@ namespace SolitaireAssociations
 
         private void SetHighlight(bool value)
         {
+            if (backgroundImage == null)
+            {
+                return;
+            }
+
+            Color color = backgroundImage.color;
+            color.r = value ? 1f : color.r;
+            color.g = value ? 0.84f : color.g;
+            color.b = value ? 0.22f : color.b;
+            color.a = value ? 0.28f : 0f;
+            backgroundImage.color = color;
         }
     }
 }

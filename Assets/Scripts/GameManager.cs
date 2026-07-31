@@ -24,6 +24,7 @@ namespace SolitaireAssociations
         private const float GoalCollapseDuration = 0.24f;
         private const float GoalCloudDuration = 0.22f;
         private const float RestartLifeSpendLockSeconds = 0.75f;
+        private const float TouchDragLiftReferencePixels = 72f;
         private const int FirstManifestLevelNumber = 1;
 
         public readonly struct ObjectiveState
@@ -141,6 +142,8 @@ namespace SolitaireAssociations
         private readonly Stack<BoardSnapshot> moveHistory = new();
 
         private CardView draggedCard;
+        private CardView touchSelectedCard;
+        private int activePointerId = int.MinValue;
         private GeneratedLevelData generatedLevelData;
         private bool dragWasResolved;
         private int remainingMoves;
@@ -419,7 +422,7 @@ namespace SolitaireAssociations
             return true;
         }
 
-        public bool BeginDrag(CardView cardView)
+        public bool BeginDrag(CardView cardView, int pointerId)
         {
             if (cardView == null || levelFinished || draggedCard != null)
             {
@@ -437,16 +440,18 @@ namespace SolitaireAssociations
                 return false;
             }
 
+            ClearTouchSelection();
             draggedCard = cardView;
+            activePointerId = pointerId;
             draggedStack.Clear();
             draggedStack.AddRange(stack);
             dragWasResolved = false;
             return true;
         }
 
-        public bool IsDragging(CardView cardView)
+        public bool IsDragging(CardView cardView, int pointerId)
         {
-            return draggedCard == cardView;
+            return draggedCard == cardView && activePointerId == pointerId;
         }
 
         public void BeginDragVisual(CardView cardView)
@@ -496,7 +501,7 @@ namespace SolitaireAssociations
             }
 
             Vector3 anchorPosition = eventData != null
-                ? (Vector3)eventData.position
+                ? (Vector3)(eventData.position + GetTouchDragLift(eventData.pointerId))
                 : cardView.RectTransform.position;
 
             foreach (CardView stackCard in draggedStack)
@@ -515,7 +520,8 @@ namespace SolitaireAssociations
 
         public void EndDrag(CardView cardView, PointerEventData eventData)
         {
-            if (draggedCard != cardView)
+            if (draggedCard != cardView
+                || (eventData != null && activePointerId != eventData.pointerId))
             {
                 return;
             }
@@ -539,6 +545,157 @@ namespace SolitaireAssociations
             }
 
             draggedCard = null;
+            activePointerId = int.MinValue;
+            dragWasResolved = false;
+            draggedStack.Clear();
+            draggedStackOffsets.Clear();
+            RestoreGameplayCardInteractivity();
+        }
+
+        public void HandleCardTap(CardView cardView, int clickCount)
+        {
+            if (cardView == null
+                || levelFinished
+                || hintAnimationInProgress
+                || draggedCard != null
+                || !cardView.IsFaceUp
+                || cardView.Container is GoalSlot)
+            {
+                return;
+            }
+
+            List<CardView> stack = BuildDragStack(cardView);
+            if (stack.Count == 0)
+            {
+                PlayInvalidMoveFeedback(cardView);
+                return;
+            }
+
+            if (clickCount >= 2)
+            {
+                ClearTouchSelection();
+                if (!TryAutoMoveCardToGoal(cardView, stack))
+                {
+                    PlayInvalidMoveFeedback(cardView);
+                }
+
+                return;
+            }
+
+            if (touchSelectedCard == cardView)
+            {
+                ClearTouchSelection();
+                return;
+            }
+
+            if (touchSelectedCard != null
+                && cardView.Container != null
+                && cardView.Container != touchSelectedCard.Container
+                && TryMoveSelectedCardTo(cardView.Container))
+            {
+                return;
+            }
+
+            ClearTouchSelection();
+            touchSelectedCard = cardView;
+            touchSelectedCard.SetTouchSelected(true);
+        }
+
+        public bool TryMoveSelectedCardTo(ICardContainer targetContainer)
+        {
+            CardView selected = touchSelectedCard;
+            if (selected == null || targetContainer == null || selected.Container == targetContainer)
+            {
+                return false;
+            }
+
+            List<CardView> stack = BuildDragStack(selected);
+            if (stack.Count == 0 || !CanMoveCard(selected, targetContainer))
+            {
+                PlayInvalidMoveFeedback(selected);
+                return false;
+            }
+
+            touchSelectedCard = null;
+            selected.SetTouchSelected(false);
+            draggedStack.Clear();
+            draggedStack.AddRange(stack);
+            ExecuteMove(selected, targetContainer);
+            draggedStack.Clear();
+            RestoreGameplayCardInteractivity();
+            return true;
+        }
+
+        public void ClearTouchSelection()
+        {
+            if (touchSelectedCard != null)
+            {
+                touchSelectedCard.SetTouchSelected(false);
+                touchSelectedCard = null;
+            }
+        }
+
+        private bool TryAutoMoveCardToGoal(CardView cardView, List<CardView> stack)
+        {
+            foreach (GoalSlot goalSlot in GetActiveGoalSlots())
+            {
+                if (goalSlot == null || !CanMoveCard(cardView, goalSlot))
+                {
+                    continue;
+                }
+
+                draggedStack.Clear();
+                draggedStack.AddRange(stack);
+                ExecuteMove(cardView, goalSlot);
+                draggedStack.Clear();
+                RestoreGameplayCardInteractivity();
+                return true;
+            }
+
+            return false;
+        }
+
+        private static Vector2 GetTouchDragLift(int pointerId)
+        {
+            if (pointerId < 0)
+            {
+                return Vector2.zero;
+            }
+
+            float dpi = Screen.dpi > 0f ? Screen.dpi : 160f;
+            float lift = TouchDragLiftReferencePixels * Mathf.Clamp(dpi / 160f, 0.8f, 2f);
+            return Vector2.up * lift;
+        }
+
+        private void OnApplicationPause(bool pauseStatus)
+        {
+            if (pauseStatus)
+            {
+                CancelActivePointerInteraction();
+            }
+        }
+
+        private void OnApplicationFocus(bool hasFocus)
+        {
+            if (!hasFocus)
+            {
+                CancelActivePointerInteraction();
+            }
+        }
+
+        private void CancelActivePointerInteraction()
+        {
+            ClearTouchSelection();
+            if (draggedCard == null)
+            {
+                return;
+            }
+
+            CardView canceledCard = draggedCard;
+            FinishDragVisual();
+            canceledCard.Container?.RefreshLayout();
+            draggedCard = null;
+            activePointerId = int.MinValue;
             dragWasResolved = false;
             draggedStack.Clear();
             draggedStackOffsets.Clear();
@@ -745,6 +902,7 @@ namespace SolitaireAssociations
             }
 
             uiManager?.ResetPauseState();
+            ClearTouchSelection();
             ClearBoard();
             moveHistory.Clear();
             completedAssociations.Clear();
@@ -752,6 +910,7 @@ namespace SolitaireAssociations
             levelCompletionInProgress = false;
             completedUsedMovesCount = 0;
             draggedCard = null;
+            activePointerId = int.MinValue;
             dragWasResolved = false;
             if (levelCompleteRoutine != null)
             {
@@ -999,13 +1158,27 @@ namespace SolitaireAssociations
 
         private static ColumnLayoutProfile NormalizeGameplayProfile(ColumnLayoutProfile profile, int visibleColumnsCount)
         {
-            Vector2 targetCardSize = new(170f, 248f);
-            float targetSpacing = visibleColumnsCount <= 3
-                ? 72f
-                : visibleColumnsCount == 4
-                    ? 56f
-                    : 48f;
-            float targetVerticalOffset = 40f;
+            bool portrait = Screen.height > Screen.width;
+            Vector2 targetCardSize = portrait
+                ? visibleColumnsCount switch
+                {
+                    3 => new Vector2(176f, 256f),
+                    4 => new Vector2(160f, 233f),
+                    _ => new Vector2(148f, 216f)
+                }
+                : new Vector2(170f, 248f);
+            float targetSpacing = portrait
+                ? visibleColumnsCount <= 3
+                    ? 58f
+                    : visibleColumnsCount == 4
+                        ? 36f
+                        : 24f
+                : visibleColumnsCount <= 3
+                    ? 72f
+                    : visibleColumnsCount == 4
+                        ? 56f
+                        : 48f;
+            float targetVerticalOffset = portrait ? 52f : 40f;
 
             profile.columnCount = visibleColumnsCount;
             profile.cardSize = targetCardSize;
@@ -2785,7 +2958,9 @@ namespace SolitaireAssociations
                 return false;
             }
 
+            ClearTouchSelection();
             draggedCard = null;
+            activePointerId = int.MinValue;
             dragWasResolved = false;
             draggedStack.Clear();
             draggedStackOffsets.Clear();
