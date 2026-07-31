@@ -8,6 +8,11 @@
 [Mm]emoryCaptures/
 [Rr]ecordings/
 
+# Local review captures, backups, and crash reports
+[Aa]rtifacts/
+[Bb]ackups/
+mono_crash.*.json
+
 # Local image-processing Python environment
 Tools/.image_bg_deps/
 

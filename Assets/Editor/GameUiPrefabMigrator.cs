@@ -17,6 +17,9 @@ public static class GameUiPrefabMigrator
     private const string PrefabRoot = "Assets/Prefabs/UI/Game";
     private const string MainScenePath = "Assets/Scenes/Main.unity";
     private const string GameplayButtonSpritePath = "Assets/Resources/UI/Premium/button_gameplay_action_gold.png";
+    private const string ResourceHudRowSpritePath = "Assets/Resources/UI/Premium/hud_resource_row_premium.png";
+    private const string ResourceHudStackSpritePath = "Assets/Resources/UI/Premium/hud_resource_stack_light.png";
+    private const string ResourceHudLightRowSpritePath = "Assets/Resources/UI/Premium/hud_resource_row_light.png";
     private const string CategorySlotSpritePath = "Assets/Resources/UI/Premium/category_slot_cardmesh.png";
     private const string CategoryCrownSpritePath = "Assets/Resources/UI/Premium/category_slot_crown_cardmesh.png";
     private const string LivesHeartSpritePath = "Assets/Resources/UI/Premium/icon_lives_heart.png";
@@ -38,6 +41,94 @@ public static class GameUiPrefabMigrator
         RunMigration();
     }
 
+    [MenuItem("Tools/CardMesh/Polish Lives Counter Prefab")]
+    public static void PolishLivesCounterPrefab()
+    {
+        WriteSpritePng(ResourceHudRowSpritePath, CreateResourceHudRowTexture());
+        WriteSpritePng(ResourceHudStackSpritePath, CreateResourceHudStackTexture());
+        WriteSpritePng(ResourceHudLightRowSpritePath, CreateResourceHudLightRowTexture());
+        WriteSpritePng(LivesHeartSpritePath, CreateLivesHeartTexture());
+
+        string path = $"{PrefabRoot}/LivesCounter.prefab";
+        GameObject root = PrefabUtility.LoadPrefabContents(path);
+        try
+        {
+            ConfigureLivesCounter(root.transform as RectTransform);
+            PrefabUtility.SaveAsPrefabAsset(root, path);
+        }
+        finally
+        {
+            PrefabUtility.UnloadPrefabContents(root);
+        }
+
+        string movesPath = $"{PrefabRoot}/MovesCounter.prefab";
+        GameObject movesRoot = PrefabUtility.LoadPrefabContents(movesPath);
+        try
+        {
+            ConfigureMovesCounter(movesRoot.transform as RectTransform);
+            PrefabUtility.SaveAsPrefabAsset(movesRoot, movesPath);
+        }
+        finally
+        {
+            PrefabUtility.UnloadPrefabContents(movesRoot);
+        }
+
+        string coinsPath = $"{PrefabRoot}/CurrencyCounter.prefab";
+        GameObject coinsRoot = PrefabUtility.LoadPrefabContents(coinsPath);
+        try
+        {
+            ConfigureCurrencyCounter(coinsRoot.transform as RectTransform);
+            PrefabUtility.SaveAsPrefabAsset(coinsRoot, coinsPath);
+        }
+        finally
+        {
+            PrefabUtility.UnloadPrefabContents(coinsRoot);
+        }
+
+        Scene activeScene = EditorSceneManager.GetActiveScene();
+        if (activeScene.path == MainScenePath)
+        {
+            RectTransform safeArea = null;
+            foreach (RectTransform candidate in UnityEngine.Object.FindObjectsByType<RectTransform>(
+                         FindObjectsInactive.Include,
+                         FindObjectsSortMode.None))
+            {
+                if (candidate != null && candidate.name == "SafeAreaRoot")
+                {
+                    safeArea = candidate;
+                    break;
+                }
+            }
+
+            if (safeArea != null)
+            {
+                ConfigureResourceStackPanel(safeArea);
+                ReplaceWithPrefabRect(safeArea, "MovesPanel", movesPath, true);
+                ReplaceWithPrefabRect(safeArea, "LivesHud", path, true);
+                RectTransform topHud = FindDirectChild<RectTransform>(safeArea, "TopHUD");
+                if (topHud != null)
+                {
+                    RemoveDirectChild(topHud, "CoinsPanel");
+                }
+                ReplaceWithPrefabRect(safeArea, "CoinsPanel", coinsPath, true);
+
+                SolitaireSceneRefs sceneRefs = UnityEngine.Object.FindFirstObjectByType<SolitaireSceneRefs>();
+                if (sceneRefs != null)
+                {
+                    sceneRefs.ResolveSceneReferences();
+                    EditorUtility.SetDirty(sceneRefs);
+                }
+
+                EditorSceneManager.MarkSceneDirty(activeScene);
+                EditorSceneManager.SaveScene(activeScene);
+            }
+        }
+
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+        Debug.Log("GameUiPrefabMigrator: LivesCounter and MovesCounter prefabs polished.");
+    }
+
     [MenuItem("Tools/CardMesh/Validate Main Runtime Binding")]
     public static void ValidateMainRuntimeBinding()
     {
@@ -52,6 +143,69 @@ public static class GameUiPrefabMigrator
             $"hasBindings={gameManager != null && gameManager.HasPresentationBindings}, " +
             $"level={(gameManager != null && gameManager.AssignedLevelDefinition != null ? gameManager.AssignedLevelDefinition.name : "null")}, " +
             $"columns={(refs != null && refs.Columns != null ? refs.Columns.Count : 0)}.");
+    }
+
+    [MenuItem("Tools/CardMesh/Test HUD/Spend One Life")]
+    public static void TestHudSpendOneLife()
+    {
+        if (!Application.isPlaying)
+        {
+            Debug.LogWarning("GameUiPrefabMigrator: enter Play Mode before testing the recovering-lives HUD state.");
+            return;
+        }
+
+        LivesManager lives = UnityEngine.Object.FindFirstObjectByType<LivesManager>();
+        if (lives == null || !lives.SpendLife())
+        {
+            Debug.LogWarning("GameUiPrefabMigrator: could not spend a life for HUD testing.");
+        }
+    }
+
+    [MenuItem("Tools/CardMesh/Test HUD/Restore All Lives")]
+    public static void TestHudRestoreAllLives()
+    {
+        if (!Application.isPlaying)
+        {
+            Debug.LogWarning("GameUiPrefabMigrator: enter Play Mode before restoring test lives.");
+            return;
+        }
+
+        LivesManager lives = UnityEngine.Object.FindFirstObjectByType<LivesManager>();
+        if (lives == null)
+        {
+            return;
+        }
+
+        while (lives.CurrentLives < LivesManager.MaxLives)
+        {
+            lives.AddLifeForRewardedAd();
+        }
+    }
+
+    [MenuItem("Tools/CardMesh/Test HUD/Preview Large Values")]
+    public static void TestHudPreviewLargeValues()
+    {
+        if (!Application.isPlaying)
+        {
+            Debug.LogWarning("GameUiPrefabMigrator: enter Play Mode before previewing large HUD values.");
+            return;
+        }
+
+        foreach (TextMeshProUGUI text in UnityEngine.Object.FindObjectsByType<TextMeshProUGUI>(
+                     FindObjectsInactive.Include,
+                     FindObjectsSortMode.None))
+        {
+            if (text.name == "CoinsText")
+            {
+                text.text = "999 999";
+                text.ForceMeshUpdate(true, true);
+            }
+            else if (text.name == "MovesValue")
+            {
+                text.text = "999";
+                text.ForceMeshUpdate(true, true);
+            }
+        }
     }
 
     private static void RunIfRequested()
@@ -116,6 +270,9 @@ public static class GameUiPrefabMigrator
     private static void CreateGeneratedSlotSprites()
     {
         WriteSpritePng(GameplayButtonSpritePath, CreateGameplayActionButtonTexture());
+        WriteSpritePng(ResourceHudRowSpritePath, CreateResourceHudRowTexture());
+        WriteSpritePng(ResourceHudStackSpritePath, CreateResourceHudStackTexture());
+        WriteSpritePng(ResourceHudLightRowSpritePath, CreateResourceHudLightRowTexture());
         WriteSpritePng(CategorySlotSpritePath, CreateCategorySlotTexture());
         WriteSpritePng(CategoryCrownSpritePath, CreateCategoryCrownTexture());
         WriteSpritePng(LivesHeartSpritePath, CreateLivesHeartTexture());
@@ -171,6 +328,195 @@ public static class GameUiPrefabMigrator
                     {
                         pixel = Color.Lerp(pixel, greenTop, Mathf.Clamp01(1f - inner / 5f) * 0.12f);
                     }
+                }
+
+                texture.SetPixel(x, y, pixel);
+            }
+        }
+
+        texture.Apply();
+        return texture;
+    }
+
+    private static Texture2D CreateResourceHudRowTexture()
+    {
+        const int width = 640;
+        const int height = 220;
+        Texture2D texture = new(width, height, TextureFormat.RGBA32, false);
+        texture.name = "hud_resource_row_premium";
+
+        Color clear = Color.clear;
+        Color shadow = new(0.015f, 0.035f, 0.018f, 0.72f);
+        Color goldDark = new(0.36f, 0.2f, 0.035f, 1f);
+        Color goldMid = new(0.72f, 0.49f, 0.12f, 1f);
+        Color goldLight = new(0.98f, 0.81f, 0.31f, 1f);
+        Color greenTop = new(0.055f, 0.31f, 0.18f, 1f);
+        Color greenMiddle = new(0.018f, 0.22f, 0.13f, 1f);
+        Color greenBottom = new(0.006f, 0.105f, 0.07f, 1f);
+        Color innerLine = new(0.015f, 0.09f, 0.055f, 0.96f);
+
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                float outer = RoundedRectSignedDistance(x + 0.5f, y + 0.5f, width, height, 34f, 12f);
+                if (outer > 0f)
+                {
+                    float softShadow = Mathf.Clamp01(1f - outer / 14f);
+                    texture.SetPixel(x, y, softShadow > 0f
+                        ? new Color(shadow.r, shadow.g, shadow.b, shadow.a * softShadow)
+                        : clear);
+                    continue;
+                }
+
+                float goldInner = RoundedRectSignedDistance(x + 0.5f, y + 0.5f, width, height, 28f, 19f);
+                float darkInner = RoundedRectSignedDistance(x + 0.5f, y + 0.5f, width, height, 24f, 25f);
+                float fillInner = RoundedRectSignedDistance(x + 0.5f, y + 0.5f, width, height, 21f, 29f);
+                float vertical = Mathf.Clamp01((float)y / (height - 1));
+                Color pixel;
+
+                if (goldInner > 0f)
+                {
+                    float borderT = Mathf.Clamp01(Mathf.Abs(outer) / 9f);
+                    pixel = Color.Lerp(goldLight, Color.Lerp(goldMid, goldDark, vertical), borderT);
+                }
+                else if (darkInner > 0f)
+                {
+                    pixel = innerLine;
+                }
+                else
+                {
+                    float upperBlend = Mathf.Clamp01(vertical * 2f);
+                    float lowerBlend = Mathf.Clamp01((vertical - 0.46f) / 0.54f);
+                    pixel = Color.Lerp(greenTop, greenMiddle, upperBlend);
+                    pixel = Color.Lerp(pixel, greenBottom, lowerBlend);
+
+                    float topGloss = Mathf.Clamp01(1f - Mathf.Abs(y - 56f) / 18f);
+                    float horizontalFade = Mathf.Clamp01(1f - Mathf.Abs(x - width * 0.5f) / (width * 0.52f));
+                    pixel = Color.Lerp(pixel, new Color(0.23f, 0.55f, 0.32f, 1f), topGloss * horizontalFade * 0.13f);
+
+                    float centerGlow = Mathf.Clamp01(1f - Vector2.Distance(
+                        new Vector2(x, y),
+                        new Vector2(width * 0.58f, height * 0.44f)) / 260f);
+                    pixel = Color.Lerp(pixel, new Color(0.08f, 0.34f, 0.2f, 1f), centerGlow * 0.08f);
+                }
+
+                // Quiet corner ornaments keep the row from reading as a generic capsule.
+                bool upperAccent = y >= 28 && y <= 34 && (x >= 46 && x <= 116 || x >= width - 116 && x <= width - 46);
+                bool lowerAccent = y >= height - 35 && y <= height - 29 && (x >= 56 && x <= 102 || x >= width - 102 && x <= width - 56);
+                if (upperAccent || lowerAccent)
+                {
+                    pixel = Color.Lerp(pixel, goldLight, upperAccent ? 0.52f : 0.32f);
+                }
+
+                texture.SetPixel(x, y, pixel);
+            }
+        }
+
+        texture.Apply();
+        return texture;
+    }
+
+    private static Texture2D CreateResourceHudStackTexture()
+    {
+        const int width = 360;
+        const int height = 420;
+        Texture2D texture = new(width, height, TextureFormat.RGBA32, false);
+        texture.name = "hud_resource_stack_light";
+
+        Color clear = Color.clear;
+        Color edgeGold = new(0.83f, 0.62f, 0.2f, 0.5f);
+        Color innerEdge = new(0.01f, 0.08f, 0.05f, 0.62f);
+        Color greenTop = new(0.02f, 0.16f, 0.1f, 0.58f);
+        Color greenBottom = new(0.004f, 0.075f, 0.045f, 0.68f);
+
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                float outer = RoundedRectSignedDistance(x + 0.5f, y + 0.5f, width, height, 27f, 7f);
+                if (outer > 0f)
+                {
+                    float shadow = Mathf.Clamp01(1f - outer / 10f);
+                    texture.SetPixel(x, y, shadow > 0f
+                        ? new Color(0f, 0.025f, 0.014f, shadow * 0.22f)
+                        : clear);
+                    continue;
+                }
+
+                float goldInner = RoundedRectSignedDistance(x + 0.5f, y + 0.5f, width, height, 25f, 9f);
+                float fillInner = RoundedRectSignedDistance(x + 0.5f, y + 0.5f, width, height, 22f, 12f);
+                Color pixel;
+                if (goldInner > 0f)
+                {
+                    pixel = edgeGold;
+                }
+                else if (fillInner > 0f)
+                {
+                    pixel = innerEdge;
+                }
+                else
+                {
+                    float vertical = Mathf.Clamp01((float)y / (height - 1));
+                    pixel = Color.Lerp(greenTop, greenBottom, vertical);
+                    float topLight = Mathf.Clamp01(1f - Mathf.Abs(y - 54f) / 30f);
+                    float horizontalFade = Mathf.Clamp01(1f - Mathf.Abs(x - width * 0.5f) / (width * 0.6f));
+                    pixel = Color.Lerp(pixel, new Color(0.08f, 0.3f, 0.18f, pixel.a), topLight * horizontalFade * 0.08f);
+                }
+
+                texture.SetPixel(x, y, pixel);
+            }
+        }
+
+        texture.Apply();
+        return texture;
+    }
+
+    private static Texture2D CreateResourceHudLightRowTexture()
+    {
+        const int width = 520;
+        const int height = 150;
+        Texture2D texture = new(width, height, TextureFormat.RGBA32, false);
+        texture.name = "hud_resource_row_light";
+
+        Color clear = Color.clear;
+        Color gold = new(0.86f, 0.64f, 0.2f, 0.62f);
+        Color innerDark = new(0.006f, 0.07f, 0.042f, 0.7f);
+        Color top = new(0.025f, 0.22f, 0.13f, 0.76f);
+        Color bottom = new(0.004f, 0.095f, 0.058f, 0.84f);
+
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                float outer = RoundedRectSignedDistance(x + 0.5f, y + 0.5f, width, height, 21f, 6f);
+                if (outer > 0f)
+                {
+                    float shadow = Mathf.Clamp01(1f - outer / 7f);
+                    texture.SetPixel(x, y, shadow > 0f
+                        ? new Color(0f, 0.02f, 0.012f, shadow * 0.16f)
+                        : clear);
+                    continue;
+                }
+
+                float borderInner = RoundedRectSignedDistance(x + 0.5f, y + 0.5f, width, height, 19f, 8f);
+                float fillInner = RoundedRectSignedDistance(x + 0.5f, y + 0.5f, width, height, 17f, 10f);
+                Color pixel;
+                if (borderInner > 0f)
+                {
+                    pixel = gold;
+                }
+                else if (fillInner > 0f)
+                {
+                    pixel = innerDark;
+                }
+                else
+                {
+                    float vertical = Mathf.Clamp01((float)y / (height - 1));
+                    pixel = Color.Lerp(top, bottom, vertical);
+                    float topGloss = Mathf.Clamp01(1f - Mathf.Abs(y - 34f) / 17f);
+                    float horizontalFade = Mathf.Clamp01(1f - Mathf.Abs(x - width * 0.5f) / (width * 0.57f));
+                    pixel = Color.Lerp(pixel, new Color(0.09f, 0.34f, 0.2f, pixel.a), topGloss * horizontalFade * 0.08f);
                 }
 
                 texture.SetPixel(x, y, pixel);
@@ -300,30 +646,64 @@ public static class GameUiPrefabMigrator
 
     private static Texture2D CreateLivesHeartTexture()
     {
-        const int size = 96;
+        const int size = 192;
+        const int samplesPerAxis = 4;
         Texture2D texture = new(size, size, TextureFormat.RGBA32, false);
         texture.name = "icon_lives_heart";
         Color clear = Color.clear;
-        Color redDark = new(0.78f, 0.03f, 0.09f, 1f);
-        Color redMid = new(1f, 0.16f, 0.22f, 1f);
-        Color redLight = new(1f, 0.48f, 0.42f, 1f);
+        Color redDark = new(0.62f, 0.015f, 0.055f, 1f);
+        Color redMid = new(0.96f, 0.075f, 0.14f, 1f);
+        Color redLight = new(1f, 0.43f, 0.39f, 1f);
 
         for (int y = 0; y < size; y++)
         {
             for (int x = 0; x < size; x++)
             {
-                float nx = (x - 48f) / 39f;
-                float ny = (y - 45f) / 37f;
-                float heart = Mathf.Pow(nx * nx + ny * ny - 0.32f, 3f) - nx * nx * ny * ny * ny;
-                if (heart > 0f)
+                Color accumulated = Color.clear;
+                int coveredSamples = 0;
+                for (int sampleY = 0; sampleY < samplesPerAxis; sampleY++)
+                {
+                    for (int sampleX = 0; sampleX < samplesPerAxis; sampleX++)
+                    {
+                        float px = x + (sampleX + 0.5f) / samplesPerAxis;
+                        float py = y + (sampleY + 0.5f) / samplesPerAxis;
+                        float nx = (px - 96f) / 78f;
+                        float ny = (py - 90f) / 74f;
+                        float heart = Mathf.Pow(nx * nx + ny * ny - 0.32f, 3f) - nx * nx * ny * ny * ny;
+                        if (heart > 0f)
+                        {
+                            continue;
+                        }
+
+                        float vertical = Mathf.Clamp01(py / size);
+                        Color sample = Color.Lerp(redDark, redMid, Mathf.SmoothStep(0f, 1f, vertical));
+
+                        float broadHighlight = Mathf.Clamp01(
+                            1f - Vector2.Distance(new Vector2(px, py), new Vector2(67f, 126f)) / 82f);
+                        sample = Color.Lerp(sample, redLight, broadHighlight * 0.34f);
+
+                        float lowerDepth = Mathf.Clamp01(
+                            1f - Vector2.Distance(new Vector2(px, py), new Vector2(126f, 54f)) / 94f);
+                        sample = Color.Lerp(sample, redDark, lowerDepth * 0.2f);
+
+                        float specularX = (px - 64f) / 34f;
+                        float specularY = (py - 132f) / 17f;
+                        float specular = Mathf.Clamp01(1f - specularX * specularX - specularY * specularY);
+                        sample = Color.Lerp(sample, new Color(1f, 0.72f, 0.68f, 1f), specular * 0.18f);
+
+                        accumulated += sample;
+                        coveredSamples++;
+                    }
+                }
+
+                if (coveredSamples == 0)
                 {
                     texture.SetPixel(x, y, clear);
                     continue;
                 }
 
-                float highlight = Mathf.Clamp01(1f - Vector2.Distance(new Vector2(x, y), new Vector2(34f, 62f)) / 42f);
-                Color pixel = Color.Lerp(redDark, redMid, Mathf.Clamp01((y + 10f) / size));
-                pixel = Color.Lerp(pixel, redLight, highlight * 0.32f);
+                Color pixel = accumulated / coveredSamples;
+                pixel.a = coveredSamples / (float)(samplesPerAxis * samplesPerAxis);
                 texture.SetPixel(x, y, pixel);
             }
         }
@@ -359,6 +739,11 @@ public static class GameUiPrefabMigrator
         importer.mipmapEnabled = false;
         importer.wrapMode = TextureWrapMode.Clamp;
         importer.filterMode = FilterMode.Bilinear;
+        if (path == LivesHeartSpritePath)
+        {
+            importer.maxTextureSize = 256;
+            importer.textureCompression = TextureImporterCompression.Uncompressed;
+        }
         importer.SaveAndReimport();
     }
 
@@ -432,7 +817,9 @@ public static class GameUiPrefabMigrator
         RectTransform topHud = EnsureRect(safeArea, "TopHUD");
         SetAnchored(topHud, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, 128f), new Vector2(0f, -18f));
 
-        RectTransform coinsPanel = ReplaceWithPrefabRect(topHud, "CoinsPanel", $"{PrefabRoot}/CurrencyCounter.prefab");
+        ConfigureResourceStackPanel(safeArea);
+        RemoveDirectChild(topHud, "CoinsPanel");
+        RectTransform coinsPanel = ReplaceWithPrefabRect(safeArea, "CoinsPanel", $"{PrefabRoot}/CurrencyCounter.prefab");
         ConfigureCurrencyCounter(coinsPanel);
         RemoveDirectChild(coinsPanel, "PlusButton");
 
@@ -926,60 +1313,190 @@ public static class GameUiPrefabMigrator
 
     private static void ConfigureCurrencyCounter(RectTransform panel)
     {
-        SetAnchored(panel, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0.5f, 0.5f), new Vector2(236f, 70f), new Vector2(196f, -100f));
+        SetAnchored(panel, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0.5f, 0.5f), new Vector2(238f, 60f), new Vector2(184f, -485f));
         ConfigureCounter(panel, "CoinsPanel", string.Empty, "0");
+    }
+
+    private static void ConfigureResourceStackPanel(RectTransform safeArea)
+    {
+        RectTransform panel = EnsureImageLayer(
+            safeArea,
+            "ResourceStackPanel",
+            null,
+            Image.Type.Simple,
+            new Color(1f, 1f, 1f, 0f));
+        SetAnchored(
+            panel,
+            new Vector2(0f, 1f),
+            new Vector2(0f, 1f),
+            new Vector2(0.5f, 0.5f),
+            new Vector2(246f, 216f),
+            new Vector2(190f, -486f));
+        Image panelImage = panel.GetComponent<Image>();
+        panelImage.sprite = null;
+        panelImage.color = new Color(1f, 1f, 1f, 0f);
+        panelImage.preserveAspect = false;
+        panelImage.raycastTarget = false;
+
+        RemoveDirectChild(panel, "SeparatorTop");
+        RemoveDirectChild(panel, "SeparatorBottom");
+
+        panel.SetSiblingIndex(Mathf.Min(2, panel.parent.childCount - 1));
     }
 
     private static void ConfigureMovesCounter(RectTransform panel)
     {
-        SetAnchored(panel, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0.5f, 0.5f), new Vector2(164f, 108f), new Vector2(154f, -242f));
+        SetAnchored(panel, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0.5f, 0.5f), new Vector2(238f, 60f), new Vector2(184f, -553f));
         CleanupMovesPanelChildren(panel);
+        RemoveDirectChild(panel, "MovesTopGloss");
         RemoveDirectChild(panel, "Icon");
         RemoveDirectChild(panel, "Value");
         RemoveMovesPanelTexts(panel);
         Image image = EnsureImage(panel);
-        image.sprite = PremiumUISprites.HudPanelCreamGold;
-        image.type = Image.Type.Sliced;
-        image.color = new Color(1f, 1f, 1f, 0.92f);
-        TextMeshProUGUI title = EnsureText(panel, "MovesLabel", "Ходы");
-        ConfigurePlainText(title, 25f, 17f, TextAlignmentOptions.Center, new Color(0.37f, 0.22f, 0.06f, 1f));
-        title.fontStyle = FontStyles.Normal;
-        SetAnchored(title.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(-26f, 28f), new Vector2(0f, -17f));
+        image.sprite = null;
+        image.type = Image.Type.Simple;
+        image.color = new Color(1f, 1f, 1f, 0f);
+        RectTransform movesIcon = EnsureImageLayer(
+            panel,
+            "MovesIcon",
+            null,
+            Image.Type.Simple,
+            new Color(1f, 1f, 1f, 0f));
+        SetAnchored(movesIcon, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(75f, 75f), new Vector2(38f, 0f));
+        Image movesIconImage = movesIcon.GetComponent<Image>();
+        movesIconImage.sprite = null;
+        movesIconImage.color = new Color(1f, 1f, 1f, 0f);
+        movesIconImage.raycastTarget = false;
+        RemoveDirectChild(movesIcon, "MovesArrows");
+        RectTransform movesGlyph = EnsureImageLayer(
+            movesIcon,
+            "MovesIconGlyph",
+            PremiumUISprites.BoosterRocketIcon,
+            Image.Type.Simple,
+            Color.white);
+        SetAnchored(movesGlyph, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(45f, 45f), Vector2.zero);
+        Image movesGlyphImage = movesGlyph.GetComponent<Image>();
+        movesGlyphImage.preserveAspect = true;
+        movesGlyphImage.raycastTarget = false;
+
+        TextMeshProUGUI title = EnsureText(panel, "MovesLabel", "ХОДЫ");
+        ApplyInterFont(title);
+        ConfigurePlainText(title, 12f, 12f, TextAlignmentOptions.Center, new Color(0.91f, 0.7f, 0.28f, 0.82f));
+        title.fontStyle = FontStyles.Bold;
+        title.fontWeight = FontWeight.Bold;
+        title.enableAutoSizing = false;
+        title.fontSize = 12f;
+        title.fontSizeMin = 12f;
+        title.fontSizeMax = 12f;
+        RemoveUiEffects(title.gameObject);
+        SetAnchored(title.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(148f, 16f), new Vector2(153f, -17f));
         TextMeshProUGUI value = EnsureText(panel, "MovesValue", "140");
-        ConfigurePlainText(value, 30f, 30f, TextAlignmentOptions.Center, new Color(0.31f, 0.17f, 0.04f, 1f));
+        ApplyInterFont(value);
+        ConfigurePlainText(value, 32f, 32f, TextAlignmentOptions.Center, new Color(1f, 0.91f, 0.64f, 0.96f));
         value.enableAutoSizing = false;
-        value.fontSize = 30f;
-        value.fontStyle = FontStyles.Normal;
+        value.fontSize = 32f;
+        value.fontSizeMin = 32f;
+        value.fontSizeMax = 32f;
+        value.fontStyle = FontStyles.Bold;
+        value.fontWeight = FontWeight.Bold;
+        GetOrAdd<HudValuePulse>(value.gameObject);
         RemoveUiEffects(value.gameObject);
-        SetAnchored(value.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(-28f, 48f), new Vector2(0f, 12f));
+        SetAnchored(value.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(148f, 42f), new Vector2(153f, 8f));
     }
 
     private static void ConfigureLivesCounter(RectTransform root)
     {
-        SetAnchored(root, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0.5f, 0.5f), new Vector2(214f, 64f), new Vector2(154f, -379f));
+        SetAnchored(root, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0.5f, 0.5f), new Vector2(238f, 66f), new Vector2(184f, -417f));
         RemoveDirectChild(root, "Icon");
         RemoveDirectChild(root, "Value");
+        RemoveDirectChild(root, "LivesBackplate");
+        RemoveDirectChild(root, "LivesTopGloss");
         EnsureImage(root).color = new Color(1f, 1f, 1f, 0f);
+
+        RectTransform statusFill = EnsureImageLayer(
+            root,
+            "LivesStatusFill",
+            null,
+            Image.Type.Sliced,
+            new Color(1f, 1f, 1f, 0f));
+        SetAnchored(statusFill, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(230f, 64f), new Vector2(123f, 0f));
+        statusFill.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0f);
+        statusFill.SetAsFirstSibling();
+
         RectTransform heart = EnsureImageLayer(root, "HeartIcon", GetHeartSprite(), Image.Type.Simple, Color.white);
         TMP_Text staleHeartText = heart.GetComponent<TMP_Text>();
         if (staleHeartText != null)
         {
             UnityEngine.Object.DestroyImmediate(staleHeartText);
         }
-        SetAnchored(heart, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(54f, 54f), new Vector2(42f, 0f));
-        TextMeshProUGUI count = EnsureText(root, "LivesCount", "5/5");
-        ConfigurePlainText(count, 32f, 32f, TextAlignmentOptions.MidlineLeft, new Color(1f, 0.9f, 0.66f, 1f));
+        SetAnchored(heart, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(76f, 76f), new Vector2(38f, 0f));
+        AddOrUpdateShadow(heart.gameObject, new Color(0.25f, 0f, 0f, 0.38f), new Vector2(0f, -3f));
+
+        TextMeshProUGUI count = EnsureText(root, "LivesCount", "5");
+        ConfigurePlainText(count, 36f, 36f, TextAlignmentOptions.Center, Color.white);
         count.enableAutoSizing = false;
-        count.fontSize = 32f;
-        count.fontSizeMin = 32f;
-        count.fontSizeMax = 32f;
-        count.fontStyle = FontStyles.Normal;
+        count.fontSize = 36f;
+        count.fontSizeMin = 36f;
+        count.fontSizeMax = 36f;
+        count.fontStyle = FontStyles.Bold;
+        count.fontWeight = FontWeight.Bold;
+        GetOrAdd<HudValuePulse>(count.gameObject);
         count.enableWordWrapping = false;
         count.overflowMode = TextOverflowModes.Overflow;
         count.margin = Vector4.zero;
         count.extraPadding = false;
         count.raycastTarget = false;
-        SetAnchored(count.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(126f, 56f), new Vector2(82f, 0f));
+        SetAnchored(count.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(56f, 48f), new Vector2(38f, 3f));
+
+        TextMeshProUGUI status = EnsureText(root, "LivesStatus", "ЗАПОЛНЕНО");
+        ApplyInterFont(status);
+        ConfigurePlainText(status, 19f, 15f, TextAlignmentOptions.Center, new Color(1f, 0.84f, 0.46f, 0.94f));
+        status.fontStyle = FontStyles.Bold;
+        status.fontWeight = FontWeight.Bold;
+        status.enableAutoSizing = true;
+        status.fontSize = 19f;
+        status.fontSizeMin = 15f;
+        status.fontSizeMax = 19f;
+        status.enableWordWrapping = false;
+        status.overflowMode = TextOverflowModes.Ellipsis;
+        status.margin = Vector4.zero;
+        SetAnchored(status.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(154f, 46f), new Vector2(153f, 0f));
+
+        RectTransform addLifeRoot = EnsureRect(root, "AddLifeButton");
+        SetAnchored(addLifeRoot, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(48f, 48f), new Vector2(68f, -21f));
+        Image addLifeImage = addLifeRoot.GetComponent<Image>();
+        if (addLifeImage == null)
+        {
+            addLifeImage = addLifeRoot.gameObject.AddComponent<Image>();
+        }
+        addLifeImage.sprite = null;
+        addLifeImage.color = new Color(1f, 1f, 1f, 0.001f);
+        addLifeImage.raycastTarget = true;
+
+        RectTransform addLifeVisual = EnsureImageLayer(
+            addLifeRoot,
+            "AddLifeVisual",
+            PremiumUISprites.CleanIconCircle != null ? PremiumUISprites.CleanIconCircle : PremiumUISprites.IconCircle,
+            Image.Type.Simple,
+            Color.white);
+        SetAnchored(addLifeVisual, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(34f, 34f), Vector2.zero);
+        Image addLifeVisualImage = addLifeVisual.GetComponent<Image>();
+        addLifeVisualImage.raycastTarget = false;
+        Button addLifeButton = GetOrAdd<Button>(addLifeRoot.gameObject);
+        addLifeButton.targetGraphic = addLifeVisualImage;
+
+        TextMeshProUGUI plusLabel = EnsureText(addLifeRoot, "PlusLabel", "+");
+        ApplyInterFont(plusLabel);
+        ConfigurePlainText(plusLabel, 22f, 20f, TextAlignmentOptions.Center, new Color(1f, 0.88f, 0.42f, 1f));
+        plusLabel.fontStyle = FontStyles.Bold;
+        plusLabel.raycastTarget = false;
+        SetAnchored(plusLabel.rectTransform, Vector2.zero, Vector2.one, new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.zero);
+        plusLabel.transform.SetAsLastSibling();
+
+        heart.SetAsLastSibling();
+        count.transform.SetAsLastSibling();
+        addLifeRoot.SetAsLastSibling();
+
         LivesHudView view = GetOrAdd<LivesHudView>(root.gameObject);
         EditorUtility.SetDirty(view);
     }
@@ -1003,10 +1520,11 @@ public static class GameUiPrefabMigrator
     private static void ConfigureCounter(RectTransform root, string objectName, string icon, string value)
     {
         root.name = objectName;
+        RemoveDirectChild(root, "CoinsTopGloss");
         Image image = EnsureImage(root);
-        image.sprite = PremiumUISprites.HudCounterGold;
-        image.type = Image.Type.Sliced;
-        image.color = new Color(1f, 1f, 1f, 0.96f);
+        image.sprite = null;
+        image.type = Image.Type.Simple;
+        image.color = new Color(1f, 1f, 1f, 0f);
         if (objectName == "CoinsPanel")
         {
             RemoveDirectChild(root, "CoinGlyph");
@@ -1017,7 +1535,7 @@ public static class GameUiPrefabMigrator
                 coinImage.preserveAspect = true;
             }
 
-            SetAnchored(coinIcon, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(54f, 54f), new Vector2(40f, 0f));
+            SetAnchored(coinIcon, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(75f, 75f), new Vector2(38f, 0f));
         }
         else
         {
@@ -1029,21 +1547,33 @@ public static class GameUiPrefabMigrator
         TextMeshProUGUI text = EnsureText(root, objectName == "CoinsPanel" ? "CoinsText" : "Value", value);
         if (objectName == "CoinsPanel")
         {
-            ConfigurePlainText(text, 30f, 30f, TextAlignmentOptions.Center, new Color(0.31f, 0.17f, 0.04f, 1f));
-            text.enableAutoSizing = false;
-            text.fontSize = 30f;
-            text.fontSizeMin = 30f;
-            text.fontSizeMax = 30f;
-            text.fontStyle = FontStyles.Normal;
-            text.fontWeight = FontWeight.Regular;
+            ConfigurePlainText(text, 32f, 19f, TextAlignmentOptions.Center, new Color(1f, 0.91f, 0.64f, 0.96f));
+            text.enableAutoSizing = true;
+            text.fontSize = 32f;
+            text.fontSizeMin = 19f;
+            text.fontSizeMax = 32f;
+            text.fontStyle = FontStyles.Bold;
+            text.fontWeight = FontWeight.Bold;
+            ApplyInterFont(text);
+            GetOrAdd<HudValuePulse>(text.gameObject);
             RemoveUiEffects(text.gameObject);
+
+            TextMeshProUGUI caption = EnsureText(root, "CoinsLabel", "ЗОЛОТО");
+            ApplyInterFont(caption);
+            ConfigurePlainText(caption, 12f, 12f, TextAlignmentOptions.Center, new Color(0.91f, 0.7f, 0.28f, 0.82f));
+            caption.fontStyle = FontStyles.Bold;
+            caption.fontWeight = FontWeight.Bold;
+            caption.enableAutoSizing = false;
+            caption.gameObject.SetActive(true);
+            RemoveUiEffects(caption.gameObject);
+            SetAnchored(caption.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(148f, 16f), new Vector2(153f, -17f));
         }
         else
         {
             ConfigurePlainText(text, 36f, 23f, TextAlignmentOptions.MidlineLeft, new Color(0.29f, 0.16f, 0.04f, 1f));
         }
 
-        SetAnchored(text.rectTransform, new Vector2(0f, 0.5f), new Vector2(1f, 0.5f), new Vector2(0.5f, 0.5f), objectName == "CoinsPanel" ? new Vector2(-60f, 44f) : new Vector2(-92f, 44f), new Vector2(objectName == "CoinsPanel" ? 24f : 38f, 0f));
+        SetAnchored(text.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f), objectName == "CoinsPanel" ? new Vector2(148f, 42f) : new Vector2(-92f, 44f), new Vector2(objectName == "CoinsPanel" ? 153f : 38f, objectName == "CoinsPanel" ? 8f : 0f));
     }
 
     private static RectTransform EnsureImageLayer(RectTransform parent, string name, Sprite sprite, Image.Type type, Color color)
@@ -1284,6 +1814,24 @@ public static class GameUiPrefabMigrator
         RuntimeCyrillicFontProvider.Apply(text, value);
         text.raycastTarget = false;
         return text;
+    }
+
+    private static void ApplyInterFont(TMP_Text text)
+    {
+        if (text == null)
+        {
+            return;
+        }
+
+        TMP_FontAsset font = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(
+            "Assets/Fonts/Inter/Inter_28pt-Regular SDF.asset");
+        if (font == null)
+        {
+            return;
+        }
+
+        text.font = font;
+        text.fontSharedMaterial = font.material;
     }
 
     private static void ConfigurePlainText(TMP_Text text, float maxSize, float minSize, TextAlignmentOptions alignment, Color color)

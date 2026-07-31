@@ -23,7 +23,7 @@ namespace SolitaireAssociations
         private static readonly Vector2 TitleSize = new(-132f, 84f);
         private static readonly Vector2 StatsOffset = new(0f, -126f);
         private static readonly Vector2 StatsSize = new(-170f, 42f);
-        private static readonly Vector2 CloseOffset = new(-52f, -98f);
+        private static readonly Vector2 CloseOffset = new(-80f, -132f);
         private static readonly Vector2 CloseSize = new(58f, 58f);
         private static readonly Vector2 ScrollSize = new(720f, 432f);
         private static readonly Vector2 ScrollOffset = new(0f, -184f);
@@ -217,7 +217,25 @@ namespace SolitaireAssociations
             levelsScrollRect ??= FindChildRecursive<ScrollRect>(transform, "LevelsScroll");
             levelsScrollbar ??= FindChildRecursive<Scrollbar>(transform, ScrollbarName);
             dimButton ??= FindButton(transform, "Dim");
-            closeButton ??= FindButton(transform, "CloseButton");
+            if (panel != null)
+            {
+                closeButton = PopupShell.EnsureIconCloseButton(panel, "CloseButton");
+                SetAnchored(
+                    closeButton.transform as RectTransform,
+                    new Vector2(1f, 1f),
+                    new Vector2(1f, 1f),
+                    new Vector2(0.5f, 0.5f),
+                    CloseSize,
+                    CloseOffset);
+
+                Image closeImage = closeButton.GetComponent<Image>();
+                if (closeImage != null)
+                {
+                    closeImage.raycastPadding = new Vector4(-8f, -8f, -8f, -8f);
+                }
+
+                closeButton.transform.SetAsLastSibling();
+            }
 
             if (contentRoot == null)
             {
@@ -676,6 +694,7 @@ namespace SolitaireAssociations
             if (closeButton != null)
             {
                 SetAnchored(closeButton.transform as RectTransform, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 0.5f), CloseSize, CloseOffset);
+                closeButton.transform.SetAsLastSibling();
             }
         }
 
@@ -1224,20 +1243,22 @@ namespace SolitaireAssociations
 
         private Button CreateCloseButton(RectTransform parent)
         {
-            RectTransform closeRoot = CreateRect("CloseButton", parent, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 0.5f), CloseSize, CloseOffset);
-            Image image = closeRoot.gameObject.AddComponent<Image>();
-            image.color = new Color(0f, 0f, 0f, 0.001f);
-            image.raycastTarget = true;
+            Button button = PopupShell.EnsureIconCloseButton(parent, "CloseButton");
+            SetAnchored(
+                button.transform as RectTransform,
+                new Vector2(1f, 1f),
+                new Vector2(1f, 1f),
+                new Vector2(0.5f, 0.5f),
+                CloseSize,
+                CloseOffset);
 
-            Button button = closeRoot.gameObject.AddComponent<Button>();
-            button.targetGraphic = image;
+            Image image = button.GetComponent<Image>();
+            if (image != null)
+            {
+                image.raycastPadding = new Vector4(-8f, -8f, -8f, -8f);
+            }
 
-            TextMeshProUGUI label = CreateText(closeRoot, "Label", "X", 34f, textGold, TextAlignmentOptions.Center);
-            StretchToFill(label.rectTransform, 0f, 0f, 0f, 0f);
-            label.fontStyle = FontStyles.Bold;
-            AddTextOutline(label, new Color(0.12f, 0.055f, 0.012f, 0.62f), new Vector2(1f, -1f));
-
-            button.gameObject.AddComponent<UIJuicyButton>();
+            button.transform.SetAsLastSibling();
             return button;
         }
 

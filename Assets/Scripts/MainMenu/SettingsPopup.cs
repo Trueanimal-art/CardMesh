@@ -20,6 +20,9 @@ namespace SolitaireAssociations
         private const float DefaultMusicVolume = 0.7f;
         private const float DefaultSfxVolume = 0.8f;
         private const float FadeDuration = 0.18f;
+        private static readonly Vector2 PolishedTitleOffset = new(0f, -88f);
+        private static readonly Vector2 PolishedClosePosition = new(-80f, -132f);
+        private static readonly Vector2 PolishedCloseOffset = new(-14f, -56f);
         private static readonly Vector2 PanelSize = new(920f, 780f);
         private static readonly Vector2 TitleOffset = new(0f, -90f);
         private static readonly Vector2 TitleSize = new(-160f, 76f);
@@ -69,6 +72,9 @@ namespace SolitaireAssociations
         private TMP_FontAsset fontAsset;
         private bool hintsEnabled;
         private Coroutine animationRoutine;
+        private Coroutine musicPercentRoutine;
+        private Coroutine sfxPercentRoutine;
+        private Coroutine hintsToggleRoutine;
         private Vector3 shownPanelScale = Vector3.one;
         private bool hasCapturedShownPanelScale;
 
@@ -316,7 +322,22 @@ namespace SolitaireAssociations
                 PopupShell.SizePreset.Compact,
                 "Настройки",
                 useInnerBackground: false,
-                customTitlePositionOffset: new Vector2(0f, -160f));
+                customTitlePositionOffset: PolishedTitleOffset,
+                customClosePositionOffset: PolishedCloseOffset);
+
+            RectTransform closeRect = shell.CloseButton != null
+                ? shell.CloseButton.transform as RectTransform
+                : null;
+            if (closeRect != null)
+            {
+                closeRect.anchoredPosition = PolishedClosePosition;
+                Image closeImage = shell.CloseButton.GetComponent<Image>();
+                if (closeImage != null)
+                {
+                    closeImage.raycastPadding =
+                        new Vector4(-10f, -10f, -10f, -10f);
+                }
+            }
 
             Image backdropImage = shell.Backdrop != null ? shell.Backdrop.GetComponent<Image>() : null;
             if (backdropImage != null)
@@ -346,7 +367,8 @@ namespace SolitaireAssociations
                 PopupShell.SizePreset.Compact,
                 "Настройки",
                 useInnerBackground: false,
-                customTitlePositionOffset: new Vector2(0f, -160f));
+                customTitlePositionOffset: PolishedTitleOffset,
+                customClosePositionOffset: PolishedCloseOffset);
             panel = shell.PanelRoot;
             contentRoot = shell.ContentRoot;
             dimButton = shell.BackdropButton;
@@ -439,7 +461,7 @@ namespace SolitaireAssociations
             sfxSlider = CreateSliderRow(contentRoot, "SfxRow", "Звуки", top, "SfxSlider", "SfxValue", OnSfxSliderChanged, out sfxValueText);
             top -= SettingsRowHeight + SettingsRowSpacing;
             CreateHintsRow(contentRoot, top);
-            top -= SettingsRowHeight + SettingsRowSpacing;
+            top -= SettingsRowHeight + 24f;
             howToButton = CreateSettingsButton(contentRoot, "HowToPlayButton", "Как играть", textGold, top);
             top -= SettingsButtonHeight + SettingsRowSpacing;
             resetButton = CreateSettingsButton(contentRoot, "ResetProgressButton", "Сброс прогресса", textGold, top);
@@ -461,7 +483,7 @@ namespace SolitaireAssociations
             SetAnchored(rowRect, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(-SettingsContentHorizontalPadding * 2f, SettingsRowHeight), new Vector2(0f, topY));
 
             TextMeshProUGUI labelText = CreateText(rowRect, "Label", label, 31f, textCream, TextAlignmentOptions.Left);
-            SetAnchored(labelText.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(168f, 48f), Vector2.zero);
+            SetAnchored(labelText.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(190f, 48f), Vector2.zero);
             labelText.fontStyle = FontStyles.Bold;
             AddTextOutline(labelText, new Color(0f, 0.06f, 0.02f, 0.58f), new Vector2(1f, -1f));
 
@@ -522,12 +544,12 @@ namespace SolitaireAssociations
             SetAnchored(rowRect, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(-SettingsContentHorizontalPadding * 2f, SettingsRowHeight), new Vector2(0f, topY));
 
             TextMeshProUGUI labelText = CreateText(rowRect, "Label", "Подсказки", 31f, textCream, TextAlignmentOptions.Left);
-            SetAnchored(labelText.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(260f, 48f), Vector2.zero);
+            SetAnchored(labelText.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(190f, 48f), Vector2.zero);
             labelText.fontStyle = FontStyles.Bold;
             AddTextOutline(labelText, new Color(0f, 0.06f, 0.02f, 0.58f), new Vector2(1f, -1f));
 
             hintsToggleButton = CreateImageButton(rowRect, "HintsToggle", GetLevelButtonSprite(), Color.white);
-            SetAnchored(hintsToggleButton.transform as RectTransform, new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(172f, 54f), Vector2.zero);
+            SetAnchored(hintsToggleButton.transform as RectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(172f, 54f), new Vector2(44f, 0f));
             hintsToggleButton.onClick.AddListener(ToggleHints);
             hintsValueText = CreateText(hintsToggleButton.transform, "HintsValue", "Вкл", 28f, textGold, TextAlignmentOptions.Center);
             StretchToFill(hintsValueText.rectTransform, 16f, 16f, 0f, 2f);
@@ -591,7 +613,10 @@ namespace SolitaireAssociations
 
             if (musicValueText != null)
             {
-                musicValueText.text = $"{Mathf.RoundToInt(value * 100f)}%";
+                AnimatePercentage(
+                    musicValueText,
+                    Mathf.RoundToInt(value * 100f),
+                    true);
             }
         }
 
@@ -607,7 +632,10 @@ namespace SolitaireAssociations
 
             if (sfxValueText != null)
             {
-                sfxValueText.text = $"{Mathf.RoundToInt(value * 100f)}%";
+                AnimatePercentage(
+                    sfxValueText,
+                    Mathf.RoundToInt(value * 100f),
+                    false);
             }
         }
 
@@ -617,6 +645,7 @@ namespace SolitaireAssociations
             PlayerPrefs.SetInt(HintsEnabledKey, hintsEnabled ? 1 : 0);
             PlayerPrefs.Save();
             RefreshHintsLabel();
+            PlayHintsToggleFeedback();
         }
 
         private void RefreshHintsLabel()
@@ -626,6 +655,128 @@ namespace SolitaireAssociations
                 hintsValueText.text = hintsEnabled ? "Вкл" : "Выкл";
                 hintsValueText.color = hintsEnabled ? textGold : new Color(0.86f, 0.8f, 0.62f, 0.64f);
             }
+        }
+
+        private void AnimatePercentage(
+            TextMeshProUGUI label,
+            int targetValue,
+            bool isMusic)
+        {
+            if (label == null)
+            {
+                return;
+            }
+
+            targetValue = Mathf.Clamp(targetValue, 0, 100);
+            if (!Application.isPlaying || !isActiveAndEnabled)
+            {
+                label.text = $"{targetValue}%";
+                return;
+            }
+
+            Coroutine running = isMusic
+                ? musicPercentRoutine
+                : sfxPercentRoutine;
+            if (running != null)
+            {
+                StopCoroutine(running);
+            }
+
+            Coroutine next = StartCoroutine(
+                AnimatePercentageRoutine(label, targetValue, isMusic));
+            if (isMusic)
+            {
+                musicPercentRoutine = next;
+            }
+            else
+            {
+                sfxPercentRoutine = next;
+            }
+        }
+
+        private System.Collections.IEnumerator AnimatePercentageRoutine(
+            TextMeshProUGUI label,
+            int targetValue,
+            bool isMusic)
+        {
+            int startValue = ParsePercentage(label.text, targetValue);
+            float elapsed = 0f;
+            const float duration = 0.09f;
+            while (elapsed < duration)
+            {
+                elapsed += Time.unscaledDeltaTime;
+                float t = Mathf.Clamp01(elapsed / duration);
+                float eased = 1f - Mathf.Pow(1f - t, 3f);
+                label.text =
+                    $"{Mathf.RoundToInt(Mathf.Lerp(startValue, targetValue, eased))}%";
+                yield return null;
+            }
+
+            label.text = $"{targetValue}%";
+            if (isMusic)
+            {
+                musicPercentRoutine = null;
+            }
+            else
+            {
+                sfxPercentRoutine = null;
+            }
+        }
+
+        private static int ParsePercentage(string value, int fallback)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return fallback;
+            }
+
+            string digits = value.Replace("%", string.Empty).Trim();
+            return int.TryParse(digits, out int parsed)
+                ? Mathf.Clamp(parsed, 0, 100)
+                : fallback;
+        }
+
+        private void PlayHintsToggleFeedback()
+        {
+            if (!Application.isPlaying
+                || !isActiveAndEnabled
+                || hintsToggleButton == null)
+            {
+                return;
+            }
+
+            if (hintsToggleRoutine != null)
+            {
+                StopCoroutine(hintsToggleRoutine);
+            }
+
+            hintsToggleRoutine = StartCoroutine(AnimateHintsToggle());
+        }
+
+        private System.Collections.IEnumerator AnimateHintsToggle()
+        {
+            RectTransform rect = hintsToggleButton.transform as RectTransform;
+            if (rect == null)
+            {
+                hintsToggleRoutine = null;
+                yield break;
+            }
+
+            Vector3 baseScale = Vector3.one;
+            float elapsed = 0f;
+            const float duration = 0.16f;
+            while (elapsed < duration)
+            {
+                elapsed += Time.unscaledDeltaTime;
+                float t = Mathf.Clamp01(elapsed / duration);
+                float response = Mathf.Sin(t * Mathf.PI);
+                rect.localScale =
+                    baseScale * Mathf.Lerp(1f, 1.055f, response);
+                yield return null;
+            }
+
+            rect.localScale = baseScale;
+            hintsToggleRoutine = null;
         }
 
         private void ShowHowToPlay()

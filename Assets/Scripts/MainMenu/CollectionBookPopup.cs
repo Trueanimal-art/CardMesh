@@ -28,6 +28,7 @@ namespace SolitaireAssociations
         [SerializeField] private Button infoButton;
         [SerializeField] private RectTransform rewardCardsRoot;
         [SerializeField] private RectTransform scoreRowsRoot;
+        [SerializeField] private CollectionBookPremiumMotion premiumMotion;
 
         [Header("Shared prefab references")]
         [SerializeField] private PremiumEventPrefabReferences sharedPrefabs = new();
@@ -35,6 +36,8 @@ namespace SolitaireAssociations
         private CollectionBookManager manager;
         private bool hasShownRuntime;
         private Coroutine openRoutine;
+        private float lastRenderedProgress = -1f;
+        private int lastClaimedRewards = -1;
         private static TMP_FontAsset rewardCardFont;
 #if UNITY_EDITOR
         private bool editorRefreshQueued;
@@ -115,6 +118,10 @@ namespace SolitaireAssociations
             ApplyFontsToAllTexts();
             WireButtons();
             Refresh();
+            if (premiumMotion != null)
+            {
+                premiumMotion.PlayOpenSequence();
+            }
 
             if (canvasGroup != null)
             {
@@ -179,9 +186,25 @@ namespace SolitaireAssociations
                 ? $"До следующего уровня: {Mathf.Max(0, span - localProgress)} очков"
                 : "Все уровни пройдены");
 
+            float targetProgress = next != null ? Mathf.Clamp01((float)manager.CurrentPoints / target) : 1f;
             if (progressFill != null)
             {
-                progressFill.fillAmount = next != null ? Mathf.Clamp01((float)manager.CurrentPoints / target) : 1f;
+                bool canAnimate = premiumMotion != null
+                    && gameObject.activeInHierarchy
+                    && lastRenderedProgress >= 0f;
+                int claimedRewardIndex = lastClaimedRewards >= 0
+                    && manager.ClaimedRewardsCount > lastClaimedRewards
+                        ? manager.ClaimedRewardsCount - 1
+                        : -1;
+
+                if (canAnimate)
+                {
+                    premiumMotion.AnimateProgress(targetProgress, claimedRewardIndex);
+                }
+                else
+                {
+                    progressFill.fillAmount = targetProgress;
+                }
             }
 
             if (levelProgressFill != null)
@@ -191,6 +214,9 @@ namespace SolitaireAssociations
 
             RefreshRewardCards();
             RefreshRewardProgressMarker();
+            premiumMotion?.SetActiveReward(manager.ClaimedRewardsCount);
+            lastRenderedProgress = targetProgress;
+            lastClaimedRewards = manager.ClaimedRewardsCount;
         }
 
         private void RefreshEditorPreview()
@@ -240,6 +266,15 @@ namespace SolitaireAssociations
                 SetText(card.Find("Points")?.GetComponent<TMP_Text>(), required.ToString());
                 SetRewardCardText(card.Find("Reward")?.GetComponent<TMP_Text>(), rewardTitle);
                 SetText(card.Find("Status")?.GetComponent<TMP_Text>(), claimed ? "ПОЛУЧЕНО" : current ? "СЛЕДУЮЩАЯ" : "ЗАБЛОКИРОВАНО");
+                Image cardImage = card.GetComponent<Image>();
+                if (cardImage != null)
+                {
+                    cardImage.color = claimed
+                        ? new Color(0.08f, 0.27f, 0.16f, 0.98f)
+                        : current
+                            ? new Color(0.075f, 0.31f, 0.18f, 0.99f)
+                            : new Color(0.045f, 0.19f, 0.115f, 0.96f);
+                }
                 rewardIndex++;
             }
         }
@@ -264,24 +299,17 @@ namespace SolitaireAssociations
                 rewardProgressMarker = existing != null ? existing.GetComponent<Image>() : null;
             }
 
-            if (rewardProgressMarker == null)
-            {
-                GameObject markerObject = new("CurrentProgressMarker", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
-                markerObject.transform.SetParent(rewardCardsRoot, false);
-                rewardProgressMarker = markerObject.GetComponent<Image>();
-            }
-
             if (rewardProgressLine == null)
             {
                 Transform existing = rewardCardsRoot.Find("CurrentProgressLine");
                 rewardProgressLine = existing != null ? existing.GetComponent<Image>() : null;
             }
 
-            if (rewardProgressLine == null)
+            // The progress visuals are materialized in MainMenu.unity by the
+            // editor installer. Runtime never creates scene layout objects.
+            if (rewardProgressMarker == null || rewardProgressLine == null)
             {
-                GameObject lineObject = new("CurrentProgressLine", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
-                lineObject.transform.SetParent(rewardCardsRoot, false);
-                rewardProgressLine = lineObject.GetComponent<Image>();
+                return;
             }
 
             rewardProgressMarker.sprite = firstMilestone.sprite;
@@ -298,7 +326,8 @@ namespace SolitaireAssociations
             markerRect.localScale = Vector3.one * 1.12f;
             markerRect.SetAsLastSibling();
 
-            float markerX = firstCard.anchoredPosition.x - 108f;
+            float firstCardX = GetLocalCenterX(firstCard, rewardCardsRoot);
+            float markerX = firstCardX - 108f;
             int previousRequired = 0;
             float previousX = markerX;
             int visibleRewardCount = 0;
@@ -316,18 +345,18 @@ namespace SolitaireAssociations
                 if (manager.CurrentPoints <= reward.RequiredPoints)
                 {
                     float segmentProgress = Mathf.InverseLerp(previousRequired, reward.RequiredPoints, manager.CurrentPoints);
-                    markerX = Mathf.Lerp(previousX, card.anchoredPosition.x, segmentProgress);
+                    markerX = Mathf.Lerp(previousX, GetLocalCenterX(card, rewardCardsRoot), segmentProgress);
                     break;
                 }
 
                 previousRequired = reward.RequiredPoints;
-                previousX = card.anchoredPosition.x;
+                previousX = GetLocalCenterX(card, rewardCardsRoot);
                 markerX = previousX;
             }
 
             rewardProgressMarker.gameObject.SetActive(visibleRewardCount > 0);
             float timelineY = firstMilestone.rectTransform.anchoredPosition.y;
-            float timelineStartX = firstCard.anchoredPosition.x - 108f;
+            float timelineStartX = firstCardX - 108f;
 
             rewardProgressLine.sprite = null;
             rewardProgressLine.type = Image.Type.Simple;
@@ -393,6 +422,7 @@ namespace SolitaireAssociations
             infoButton = transform.Find("Panel/InfoButton")?.GetComponent<Button>();
             rewardCardsRoot = FindRect("Panel/RewardStages");
             scoreRowsRoot = FindRect("Panel/ScoreRules");
+            premiumMotion = GetComponent<CollectionBookPremiumMotion>();
         }
 
         private static void ConfigureProgressFill(Image fill)
@@ -430,6 +460,16 @@ namespace SolitaireAssociations
         }
 
         private RectTransform FindRect(string path) => transform.Find(path)?.GetComponent<RectTransform>();
+
+        private static float GetLocalCenterX(RectTransform child, RectTransform parent)
+        {
+            if (child == null || parent == null)
+            {
+                return 0f;
+            }
+
+            return (child.anchorMin.x - parent.pivot.x) * parent.rect.width + child.anchoredPosition.x;
+        }
 
         private TMP_Text FindTMP(string path)
         {
@@ -582,6 +622,12 @@ namespace SolitaireAssociations
             }
 
             BindSceneReferences();
+            UpgradeAuthoringLayout();
+            EnsureProgressVisuals();
+            EnsurePremiumMotion();
+            BindSceneReferences();
+            ApplyFontsToAllTexts();
+            RefreshEditorPreview();
         }
 
         private void EnsureAuthoringLayout()
@@ -733,7 +779,105 @@ namespace SolitaireAssociations
             UpgradeCollectionHero();
             UpgradeProgressBlock();
             UpgradeRewardCards();
+            AlignMilestoneLine();
             UpgradeBottomBlocks();
+        }
+
+        private void AlignMilestoneLine()
+        {
+            RectTransform panelRect = transform.Find("Panel") as RectTransform;
+            RectTransform line = transform.Find("Panel/MilestoneLine") as RectTransform;
+            RectTransform firstMilestone = transform.Find("Panel/RewardStages/RewardStage_1/MilestoneDiamond") as RectTransform;
+            if (panelRect == null || line == null || firstMilestone == null)
+            {
+                return;
+            }
+
+            float milestoneY = panelRect.InverseTransformPoint(firstMilestone.position).y;
+            line.anchorMin = new Vector2(0.5f, 0.5f);
+            line.anchorMax = line.anchorMin;
+            line.pivot = new Vector2(0.5f, 0.5f);
+            line.anchoredPosition = new Vector2(0f, milestoneY);
+            line.sizeDelta = new Vector2(1080f, 2f);
+        }
+
+        private void EnsureProgressVisuals()
+        {
+            RectTransform progressBlock = transform.Find("Panel/ProgressBlock") as RectTransform;
+            if (progressBlock != null)
+            {
+                Image highlight = progressBlock.Find("InnerHighlight")?.GetComponent<Image>();
+                if (highlight == null)
+                {
+                    highlight = CreateImage(
+                        progressBlock,
+                        "InnerHighlight",
+                        PremiumUISprites.EmeraldPanel,
+                        new Color(1f, 0.88f, 0.42f, 0.075f),
+                        Vector2.zero,
+                        new Vector2(540f, 122f),
+                        Image.Type.Sliced);
+                }
+
+                highlight.sprite = PremiumUISprites.EmeraldPanel;
+                highlight.sprite = null;
+                highlight.type = Image.Type.Simple;
+                highlight.color = new Color(1f, 0.84f, 0.32f, 0.13f);
+                highlight.raycastTarget = false;
+                SetTextRect(highlight.rectTransform, new Vector2(0f, 61f), new Vector2(470f, 2f));
+                highlight.rectTransform.SetAsFirstSibling();
+            }
+
+            RectTransform root = transform.Find("Panel/RewardStages") as RectTransform;
+            if (root == null)
+            {
+                return;
+            }
+
+            RectTransform firstCard = root.Find("RewardStage_1") as RectTransform;
+            Image firstMilestone = firstCard != null
+                ? firstCard.Find("MilestoneDiamond")?.GetComponent<Image>()
+                : null;
+            if (firstMilestone == null)
+            {
+                return;
+            }
+
+            if (root.Find("CurrentProgressLine") == null)
+            {
+                Image line = CreateImage(
+                    root,
+                    "CurrentProgressLine",
+                    null,
+                    new Color(0.58f, 0.88f, 0.2f, 0.94f),
+                    Vector2.zero,
+                    new Vector2(1f, 5f),
+                    Image.Type.Simple);
+                line.rectTransform.SetAsLastSibling();
+            }
+
+            if (root.Find("CurrentProgressMarker") == null)
+            {
+                Image marker = CreateImage(
+                    root,
+                    "CurrentProgressMarker",
+                    firstMilestone.sprite,
+                    new Color(0.52f, 1f, 0.45f, 1f),
+                    Vector2.zero,
+                    new Vector2(40f, 44f),
+                    Image.Type.Simple);
+                marker.preserveAspect = true;
+                marker.rectTransform.SetAsLastSibling();
+            }
+        }
+
+        private void EnsurePremiumMotion()
+        {
+            premiumMotion = GetComponent<CollectionBookPremiumMotion>();
+            if (premiumMotion == null)
+            {
+                premiumMotion = gameObject.AddComponent<CollectionBookPremiumMotion>();
+            }
         }
 
         private void StyleHeader()
@@ -833,27 +977,97 @@ namespace SolitaireAssociations
             RectTransform progressBlock = transform.Find("Panel/ProgressBlock") as RectTransform;
             if (progressBlock != null)
             {
-                SetAnchored(progressBlock, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(520f, 118f), new Vector2(0f, 22f));
+                SetAnchored(progressBlock, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(560f, 150f), new Vector2(0f, 120f));
                 Image progressImage = progressBlock.GetComponent<Image>();
                 if (progressImage != null)
                 {
-                    progressImage.sprite = PremiumUISprites.EmeraldPanel;
-                    progressImage.type = Image.Type.Sliced;
-                    progressImage.color = new Color(0.38f, 0.68f, 0.48f, 0.88f);
+                    progressImage.enabled = false;
                     progressImage.raycastTarget = false;
+                    Outline outline = progressBlock.GetComponent<Outline>();
+                    if (outline != null)
+                    {
+                        outline.enabled = false;
+                    }
                 }
 
-                SetTextRect(progressBlock.Find("ProgressTitle") as RectTransform, new Vector2(0f, 37f), new Vector2(440f, 24f));
-                SetTextRect(progressBlock.Find("ProgressValue") as RectTransform, new Vector2(0f, 9f), new Vector2(440f, 50f));
-                SetTextRect(progressBlock.Find("ProgressTrack") as RectTransform, new Vector2(0f, -15f), new Vector2(370f, 9f));
-                SetTextRect(progressBlock.Find("NextReward") as RectTransform, new Vector2(0f, -38f), new Vector2(420f, 35f));
+                RectTransform progressFrame = progressBlock.Find("ProgressFrame") as RectTransform;
+                if (progressFrame != null)
+                {
+                    progressFrame.gameObject.SetActive(true);
+                    SetTextRect(progressFrame, Vector2.zero, new Vector2(550f, 144f));
+                    Image frameImage = progressFrame.GetComponent<Image>();
+                    if (frameImage != null)
+                    {
+                        frameImage.enabled = true;
+                        frameImage.color = Color.white;
+                        frameImage.type = Image.Type.Sliced;
+                        frameImage.raycastTarget = false;
+                    }
+
+                    progressFrame.SetAsFirstSibling();
+                }
+
+                SetActiveIfExists(progressBlock, "InnerHighlight", false);
+                SetTextRect(progressBlock.Find("ProgressTitle") as RectTransform, new Vector2(0f, 48f), new Vector2(470f, 24f));
+                SetTextRect(progressBlock.Find("ProgressValue") as RectTransform, new Vector2(0f, 17f), new Vector2(470f, 48f));
+                RectTransform track = progressBlock.Find("ProgressTrack") as RectTransform;
+                if (track != null)
+                {
+                    track.gameObject.SetActive(true);
+                }
+
+                SetTextRect(track, new Vector2(0f, -17f), new Vector2(400f, 14f));
+                SetTextRect(progressBlock.Find("NextReward") as RectTransform, new Vector2(0f, -51f), new Vector2(470f, 26f));
                 TuneText(progressBlock.Find("ProgressTitle")?.GetComponent<TMP_Text>(), 20f, 16f, false);
-                TuneText(progressBlock.Find("ProgressValue")?.GetComponent<TMP_Text>(), 58f, 42f, false);
+                TMP_Text progressValue = progressBlock.Find("ProgressValue")?.GetComponent<TMP_Text>();
+                TuneText(progressValue, 52f, 40f, false);
+                if (progressValue != null)
+                {
+                    progressValue.enabled = true;
+                    progressValue.color = new Color(1f, 0.92f, 0.68f, 1f);
+                    progressValue.fontStyle = FontStyles.Bold;
+                    progressValue.enableWordWrapping = false;
+                    progressValue.overflowMode = TextOverflowModes.Overflow;
+                    TMP_Text progressTitle = progressBlock.Find("ProgressTitle")?.GetComponent<TMP_Text>();
+                    if (progressTitle != null && progressTitle.font != null)
+                    {
+                        progressValue.font = progressTitle.font;
+                        progressValue.fontSharedMaterial = progressTitle.fontSharedMaterial;
+                    }
+
+                    progressValue.rectTransform.SetAsLastSibling();
+                }
+
+                SetActiveIfExists(progressBlock, "ProgressFillPanel", false);
                 TMP_Text nextReward = progressBlock.Find("NextReward")?.GetComponent<TMP_Text>();
-                TuneText(nextReward, 16.5f, 13f, true);
+                TuneText(nextReward, 16f, 13f, false);
                 if (nextReward != null)
                 {
                     nextReward.lineSpacing = -5f;
+                    nextReward.color = new Color(1f, 0.91f, 0.72f, 0.96f);
+                }
+
+                Image trackImage = track != null ? track.GetComponent<Image>() : null;
+                if (trackImage != null)
+                {
+                    trackImage.sprite = null;
+                    trackImage.type = Image.Type.Simple;
+                    trackImage.color = new Color(0.018f, 0.13f, 0.075f, 1f);
+                    Outline trackOutline = track.GetComponent<Outline>();
+                    if (trackOutline == null)
+                    {
+                        trackOutline = track.gameObject.AddComponent<Outline>();
+                    }
+
+                    trackOutline.effectColor = new Color(0.9f, 0.68f, 0.17f, 0.44f);
+                    trackOutline.effectDistance = new Vector2(1f, -1f);
+                    trackOutline.useGraphicAlpha = true;
+                }
+
+                Image fill = track != null ? track.Find("ProgressFill")?.GetComponent<Image>() : null;
+                if (fill != null)
+                {
+                    fill.color = new Color(0.72f, 0.9f, 0.25f, 1f);
                 }
             }
 
@@ -866,7 +1080,7 @@ namespace SolitaireAssociations
             RectTransform rewardStages = transform.Find("Panel/RewardStages") as RectTransform;
             if (rewardStages != null)
             {
-                SetAnchored(rewardStages, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(1300f, 236f), new Vector2(0f, 170f));
+                SetAnchored(rewardStages, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(1300f, 236f), new Vector2(0f, 270f));
             }
         }
 
@@ -878,14 +1092,25 @@ namespace SolitaireAssociations
                 return;
             }
 
-            for (int i = 0; i < root.childCount; i++)
+            int rewardIndex = 0;
+            for (int childIndex = 0; childIndex < root.childCount; childIndex++)
             {
-                Transform card = root.GetChild(i);
+                Transform card = root.GetChild(childIndex);
+                if (!card.name.StartsWith("RewardStage_"))
+                {
+                    continue;
+                }
+
+                int i = rewardIndex++;
                 RectTransform cardRect = card as RectTransform;
                 if (cardRect != null)
                 {
                     cardRect.sizeDelta = new Vector2(182f, 218f);
-                    cardRect.anchoredPosition = new Vector2(-540f + (i * 216f), 0f);
+                    float anchorX = (i + 0.5f) / 6f;
+                    cardRect.anchorMin = new Vector2(anchorX, 0.5f);
+                    cardRect.anchorMax = cardRect.anchorMin;
+                    cardRect.pivot = new Vector2(0.5f, 0.5f);
+                    cardRect.anchoredPosition = Vector2.zero;
                 }
 
                 Image cardImage = card.GetComponent<Image>();
@@ -893,8 +1118,21 @@ namespace SolitaireAssociations
                 {
                     cardImage.sprite = PremiumUISprites.EmeraldPanel;
                     cardImage.type = Image.Type.Sliced;
-                    cardImage.color = new Color(0.45f, 0.78f, 0.55f, 0.94f);
+                    cardImage.color = i == 0
+                        ? new Color(0.075f, 0.31f, 0.18f, 0.99f)
+                        : new Color(0.045f, 0.19f, 0.115f, 0.96f);
                     cardImage.raycastTarget = false;
+                    Outline outline = card.GetComponent<Outline>();
+                    if (outline == null)
+                    {
+                        outline = card.gameObject.AddComponent<Outline>();
+                    }
+
+                    outline.effectColor = i == 0
+                        ? new Color(1f, 0.76f, 0.18f, 0.58f)
+                        : new Color(0.88f, 0.65f, 0.16f, 0.32f);
+                    outline.effectDistance = i == 0 ? new Vector2(1.6f, -1.6f) : new Vector2(1f, -1f);
+                    outline.useGraphicAlpha = true;
                 }
 
                 foreach (Shadow shadow in card.GetComponents<Shadow>())
@@ -903,6 +1141,11 @@ namespace SolitaireAssociations
                     shadow.effectDistance = Vector2.zero;
                 }
 
+                CanvasGroup cardGroup = GetOrCreateCanvasGroup(card.gameObject);
+                cardGroup.alpha = 1f;
+                cardGroup.interactable = true;
+                cardGroup.blocksRaycasts = true;
+
                 TMP_Text oldIcon = card.Find("Icon")?.GetComponent<TMP_Text>();
                 if (oldIcon != null)
                 {
@@ -910,7 +1153,12 @@ namespace SolitaireAssociations
                 }
 
                 SetTextRect(card.Find("Points") as RectTransform, new Vector2(0f, 139f), new Vector2(154f, 30f));
-                TuneText(card.Find("Points")?.GetComponent<TMP_Text>(), 21f, 15f, false);
+                TMP_Text pointsText = card.Find("Points")?.GetComponent<TMP_Text>();
+                TuneText(pointsText, 22f, 17f, false);
+                if (pointsText != null)
+                {
+                    pointsText.color = new Color(1f, 0.87f, 0.48f, 1f);
+                }
 
                 Image milestone = card.Find("MilestoneDiamond")?.GetComponent<Image>();
                 if (milestone == null)
@@ -928,7 +1176,13 @@ namespace SolitaireAssociations
                 milestone.color = Color.white;
                 milestone.preserveAspect = true;
                 milestone.raycastTarget = false;
-                SetTextRect(milestone.rectTransform, new Vector2(0f, 109f), new Vector2(30f, 34f));
+                SetTextRect(
+                    milestone.rectTransform,
+                    new Vector2(0f, 109f),
+                    i == 0 ? new Vector2(38f, 42f) : new Vector2(30f, 34f));
+                milestone.color = i == 0
+                    ? new Color(0.62f, 1f, 0.48f, 1f)
+                    : new Color(1f, 0.88f, 0.46f, 0.94f);
 
                 Image icon = card.Find("RewardIcon")?.GetComponent<Image>();
                 if (icon == null)
@@ -939,17 +1193,18 @@ namespace SolitaireAssociations
                 icon.sprite = GetCollectionRewardIcon(i);
                 icon.preserveAspect = true;
                 icon.color = Color.white;
-                icon.rectTransform.sizeDelta = i == 4 ? new Vector2(59f, 59f) : new Vector2(53f, 53f);
-                icon.rectTransform.anchoredPosition = new Vector2(0f, 29f);
+                icon.rectTransform.sizeDelta = i == 4 ? new Vector2(68f, 68f) : new Vector2(64f, 64f);
+                icon.rectTransform.anchoredPosition = new Vector2(0f, 27f);
 
                 RectTransform reward = card.Find("Reward") as RectTransform;
                 SetTextRect(reward, new Vector2(0f, -45f), new Vector2(148f, 62f));
                 TMP_Text rewardText = reward != null ? reward.GetComponent<TMP_Text>() : null;
-                TuneText(rewardText, i == 4 ? 16.5f : 17.5f, 12f, true);
+                TuneText(rewardText, i == 4 ? 17.5f : 19f, 13.5f, true);
                 if (rewardText != null)
                 {
                     rewardText.margin = new Vector4(8f, 5f, 8f, 5f);
                     rewardText.lineSpacing = -3f;
+                    rewardText.color = new Color(1f, 0.93f, 0.75f, 1f);
                 }
 
                 SetTextRect(card.Find("Status") as RectTransform, new Vector2(0f, -91f), new Vector2(166f, 24f));
@@ -961,13 +1216,25 @@ namespace SolitaireAssociations
                 }
 
                 Image glow = card.Find("ActiveGlow")?.GetComponent<Image>();
-                if (glow != null)
+                if (glow == null)
                 {
-                    Color color = glow.color;
-                    color.a = 0f;
-                    glow.color = color;
-                    glow.gameObject.SetActive(false);
+                    glow = CreateImage(
+                        card,
+                        "ActiveGlow",
+                        cardImage != null ? cardImage.sprite : PremiumUISprites.EmeraldPanel,
+                        new Color(1f, 0.76f, 0.18f, 0.18f),
+                        Vector2.zero,
+                        new Vector2(190f, 226f),
+                        Image.Type.Sliced);
                 }
+
+                glow.sprite = cardImage != null ? cardImage.sprite : PremiumUISprites.EmeraldPanel;
+                glow.type = Image.Type.Sliced;
+                glow.color = new Color(1f, 0.76f, 0.18f, 0.18f);
+                glow.raycastTarget = false;
+                SetTextRect(glow.rectTransform, Vector2.zero, new Vector2(190f, 226f));
+                glow.gameObject.SetActive(i == 0);
+                glow.rectTransform.SetAsFirstSibling();
             }
         }
 
@@ -976,51 +1243,54 @@ namespace SolitaireAssociations
             RectTransform scoreRules = transform.Find("Panel/ScoreRules") as RectTransform;
             if (scoreRules != null)
             {
-                SetAnchored(scoreRules, new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(0.5f, 0.5f), new Vector2(560f, 82f), new Vector2(350f, 105f));
+                SetAnchored(scoreRules, new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(0.5f, 0.5f), new Vector2(530f, 130f), new Vector2(360f, 175f));
                 Image scoreImage = scoreRules.GetComponent<Image>();
                 if (scoreImage != null)
                 {
                     scoreImage.sprite = PremiumUISprites.EmeraldPanel;
                     scoreImage.type = Image.Type.Sliced;
-                    scoreImage.color = new Color(0.42f, 0.72f, 0.52f, 0.84f);
+                    scoreImage.color = new Color(0.045f, 0.22f, 0.13f, 0.96f);
                     scoreImage.raycastTarget = false;
                 }
 
-                SetTextRect(scoreRules.Find("Title") as RectTransform, new Vector2(0f, 25f), new Vector2(500f, 24f));
-                SetTextRect(scoreRules.Find("Rows") as RectTransform, new Vector2(0f, -13f), new Vector2(510f, 48f));
-                TuneText(scoreRules.Find("Title")?.GetComponent<TMP_Text>(), 24f, 18f, false);
+                SetTextRect(scoreRules.Find("Title") as RectTransform, new Vector2(0f, 43f), new Vector2(480f, 26f));
+                SetTextRect(scoreRules.Find("Rows") as RectTransform, new Vector2(0f, -18f), new Vector2(490f, 82f));
+                TuneText(scoreRules.Find("Title")?.GetComponent<TMP_Text>(), 23f, 18f, false);
                 TMP_Text rules = scoreRules.Find("Rows")?.GetComponent<TMP_Text>();
                 SetText(rules, "• Обычная категория  +1 очко\n• Категория с картинками  +2 очка\n• Без подсказок  +1 бонус\n• Без отмены  +1 бонус");
-                TuneText(rules, 15f, 12f, true);
+                TuneText(rules, 16f, 13f, true);
                 if (rules != null)
                 {
                     rules.alignment = TextAlignmentOptions.Left;
-                    rules.lineSpacing = -8f;
-                    rules.margin = new Vector4(34f, 2f, 24f, 2f);
+                    rules.lineSpacing = -2f;
+                    rules.margin = new Vector4(28f, 5f, 22f, 5f);
+                    rules.color = new Color(1f, 0.92f, 0.75f, 0.98f);
                 }
             }
 
             RectTransform levelBlock = transform.Find("Panel/LevelBlock") as RectTransform;
             if (levelBlock != null)
             {
-                SetAnchored(levelBlock, new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0.5f), new Vector2(560f, 82f), new Vector2(-350f, 105f));
+                SetAnchored(levelBlock, new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0.5f), new Vector2(530f, 130f), new Vector2(-360f, 175f));
                 Image levelImage = levelBlock.GetComponent<Image>();
                 if (levelImage != null)
                 {
                     levelImage.sprite = PremiumUISprites.EmeraldPanel;
                     levelImage.type = Image.Type.Sliced;
-                    levelImage.color = new Color(0.42f, 0.72f, 0.52f, 0.84f);
+                    levelImage.color = new Color(0.045f, 0.22f, 0.13f, 0.96f);
                     levelImage.raycastTarget = false;
                 }
 
-                SetTextRect(levelBlock.Find("Title") as RectTransform, new Vector2(0f, 25f), new Vector2(500f, 24f));
-                SetTextRect(levelBlock.Find("Medal") as RectTransform, new Vector2(-172f, -8f), new Vector2(150f, 54f));
-                SetTextRect(levelBlock.Find("LevelTitle") as RectTransform, new Vector2(82f, 1f), new Vector2(340f, 32f));
-                SetTextRect(levelBlock.Find("LevelProgress") as RectTransform, new Vector2(82f, -24f), new Vector2(280f, 20f));
+                SetTextRect(levelBlock.Find("Title") as RectTransform, new Vector2(0f, 43f), new Vector2(480f, 26f));
+                SetTextRect(levelBlock.Find("Medal") as RectTransform, new Vector2(-165f, -10f), new Vector2(126f, 68f));
+                SetTextRect(levelBlock.Find("LevelTitle") as RectTransform, new Vector2(70f, 10f), new Vector2(330f, 32f));
+                SetTextRect(levelBlock.Find("LevelProgress") as RectTransform, new Vector2(70f, -21f), new Vector2(290f, 21f));
+                SetTextRect(levelBlock.Find("LevelRemaining") as RectTransform, new Vector2(70f, -45f), new Vector2(310f, 18f));
                 TuneText(levelBlock.Find("Title")?.GetComponent<TMP_Text>(), 23f, 17f, false);
-                TuneText(levelBlock.Find("Medal")?.GetComponent<TMP_Text>(), 66f, 52f, false);
-                TuneText(levelBlock.Find("LevelTitle")?.GetComponent<TMP_Text>(), 22f, 16f, false);
-                TuneText(levelBlock.Find("LevelProgress")?.GetComponent<TMP_Text>(), 16f, 13f, false);
+                TuneText(levelBlock.Find("Medal")?.GetComponent<TMP_Text>(), 62f, 48f, false);
+                TuneText(levelBlock.Find("LevelTitle")?.GetComponent<TMP_Text>(), 23f, 17f, false);
+                TuneText(levelBlock.Find("LevelProgress")?.GetComponent<TMP_Text>(), 17f, 14f, false);
+                TuneText(levelBlock.Find("LevelRemaining")?.GetComponent<TMP_Text>(), 14.5f, 12f, false);
             }
 
             HideOpenBookButton();

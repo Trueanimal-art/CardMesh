@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Collections;
 using System;
+using System.Globalization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -10,10 +11,11 @@ namespace SolitaireAssociations
 {
     public sealed class UIManager : MonoBehaviour
     {
-        private const float HudTopInset = 100f;
-        private const float MovesTopInset = 242f;
+        private const float LivesTopInset = 417f;
+        private const float CoinsTopInset = 485f;
+        private const float MovesTopInset = 553f;
         private const float LivesLeftInsetX = 154f;
-        private const float LivesUnderMovesTopInset = 379f;
+        private const float LivesExpandedWidthOffset = 43f;
         private const float RightDeckInset = 269f;
         private const float DeckCardBackInsetX = 239f;
         private static readonly Vector2 GameplayCardSize = new(196f, 286f);
@@ -201,7 +203,9 @@ namespace SolitaireAssociations
         {
             if (coinsLabel != null)
             {
-                coinsLabel.text = coins.ToString();
+                coinsLabel.text = Mathf.Max(0, coins)
+                    .ToString("#,0", CultureInfo.InvariantCulture)
+                    .Replace(",", "\u00A0");
             }
         }
 
@@ -515,6 +519,7 @@ namespace SolitaireAssociations
                 EnsureBackgroundVignette();
             }
 
+            EnsureResourceStackPanel();
             StyleTopHud();
             StyleMovesPanel();
             StyleDeckArea();
@@ -523,6 +528,7 @@ namespace SolitaireAssociations
             HideAdPlaceholder();
         }
 
+
         private bool HasPrefabAuthoredGameplayUi()
         {
             return safeAreaRoot != null
@@ -530,6 +536,33 @@ namespace SolitaireAssociations
                 && FindChildRecursive<RectTransform>(safeAreaRoot, "UndoButtonIcon") != null
                 && FindChildRecursive<RectTransform>(safeAreaRoot, "BoosterDeckButtonIcon") != null
                 && FindChildRecursive<RectTransform>(safeAreaRoot, "LivesHud") != null;
+        }
+
+        private void EnsureResourceStackPanel()
+        {
+            RectTransform panel = EnsureDirectImageLayer(
+                safeAreaRoot,
+                "ResourceStackPanel",
+                null,
+                Image.Type.Simple,
+                new Color(1f, 1f, 1f, 0f));
+            SetAnchored(
+                panel,
+                new Vector2(0f, 1f),
+                new Vector2(0f, 1f),
+                new Vector2(0.5f, 0.5f),
+                new Vector2(246f, 216f),
+                new Vector2(190f, -486f));
+            Image panelImage = panel.GetComponent<Image>();
+            panelImage.sprite = null;
+            panelImage.color = new Color(1f, 1f, 1f, 0f);
+            panelImage.preserveAspect = false;
+            panelImage.raycastTarget = false;
+
+            RemoveChildIfExists(panel, "SeparatorTop");
+            RemoveChildIfExists(panel, "SeparatorBottom");
+
+            panel.SetSiblingIndex(Mathf.Min(2, panel.parent.childCount - 1));
         }
 
         private void BindAuthoredGameplayButtonBadges()
@@ -567,17 +600,62 @@ namespace SolitaireAssociations
             RectTransform root = FindChildRecursive<RectTransform>(safeAreaRoot, "LivesHud");
             if (root == null)
             {
-                root = CreateRect("LivesHud", safeAreaRoot, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0.5f, 0.5f), new Vector2(214f, 64f), new Vector2(LivesLeftInsetX, -LivesUnderMovesTopInset));
+                root = CreateRect(
+                    "LivesHud",
+                    safeAreaRoot,
+                    new Vector2(0f, 1f),
+                    new Vector2(0f, 1f),
+                    new Vector2(0.5f, 0.5f),
+                    new Vector2(238f, 66f),
+                    new Vector2(184f, -LivesTopInset));
             }
             else
             {
-                SetAnchored(root, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0.5f, 0.5f), new Vector2(214f, 64f), new Vector2(LivesLeftInsetX, -LivesUnderMovesTopInset));
+                SetAnchored(
+                    root,
+                    new Vector2(0f, 1f),
+                    new Vector2(0f, 1f),
+                    new Vector2(0.5f, 0.5f),
+                    new Vector2(238f, 66f),
+                    new Vector2(184f, -LivesTopInset));
+            }
+
+            foreach (LivesHudView candidate in UnityEngine.Object.FindObjectsByType<LivesHudView>(
+                         FindObjectsInactive.Include,
+                         FindObjectsSortMode.None))
+            {
+                if (candidate != null && candidate.transform != root)
+                {
+                    candidate.gameObject.SetActive(false);
+                }
             }
 
             Image panelImage = EnsureGraphic<Image>(root.gameObject);
             panelImage.sprite = null;
             panelImage.color = new Color(1f, 1f, 1f, 0f);
             panelImage.raycastTarget = false;
+
+            RemoveChildIfExists(root, "LivesBackplate");
+            RemoveChildIfExists(root, "LivesTopGloss");
+
+            RectTransform statusFill = EnsureDirectImageLayer(
+                root,
+                "LivesStatusFill",
+                null,
+                Image.Type.Simple,
+                new Color(1f, 1f, 1f, 0f));
+            SetAnchored(
+                statusFill,
+                new Vector2(0f, 0.5f),
+                new Vector2(0f, 0.5f),
+                new Vector2(0.5f, 0.5f),
+                new Vector2(230f, 64f),
+                new Vector2(123f, 0f));
+            Image statusFillImage = statusFill.GetComponent<Image>();
+            statusFillImage.color = new Color(1f, 1f, 1f, 0f);
+            statusFillImage.preserveAspect = false;
+            statusFillImage.raycastTarget = false;
+            statusFill.SetAsFirstSibling();
 
             RectTransform heart = EnsureDirectImageLayer(root, "HeartIcon", GetHeartSprite(), Image.Type.Simple, Color.white);
             TMP_Text heartText = heart.GetComponent<TMP_Text>();
@@ -586,19 +664,141 @@ namespace SolitaireAssociations
                 heartText.enabled = false;
             }
 
-            SetAnchored(heart, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(54f, 54f), new Vector2(42f, 0f));
+            SetAnchored(
+                heart,
+                new Vector2(0f, 0.5f),
+                new Vector2(0f, 0.5f),
+                new Vector2(0.5f, 0.5f),
+                new Vector2(76f, 76f),
+                new Vector2(38f, 0f));
             Image heartImage = heart.GetComponent<Image>();
             heartImage.preserveAspect = true;
-            AddShadow(heart.gameObject, new Color(0.25f, 0f, 0f, 0.32f), new Vector2(0f, -2f));
+            heartImage.raycastTarget = false;
+            AddShadow(heart.gameObject, new Color(0.25f, 0f, 0f, 0.38f), new Vector2(0f, -3f));
 
             TextMeshProUGUI count = EnsureDirectText(root, "LivesCount");
             RemoveUiEffects(count.gameObject);
-            ConfigureText(count, 32f, 32f, TextAlignmentOptions.MidlineLeft, new Color(1f, 0.9f, 0.66f, 1f));
+            ConfigureText(count, 36f, 36f, TextAlignmentOptions.Center, Color.white);
             ApplyCachedTextStyle(count, livesCountFontAsset, null);
             ApplyLivesCountStyle(count);
-            SetAnchored(count.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(126f, 56f), new Vector2(82f, 0f));
+            if (count.GetComponent<HudValuePulse>() == null)
+            {
+                count.gameObject.AddComponent<HudValuePulse>();
+            }
+            SetAnchored(
+                count.rectTransform,
+                new Vector2(0f, 0.5f),
+                new Vector2(0f, 0.5f),
+                new Vector2(0.5f, 0.5f),
+                new Vector2(56f, 48f),
+                new Vector2(38f, 3f));
+
+            TextMeshProUGUI status = EnsureDirectText(root, "LivesStatus");
+            RemoveUiEffects(status.gameObject);
+            ConfigureText(status, 19f, 15f, TextAlignmentOptions.Center, new Color(1f, 0.84f, 0.46f, 0.94f));
+            ApplyCachedTextStyle(status, livesCountFontAsset, null);
+            status.fontStyle = FontStyles.Bold;
+            status.fontWeight = FontWeight.Bold;
+            status.text = "ЗАПОЛНЕНО";
+            status.enableAutoSizing = true;
+            status.fontSize = 19f;
+            status.fontSizeMin = 15f;
+            status.fontSizeMax = 19f;
+            status.enableWordWrapping = false;
+            status.overflowMode = TextOverflowModes.Ellipsis;
+            SetAnchored(
+                status.rectTransform,
+                new Vector2(0f, 0.5f),
+                new Vector2(0f, 0.5f),
+                new Vector2(0.5f, 0.5f),
+                new Vector2(154f, 46f),
+                new Vector2(153f, 0f));
+
+            RectTransform addLifeRoot = null;
+            for (int index = 0; index < root.childCount; index++)
+            {
+                if (root.GetChild(index) is RectTransform child && child.name == "AddLifeButton")
+                {
+                    addLifeRoot = child;
+                    break;
+                }
+            }
+
+            if (addLifeRoot == null)
+            {
+                addLifeRoot = CreateRect(
+                    "AddLifeButton",
+                    root,
+                    new Vector2(0f, 0.5f),
+                    new Vector2(0f, 0.5f),
+                    new Vector2(0.5f, 0.5f),
+                    new Vector2(48f, 48f),
+                    new Vector2(68f, -21f));
+            }
+            else
+            {
+                SetAnchored(
+                    addLifeRoot,
+                    new Vector2(0f, 0.5f),
+                    new Vector2(0f, 0.5f),
+                    new Vector2(0.5f, 0.5f),
+                    new Vector2(48f, 48f),
+                    new Vector2(68f, -21f));
+            }
+
+            Image addLifeImage = EnsureGraphic<Image>(addLifeRoot.gameObject);
+            addLifeImage.sprite = null;
+            addLifeImage.color = new Color(1f, 1f, 1f, 0.001f);
+            addLifeImage.raycastTarget = true;
+
+            RectTransform addLifeVisual = EnsureDirectImageLayer(
+                addLifeRoot,
+                "AddLifeVisual",
+                PremiumUISprites.CleanIconCircle != null ? PremiumUISprites.CleanIconCircle : PremiumUISprites.IconCircle,
+                Image.Type.Simple,
+                Color.white);
+            SetAnchored(
+                addLifeVisual,
+                new Vector2(0.5f, 0.5f),
+                new Vector2(0.5f, 0.5f),
+                new Vector2(0.5f, 0.5f),
+                new Vector2(34f, 34f),
+                Vector2.zero);
+            Image addLifeVisualImage = addLifeVisual.GetComponent<Image>();
+            addLifeVisualImage.preserveAspect = true;
+            addLifeVisualImage.raycastTarget = false;
+
+            Button addLifeButton = addLifeRoot.GetComponent<Button>() ?? addLifeRoot.gameObject.AddComponent<Button>();
+            addLifeButton.targetGraphic = addLifeVisualImage;
+            addLifeButton.transition = Selectable.Transition.ColorTint;
+            ColorBlock addLifeColors = addLifeButton.colors;
+            addLifeColors.normalColor = Color.white;
+            addLifeColors.highlightedColor = new Color(1f, 0.96f, 0.74f, 1f);
+            addLifeColors.pressedColor = new Color(0.82f, 0.92f, 0.78f, 1f);
+            addLifeColors.selectedColor = addLifeColors.highlightedColor;
+            addLifeColors.disabledColor = new Color(1f, 1f, 1f, 0.45f);
+            addLifeColors.fadeDuration = 0.08f;
+            addLifeButton.colors = addLifeColors;
+
+            TextMeshProUGUI addLifeLabel = EnsureDirectText(addLifeRoot, "PlusLabel");
+            ConfigureText(addLifeLabel, 22f, 20f, TextAlignmentOptions.Center, new Color(1f, 0.88f, 0.42f, 1f));
+            ApplyCachedTextStyle(addLifeLabel, livesCountFontAsset, null);
+            addLifeLabel.text = "+";
+            addLifeLabel.fontStyle = FontStyles.Bold;
+            addLifeLabel.raycastTarget = false;
+            SetAnchored(
+                addLifeLabel.rectTransform,
+                Vector2.zero,
+                Vector2.one,
+                new Vector2(0.5f, 0.5f),
+                Vector2.zero,
+                Vector2.zero);
+            addLifeLabel.transform.SetAsLastSibling();
+
+            heart.SetAsLastSibling();
             count.transform.SetAsLastSibling();
-            NormalizeLivesHudChildren(root, heart, count);
+            addLifeRoot.SetAsLastSibling();
+            NormalizeLivesHudChildren(root, statusFill, heart, count, status, addLifeRoot);
 
             LivesHudView[] hudViews = root.GetComponents<LivesHudView>();
             if (hudViews.Length > 0)
@@ -621,11 +821,23 @@ namespace SolitaireAssociations
                 livesHudView = root.gameObject.AddComponent<LivesHudView>();
             }
 
-            livesHudView.Configure(livesManager, count, heart.GetComponent<Image>());
+            livesHudView.Configure(
+                livesManager,
+                count,
+                heart.GetComponent<Image>(),
+                status,
+                addLifeButton,
+                null);
             root.SetAsLastSibling();
         }
 
-        private static void NormalizeLivesHudChildren(RectTransform root, RectTransform heart, TMP_Text count)
+        private static void NormalizeLivesHudChildren(
+            RectTransform root,
+            RectTransform statusFill,
+            RectTransform heart,
+            TMP_Text count,
+            TMP_Text status,
+            RectTransform addLifeButton)
         {
             if (root == null)
             {
@@ -635,16 +847,20 @@ namespace SolitaireAssociations
             for (int index = 0; index < root.childCount; index++)
             {
                 Transform child = root.GetChild(index);
-                bool keep = child == heart || (count != null && child == count.transform);
+                bool keep =
+                    child == statusFill ||
+                    child == heart ||
+                    child == addLifeButton ||
+                    (count != null && child == count.transform) ||
+                    (status != null && child == status.transform);
                 child.gameObject.SetActive(keep);
             }
 
             foreach (TMP_Text text in root.GetComponentsInChildren<TMP_Text>(true))
             {
-                if (text == count)
+                if (text == count || text == status || text.name == "PlusLabel")
                 {
                     TrimExtraTextComponents(text.gameObject, text);
-                    ApplyLivesCountStyle(text);
                     continue;
                 }
 
@@ -724,15 +940,15 @@ namespace SolitaireAssociations
             text.enabled = true;
             text.canvasRenderer.SetAlpha(1f);
             text.enableAutoSizing = false;
-            text.fontSize = 38f;
-            text.fontSizeMin = 38f;
-            text.fontSizeMax = 38f;
-            text.fontStyle = FontStyles.Normal;
-            text.fontWeight = FontWeight.Regular;
+            text.fontSize = 32f;
+            text.fontSizeMin = 32f;
+            text.fontSizeMax = 32f;
+            text.fontStyle = FontStyles.Bold;
+            text.fontWeight = FontWeight.Bold;
             text.enableWordWrapping = false;
             text.overflowMode = TextOverflowModes.Overflow;
             text.alignment = TextAlignmentOptions.Center;
-            text.color = new Color(0.31f, 0.17f, 0.04f, 1f);
+            text.color = new Color(1f, 0.91f, 0.64f, 0.96f);
             text.margin = Vector4.zero;
             text.extraPadding = false;
             text.raycastTarget = false;
@@ -750,15 +966,15 @@ namespace SolitaireAssociations
             text.enabled = true;
             text.canvasRenderer.SetAlpha(1f);
             text.enableAutoSizing = false;
-            text.fontSize = 32f;
-            text.fontSizeMin = 32f;
-            text.fontSizeMax = 32f;
-            text.fontStyle = FontStyles.Normal;
-            text.fontWeight = FontWeight.Regular;
+            text.fontSize = 36f;
+            text.fontSizeMin = 36f;
+            text.fontSizeMax = 36f;
+            text.fontStyle = FontStyles.Bold;
+            text.fontWeight = FontWeight.Bold;
             text.enableWordWrapping = false;
             text.overflowMode = TextOverflowModes.Overflow;
-            text.alignment = TextAlignmentOptions.MidlineLeft;
-            text.color = new Color(1f, 0.9f, 0.66f, 1f);
+            text.alignment = TextAlignmentOptions.Center;
+            text.color = Color.white;
             text.margin = Vector4.zero;
             text.extraPadding = false;
             text.raycastTarget = false;
@@ -782,22 +998,23 @@ namespace SolitaireAssociations
             coinsPanel = FindChildRecursive<RectTransform>(safeAreaRoot, "CoinsPanel");
             if (coinsPanel != null)
             {
-                SetAnchored(coinsPanel, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0.5f, 0.5f), new Vector2(236f, 70f), new Vector2(196f, -HudTopInset));
-                Image panelImage = EnsureGraphic<Image>(coinsPanel.gameObject);
-                panelImage.sprite = GetHudCounterGoldSprite();
-                panelImage.type = Image.Type.Sliced;
-                panelImage.color = new Color(1f, 1f, 1f, 0.96f);
-                AddShadow(coinsPanel.gameObject, new Color(0.12f, 0.06f, 0.01f, 0.22f), new Vector2(0f, -4f));
+                if (coinsPanel.parent != safeAreaRoot)
+                {
+                    coinsPanel.SetParent(safeAreaRoot, false);
+                }
 
-                RectTransform coinGloss = EnsureImageLayer(coinsPanel, "CoinsTopGloss", GetRoundedButtonSprite(), Image.Type.Sliced, new Color(1f, 0.96f, 0.74f, 0.16f));
-                SetAnchored(coinGloss, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(-54f, 18f), new Vector2(10f, -19f));
-                coinGloss.SetAsFirstSibling();
+                SetAnchored(coinsPanel, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0.5f, 0.5f), new Vector2(238f, 60f), new Vector2(184f, -CoinsTopInset));
+                Image panelImage = EnsureGraphic<Image>(coinsPanel.gameObject);
+                panelImage.sprite = null;
+                panelImage.color = new Color(1f, 1f, 1f, 0f);
+
+                RemoveChildIfExists(coinsPanel, "CoinsTopGloss");
 
                 RectTransform coinIcon = FindChildRecursive<RectTransform>(coinsPanel, "CoinIcon")
                     ?? EnsureImageLayer(coinsPanel, "CoinIcon", GetCoinIconSprite(), Image.Type.Simple, Color.white);
                 if (coinIcon != null)
                 {
-                    SetAnchored(coinIcon, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(54f, 54f), new Vector2(40f, 0f));
+                    SetAnchored(coinIcon, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(75f, 75f), new Vector2(38f, 0f));
                     Image coinImage = EnsureGraphic<Image>(coinIcon.gameObject);
                     coinImage.sprite = GetCoinIconSprite();
                     coinImage.type = Image.Type.Simple;
@@ -814,18 +1031,33 @@ namespace SolitaireAssociations
                 if (coinsLabel != null)
                 {
                     RectTransform coinsRect = coinsLabel.rectTransform;
-                    SetAnchored(coinsRect, new Vector2(0f, 0.5f), new Vector2(1f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-60f, 44f), new Vector2(24f, 0f));
+                    SetAnchored(coinsRect, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(148f, 42f), new Vector2(153f, 8f));
                     RemoveUiEffects(coinsLabel.gameObject);
                     ApplyCachedTextStyle(coinsLabel, movesValueFontAsset, movesValueFontMaterial);
-                    ConfigureText(coinsLabel, 30f, 30f, TextAlignmentOptions.Center, new Color(0.31f, 0.17f, 0.04f, 1f));
-                    coinsLabel.enableAutoSizing = false;
-                    coinsLabel.fontSize = 30f;
-                    coinsLabel.fontSizeMin = 30f;
-                    coinsLabel.fontSizeMax = 30f;
-                    coinsLabel.fontStyle = FontStyles.Normal;
-                    coinsLabel.fontWeight = FontWeight.Regular;
+                    ConfigureText(coinsLabel, 32f, 32f, TextAlignmentOptions.Center, new Color(1f, 0.91f, 0.65f, 0.96f));
+                    coinsLabel.enableAutoSizing = true;
+                    coinsLabel.fontSize = 32f;
+                    coinsLabel.fontSizeMin = 19f;
+                    coinsLabel.fontSizeMax = 32f;
+                    coinsLabel.fontStyle = FontStyles.Bold;
+                    coinsLabel.fontWeight = FontWeight.Bold;
                     coinsLabel.overflowMode = TextOverflowModes.Ellipsis;
+                    if (coinsLabel.GetComponent<HudValuePulse>() == null)
+                    {
+                        coinsLabel.gameObject.AddComponent<HudValuePulse>();
+                    }
                 }
+
+                TextMeshProUGUI coinsCaption = EnsureDirectText(coinsPanel, "CoinsLabel");
+                coinsCaption.gameObject.SetActive(true);
+                coinsCaption.text = "ЗОЛОТО";
+                ConfigureText(coinsCaption, 12f, 12f, TextAlignmentOptions.Center, new Color(0.9f, 0.69f, 0.27f, 0.82f));
+                ApplyCachedTextStyle(coinsCaption, movesLabelFontAsset, movesLabelFontMaterial);
+                coinsCaption.fontStyle = FontStyles.Bold;
+                coinsCaption.fontWeight = FontWeight.Bold;
+                coinsCaption.enableAutoSizing = false;
+                coinsCaption.raycastTarget = false;
+                SetAnchored(coinsCaption.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(148f, 16f), new Vector2(153f, -17f));
             }
 
             if (plusButton != null)
@@ -857,16 +1089,47 @@ namespace SolitaireAssociations
                 return;
             }
 
-            SetAnchored(movesPanel, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0.5f, 0.5f), new Vector2(164f, 108f), new Vector2(154f, -MovesTopInset));
+            SetAnchored(movesPanel, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0.5f, 0.5f), new Vector2(238f, 60f), new Vector2(184f, -MovesTopInset));
             Image panelImage = EnsureGraphic<Image>(movesPanel.gameObject);
-            panelImage.sprite = GetHudPanelCreamGoldSprite();
-            panelImage.type = Image.Type.Sliced;
-            panelImage.color = new Color(1f, 1f, 1f, 0.92f);
-            AddShadow(movesPanel.gameObject, new Color(0.12f, 0.06f, 0.01f, 0.2f), new Vector2(0f, -4f));
+            panelImage.sprite = null;
+            panelImage.color = new Color(1f, 1f, 1f, 0f);
 
-            RectTransform movesGloss = EnsureImageLayer(movesPanel, "MovesTopGloss", GetRoundedButtonSprite(), Image.Type.Sliced, new Color(1f, 0.96f, 0.74f, 0.14f));
-            SetAnchored(movesGloss, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(-36f, 18f), new Vector2(0f, -20f));
-            movesGloss.SetAsFirstSibling();
+            RemoveChildIfExists(movesPanel, "MovesTopGloss");
+
+            RectTransform movesIcon = EnsureDirectImageLayer(
+                movesPanel,
+                "MovesIcon",
+                null,
+                Image.Type.Simple,
+                new Color(1f, 1f, 1f, 0f));
+            SetAnchored(
+                movesIcon,
+                new Vector2(0f, 0.5f),
+                new Vector2(0f, 0.5f),
+                new Vector2(0.5f, 0.5f),
+                new Vector2(75f, 75f),
+                new Vector2(38f, 0f));
+            Image movesIconImage = movesIcon.GetComponent<Image>();
+            movesIconImage.sprite = null;
+            movesIconImage.color = new Color(1f, 1f, 1f, 0f);
+            movesIconImage.raycastTarget = false;
+            RemoveChildIfExists(movesIcon, "MovesArrows");
+            RectTransform movesGlyph = EnsureDirectImageLayer(
+                movesIcon,
+                "MovesIconGlyph",
+                PremiumUISprites.BoosterRocketIcon,
+                Image.Type.Simple,
+                Color.white);
+            SetAnchored(
+                movesGlyph,
+                new Vector2(0.5f, 0.5f),
+                new Vector2(0.5f, 0.5f),
+                new Vector2(0.5f, 0.5f),
+                new Vector2(45f, 45f),
+                Vector2.zero);
+            Image movesGlyphImage = movesGlyph.GetComponent<Image>();
+            movesGlyphImage.preserveAspect = true;
+            movesGlyphImage.raycastTarget = false;
 
             EnsureMovesPanelText(movesPanel);
         }
@@ -880,27 +1143,34 @@ namespace SolitaireAssociations
                     : lastDisplayedMoves.ToString());
 
             TextMeshProUGUI label = EnsureDirectText(panel, "MovesLabel");
-            label.text = "Ходы";
+            label.text = "ХОДЫ";
             label.gameObject.SetActive(true);
             label.enabled = true;
             label.canvasRenderer.SetAlpha(1f);
-            SetAnchored(label.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(-26f, 28f), new Vector2(0f, -17f));
-            ConfigureText(label, 25f, 17f, TextAlignmentOptions.Center, new Color(0.37f, 0.22f, 0.06f, 1f));
+            SetAnchored(label.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(148f, 16f), new Vector2(153f, -17f));
+            ConfigureText(label, 12f, 12f, TextAlignmentOptions.Center, new Color(0.9f, 0.69f, 0.27f, 0.82f));
             ApplyCachedTextStyle(label, movesLabelFontAsset, movesLabelFontMaterial);
-            label.fontStyle = FontStyles.Normal;
-            label.fontWeight = FontWeight.Regular;
+            label.fontStyle = FontStyles.Bold;
+            label.fontWeight = FontWeight.Bold;
+            label.enableAutoSizing = false;
+            label.fontSize = 12f;
+            label.fontSizeMin = 12f;
+            label.fontSizeMax = 12f;
             RemoveUiEffects(label.gameObject);
-            AddTextOutline(label, new Color(1f, 0.93f, 0.62f, 0.22f), new Vector2(0.6f, -0.6f));
 
             movesLabel = EnsureDirectText(panel, "MovesValue");
             movesLabel.text = value;
             movesLabel.gameObject.SetActive(true);
             movesLabel.enabled = true;
             movesLabel.canvasRenderer.SetAlpha(1f);
-            SetAnchored(movesLabel.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(-24f, 54f), new Vector2(0f, 10f));
-            ConfigureText(movesLabel, 38f, 38f, TextAlignmentOptions.Center, new Color(0.31f, 0.17f, 0.04f, 1f));
+            SetAnchored(movesLabel.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(148f, 42f), new Vector2(153f, 8f));
+            ConfigureText(movesLabel, 32f, 32f, TextAlignmentOptions.Center, new Color(1f, 0.91f, 0.65f, 0.96f));
             ApplyCachedTextStyle(movesLabel, movesValueFontAsset, movesValueFontMaterial);
             ApplyMovesValueStyle(movesLabel);
+            if (movesLabel.GetComponent<HudValuePulse>() == null)
+            {
+                movesLabel.gameObject.AddComponent<HudValuePulse>();
+            }
             RemoveUiEffects(movesLabel.gameObject);
             label.transform.SetAsLastSibling();
             movesLabel.transform.SetAsLastSibling();
@@ -916,7 +1186,7 @@ namespace SolitaireAssociations
 
             foreach (TMP_Text text in panel.GetComponentsInChildren<TMP_Text>(true))
             {
-                if (text == label || text == value)
+                if (text == label || text == value || text.name == "MovesArrows")
                 {
                     TrimExtraTextComponents(text.gameObject, text);
                     text.gameObject.SetActive(true);
@@ -2213,7 +2483,7 @@ namespace SolitaireAssociations
 
         private IEnumerator PulseCoins()
         {
-            Transform target = coinsPanel != null ? coinsPanel : coinsLabel.transform;
+            Transform target = coinsLabel != null ? coinsLabel.transform : coinsPanel;
             Vector3 baseScale = Vector3.one;
             float duration = 0.24f;
             float elapsed = 0f;

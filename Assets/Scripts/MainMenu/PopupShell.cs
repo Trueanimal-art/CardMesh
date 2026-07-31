@@ -29,6 +29,7 @@ namespace SolitaireAssociations
         [SerializeField] private bool showIconMedallion;
         [SerializeField] private bool showInnerBackground = true;
         [SerializeField] private Vector2 titlePositionOffset;
+        [SerializeField] private Vector2 closePositionOffset;
         [SerializeField] private Sprite iconSprite;
 
         [Header("Shell bindings")]
@@ -80,7 +81,8 @@ namespace SolitaireAssociations
             Sprite icon = null,
             bool useIconMedallion = false,
             bool useInnerBackground = true,
-            Vector2? customTitlePositionOffset = null)
+            Vector2? customTitlePositionOffset = null,
+            Vector2? customClosePositionOffset = null)
         {
             sizePreset = preset;
             title = titleValue ?? string.Empty;
@@ -89,6 +91,7 @@ namespace SolitaireAssociations
             showIconMedallion = useIconMedallion || iconSprite != null;
             showInnerBackground = useInnerBackground;
             titlePositionOffset = customTitlePositionOffset ?? Vector2.zero;
+            closePositionOffset = customClosePositionOffset ?? Vector2.zero;
             EnsureHierarchy();
         }
 
@@ -310,7 +313,13 @@ namespace SolitaireAssociations
             subtitleText.gameObject.SetActive(!string.IsNullOrWhiteSpace(subtitle));
 
             RectTransform closeRect = closeButton.transform as RectTransform;
-            SetAnchored(closeRect, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 0.5f), layout.CloseSize, layout.ClosePosition);
+            SetAnchored(
+                closeRect,
+                new Vector2(1f, 1f),
+                new Vector2(1f, 1f),
+                new Vector2(0.5f, 0.5f),
+                layout.CloseSize,
+                layout.ClosePosition + closePositionOffset);
             StyleIconCloseButton(closeButton);
 
             StretchToFill(contentRoot, layout.ContentLeft, layout.ContentRight, layout.ContentTop, layout.ContentBottom);

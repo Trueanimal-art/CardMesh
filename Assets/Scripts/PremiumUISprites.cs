@@ -9,6 +9,9 @@ namespace SolitaireAssociations
         private static Sprite primaryButton;
         private static Sprite cleanGoldButton;
         private static Sprite gameplayActionButton;
+        private static Sprite resourceHudRow;
+        private static Sprite resourceHudStack;
+        private static Sprite resourceHudLightRow;
         private static Sprite hudCounterGold;
         private static Sprite hudPanelCreamGold;
         private static Sprite secondaryButton;
@@ -40,6 +43,9 @@ namespace SolitaireAssociations
         public static Sprite PrimaryButton => primaryButton ??= Load("button_primary_gold");
         public static Sprite CleanGoldButton => cleanGoldButton ??= Load("button_gold_clean");
         public static Sprite GameplayActionButton => gameplayActionButton ??= Load("button_gameplay_action_gold");
+        public static Sprite ResourceHudRow => resourceHudRow ??= Load("hud_resource_row_premium");
+        public static Sprite ResourceHudStack => resourceHudStack ??= Load("hud_resource_stack_light");
+        public static Sprite ResourceHudLightRow => resourceHudLightRow ??= Load("hud_resource_row_light");
         public static Sprite HudCounterGold => hudCounterGold ??= Load("hud_counter_gold");
         public static Sprite HudPanelCreamGold => hudPanelCreamGold ??= Load("hud_panel_cream_gold");
         public static Sprite SecondaryButton => secondaryButton ??= Load("button_secondary_emerald");

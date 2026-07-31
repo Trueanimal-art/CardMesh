@@ -23,6 +23,10 @@ namespace SolitaireAssociations
         [SerializeField] private int maxMessageLength = 1000;
         [SerializeField] private bool fallbackToMailClient = true;
 
+        private static readonly Color CounterNormalColor = new(0.86f, 0.84f, 0.70f, 0.72f);
+        private static readonly Color CounterNearLimitColor = new(1f, 0.78f, 0.30f, 0.88f);
+        private static readonly Color CounterAtLimitColor = new(1f, 0.60f, 0.24f, 0.92f);
+
         private Coroutine sendRoutine;
 
         private void Awake()
@@ -32,7 +36,10 @@ namespace SolitaireAssociations
             {
                 messageInput.characterLimit = Mathf.Max(1, maxMessageLength);
                 messageInput.onValidateInput = ValidateMessageCharacter;
+                BindMessageCounter();
             }
+
+            UpdateCharacterCounter(messageInput != null ? messageInput.text : string.Empty);
         }
 
         private void Update()
@@ -57,7 +64,17 @@ namespace SolitaireAssociations
         private void OnEnable()
         {
             popupRoot ??= gameObject;
+            BindMessageCounter();
+            UpdateCharacterCounter(messageInput != null ? messageInput.text : string.Empty);
             SetSending(false);
+        }
+
+        private void OnDestroy()
+        {
+            if (messageInput != null)
+            {
+                messageInput.onValueChanged.RemoveListener(UpdateCharacterCounter);
+            }
         }
 
         public void Open()
@@ -73,7 +90,7 @@ namespace SolitaireAssociations
                 messageInput.ActivateInputField();
             }
 
-            SetStatus("До 1000 символов");
+            UpdateCharacterCounter(messageInput != null ? messageInput.text : string.Empty);
             SetSending(false);
         }
 
@@ -228,7 +245,40 @@ namespace SolitaireAssociations
             }
 
             statusLabel.text = message;
+            statusLabel.color = CounterNormalColor;
             RuntimeCyrillicFontProvider.Apply(statusLabel, message);
+        }
+
+        private void BindMessageCounter()
+        {
+            if (messageInput == null)
+            {
+                return;
+            }
+
+            messageInput.onValueChanged.RemoveListener(UpdateCharacterCounter);
+            messageInput.onValueChanged.AddListener(UpdateCharacterCounter);
+        }
+
+        private void UpdateCharacterCounter(string value)
+        {
+            if (statusLabel == null)
+            {
+                return;
+            }
+
+            int limit = Mathf.Max(1, maxMessageLength);
+            int length = Mathf.Min((value ?? string.Empty).Length, limit);
+            float ratio = length / (float)limit;
+            string counter = $"{length} / {limit}";
+
+            statusLabel.text = counter;
+            statusLabel.color = ratio >= 0.98f
+                ? CounterAtLimitColor
+                : ratio >= 0.9f
+                    ? CounterNearLimitColor
+                    : CounterNormalColor;
+            RuntimeCyrillicFontProvider.Apply(statusLabel, counter);
         }
 
         [Serializable]
