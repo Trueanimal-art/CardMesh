@@ -45,6 +45,14 @@ namespace CardMesh
         public void SelectFour() => SetRating(4);
         public void SelectFive() => SetRating(5);
 
+        public void Open()
+        {
+            MainMenuPopupExclusivity.OpenExclusive(this);
+            GameObject root = popupRoot != null ? popupRoot : gameObject;
+            root.SetActive(true);
+            root.transform.SetAsLastSibling();
+        }
+
         public void Submit()
         {
             if (selectedRating <= 0 || confirmationRoutine != null)

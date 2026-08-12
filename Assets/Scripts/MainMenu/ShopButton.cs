@@ -119,25 +119,10 @@ namespace CardMesh
 
         private void StyleAuthoringButton()
         {
-            RectTransform rect = transform as RectTransform;
-            if (rect != null)
-            {
-                rect.anchorMin = new Vector2(0f, 1f);
-                rect.anchorMax = new Vector2(0f, 1f);
-                rect.pivot = new Vector2(0.5f, 0.5f);
-                rect.sizeDelta = new Vector2(144f, 144f);
-                if (rect.anchoredPosition == Vector2.zero)
-                {
-                    rect.anchoredPosition = new Vector2(120f, -120f);
-                }
-            }
-
             Image image = GetComponent<Image>();
             if (image != null)
             {
-                image.preserveAspect = true;
                 image.raycastTarget = true;
-                image.color = Color.white;
             }
 
             if (GetComponent<UIJuicyButton>() == null)

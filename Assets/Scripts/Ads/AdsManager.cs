@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class AdsManager : MonoBehaviour
 {
@@ -25,6 +27,10 @@ public class AdsManager : MonoBehaviour
     private int restartRequestCountThisLevel;
     private int trackedLevelNumber = -1;
     private bool adInProgress;
+    private bool bannerDesiredVisible;
+    private bool applicationPaused;
+    private readonly HashSet<string> bannerBlockers = new();
+    private float nextBannerHeartbeatAt;
     private float audioVolumeBeforeAd = 1f;
     private bool audioPauseBeforeAd;
 
@@ -41,6 +47,8 @@ public class AdsManager : MonoBehaviour
 
         provider = CreateProvider();
         Log($"Provider selected: {provider.ProviderName}");
+        SceneManager.activeSceneChanged += HandleActiveSceneChanged;
+        UpdateBannerVisibility(SceneManager.GetActiveScene());
     }
 
     private void OnDestroy()
@@ -52,7 +60,38 @@ public class AdsManager : MonoBehaviour
 
         provider?.Dispose();
         provider = null;
+        SceneManager.activeSceneChanged -= HandleActiveSceneChanged;
         Instance = null;
+    }
+
+    private void Update()
+    {
+        if (Time.unscaledTime < nextBannerHeartbeatAt)
+        {
+            return;
+        }
+
+        nextBannerHeartbeatAt = Time.unscaledTime + 1f;
+        RestoreBannerVisibility();
+    }
+
+    public void SetBannerBlocker(string reason, bool active)
+    {
+        if (string.IsNullOrWhiteSpace(reason))
+        {
+            return;
+        }
+
+        if (active)
+        {
+            bannerBlockers.Add(reason);
+        }
+        else
+        {
+            bannerBlockers.Remove(reason);
+        }
+
+        RestoreBannerVisibility();
     }
 
     public void ShowRewardedAddMoves(Action onCompleted, Action onFailed = null)
@@ -74,6 +113,7 @@ public class AdsManager : MonoBehaviour
 
         BeginAdAudioMute();
         adInProgress = true;
+        provider.SetBannerVisible(false);
         bool resolved = false;
 
         bool started = provider.ShowRewarded(
@@ -88,6 +128,7 @@ public class AdsManager : MonoBehaviour
                 Log($"Rewarded completed: {safeReason}");
                 FinishAdAudioRestore();
                 adInProgress = false;
+                RestoreBannerVisibility();
                 onCompleted?.Invoke();
             },
             onFailedOrClosed: () =>
@@ -101,6 +142,7 @@ public class AdsManager : MonoBehaviour
                 Log("Rewarded failed");
                 FinishAdAudioRestore();
                 adInProgress = false;
+                RestoreBannerVisibility();
                 onFailed?.Invoke();
             });
 
@@ -115,6 +157,7 @@ public class AdsManager : MonoBehaviour
             Log("Rewarded failed");
             FinishAdAudioRestore();
             adInProgress = false;
+            RestoreBannerVisibility();
             onFailed?.Invoke();
         }
     }
@@ -151,6 +194,7 @@ public class AdsManager : MonoBehaviour
 
         BeginAdAudioMute();
         adInProgress = true;
+        provider.SetBannerVisible(false);
         bool resolved = false;
 
         bool started = provider.ShowInterstitial(
@@ -166,6 +210,7 @@ public class AdsManager : MonoBehaviour
                 Log("Interstitial completed");
                 FinishAdAudioRestore();
                 adInProgress = false;
+                RestoreBannerVisibility();
                 onCompleted?.Invoke();
             },
             onFailed: () =>
@@ -179,6 +224,7 @@ public class AdsManager : MonoBehaviour
                 Log("Interstitial failed");
                 FinishAdAudioRestore();
                 adInProgress = false;
+                RestoreBannerVisibility();
                 onSkippedOrFailed?.Invoke();
             });
 
@@ -193,6 +239,7 @@ public class AdsManager : MonoBehaviour
             Log("Interstitial failed");
             FinishAdAudioRestore();
             adInProgress = false;
+            RestoreBannerVisibility();
             onSkippedOrFailed?.Invoke();
         }
 
@@ -256,6 +303,44 @@ public class AdsManager : MonoBehaviour
         {
             onFailed?.Invoke();
         }
+    }
+
+    private void OnApplicationPause(bool pauseStatus)
+    {
+        applicationPaused = pauseStatus;
+        if (pauseStatus)
+        {
+            provider?.SetBannerVisible(false);
+            return;
+        }
+
+        RestoreBannerVisibility();
+    }
+
+    private void HandleActiveSceneChanged(Scene previousScene, Scene nextScene)
+    {
+        UpdateBannerVisibility(nextScene);
+    }
+
+    private void UpdateBannerVisibility(Scene scene)
+    {
+        bannerDesiredVisible =
+            scene.IsValid()
+            && string.Equals(scene.name, "Main", StringComparison.Ordinal);
+        if (!bannerDesiredVisible)
+        {
+            bannerBlockers.Clear();
+        }
+        RestoreBannerVisibility();
+    }
+
+    private void RestoreBannerVisibility()
+    {
+        provider?.SetBannerVisible(
+            bannerDesiredVisible
+            && !adInProgress
+            && !applicationPaused
+            && bannerBlockers.Count == 0);
     }
 
     private IAdsProvider CreateProvider()
@@ -358,6 +443,10 @@ public class AdsManager : MonoBehaviour
             return true;
         }
 
+        public void SetBannerVisible(bool visible)
+        {
+        }
+
         public void Dispose()
         {
         }
@@ -385,6 +474,10 @@ public class AdsManager : MonoBehaviour
             return false;
         }
 
+        public void SetBannerVisible(bool visible)
+        {
+        }
+
         public void Dispose()
         {
         }
@@ -398,4 +491,5 @@ internal interface IAdsProvider : IDisposable
     bool ShowRewarded(Action onCompleted, Action onFailedOrClosed);
     bool ShowInterstitial(Action onCompleted, Action onFailed);
     bool ShowPrivacyOptions(Action onClosed, Action onFailed);
+    void SetBannerVisible(bool visible);
 }

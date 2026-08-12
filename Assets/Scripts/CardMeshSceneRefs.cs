@@ -9,6 +9,8 @@ namespace CardMesh
     [Serializable]
     public sealed class ColumnRef
     {
+        private const float GoalLabelOverhang = 72f;
+        private const float GoalLabelMinimumGap = 8f;
         private static Sprite plainCategoryLabelSprite;
 
         [SerializeField] private Transform root;
@@ -115,8 +117,8 @@ namespace CardMesh
                 crownSlotLabelText.enableAutoSizing = true;
                 crownSlotLabelText.fontSizeMin = 16f;
                 crownSlotLabelText.fontSizeMax = 23f;
-                crownSlotLabelText.enableWordWrapping = false;
-                crownSlotLabelText.overflowMode = TextOverflowModes.Ellipsis;
+                crownSlotLabelText.textWrappingMode = TextWrappingModes.NoWrap;
+                crownSlotLabelText.overflowMode = TextOverflowModes.Truncate;
                 crownSlotLabelText.color = new Color(0.28f, 0.18f, 0.05f, 1f);
                 crownSlotLabelText.fontStyle = FontStyles.Bold;
                 crownSlotLabelText.margin = new Vector4(18f, 0f, 18f, 2f);
@@ -131,11 +133,27 @@ namespace CardMesh
             }
         }
 
-        private static float ResolveGoalLabelWidth(string categoryTitle, float slotWidth)
+        private float ResolveGoalLabelWidth(string categoryTitle, float slotWidth)
         {
             int titleLength = string.IsNullOrEmpty(categoryTitle) ? 0 : categoryTitle.Length;
             float desiredWidth = 120f + (titleLength * 12f);
-            return Mathf.Clamp(desiredWidth, slotWidth + 24f, slotWidth + 72f);
+            float minimumWidth = slotWidth + 24f;
+            float maximumWidth = slotWidth + GoalLabelOverhang;
+
+            HorizontalLayoutGroup columnsLayout = root != null && root.parent != null
+                ? root.parent.GetComponent<HorizontalLayoutGroup>()
+                : null;
+            if (columnsLayout != null)
+            {
+                // Keep a visible divider between adjacent labels on dense layouts,
+                // especially the five-column profile where the old minimum overlapped.
+                maximumWidth = Mathf.Min(
+                    maximumWidth,
+                    slotWidth + columnsLayout.spacing - GoalLabelMinimumGap);
+            }
+
+            minimumWidth = Mathf.Min(minimumWidth, maximumWidth);
+            return Mathf.Clamp(desiredWidth, minimumWidth, maximumWidth);
         }
 
         private static Sprite GetPlainCategoryLabelSprite()
@@ -180,12 +198,15 @@ namespace CardMesh
         private const float CrownSlotHeight = 286f;
         private const float GameplayColumnWidth = 196f;
         private const float CrownSlotAnchoredY = -78f;
-        private const float CrownToCardsGap = 14f;
+        private const float CrownToCardsGap = 30f;
         private const float CardsStackHeight = 390f;
-        private const float BoardAreaTopInset = 225f;
-        private const float BoardAreaBottomInset = 260f;
-        private const float BottomHudHeight = 178f;
-        private const float BottomHudBottomInset = 40f;
+        private const float BoardAreaTopInset = 930f;
+        private const float BoardAreaBottomInset = 50f;
+        private const float DeckAreaAnchoredX = -283f;
+        private const float DeckAreaAnchoredY = -475f;
+        private const float BottomHudHeight = 224f;
+        private const float BottomHudBottomInset = 264f;
+        private const float AdBannerReserveHeight = 240f;
 
         [Header("Roots")]
         [SerializeField] private RectTransform safeAreaRoot;
@@ -208,6 +229,8 @@ namespace CardMesh
 
         [Header("Columns")]
         [SerializeField] private List<ColumnRef> columns = new();
+        [SerializeField, Range(3, MaxSupportedColumns)]
+        private int editorPreviewColumns = 3;
 
         public RectTransform SafeAreaRoot => safeAreaRoot;
         public RectTransform ColumnSlotsRoot => columnSlotsRoot;
@@ -223,6 +246,7 @@ namespace CardMesh
         public Button UndoButton => undoButton;
         public Button BoosterDeckButton => boosterDeckButton;
         public IReadOnlyList<ColumnRef> Columns => columns;
+        public int EditorPreviewColumns => editorPreviewColumns;
 
         private void OnEnable()
         {
@@ -239,6 +263,18 @@ namespace CardMesh
         public void NormalizeSceneLayout()
         {
             AutoAssign();
+        }
+
+        public void SetEditorPreviewColumns(int columnsCount)
+        {
+            editorPreviewColumns = Mathf.Clamp(columnsCount, 3, MaxSupportedColumns);
+            ApplyEditorPreviewColumns();
+        }
+
+        public void ApplyRuntimeColumnProfile(int columnsCount)
+        {
+            ApplyColumnProfileLayout(
+                Mathf.Clamp(columnsCount, 3, MaxSupportedColumns));
         }
 
         public void UpdateMovesValue(int remainingMoves)
@@ -546,7 +582,7 @@ namespace CardMesh
             {
                 text.color = color;
                 text.fontStyle = FontStyles.Bold;
-                text.enableWordWrapping = false;
+                text.textWrappingMode = TextWrappingModes.NoWrap;
                 text.alignment = TextAlignmentOptions.Center;
             }
         }
@@ -558,13 +594,37 @@ namespace CardMesh
                 return;
             }
 
-            int previewColumnsCount = Mathf.Clamp(Mathf.Min(MaxSupportedColumns, columns.Count), 3, MaxSupportedColumns);
+            int previewColumnsCount = Mathf.Clamp(
+                Mathf.Min(editorPreviewColumns, columns.Count),
+                3,
+                MaxSupportedColumns);
+            ApplyColumnProfileLayout(previewColumnsCount);
+        }
+
+        private void ApplyColumnProfileLayout(int visibleColumnsCount)
+        {
+            if (columnSlotsRoot == null || columns == null || columns.Count == 0)
+            {
+                return;
+            }
+
+            int previewColumnsCount = Mathf.Clamp(
+                Mathf.Min(visibleColumnsCount, columns.Count),
+                3,
+                MaxSupportedColumns);
             ColumnLayoutProfile profile = GameManager.GetGameplayLayoutProfile(previewColumnsCount);
 
             HorizontalLayoutGroup layoutGroup = columnSlotsRoot.GetComponent<HorizontalLayoutGroup>();
             if (layoutGroup != null)
             {
                 layoutGroup.spacing = profile.columnSpacing;
+                layoutGroup.padding = new RectOffset(
+                    layoutGroup.padding.left,
+                    layoutGroup.padding.right,
+                    GetProfileVerticalCompensation(previewColumnsCount),
+                    layoutGroup.padding.bottom);
+                layoutGroup.childControlWidth = true;
+                layoutGroup.childForceExpandWidth = false;
             }
 
             for (int index = 0; index < columns.Count; index++)
@@ -580,6 +640,16 @@ namespace CardMesh
             }
 
             LayoutRebuilder.ForceRebuildLayoutImmediate(columnSlotsRoot);
+        }
+
+        private static int GetProfileVerticalCompensation(int columnsCount)
+        {
+            return columnsCount switch
+            {
+                4 => 36,
+                5 => 76,
+                _ => 0
+            };
         }
 
         private void ScheduleEditorPreviewColumns()
@@ -606,6 +676,10 @@ namespace CardMesh
             }
 
             EnsureLayoutElement(column.Root.gameObject, profile.cardSize.x, profile.cardSize.y + (profile.verticalOffset * 4f));
+            if (column.Root is RectTransform columnRoot)
+            {
+                columnRoot.sizeDelta = new Vector2(profile.cardSize.x, columnRoot.sizeDelta.y);
+            }
 
             if (column.CrownSlot is RectTransform crownSlot)
             {
@@ -615,6 +689,11 @@ namespace CardMesh
 
             if (column.CardsStackRoot is RectTransform cardsStackRoot)
             {
+                float cardsStackAnchoredY =
+                    CrownSlotAnchoredY - (profile.cardSize.y * 0.5f) - CrownToCardsGap;
+                cardsStackRoot.anchoredPosition = new Vector2(
+                    cardsStackRoot.anchoredPosition.x,
+                    cardsStackAnchoredY);
                 cardsStackRoot.sizeDelta = new Vector2(profile.cardSize.x, profile.cardSize.y + (profile.verticalOffset * 5f));
             }
         }
@@ -634,10 +713,8 @@ namespace CardMesh
             }
 
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution = Screen.height > Screen.width
-                ? new Vector2(1080f, 1920f)
-                : new Vector2(1920f, 1080f);
-            scaler.matchWidthOrHeight = 0.5f;
+            scaler.referenceResolution = new Vector2(1080f, 1920f);
+            scaler.matchWidthOrHeight = 0f;
         }
 
         private void ApplyReferenceLayout()
@@ -680,7 +757,26 @@ namespace CardMesh
                 return;
             }
 
-            SetAnchored(topHud, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, 180f), new Vector2(0f, -24f));
+            SetAnchored(topHud, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, 224f), Vector2.zero);
+
+            RectTransform statusPlates = FindChildRecursive<RectTransform>(topHud, "GameplayStatusPlates");
+            if (statusPlates != null)
+            {
+                SetAnchored(statusPlates, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 0.5f), new Vector2(960f, 96f), new Vector2(35f, -142f));
+                RectTransform lives = FindChildRecursive<RectTransform>(statusPlates, "LivesHud");
+                RectTransform coins = FindChildRecursive<RectTransform>(statusPlates, "CoinsPanel");
+                RectTransform moves = FindChildRecursive<RectTransform>(statusPlates, "MovesPanel");
+                SetAnchored(lives, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(280f, 96f), new Vector2(-330f, 0f));
+                SetAnchored(coins, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(190f, 96f), Vector2.zero);
+                SetAnchored(moves, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(240f, 96f), new Vector2(280f, 0f));
+
+                RectTransform authoredMenu = menuButton != null ? menuButton.GetComponent<RectTransform>() : FindChildRecursive<RectTransform>(topHud, "MenuButton");
+                if (authoredMenu != null)
+                {
+                    SetAnchored(authoredMenu, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 0.5f), new Vector2(88f, 88f), new Vector2(-76f, -60f));
+                }
+                return;
+            }
 
             RectTransform menuRoot = menuButton != null ? menuButton.GetComponent<RectTransform>() : FindChildRecursive<RectTransform>(topHud, "MenuButton");
             if (menuRoot != null)
@@ -730,8 +826,8 @@ namespace CardMesh
                     coinsText.fontSizeMax = 30f;
                     coinsText.fontStyle = FontStyles.Normal;
                     coinsText.fontWeight = FontWeight.Regular;
-                    coinsText.enableWordWrapping = false;
-                    coinsText.overflowMode = TextOverflowModes.Ellipsis;
+                    coinsText.textWrappingMode = TextWrappingModes.NoWrap;
+                    coinsText.overflowMode = TextOverflowModes.Truncate;
                     coinsText.alignment = TextAlignmentOptions.Center;
                     coinsText.color = movesValue != null ? movesValue.color : new Color(0.31f, 0.17f, 0.04f, 1f);
                     if (coinsText.TryGetComponent(out Shadow shadow))
@@ -777,6 +873,11 @@ namespace CardMesh
                 return;
             }
 
+            if (movesPanel.parent != null && movesPanel.parent.name == "GameplayStatusPlates")
+            {
+                return;
+            }
+
             SetAnchored(movesPanel, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0.5f, 0.5f), new Vector2(220f, 260f), new Vector2(140f, -320f));
             Image panelImage = EnsureGraphic<Image>(movesPanel.gameObject);
             if (panelImage.sprite == null)
@@ -804,7 +905,7 @@ namespace CardMesh
                 return;
             }
 
-            SetAnchored(deckArea, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 0.5f), new Vector2(520f, 310f), new Vector2(-269f, -470f));
+            SetAnchored(deckArea, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 0.5f), new Vector2(520f, 310f), new Vector2(DeckAreaAnchoredX, DeckAreaAnchoredY));
             Image deckAreaImage = EnsureGraphic<Image>(deckArea.gameObject);
             if (deckAreaImage.sprite == null)
             {
@@ -825,7 +926,7 @@ namespace CardMesh
             if (deckCounter != null)
             {
                 SetAnchored((RectTransform)deckCounter.transform, new Vector2(1f, 0.54f), new Vector2(1f, 0.54f), new Vector2(0.5f, 0.5f), new Vector2(52f, 40f), new Vector2(-165f, 120f));
-                deckCounter.enableWordWrapping = false;
+                deckCounter.textWrappingMode = TextWrappingModes.NoWrap;
                 deckCounter.enableAutoSizing = true;
                 deckCounter.fontSizeMin = 22f;
                 deckCounter.fontSizeMax = 36f;
@@ -949,31 +1050,29 @@ namespace CardMesh
             RectTransform hintRoot = hintButton != null ? hintButton.GetComponent<RectTransform>() : FindChildRecursive<RectTransform>(bottomHud, "HintButton");
             if (hintRoot != null)
             {
-                SetAnchored(hintRoot, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(210f, 82f), new Vector2(-310f, 0f));
+                SetAnchored(hintRoot, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(224f, 224f), new Vector2(-250f, 0f));
                 Image hintImage = EnsureGraphic<Image>(hintRoot.gameObject);
                 if (hintImage.sprite == null)
                 {
                     hintImage.color = new Color(0.47f, 0.64f, 1f, 1f);
                 }
-                StretchChildText(hintRoot);
             }
 
             RectTransform undoRoot = undoButton != null ? undoButton.GetComponent<RectTransform>() : FindChildRecursive<RectTransform>(bottomHud, "UndoButton");
             if (undoRoot != null)
             {
-                SetAnchored(undoRoot, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(210f, 82f), Vector2.zero);
+                SetAnchored(undoRoot, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(224f, 224f), new Vector2(0f, 14f));
                 Image undoImage = EnsureGraphic<Image>(undoRoot.gameObject);
                 if (undoImage.sprite == null)
                 {
                     undoImage.color = new Color(0.47f, 0.64f, 1f, 1f);
                 }
-                StretchChildText(undoRoot);
             }
 
             RectTransform boosterRoot = boosterDeckButton != null ? boosterDeckButton.GetComponent<RectTransform>() : FindChildRecursive<RectTransform>(bottomHud, "BoosterDeckButton");
             if (boosterRoot != null)
             {
-                SetAnchored(boosterRoot, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(210f, 82f), new Vector2(310f, 0f));
+                SetAnchored(boosterRoot, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(224f, 224f), new Vector2(250f, 0f));
                 Image boosterImage = EnsureGraphic<Image>(boosterRoot.gameObject);
                 if (boosterImage.sprite == null)
                 {
@@ -1004,9 +1103,16 @@ namespace CardMesh
                 return;
             }
 
-            SetAnchored(adBanner, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 64f), Vector2.zero);
+            adBanner.gameObject.SetActive(true);
+            SetAnchored(
+                adBanner,
+                new Vector2(0f, 0f),
+                new Vector2(1f, 0f),
+                new Vector2(0.5f, 0f),
+                new Vector2(0f, AdBannerReserveHeight),
+                Vector2.zero);
             Image image = EnsureGraphic<Image>(adBanner.gameObject);
-            image.color = new Color(0f, 0f, 0f, 0.12f);
+            image.color = new Color(0f, 0f, 0f, 0f);
             image.enabled = true;
             image.raycastTarget = false;
         }

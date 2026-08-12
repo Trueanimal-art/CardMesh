@@ -21,12 +21,12 @@ namespace CardMesh
         private static readonly Vector2 PanelSize = new(920f, 700f);
         private static readonly Vector2 TitleOffset = new(0f, -64f);
         private static readonly Vector2 TitleSize = new(-132f, 84f);
-        private static readonly Vector2 StatsOffset = new(0f, -126f);
+        private static readonly Vector2 StatsOffset = new(0f, -114f);
         private static readonly Vector2 StatsSize = new(-170f, 42f);
-        private static readonly Vector2 CloseOffset = new(-80f, -132f);
-        private static readonly Vector2 CloseSize = new(58f, 58f);
+        private static readonly Vector2 CloseOffset = new(-90f, -90f);
+        private static readonly Vector2 CloseSize = new(60f, 60f);
         private static readonly Vector2 ScrollSize = new(720f, 432f);
-        private static readonly Vector2 ScrollOffset = new(0f, -184f);
+        private static readonly Vector2 ScrollOffset = new(0f, -198f);
         private const float ScrollViewportHorizontalInset = 18f;
         private const float ScrollViewportTopInset = 28f;
         private const float ScrollViewportBottomInset = 28f;
@@ -119,6 +119,7 @@ namespace CardMesh
 
         public void Show(LevelProgressionManager targetProgressionManager, Action<int> selectedCallback)
         {
+            MainMenuPopupExclusivity.OpenExclusive(this);
             BindSceneReferences();
             CaptureAuthoredPlayModeLayout();
             CaptureShownPanelScale();
@@ -220,19 +221,8 @@ namespace CardMesh
             if (panel != null)
             {
                 closeButton = PopupShell.EnsureIconCloseButton(panel, "CloseButton");
-                SetAnchored(
-                    closeButton.transform as RectTransform,
-                    new Vector2(1f, 1f),
-                    new Vector2(1f, 1f),
-                    new Vector2(0.5f, 0.5f),
-                    CloseSize,
-                    CloseOffset);
-
-                Image closeImage = closeButton.GetComponent<Image>();
-                if (closeImage != null)
-                {
-                    closeImage.raycastPadding = new Vector4(-8f, -8f, -8f, -8f);
-                }
+                LevelFrameChrome chrome = panel.GetComponent<LevelFrameChrome>() ?? panel.gameObject.AddComponent<LevelFrameChrome>();
+                chrome.Configure(LevelFrameChrome.Preset.Compact, close: closeButton);
 
                 closeButton.transform.SetAsLastSibling();
             }
@@ -306,6 +296,8 @@ namespace CardMesh
             panelImage.raycastTarget = false;
             AddShadow(panelObject, new Color(0.02f, 0.01f, 0f, 0.42f), new Vector2(0f, -8f));
 
+            LevelFrameChrome chrome = panelObject.AddComponent<LevelFrameChrome>();
+
             TextMeshProUGUI title = CreateText(panel, "Title", "Выбор уровня", 54f, textGold, TextAlignmentOptions.Center);
             SetAnchored(title.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), TitleSize, TitleOffset);
             title.fontStyle = FontStyles.Bold;
@@ -316,6 +308,7 @@ namespace CardMesh
             AddTextOutline(statsText, new Color(0.12f, 0.055f, 0.012f, 0.48f), new Vector2(1f, -1f));
 
             closeButton = CreateCloseButton(panel);
+            chrome.Configure(LevelFrameChrome.Preset.Compact, close: closeButton);
 
             GameObject scrollRoot = CreateChild(panelObject, "LevelsScroll", typeof(RectTransform), typeof(ScrollRect));
             RectTransform scrollRectTransform = scrollRoot.transform as RectTransform;
@@ -1205,6 +1198,13 @@ namespace CardMesh
 
         private TMP_FontAsset ResolveFont()
         {
+            TMP_FontAsset sharedCyrillicFont =
+                Resources.Load<TMP_FontAsset>("Fonts/Roboto-Bold Cyrillic SDF");
+            if (sharedCyrillicFont != null)
+            {
+                return sharedCyrillicFont;
+            }
+
             TMP_Text sceneText = FindFirstObjectByType<TMP_Text>(FindObjectsInactive.Include);
             if (sceneText != null && sceneText.font != null)
             {
@@ -1244,19 +1244,8 @@ namespace CardMesh
         private Button CreateCloseButton(RectTransform parent)
         {
             Button button = PopupShell.EnsureIconCloseButton(parent, "CloseButton");
-            SetAnchored(
-                button.transform as RectTransform,
-                new Vector2(1f, 1f),
-                new Vector2(1f, 1f),
-                new Vector2(0.5f, 0.5f),
-                CloseSize,
-                CloseOffset);
-
-            Image image = button.GetComponent<Image>();
-            if (image != null)
-            {
-                image.raycastPadding = new Vector4(-8f, -8f, -8f, -8f);
-            }
+            LevelFrameChrome chrome = parent.GetComponent<LevelFrameChrome>() ?? parent.gameObject.AddComponent<LevelFrameChrome>();
+            chrome.Configure(LevelFrameChrome.Preset.Compact, close: button);
 
             button.transform.SetAsLastSibling();
             return button;
@@ -1271,7 +1260,7 @@ namespace CardMesh
             label.enableAutoSizing = true;
             label.fontSizeMax = fontSize;
             label.fontSizeMin = Mathf.Max(14f, fontSize * 0.58f);
-            label.enableWordWrapping = false;
+            label.textWrappingMode = TextWrappingModes.NoWrap;
             label.alignment = alignment;
             label.color = color;
             label.raycastTarget = false;
@@ -1394,8 +1383,8 @@ namespace CardMesh
 
             CanvasScaler scaler = canvasObject.GetComponent<CanvasScaler>();
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution = new Vector2(1920f, 1080f);
-            scaler.matchWidthOrHeight = 0.5f;
+            scaler.referenceResolution = new Vector2(1080f, 1920f);
+            scaler.matchWidthOrHeight = 0f;
             return canvas;
         }
 

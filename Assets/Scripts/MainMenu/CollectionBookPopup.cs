@@ -108,12 +108,15 @@ namespace CardMesh
 
         public void Show(CollectionBookManager targetManager)
         {
+            MainMenuPopupExclusivity.OpenExclusive(this);
             manager = targetManager != null ? targetManager : CollectionBookManager.GetOrCreate(this);
             manager.StateChanged -= Refresh;
             manager.StateChanged += Refresh;
 
             hasShownRuntime = true;
             gameObject.SetActive(true);
+            transform.SetAsLastSibling();
+            MainMenuNavigationVisibility.SetBottomNavigationVisible(this, true);
             BindSceneReferences();
             ApplyFontsToAllTexts();
             WireButtons();
@@ -147,6 +150,7 @@ namespace CardMesh
             }
 
             gameObject.SetActive(false);
+            MainMenuNavigationVisibility.SetBottomNavigationVisible(this, true);
         }
 
         private void ShowRules()
@@ -281,6 +285,15 @@ namespace CardMesh
 
         private void RefreshRewardProgressMarker()
         {
+            if (!ShouldShowRewardProgressMarker())
+            {
+                Transform marker = rewardCardsRoot != null ? rewardCardsRoot.Find("CurrentProgressMarker") : null;
+                Transform line = rewardCardsRoot != null ? rewardCardsRoot.Find("CurrentProgressLine") : null;
+                if (marker != null) marker.gameObject.SetActive(false);
+                if (line != null) line.gameObject.SetActive(false);
+                return;
+            }
+
             if (rewardCardsRoot == null || manager == null)
             {
                 return;
@@ -376,6 +389,8 @@ namespace CardMesh
             markerRect.anchoredPosition = new Vector2(markerX, timelineY);
             markerRect.SetAsLastSibling();
         }
+
+        private static bool ShouldShowRewardProgressMarker() => false;
 
         private IEnumerator PlayOpenAnimation()
         {
@@ -532,7 +547,7 @@ namespace CardMesh
             text.fontSizeMax = 23f;
             text.fontStyle = FontStyles.Bold;
             text.alignment = TextAlignmentOptions.Center;
-            text.enableWordWrapping = true;
+            text.textWrappingMode = TextWrappingModes.Normal;
             text.lineSpacing = -8f;
         }
 
@@ -601,14 +616,16 @@ namespace CardMesh
         private static void ApplyPopupPanelVisual(Image panelImage)
         {
             panelImage.sprite = GetPopupPanelSprite();
-            panelImage.type = PremiumUISprites.PauseWindowCardMesh != null ? Image.Type.Simple : Image.Type.Sliced;
+            panelImage.type = PremiumUISprites.MobilePopupFrame != null ? Image.Type.Simple : Image.Type.Sliced;
             panelImage.color = Color.white;
         }
 
         private static Sprite GetPopupPanelSprite()
         {
-            return PremiumUISprites.PauseWindowCardMesh != null
-                ? PremiumUISprites.PauseWindowCardMesh
+            return PremiumUISprites.MobilePopupFrame != null
+                ? PremiumUISprites.MobilePopupFrame
+                : PremiumUISprites.PauseWindowCardMesh != null
+                    ? PremiumUISprites.PauseWindowCardMesh
                 : RoyalEventSprites.Panel != null
                     ? RoyalEventSprites.Panel
                     : PremiumUISprites.EmeraldPanel;
@@ -624,6 +641,7 @@ namespace CardMesh
             BindSceneReferences();
             UpgradeAuthoringLayout();
             EnsureProgressVisuals();
+            ApplyPortraitLayout();
             EnsurePremiumMotion();
             BindSceneReferences();
             ApplyFontsToAllTexts();
@@ -781,6 +799,193 @@ namespace CardMesh
             UpgradeRewardCards();
             AlignMilestoneLine();
             UpgradeBottomBlocks();
+            ApplyPortraitLayout();
+        }
+
+        private void ApplyPortraitLayout()
+        {
+            RectTransform panelRect = transform.Find("Panel") as RectTransform;
+            if (panelRect == null)
+            {
+                return;
+            }
+
+            SetAnchored(
+                panelRect,
+                new Vector2(0.5f, 0.5f),
+                new Vector2(0.5f, 0.5f),
+                new Vector2(0.5f, 0.5f),
+                new Vector2(1020f, LevelFrameChrome.GetMetrics(LevelFrameChrome.Preset.Tall).PanelSize.y),
+                LevelFrameChrome.GetMetrics(LevelFrameChrome.Preset.Tall).PanelPosition);
+
+            RectTransform badge = panelRect.Find("HeaderIcon") as RectTransform;
+            Button close = panelRect.Find("CloseButton")?.GetComponent<Button>();
+            Button info = panelRect.Find("InfoButton")?.GetComponent<Button>();
+            LevelFrameChrome chrome = panelRect.GetComponent<LevelFrameChrome>() ?? panelRect.gameObject.AddComponent<LevelFrameChrome>();
+            chrome.Configure(LevelFrameChrome.Preset.Tall, badge, close, info);
+            chrome.SetPanelLayoutOverride(1020f, LevelFrameChrome.GetMetrics(LevelFrameChrome.Preset.Tall).PanelPosition);
+
+            RectTransform header = panelRect.Find("Header") as RectTransform;
+            SetAnchored(
+                header,
+                new Vector2(0.5f, 1f),
+                new Vector2(0.5f, 1f),
+                new Vector2(0.5f, 1f),
+                new Vector2(880f, 220f),
+                new Vector2(0f, -34f));
+            SetAnchored(
+                header?.Find("Title") as RectTransform,
+                new Vector2(0.5f, 1f),
+                new Vector2(0.5f, 1f),
+                new Vector2(0.5f, 0.5f),
+                new Vector2(840f, 58f),
+                new Vector2(0f, -285f));
+            SetAnchored(
+                header?.Find("Subtitle") as RectTransform,
+                new Vector2(0.5f, 1f),
+                new Vector2(0.5f, 1f),
+                new Vector2(0.5f, 0.5f),
+                new Vector2(840f, 54f),
+                new Vector2(0f, -341f));
+            TuneText(header?.Find("Title")?.GetComponent<TMP_Text>(), 43f, 31f, false);
+            TuneText(header?.Find("Subtitle")?.GetComponent<TMP_Text>(), 20f, 16f, true);
+
+            StyleHeaderIcon();
+            chrome.LayoutBadge(panelRect.Find("HeaderIcon") as RectTransform);
+            RectTransform headerIcon = panelRect.Find("HeaderIcon") as RectTransform;
+            if (headerIcon != null)
+            {
+                chrome.SetBadgeLayoutOverride(new Vector2(152f, 152f), new Vector2(0f, -168f));
+            }
+            SetActiveIfExists(panelRect.Find("LevelFrameChrome") as RectTransform, "JewelTop", false);
+
+            RectTransform progress = panelRect.Find("ProgressBlock") as RectTransform;
+            SetAnchored(
+                progress,
+                new Vector2(0.5f, 1f),
+                new Vector2(0.5f, 1f),
+                new Vector2(0.5f, 0.5f),
+                new Vector2(760f, 150f),
+                new Vector2(0f, -475f));
+            SetActiveIfExists(progress, "ProgressFrame", false);
+            SetActiveIfExists(progress, "InnerHighlight", false);
+            SetActiveIfExists(progress, "ProgressFillPanel", false);
+            ConfigureFlatPanel(progress, new Color(0.008f, 0.105f, 0.045f, 0.98f));
+            SetTextRect(progress?.Find("ProgressTitle") as RectTransform, new Vector2(0f, 45f), new Vector2(630f, 26f));
+            SetTextRect(progress?.Find("ProgressValue") as RectTransform, new Vector2(0f, 12f), new Vector2(630f, 42f));
+            SetTextRect(progress?.Find("ProgressTrack") as RectTransform, new Vector2(0f, -35f), new Vector2(540f, 16f));
+            SetTextRect(progress?.Find("NextReward") as RectTransform, new Vector2(0f, -62f), new Vector2(630f, 26f));
+
+            RectTransform rewards = panelRect.Find("RewardStages") as RectTransform;
+            SetAnchored(
+                rewards,
+                new Vector2(0.5f, 1f),
+                new Vector2(0.5f, 1f),
+                new Vector2(0.5f, 0.5f),
+                new Vector2(880f, 510f),
+                new Vector2(0f, -845f));
+
+            int rewardIndex = 0;
+            foreach (RectTransform child in rewards != null
+                         ? rewards.GetComponentsInChildren<RectTransform>(true)
+                         : System.Array.Empty<RectTransform>())
+            {
+                if (child.parent != rewards || !child.name.StartsWith("RewardStage_"))
+                {
+                    continue;
+                }
+
+                int column = rewardIndex % 3;
+                int row = rewardIndex / 3;
+                SetAnchored(
+                    child,
+                    new Vector2(0.5f, 0.5f),
+                    new Vector2(0.5f, 0.5f),
+                    new Vector2(0.5f, 0.5f),
+                    new Vector2(228f, 222f),
+                    new Vector2((column - 1) * 275f, row == 0 ? 125f : -125f));
+                SetTextRect(child.Find("Points") as RectTransform, new Vector2(0f, 88f), new Vector2(192f, 28f));
+                SetTextRect(child.Find("MilestoneDiamond") as RectTransform, new Vector2(0f, 64f), new Vector2(30f, 34f));
+                SetTextRect(child.Find("RewardIcon") as RectTransform, new Vector2(0f, 12f), new Vector2(62f, 62f));
+                SetTextRect(child.Find("Reward") as RectTransform, new Vector2(0f, -55f), new Vector2(196f, 64f));
+                SetTextRect(child.Find("ActiveGlow") as RectTransform, Vector2.zero, new Vector2(234f, 228f));
+                SetActiveIfExists(child, "ActiveGlow", false);
+                rewardIndex++;
+            }
+
+            SetActiveIfExists(panelRect, "MilestoneLine", false);
+            // Legacy daily-reward ornament: it draws an unrelated horizontal
+            // divider with a large centre diamond above the collection cards.
+            SetActiveIfExists(panelRect, "DividerStrip", false);
+            if (rewards != null)
+            {
+                SetActiveIfExists(rewards, "CurrentProgressLine", false);
+                SetActiveIfExists(rewards, "CurrentProgressMarker", false);
+            }
+
+            RectTransform score = panelRect.Find("ScoreRules") as RectTransform;
+            SetAnchored(
+                score,
+                new Vector2(0.5f, 1f),
+                new Vector2(0.5f, 1f),
+                new Vector2(0.5f, 0.5f),
+                new Vector2(760f, 210f),
+                new Vector2(0f, -1215f));
+            SetActiveIfExists(score, "InfoFrame", false);
+            SetActiveIfExists(score, "InfoFill", false);
+            ConfigureFlatPanel(score, new Color(0.009f, 0.12f, 0.052f, 0.98f));
+            SetTextRect(score?.Find("Title") as RectTransform, new Vector2(0f, 72f), new Vector2(680f, 34f));
+            SetTextRect(score?.Find("Rows") as RectTransform, new Vector2(0f, -10f), new Vector2(620f, 124f));
+            TMP_Text scoreRows = score?.Find("Rows")?.GetComponent<TMP_Text>();
+            if (scoreRows != null)
+            {
+                scoreRows.margin = new Vector4(18f, 8f, 18f, 8f);
+                scoreRows.alignment = TextAlignmentOptions.Center;
+                scoreRows.lineSpacing = 1f;
+                scoreRows.overflowMode = TextOverflowModes.Overflow;
+                TuneText(scoreRows, 18f, 16f, true);
+            }
+
+            RectTransform level = panelRect.Find("LevelBlock") as RectTransform;
+            SetAnchored(
+                level,
+                new Vector2(0.5f, 1f),
+                new Vector2(0.5f, 1f),
+                new Vector2(0.5f, 0.5f),
+                new Vector2(760f, 210f),
+                new Vector2(0f, -1450f));
+            SetActiveIfExists(level, "InfoFrame", false);
+            SetActiveIfExists(level, "InfoFill", false);
+            ConfigureFlatPanel(level, new Color(0.009f, 0.12f, 0.052f, 0.98f));
+            SetTextRect(level?.Find("Title") as RectTransform, new Vector2(0f, 72f), new Vector2(680f, 32f));
+            SetTextRect(level?.Find("LevelTitle") as RectTransform, new Vector2(0f, 29f), new Vector2(640f, 38f));
+            SetTextRect(level?.Find("LevelProgress") as RectTransform, new Vector2(0f, -11f), new Vector2(600f, 26f));
+            SetTextRect(level?.Find("LevelRemaining") as RectTransform, new Vector2(0f, -53f), new Vector2(640f, 24f));
+            SetActiveIfExists(level, "LevelProgressTrack", false);
+            SetActiveIfExists(level, "Medal", false);
+
+            TMP_Text medal = level?.Find("Medal")?.GetComponent<TMP_Text>();
+            TMP_Text levelTitle = level?.Find("LevelTitle")?.GetComponent<TMP_Text>();
+            if (medal != null)
+            {
+                medal.enabled = false;
+            }
+            TuneText(levelTitle, 25f, 19f, false);
+            CenterText(level?.Find("Title")?.GetComponent<TMP_Text>());
+            CenterText(levelTitle);
+            CenterText(level?.Find("LevelProgress")?.GetComponent<TMP_Text>());
+            CenterText(level?.Find("LevelRemaining")?.GetComponent<TMP_Text>());
+        }
+
+        private static void CenterText(TMP_Text text)
+        {
+            if (text == null)
+            {
+                return;
+            }
+
+            text.alignment = TextAlignmentOptions.Center;
+            text.margin = Vector4.zero;
         }
 
         private void AlignMilestoneLine()
@@ -939,11 +1144,11 @@ namespace CardMesh
             Image icon = iconRect != null ? iconRect.GetComponent<Image>() : null;
             if (icon == null)
             {
-                icon = CreateImage(existingPanel, "HeaderIcon", LoadSprite("Assets/Art/Button/CollectionIcon.png"), Color.white, new Vector2(0f, -50f), new Vector2(190f, 190f), Image.Type.Simple);
+                icon = CreateImage(existingPanel, "HeaderIcon", LoadSprite("Assets/Art/UI/MainMenuEmeraldVault/icon_collection_royal_seal.png"), Color.white, new Vector2(0f, -50f), new Vector2(190f, 190f), Image.Type.Simple);
                 iconRect = icon.rectTransform;
             }
 
-            icon.sprite = LoadSprite("Assets/Art/Button/CollectionIcon.png");
+            icon.sprite = LoadSprite("Assets/Art/UI/MainMenuEmeraldVault/icon_collection_royal_seal.png");
             icon.color = Color.white;
             icon.preserveAspect = true;
             icon.raycastTarget = false;
@@ -1026,7 +1231,7 @@ namespace CardMesh
                     progressValue.enabled = true;
                     progressValue.color = new Color(1f, 0.92f, 0.68f, 1f);
                     progressValue.fontStyle = FontStyles.Bold;
-                    progressValue.enableWordWrapping = false;
+                    progressValue.textWrappingMode = TextWrappingModes.NoWrap;
                     progressValue.overflowMode = TextOverflowModes.Overflow;
                     TMP_Text progressTitle = progressBlock.Find("ProgressTitle")?.GetComponent<TMP_Text>();
                     if (progressTitle != null && progressTitle.font != null)
@@ -1311,9 +1516,10 @@ namespace CardMesh
             text.enableAutoSizing = true;
             text.fontSizeMax = maxSize;
             text.fontSizeMin = minSize;
-            text.enableWordWrapping = wrap;
+            text.textWrappingMode =
+                wrap ? TextWrappingModes.Normal : TextWrappingModes.NoWrap;
             text.lineSpacing = wrap ? 3f : 0f;
-            text.overflowMode = TextOverflowModes.Ellipsis;
+            text.overflowMode = TextOverflowModes.Truncate;
         }
 
         private static void SetAnchored(RectTransform rect, Vector2 anchorMin, Vector2 anchorMax, Vector2 pivot, Vector2 size, Vector2 position)
@@ -1328,6 +1534,7 @@ namespace CardMesh
             rect.pivot = pivot;
             rect.sizeDelta = size;
             rect.anchoredPosition = position;
+            rect.localScale = Vector3.one;
         }
 
         private static void SetTextRect(RectTransform rect, Vector2 position, Vector2 size)
@@ -1339,6 +1546,62 @@ namespace CardMesh
 
             rect.sizeDelta = size;
             rect.anchoredPosition = position;
+            rect.localScale = Vector3.one;
+        }
+
+        private static void ConfigureFlatPanel(RectTransform rect, Color fillColor)
+        {
+            if (rect == null)
+            {
+                return;
+            }
+
+            Image image = rect.GetComponent<Image>() ?? rect.gameObject.AddComponent<Image>();
+            image.enabled = true;
+            image.sprite = null;
+            image.type = Image.Type.Simple;
+            image.color = fillColor;
+            image.raycastTarget = false;
+
+            Outline outline = rect.GetComponent<Outline>() ?? rect.gameObject.AddComponent<Outline>();
+            outline.enabled = false;
+            outline.effectColor = new Color(0.88f, 0.65f, 0.15f, 0.92f);
+            outline.effectDistance = new Vector2(1.5f, -1.5f);
+            outline.useGraphicAlpha = false;
+
+            Color border = new(0.92f, 0.68f, 0.16f, 0.96f);
+            EnsurePanelBorder(rect, "BorderTop", new Vector2(0f, rect.rect.height * 0.5f - 1f), new Vector2(rect.rect.width, 2f), border);
+            EnsurePanelBorder(rect, "BorderBottom", new Vector2(0f, -rect.rect.height * 0.5f + 1f), new Vector2(rect.rect.width, 2f), border);
+            EnsurePanelBorder(rect, "BorderLeft", new Vector2(-rect.rect.width * 0.5f + 1f, 0f), new Vector2(2f, rect.rect.height), border);
+            EnsurePanelBorder(rect, "BorderRight", new Vector2(rect.rect.width * 0.5f - 1f, 0f), new Vector2(2f, rect.rect.height), border);
+        }
+
+        private static void EnsurePanelBorder(RectTransform parent, string name, Vector2 position, Vector2 size, Color color)
+        {
+            RectTransform border = parent.Find(name) as RectTransform;
+            Image image;
+            if (border == null)
+            {
+                GameObject borderObject = new(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+                borderObject.layer = parent.gameObject.layer;
+                borderObject.transform.SetParent(parent, false);
+                border = borderObject.GetComponent<RectTransform>();
+                image = borderObject.GetComponent<Image>();
+            }
+            else
+            {
+                image = border.GetComponent<Image>() ?? border.gameObject.AddComponent<Image>();
+            }
+
+            border.gameObject.SetActive(true);
+            border.anchorMin = border.anchorMax = border.pivot = new Vector2(0.5f, 0.5f);
+            border.anchoredPosition = position;
+            border.sizeDelta = size;
+            border.localScale = Vector3.one;
+            image.sprite = null;
+            image.type = Image.Type.Simple;
+            image.color = color;
+            image.raycastTarget = false;
         }
 
         private static void StyleSharedButton(RectTransform rect, string label, Vector2 size, Vector2 position, bool rightTop)

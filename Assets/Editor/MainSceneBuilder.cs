@@ -13,7 +13,7 @@ namespace CardMesh.Editor
         private const string ScenePath = "Assets/Scenes/Main.unity";
         private const string LevelAssetPath = "Assets/Resources/Levels/Level_1.asset";
 
-        [MenuItem("Tools/Card Mesh/Build Main Scene")]
+        [MenuItem("Tools/Card Mesh/Legacy/Build Main Scene (WebGL)")]
         public static void BuildMainScene()
         {
             BuildSceneInternal();
@@ -60,8 +60,8 @@ namespace CardMesh.Editor
 
             CanvasScaler scaler = canvasObject.GetComponent<CanvasScaler>();
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution = new Vector2(1920f, 1080f);
-            scaler.matchWidthOrHeight = 0.5f;
+            scaler.referenceResolution = new Vector2(1080f, 1920f);
+            scaler.matchWidthOrHeight = 0f;
 
             RectTransform rectTransform = (RectTransform)canvas.transform;
             rectTransform.anchorMin = Vector2.zero;

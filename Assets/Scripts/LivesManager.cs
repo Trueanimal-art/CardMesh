@@ -134,7 +134,7 @@ namespace CardMesh
             }
         }
 
-        public void AddLifeForRewardedAd()
+        public bool TryAddLife()
         {
             RecalculateLivesByTime();
             int beforeLives = CurrentLives;
@@ -148,7 +148,15 @@ namespace CardMesh
             if (CurrentLives != beforeLives)
             {
                 NotifyLivesChanged();
+                return true;
             }
+
+            return false;
+        }
+
+        public void AddLifeForRewardedAd()
+        {
+            TryAddLife();
         }
 
         private void Load()

@@ -25,8 +25,6 @@ public static class RateUsUiPrefabInstaller
     private static readonly Vector2 ButtonSize = new(340f, 170f);
     private static readonly Vector2 PopupPanelSize = new(820f, 560f);
     private static readonly Vector2 PopupActionButtonSize = new(300f, 66f);
-    private static readonly Vector2 RateButtonPosition = new(-245f, 247f);
-
     [MenuItem("Card Mesh/Main Menu/Rebuild Rate Us UI")]
     public static void RebuildRateUsUi()
     {
@@ -36,10 +34,10 @@ public static class RateUsUiPrefabInstaller
         ConfigureSpriteImport(EmptyStarSpritePath);
         Directory.CreateDirectory(PrefabDirectory);
 
-        GameObject rateButtonPrefab = RebuildRateButtonPrefab();
+        RebuildRateButtonPrefab();
         RebuildPopupActionButtonPrefab();
         GameObject popupPrefab = RebuildPopupPrefab();
-        InstallSceneObjects(rateButtonPrefab, popupPrefab);
+        InstallSceneObjects(popupPrefab);
     }
 
     private static void ConfigureSpriteImport(string spritePath)
@@ -164,14 +162,13 @@ public static class RateUsUiPrefabInstaller
         return prefab;
     }
 
-    private static void InstallSceneObjects(GameObject rateButtonPrefab, GameObject popupPrefab)
+    private static void InstallSceneObjects(GameObject popupPrefab)
     {
         Scene scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
-        Transform parent = FindButtonParent();
         Canvas canvas = Object.FindFirstObjectByType<Canvas>(FindObjectsInactive.Include);
-        if (parent == null || canvas == null)
+        if (canvas == null)
         {
-            throw new UnityException($"Cannot install rate UI: MainMenu parent or Canvas not found in {ScenePath}.");
+            throw new UnityException($"Cannot install rate UI: Canvas not found in {ScenePath}.");
         }
 
         RemoveExisting(RateButtonName);
@@ -184,43 +181,9 @@ public static class RateUsUiPrefabInstaller
         ConfigurePopupInstance(popup.GetComponent<RectTransform>());
         popup.SetActive(false);
 
-        GameObject button = PrefabUtility.InstantiatePrefab(rateButtonPrefab, parent) as GameObject;
-        button.name = RateButtonName;
-        button.layer = parent.gameObject.layer;
-        SetLayerRecursively(button, button.layer);
-        RectTransform buttonRect = button.GetComponent<RectTransform>();
-        buttonRect.anchoredPosition = RateButtonPosition;
-
-        RateUsButton opener = button.GetComponent<RateUsButton>();
-        SerializedObject openerSerialized = new(opener);
-        openerSerialized.FindProperty("ratingPopup").objectReferenceValue = popup;
-        openerSerialized.ApplyModifiedPropertiesWithoutUndo();
-
-        Button uiButton = button.GetComponent<Button>();
-        uiButton.onClick.RemoveAllListeners();
-        UnityEventTools.AddPersistentListener(uiButton.onClick, opener.OpenRatingPopup);
-
         EditorSceneManager.MarkSceneDirty(scene);
         EditorSceneManager.SaveScene(scene);
         AssetDatabase.SaveAssets();
-    }
-
-    private static Transform FindButtonParent()
-    {
-        GameObject contact = GameObject.Find("ContactButton");
-        if (contact != null)
-        {
-            return contact.transform.parent;
-        }
-
-        GameObject playButton = GameObject.Find("PlayButton");
-        if (playButton != null)
-        {
-            return playButton.transform.parent;
-        }
-
-        Canvas canvas = Object.FindFirstObjectByType<Canvas>(FindObjectsInactive.Include);
-        return canvas != null ? canvas.transform : null;
     }
 
     private static void RemoveExisting(string objectName)
@@ -512,7 +475,7 @@ public static class RateUsUiPrefabInstaller
         text.fontSizeMax = 30f;
         text.fontSizeMin = 20f;
         text.alignment = TextAlignmentOptions.Center;
-        text.enableWordWrapping = false;
+        text.textWrappingMode = TextWrappingModes.NoWrap;
         text.raycastTarget = false;
         RuntimeCyrillicFontProvider.Apply(text, label);
 

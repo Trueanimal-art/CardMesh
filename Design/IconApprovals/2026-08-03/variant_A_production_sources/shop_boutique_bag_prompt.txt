@@ -1,0 +1,16 @@
+Use case: stylized-concept.
+Asset type: isolated Unity mobile UI glyph for the CardMesh main-menu Shop medallion.
+Create one front-facing, perfectly symmetrical luxury royal boutique shopping bag icon.
+Preserve the simple unmistakable shopping-bag silhouette and thick rounded arch handle
+of icon_shop.png, but upgrade its materials to match icon_collection_royal_seal.png:
+polished warm antique gold trim, deep emerald leather, restrained premium beveling,
+and one centered faceted emerald seal in a small gold setting.
+
+The bag must read instantly as SHOP, never as a treasure chest, box, pavilion, book,
+or reward gift. Center it in an orthographic view with generous padding. Keep the
+handle and left/right sides strictly symmetrical. Use a bold, clean silhouette,
+broad surfaces, and minimal filigree. No tiny curls, crown, cards, coins, or text.
+
+Lighting: crisp game-UI studio highlights, rich but not overdecorated.
+Background: perfectly flat uniform solid chroma-key background with no gradient,
+shadow, reflection, floor, or glow outside the subject. No watermark.

@@ -184,6 +184,7 @@ namespace CardMesh
 
         public LevelDefinition AssignedLevelDefinition => levelDefinition;
         public LivesManager LivesManager => livesManager;
+        public CoinsManager CoinsManager => coinsManager;
         public float MoveDuration => moveDuration;
         public float ShakeDuration => shakeDuration;
         public float ShakeStrength => shakeStrength;
@@ -291,10 +292,12 @@ namespace CardMesh
             TryUseHint(consumeCharge: true);
         }
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         public void UseFreeHintForDevTools()
         {
             TryUseHint(consumeCharge: false);
         }
+#endif
 
         private void TryUseHint(bool consumeCharge)
         {
@@ -365,6 +368,7 @@ namespace CardMesh
                 analyticsEvent: "undo_used");
         }
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         public bool TryUseUndoForDevTools()
         {
             return TryRestoreLastMove(
@@ -372,6 +376,7 @@ namespace CardMesh
                 successMessage: "Ход отменен (DEV)",
                 analyticsEvent: "dev_undo_used");
         }
+#endif
 
         private bool TryRestoreLastMove(bool consumeCharge, string successMessage, string analyticsEvent)
         {
@@ -1097,16 +1102,30 @@ namespace CardMesh
                     ? levelDefinition.ColumnsCount
                     : 4;
             int visibleColumnsCount = Mathf.Clamp(configuredColumnsCount, 3, 5);
-            ColumnLayoutProfile profile = GetGameplayLayoutProfile(visibleColumnsCount);
+            ColumnLayoutProfile profile = NormalizeGameplayProfile(
+                (layoutConfig ?? GameLayoutConfig.CreateDefault())
+                    .GetProfile(visibleColumnsCount),
+                visibleColumnsCount);
+            sceneRefs?.ApplyRuntimeColumnProfile(visibleColumnsCount);
+            RectTransform activeColumnsContainer =
+                sceneRefs != null && sceneRefs.ColumnSlotsRoot != null
+                    ? sceneRefs.ColumnSlotsRoot
+                    : columnsContainer;
+            HorizontalLayoutGroup activeColumnsLayoutGroup =
+                activeColumnsContainer != null
+                    ? activeColumnsContainer.GetComponent<HorizontalLayoutGroup>()
+                    : columnsLayoutGroup;
 
-            if (columnsLayoutGroup != null)
+            if (activeColumnsLayoutGroup != null)
             {
-                columnsLayoutGroup.spacing = profile.columnSpacing;
+                activeColumnsLayoutGroup.spacing = profile.columnSpacing;
+                activeColumnsLayoutGroup.childControlWidth = true;
+                activeColumnsLayoutGroup.childForceExpandWidth = false;
             }
 
-            if (columnsContainer != null)
+            if (activeColumnsContainer != null)
             {
-                LayoutElement layoutElement = columnsContainer.GetComponent<LayoutElement>();
+                LayoutElement layoutElement = activeColumnsContainer.GetComponent<LayoutElement>();
                 if (layoutElement != null)
                 {
                     layoutElement.minHeight = profile.cardSize.y + (profile.verticalOffset * 5f);
@@ -1131,6 +1150,22 @@ namespace CardMesh
 
                 activatedColumns++;
                 column.ApplyLayout(profile);
+                RectTransform columnRect = sceneRefs != null && index < sceneRefs.Columns.Count
+                    ? sceneRefs.Columns[index]?.Root as RectTransform
+                    : column.transform as RectTransform;
+                if (columnRect != null)
+                {
+                    LayoutElement rootLayout = columnRect.GetComponent<LayoutElement>();
+                    if (rootLayout != null)
+                    {
+                        rootLayout.minWidth = profile.cardSize.x;
+                        rootLayout.preferredWidth = profile.cardSize.x;
+                    }
+
+                    columnRect.SetSizeWithCurrentAnchors(
+                        RectTransform.Axis.Horizontal,
+                        profile.cardSize.x);
+                }
                 column.SetBackgroundAlpha(0f);
             }
 
@@ -1147,6 +1182,10 @@ namespace CardMesh
             }
 
             drawSlot?.ApplyLayout(profile);
+            if (activeColumnsContainer != null)
+            {
+                LayoutRebuilder.ForceRebuildLayoutImmediate(activeColumnsContainer);
+            }
             Debug.Log($"GameManager: Activated {activatedColumns}/{columns.Count} columns.");
         }
 
@@ -1158,32 +1197,7 @@ namespace CardMesh
 
         private static ColumnLayoutProfile NormalizeGameplayProfile(ColumnLayoutProfile profile, int visibleColumnsCount)
         {
-            bool portrait = Screen.height > Screen.width;
-            Vector2 targetCardSize = portrait
-                ? visibleColumnsCount switch
-                {
-                    3 => new Vector2(176f, 256f),
-                    4 => new Vector2(160f, 233f),
-                    _ => new Vector2(148f, 216f)
-                }
-                : new Vector2(170f, 248f);
-            float targetSpacing = portrait
-                ? visibleColumnsCount <= 3
-                    ? 58f
-                    : visibleColumnsCount == 4
-                        ? 36f
-                        : 24f
-                : visibleColumnsCount <= 3
-                    ? 72f
-                    : visibleColumnsCount == 4
-                        ? 56f
-                        : 48f;
-            float targetVerticalOffset = portrait ? 52f : 40f;
-
             profile.columnCount = visibleColumnsCount;
-            profile.cardSize = targetCardSize;
-            profile.columnSpacing = targetSpacing;
-            profile.verticalOffset = targetVerticalOffset;
             return profile;
         }
 
@@ -1867,6 +1881,7 @@ namespace CardMesh
             levelRewardRoutine = StartCoroutine(EndLevelRewardSequence());
         }
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         public bool CompleteLevelForDevTools()
         {
             InitializeDependencies();
@@ -1881,6 +1896,7 @@ namespace CardMesh
             platformService?.TrackEvent("dev_complete_level");
             return true;
         }
+#endif
 
         private IEnumerator EndLevelRewardSequence()
         {
@@ -2123,6 +2139,7 @@ namespace CardMesh
                 analyticsEvent: "rewarded_add_moves");
         }
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         public void AddMovesForDevTools(int amount)
         {
             GrantMoves(
@@ -2194,6 +2211,7 @@ namespace CardMesh
             Debug.Log($"[DEV] Load level: level={safeLevelNumber}");
             platformService?.TrackEvent("dev_load_level_number");
         }
+#endif
 
         private void GrantMoves(int amount, bool allowReviveLostLevel, string statusPrefix, string logPrefix, string analyticsEvent)
         {

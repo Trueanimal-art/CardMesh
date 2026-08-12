@@ -9,7 +9,7 @@
     }
   ],
   "dependencies": {
-    "com.google.ads.mobile": "11.3.0",
+    "com.google.ads.mobile": "file:com.google.ads.mobile",
     "com.unity.collab-proxy": "2.12.4",
     "com.unity.feature.2d": "2.0.2",
     "com.unity.ide.rider": "3.0.40",

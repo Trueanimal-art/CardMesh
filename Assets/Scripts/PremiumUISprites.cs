@@ -32,6 +32,7 @@ namespace CardMesh
         private static Sprite softVignette;
         private static Sprite pauseWindowCardMesh;
         private static Sprite settingsWindowCardMesh;
+        private static Sprite mobilePopupFrame;
         private static Sprite levelScrollbarTrack;
         private static Sprite levelScrollbarHandle;
         private static Sprite levelListFadeTop;
@@ -66,6 +67,7 @@ namespace CardMesh
         public static Sprite SoftVignette => softVignette ??= Load("vignette_soft");
         public static Sprite PauseWindowCardMesh => pauseWindowCardMesh ??= Load("pause_window_cardmesh");
         public static Sprite SettingsWindowCardMesh => settingsWindowCardMesh ??= Load("settings_window_cardmesh");
+        public static Sprite MobilePopupFrame => mobilePopupFrame ??= Load("popup_frame_mobile_h3");
         public static Sprite LevelScrollbarTrack => levelScrollbarTrack ??= Load("level_scrollbar_track");
         public static Sprite LevelScrollbarHandle => levelScrollbarHandle ??= Load("level_scrollbar_handle");
         public static Sprite LevelListFadeTop => levelListFadeTop ??= Load("level_list_fade_top");

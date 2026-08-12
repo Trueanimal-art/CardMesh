@@ -42,11 +42,11 @@ namespace CardMesh.Editor
         private const float BoardTop = 142f;
         private const float BoardBottom = 228f;
 
-        private const float BottomHudHeight = 146f;
-        private const float BottomHudBottom = 72f;
-        private static readonly Vector2 BottomButtonSize = new(208f, 52f);
+        private const float BottomHudHeight = 190f;
+        private const float BottomHudBottom = 208f;
+        private static readonly Vector2 BottomButtonSize = new(300f, 156f);
 
-        private const float AdBannerHeight = 64f;
+        private const float AdBannerHeight = 240f;
 
         private const float ColumnSpacing = 12f;
         private const float ColumnWidth = 196f;
@@ -58,7 +58,6 @@ namespace CardMesh.Editor
         private const float CardsStackWidth = 196f;
         private const float CardsStackHeight = 312f;
 
-        [MenuItem("Tools/Card Mesh/Apply UI Layout")]
         public static void ApplyUILayout()
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode)
@@ -192,8 +191,8 @@ namespace CardMesh.Editor
                     text.fontSizeMax = 30f;
                     text.fontStyle = FontStyles.Normal;
                     text.fontWeight = FontWeight.Regular;
-                    text.enableWordWrapping = false;
-                    text.overflowMode = TextOverflowModes.Ellipsis;
+                    text.textWrappingMode = TextWrappingModes.NoWrap;
+                    text.overflowMode = TextOverflowModes.Truncate;
                     text.alignment = TextAlignmentOptions.Center;
                     text.color = movesValueText != null ? movesValueText.color : new Color(0.31f, 0.17f, 0.04f, 1f);
 
@@ -628,7 +627,7 @@ namespace CardMesh.Editor
             primary.fontSizeMin = 10f;
             primary.fontSizeMax = 18f;
             primary.fontSize = 16f;
-            primary.enableWordWrapping = false;
+            primary.textWrappingMode = TextWrappingModes.NoWrap;
             primary.alignment = TextAlignmentOptions.Center;
             primary.color = Color.white;
             EditorUtility.SetDirty(primary);
@@ -662,10 +661,10 @@ namespace CardMesh.Editor
             label.fontSizeMin = 10f;
             label.fontSizeMax = 18f;
             label.fontSize = 16f;
-            label.enableWordWrapping = false;
+            label.textWrappingMode = TextWrappingModes.NoWrap;
             label.alignment = TextAlignmentOptions.Center;
             label.color = Color.white;
-            label.overflowMode = TextOverflowModes.Ellipsis;
+            label.overflowMode = TextOverflowModes.Truncate;
             EditorUtility.SetDirty(label);
         }
 
@@ -700,8 +699,8 @@ namespace CardMesh.Editor
             text.fontSizeMax = 22f;
             text.fontSize = 18f;
             text.alignment = TextAlignmentOptions.Center;
-            text.overflowMode = TextOverflowModes.Ellipsis;
-            text.enableWordWrapping = false;
+            text.overflowMode = TextOverflowModes.Truncate;
+            text.textWrappingMode = TextWrappingModes.NoWrap;
             text.color = new Color(0.42f, 0.29f, 0.08f, 1f);
             EditorUtility.SetDirty(text);
         }

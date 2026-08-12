@@ -11,8 +11,10 @@ namespace CardMesh
         public enum SizePreset
         {
             Compact,
+            Medium,
             Wide,
-            Store
+            Store,
+            Tall
         }
 
         private static readonly Color BackdropColor = new(0.005f, 0.035f, 0.022f, 0.72f);
@@ -38,6 +40,7 @@ namespace CardMesh
         [SerializeField] private RectTransform panelRoot;
         [SerializeField] private RectTransform frame;
         [SerializeField] private Image frameImage;
+        [SerializeField] private LevelFrameChrome levelFrameChrome;
         [SerializeField] private RectTransform innerBackground;
         [SerializeField] private RectTransform headerRoot;
         [SerializeField] private RectTransform iconMedallion;
@@ -92,7 +95,10 @@ namespace CardMesh
             showInnerBackground = useInnerBackground;
             titlePositionOffset = customTitlePositionOffset ?? Vector2.zero;
             closePositionOffset = customClosePositionOffset ?? Vector2.zero;
-            EnsureHierarchy();
+            if (!Application.isPlaying)
+            {
+                EnsureHierarchy();
+            }
         }
 
         public void EnsureHierarchy()
@@ -123,7 +129,17 @@ namespace CardMesh
 
         private void Awake()
         {
-            EnsureHierarchy();
+            if (!IsReady)
+            {
+                if (Application.isPlaying)
+                {
+                    Debug.LogError(
+                        $"{name}: PopupShell prefab hierarchy is incomplete. Rebuild the authored prefab.");
+                    return;
+                }
+
+                EnsureHierarchy();
+            }
         }
 
         private void OnEnable()
@@ -213,6 +229,8 @@ namespace CardMesh
             frameImage.type = Image.Type.Simple;
             frameImage.color = Color.white;
             frameImage.raycastTarget = false;
+
+            levelFrameChrome = panelRoot.GetComponent<LevelFrameChrome>() ?? panelRoot.gameObject.AddComponent<LevelFrameChrome>();
 
             Shadow shadow = frame.GetComponent<Shadow>() ?? frame.gameObject.AddComponent<Shadow>();
             shadow.effectColor = FrameShadowColor;
@@ -321,6 +339,15 @@ namespace CardMesh
                 layout.CloseSize,
                 layout.ClosePosition + closePositionOffset);
             StyleIconCloseButton(closeButton);
+
+            LevelFrameChrome.Preset chromePreset = sizePreset switch
+            {
+                SizePreset.Tall => LevelFrameChrome.Preset.Tall,
+                SizePreset.Medium => LevelFrameChrome.Preset.Medium,
+                _ => LevelFrameChrome.Preset.Compact
+            };
+            levelFrameChrome ??= panelRoot.GetComponent<LevelFrameChrome>() ?? panelRoot.gameObject.AddComponent<LevelFrameChrome>();
+            levelFrameChrome.Configure(chromePreset, showIconMedallion ? iconMedallion : null, closeButton);
 
             StretchToFill(contentRoot, layout.ContentLeft, layout.ContentRight, layout.ContentTop, layout.ContentBottom);
         }
@@ -471,7 +498,7 @@ namespace CardMesh
             label.enableAutoSizing = true;
             label.fontSizeMax = fontSize;
             label.fontSizeMin = Mathf.Max(14f, fontSize * 0.58f);
-            label.enableWordWrapping = false;
+            label.textWrappingMode = TextWrappingModes.NoWrap;
             label.alignment = alignment;
             label.color = color;
             label.raycastTarget = false;
@@ -497,6 +524,11 @@ namespace CardMesh
 
         private static Sprite GetFrameSprite()
         {
+            if (PremiumUISprites.MobilePopupFrame != null)
+            {
+                return PremiumUISprites.MobilePopupFrame;
+            }
+
             if (PremiumUISprites.SettingsWindowCardMesh != null)
             {
                 return PremiumUISprites.SettingsWindowCardMesh;
@@ -585,6 +617,46 @@ namespace CardMesh
         {
             return preset switch
             {
+                SizePreset.Tall => new ShellLayout(
+                    new Vector2(1000f, 1540f),
+                    212f,
+                    new Vector2(128f, 128f),
+                    new Vector2(0f, -6f),
+                    18f,
+                    new Vector2(720f, 68f),
+                    new Vector2(0f, -132f),
+                    new Vector2(690f, 36f),
+                    new Vector2(0f, -182f),
+                    new Vector2(60f, 60f),
+                    new Vector2(-90f, -90f),
+                    60f,
+                    60f,
+                    226f,
+                    72f,
+                    72f,
+                    72f,
+                    176f,
+                    50f),
+                SizePreset.Medium => new ShellLayout(
+                    new Vector2(920f, 1040f),
+                    178f,
+                    new Vector2(112f, 112f),
+                    new Vector2(0f, -6f),
+                    18f,
+                    new Vector2(720f, 68f),
+                    new Vector2(0f, -98f),
+                    new Vector2(690f, 36f),
+                    new Vector2(0f, -148f),
+                    new Vector2(60f, 60f),
+                    new Vector2(-90f, -90f),
+                    72f,
+                    72f,
+                    176f,
+                    72f,
+                    72f,
+                    72f,
+                    150f,
+                    50f),
                 SizePreset.Wide => new ShellLayout(
                     new Vector2(1510f, 980f),
                     278f,
@@ -626,7 +698,7 @@ namespace CardMesh
                     232f,
                     44f),
                 _ => new ShellLayout(
-                    new Vector2(920f, 780f),
+                    new Vector2(920f, 700f),
                     178f,
                     new Vector2(126f, 126f),
                     new Vector2(0f, -58f),
@@ -635,10 +707,10 @@ namespace CardMesh
                     new Vector2(0f, -82f),
                     new Vector2(690f, 36f),
                     new Vector2(0f, -132f),
-                    new Vector2(62f, 62f),
-                    new Vector2(-66f, -76f),
-                    78f,
-                    78f,
+                    new Vector2(60f, 60f),
+                    new Vector2(-90f, -90f),
+                    72f,
+                    72f,
                     220f,
                     86f,
                     56f,

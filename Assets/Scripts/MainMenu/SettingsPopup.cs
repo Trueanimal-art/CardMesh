@@ -20,22 +20,21 @@ namespace CardMesh
         private const float DefaultMusicVolume = 0.7f;
         private const float DefaultSfxVolume = 0.8f;
         private const float FadeDuration = 0.18f;
-        private static readonly Vector2 PolishedTitleOffset = new(0f, -88f);
-        private static readonly Vector2 PolishedClosePosition = new(-80f, -132f);
-        private static readonly Vector2 PolishedCloseOffset = new(-14f, -56f);
+        private static readonly Vector2 PolishedTitleOffset = new(0f, -22f);
         private static readonly Vector2 PanelSize = new(920f, 780f);
         private static readonly Vector2 TitleOffset = new(0f, -90f);
         private static readonly Vector2 TitleSize = new(-160f, 76f);
         private static readonly Vector2 CloseOffset = new(-52f, -98f);
-        private static readonly Vector2 CloseSize = new(58f, 58f);
+        private static readonly Vector2 CloseSize = new(88f, 88f);
         private static readonly Vector2 ContentPanelSize = new(760f, 500f);
         private static readonly Vector2 ContentPanelOffset = new(0f, -184f);
         private const float ContentPanelHorizontalInset = 38f;
         private const float ContentPanelTopInset = 68f;
         private const float ContentPanelBottomInset = 36f;
         private const float SettingsRowHeight = 72f;
-        private const float SettingsButtonHeight = 58f;
-        private const float SettingsRowSpacing = 12f;
+        private const float SettingsButtonHeight = 68f;
+        private const float SettingsButtonSpacing = 8f;
+        private const float SettingsRowSpacing = 8f;
         private const float SettingsContentHeight = 430f;
         private const int SettingsContentHorizontalPadding = 26;
         private const int SettingsContentVerticalPadding = 10;
@@ -55,6 +54,8 @@ namespace CardMesh
         [SerializeField] private Button howToButton;
         [SerializeField] private Button resetButton;
         [SerializeField] private Button privacyButton;
+        [SerializeField] private Button supportButton;
+        [SerializeField] private Button rateUsButton;
         [SerializeField] private Button hintsToggleButton;
         [SerializeField] private Slider musicSlider;
         [SerializeField] private Slider sfxSlider;
@@ -119,6 +120,7 @@ namespace CardMesh
 
         public void Show()
         {
+            MainMenuPopupExclusivity.OpenExclusive(this);
             BindSceneReferences();
             ApplyShellVisualOverrides();
             if (panel == null || contentRoot == null)
@@ -138,19 +140,23 @@ namespace CardMesh
                 return;
             }
 
-            EnsureRuntimePrivacyButton();
             WireStaticControls();
             CloseModal();
             LoadSavedValues();
             gameObject.SetActive(true);
             transform.SetAsLastSibling();
+            MainMenuNavigationVisibility.SetBottomNavigationVisible(this, false);
             PlayAnimation(true, null);
         }
 
         public void Hide()
         {
             CloseModal();
-            PlayAnimation(false, () => gameObject.SetActive(false));
+            PlayAnimation(false, () =>
+            {
+                gameObject.SetActive(false);
+                MainMenuNavigationVisibility.SetBottomNavigationVisible(this, true);
+            });
         }
 
         public void EnsureAuthoringHierarchy()
@@ -168,6 +174,7 @@ namespace CardMesh
                 BindSceneReferences();
             }
 
+            ApplyShellVisualOverrides();
             ApplyFontsToAllTexts();
             WireStaticControls();
             EnsureModalTemplateReady();
@@ -194,7 +201,6 @@ namespace CardMesh
 
             CaptureShownPanelScale();
             ApplyFontsToAllTexts();
-            EnsureRuntimePrivacyButton();
             WireStaticControls();
             ApplyInitialVisuals();
         }
@@ -241,6 +247,8 @@ namespace CardMesh
             howToButton = FindButton(contentRoot, "HowToPlayButton") ?? FindButton(transform, "HowToPlayButton") ?? howToButton;
             resetButton = FindButton(contentRoot, "ResetProgressButton") ?? FindButton(transform, "ResetProgressButton") ?? resetButton;
             privacyButton = FindButton(contentRoot, "PrivacyOptionsButton") ?? FindButton(transform, "PrivacyOptionsButton") ?? privacyButton;
+            supportButton = FindButton(contentRoot, "SupportButton") ?? FindButton(transform, "SupportButton") ?? supportButton;
+            rateUsButton = FindButton(contentRoot, "RateUsButton") ?? FindButton(transform, "RateUsButton") ?? rateUsButton;
             hintsToggleButton = FindButton(contentRoot, "HintsToggle") ?? FindButton(transform, "HintsToggle") ?? hintsToggleButton;
             modalBlockerButton = FindButton(transform, "ModalBlocker") ?? modalBlockerButton;
             modalCloseButton = FindButton(transform, "ModalCloseButton") ?? modalCloseButton;
@@ -290,6 +298,18 @@ namespace CardMesh
                 privacyButton.onClick.AddListener(ShowPrivacyOptions);
             }
 
+            if (supportButton != null)
+            {
+                supportButton.onClick.RemoveListener(OpenSupport);
+                supportButton.onClick.AddListener(OpenSupport);
+            }
+
+            if (rateUsButton != null)
+            {
+                rateUsButton.onClick.RemoveListener(OpenRateUs);
+                rateUsButton.onClick.AddListener(OpenRateUs);
+            }
+
             if (hintsToggleButton != null)
             {
                 hintsToggleButton.onClick.RemoveListener(ToggleHints);
@@ -321,39 +341,6 @@ namespace CardMesh
             }
         }
 
-        private void EnsureRuntimePrivacyButton()
-        {
-            if (!Application.isPlaying
-                || privacyButton != null
-                || contentRoot == null)
-            {
-                return;
-            }
-
-            float top = -246f - SettingsButtonHeight * 2f;
-            privacyButton = CreateSettingsButton(
-                contentRoot,
-                "PrivacyOptionsButton",
-                "Конфиденциальность",
-                textGold,
-                top);
-
-            SetAnchored(
-                howToButton.transform as RectTransform,
-                new Vector2(0.5f, 1f),
-                new Vector2(0.5f, 1f),
-                new Vector2(0.5f, 1f),
-                new Vector2(560f, SettingsButtonHeight),
-                new Vector2(0f, -246f));
-            SetAnchored(
-                resetButton.transform as RectTransform,
-                new Vector2(0.5f, 1f),
-                new Vector2(0.5f, 1f),
-                new Vector2(0.5f, 1f),
-                new Vector2(560f, SettingsButtonHeight),
-                new Vector2(0f, -246f - SettingsButtonHeight));
-        }
-
         private void ApplyShellVisualOverrides()
         {
             if (shell == null)
@@ -362,18 +349,21 @@ namespace CardMesh
             }
 
             shell.Configure(
-                PopupShell.SizePreset.Compact,
+                PopupShell.SizePreset.Medium,
                 "Настройки",
                 useInnerBackground: false,
-                customTitlePositionOffset: PolishedTitleOffset,
-                customClosePositionOffset: PolishedCloseOffset);
+                customTitlePositionOffset: PolishedTitleOffset);
+
+            if (Application.isPlaying)
+            {
+                return;
+            }
 
             RectTransform closeRect = shell.CloseButton != null
                 ? shell.CloseButton.transform as RectTransform
                 : null;
             if (closeRect != null)
             {
-                closeRect.anchoredPosition = PolishedClosePosition;
                 Image closeImage = shell.CloseButton.GetComponent<Image>();
                 if (closeImage != null)
                 {
@@ -385,13 +375,23 @@ namespace CardMesh
             Image backdropImage = shell.Backdrop != null ? shell.Backdrop.GetComponent<Image>() : null;
             if (backdropImage != null)
             {
-                backdropImage.enabled = false;
+                backdropImage.enabled = true;
+                backdropImage.raycastTarget = true;
             }
 
             Shadow frameShadow = shell.Frame != null ? shell.Frame.GetComponent<Shadow>() : null;
             if (frameShadow != null)
             {
                 frameShadow.enabled = false;
+            }
+
+            panel = shell.PanelRoot != null ? shell.PanelRoot : panel;
+            contentRoot = shell.ContentRoot != null ? shell.ContentRoot : contentRoot;
+            StretchToFill(contentRoot, 72f, 72f, 176f, 72f);
+            RectTransform helpHeader = contentRoot != null ? contentRoot.Find("HelpHeader") as RectTransform : null;
+            if (helpHeader != null)
+            {
+                helpHeader.anchoredPosition = new Vector2(-16f, helpHeader.anchoredPosition.y);
             }
         }
 
@@ -407,11 +407,10 @@ namespace CardMesh
             }
 
             shell.Configure(
-                PopupShell.SizePreset.Compact,
+                PopupShell.SizePreset.Medium,
                 "Настройки",
                 useInnerBackground: false,
-                customTitlePositionOffset: PolishedTitleOffset,
-                customClosePositionOffset: PolishedCloseOffset);
+                customTitlePositionOffset: PolishedTitleOffset);
             panel = shell.PanelRoot;
             contentRoot = shell.ContentRoot;
             dimButton = shell.BackdropButton;
@@ -487,7 +486,7 @@ namespace CardMesh
 
             modalBodyText = CreateText(modalPanel, "ModalBody", string.Empty, 27f, textCream, TextAlignmentOptions.Center);
             SetAnchored(modalBodyText.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(520f, 170f), new Vector2(0f, -8f));
-            modalBodyText.enableWordWrapping = true;
+            modalBodyText.textWrappingMode = TextWrappingModes.Normal;
             modalBodyText.fontStyle = FontStyles.Bold;
             AddTextOutline(modalBodyText, new Color(0f, 0.06f, 0.02f, 0.42f), new Vector2(1f, -1f));
 
@@ -504,13 +503,19 @@ namespace CardMesh
             sfxSlider = CreateSliderRow(contentRoot, "SfxRow", "Звуки", top, "SfxSlider", "SfxValue", OnSfxSliderChanged, out sfxValueText);
             top -= SettingsRowHeight + SettingsRowSpacing;
             CreateHintsRow(contentRoot, top);
-            top -= SettingsRowHeight + 24f;
-            top += 28f;
+            top -= SettingsRowHeight + 20f;
+            top += 20f;
             howToButton = CreateSettingsButton(contentRoot, "HowToPlayButton", "Как играть", textGold, top);
-            top -= SettingsButtonHeight;
+            top -= SettingsButtonHeight + SettingsButtonSpacing;
             resetButton = CreateSettingsButton(contentRoot, "ResetProgressButton", "Сброс прогресса", textGold, top);
-            top -= SettingsButtonHeight;
+            top -= SettingsButtonHeight + SettingsButtonSpacing;
             privacyButton = CreateSettingsButton(contentRoot, "PrivacyOptionsButton", "Конфиденциальность", textGold, top);
+            top -= SettingsButtonHeight + 28f;
+            CreateSectionHeader(contentRoot, "HelpHeader", "ПОМОЩЬ", top);
+            top -= 46f;
+            supportButton = CreateSettingsButton(contentRoot, "SupportButton", "Поддержка", textGold, top);
+            top -= SettingsButtonHeight + SettingsButtonSpacing;
+            rateUsButton = CreateSettingsButton(contentRoot, "RateUsButton", "Оценить игру", textGold, top);
         }
 
         private bool HasSettingsContent()
@@ -520,7 +525,29 @@ namespace CardMesh
                 && FindButton(contentRoot, "HintsToggle") != null
                 && FindButton(contentRoot, "HowToPlayButton") != null
                 && FindButton(contentRoot, "ResetProgressButton") != null
-                && FindButton(contentRoot, "PrivacyOptionsButton") != null;
+                && FindButton(contentRoot, "PrivacyOptionsButton") != null
+                && FindButton(contentRoot, "SupportButton") != null
+                && FindButton(contentRoot, "RateUsButton") != null;
+        }
+
+        private void CreateSectionHeader(RectTransform parent, string objectName, string label, float topY)
+        {
+            TextMeshProUGUI header = CreateText(
+                parent,
+                objectName,
+                label,
+                25f,
+                textCream,
+                TextAlignmentOptions.Left);
+            SetAnchored(
+                header.rectTransform,
+                new Vector2(0.5f, 1f),
+                new Vector2(0.5f, 1f),
+                new Vector2(0.5f, 1f),
+                new Vector2(560f, 40f),
+                new Vector2(0f, topY));
+            header.fontStyle = FontStyles.Bold;
+            header.characterSpacing = 4f;
         }
 
         private Slider CreateSliderRow(RectTransform parent, string rowName, string label, float topY, string sliderName, string valueName, UnityEngine.Events.UnityAction<float> changed, out TextMeshProUGUI valueText)
@@ -540,7 +567,7 @@ namespace CardMesh
 
             GameObject sliderObject = CreateChild(row, sliderName, typeof(RectTransform), typeof(Slider));
             RectTransform sliderRect = sliderObject.transform as RectTransform;
-            SetAnchored(sliderRect, new Vector2(0f, 0.5f), new Vector2(1f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-326f, 38f), new Vector2(44f, 0f));
+            SetAnchored(sliderRect, new Vector2(0f, 0.5f), new Vector2(1f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-326f, 72f), new Vector2(44f, 0f));
 
             GameObject background = CreateChild(sliderObject, "Background", typeof(Image));
             RectTransform backgroundRect = background.transform as RectTransform;
@@ -596,7 +623,7 @@ namespace CardMesh
             AddTextOutline(labelText, new Color(0f, 0.06f, 0.02f, 0.58f), new Vector2(1f, -1f));
 
             hintsToggleButton = CreateImageButton(rowRect, "HintsToggle", GetLevelButtonSprite(), Color.white);
-            SetAnchored(hintsToggleButton.transform as RectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(172f, 54f), new Vector2(44f, 0f));
+            SetAnchored(hintsToggleButton.transform as RectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(172f, 72f), new Vector2(44f, 0f));
             hintsToggleButton.onClick.AddListener(ToggleHints);
             hintsValueText = CreateText(hintsToggleButton.transform, "HintsValue", "Вкл", 28f, textGold, TextAlignmentOptions.Center);
             StretchToFill(hintsValueText.rectTransform, 16f, 16f, 0f, 2f);
@@ -868,6 +895,40 @@ namespace CardMesh
                 null);
         }
 
+        private void OpenSupport()
+        {
+            ContactPopupController popup =
+                FindFirstObjectByType<ContactPopupController>(FindObjectsInactive.Include);
+            if (popup == null)
+            {
+                ShowModal(
+                    "Поддержка",
+                    "Форма поддержки сейчас недоступна.",
+                    ("Понятно", CloseModal),
+                    null);
+                return;
+            }
+
+            popup.Open();
+        }
+
+        private void OpenRateUs()
+        {
+            RateUsPopupController popup =
+                FindFirstObjectByType<RateUsPopupController>(FindObjectsInactive.Include);
+            if (popup == null)
+            {
+                ShowModal(
+                    "Оценить игру",
+                    "Окно оценки сейчас недоступно.",
+                    ("Понятно", CloseModal),
+                    null);
+                return;
+            }
+
+            popup.Open();
+        }
+
         private void ConfirmResetProgress()
         {
             LevelProgressionManager manager = FindFirstObjectByType<LevelProgressionManager>(FindObjectsInactive.Include);
@@ -1041,7 +1102,7 @@ namespace CardMesh
             }
 
             modalBodyText.gameObject.SetActive(true);
-            modalBodyText.enableWordWrapping = true;
+            modalBodyText.textWrappingMode = TextWrappingModes.Normal;
             modalBodyText.fontStyle = FontStyles.Bold;
             AddTextOutline(modalBodyText, new Color(0f, 0.06f, 0.02f, 0.42f), new Vector2(1f, -1f));
 
@@ -1321,7 +1382,7 @@ namespace CardMesh
             label.enableAutoSizing = true;
             label.fontSizeMax = fontSize;
             label.fontSizeMin = Mathf.Max(14f, fontSize * 0.58f);
-            label.enableWordWrapping = false;
+            label.textWrappingMode = TextWrappingModes.NoWrap;
             label.alignment = alignment;
             label.color = color;
             label.raycastTarget = false;
@@ -1401,8 +1462,10 @@ namespace CardMesh
 
         private static Sprite GetWindowSprite()
         {
-            return PremiumUISprites.SettingsWindowCardMesh != null
-                ? PremiumUISprites.SettingsWindowCardMesh
+            return PremiumUISprites.MobilePopupFrame != null
+                ? PremiumUISprites.MobilePopupFrame
+                : PremiumUISprites.SettingsWindowCardMesh != null
+                    ? PremiumUISprites.SettingsWindowCardMesh
                 : PremiumUISprites.EmeraldPanel;
         }
 
@@ -1450,8 +1513,8 @@ namespace CardMesh
 
             CanvasScaler scaler = canvasObject.GetComponent<CanvasScaler>();
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution = new Vector2(1920f, 1080f);
-            scaler.matchWidthOrHeight = 0.5f;
+            scaler.referenceResolution = new Vector2(1080f, 1920f);
+            scaler.matchWidthOrHeight = 0f;
             return canvas;
         }
 

@@ -72,6 +72,7 @@ namespace CardMesh
 
         public void Show(int usedMoves)
         {
+            AdsManager.Instance?.SetBannerBlocker("WinScreen", true);
             if (titleText != null)
             {
                 titleText.text = CompletedTitle;
@@ -100,6 +101,7 @@ namespace CardMesh
 
         public void HideInstant()
         {
+            AdsManager.Instance?.SetBannerBlocker("WinScreen", false);
             isShowing = false;
 
             if (showRoutine != null)

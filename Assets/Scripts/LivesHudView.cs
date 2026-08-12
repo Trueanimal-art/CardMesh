@@ -168,14 +168,14 @@ namespace CardMesh
             if (countText != null)
             {
                 ApplyCountTextStyle(countText);
-                countText.SetText(safeCurrentLives.ToString());
+                countText.SetText($"{safeCurrentLives}/{safeMaxLives}");
                 countText.ForceMeshUpdate(true, true);
             }
 
             if (statusText != null)
             {
                 ApplyStatusTextStyle(statusText);
-                statusText.SetText(isFull ? "ЗАПОЛНЕНО" : FormatTimeToNextLife());
+                statusText.SetText(isFull ? "ЖИЗНИ" : $"ЧЕРЕЗ {FormatTimeToNextLife()}");
                 statusText.ForceMeshUpdate(true, true);
             }
 
@@ -312,15 +312,15 @@ namespace CardMesh
             text.enabled = true;
             text.canvasRenderer.SetAlpha(1f);
             text.enableAutoSizing = false;
-            text.fontSize = 36f;
-            text.fontSizeMin = 36f;
-            text.fontSizeMax = 36f;
+            text.fontSize = 34f;
+            text.fontSizeMin = 26f;
+            text.fontSizeMax = 34f;
             text.fontStyle = FontStyles.Bold;
             text.fontWeight = FontWeight.Bold;
-            text.enableWordWrapping = false;
+            text.textWrappingMode = TextWrappingModes.NoWrap;
             text.overflowMode = TextOverflowModes.Overflow;
             text.alignment = TextAlignmentOptions.Center;
-            text.color = Color.white;
+            text.color = new Color(0.98f, 0.94f, 0.82f, 1f);
             text.margin = Vector4.zero;
             text.extraPadding = false;
             text.raycastTarget = false;
@@ -340,15 +340,15 @@ namespace CardMesh
             text.enabled = true;
             text.canvasRenderer.SetAlpha(1f);
             text.enableAutoSizing = true;
-            text.fontSize = 19f;
-            text.fontSizeMin = 15f;
-            text.fontSizeMax = 19f;
+            text.fontSize = 14f;
+            text.fontSizeMin = 11f;
+            text.fontSizeMax = 14f;
             text.fontStyle = FontStyles.Bold;
             text.fontWeight = FontWeight.Bold;
-            text.enableWordWrapping = false;
-            text.overflowMode = TextOverflowModes.Ellipsis;
+            text.textWrappingMode = TextWrappingModes.NoWrap;
+            text.overflowMode = TextOverflowModes.Truncate;
             text.alignment = TextAlignmentOptions.Center;
-            text.color = new Color(0.96f, 0.72f, 0.22f, 1f);
+            text.color = new Color(0.78f, 0.74f, 0.62f, 0.86f);
             text.margin = Vector4.zero;
             text.extraPadding = false;
             text.raycastTarget = false;

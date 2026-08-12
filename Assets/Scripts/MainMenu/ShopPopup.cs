@@ -33,6 +33,7 @@ namespace CardMesh
         private void Awake()
         {
             BindSceneReferences();
+            ApplyUiPolish();
             ApplyFontsToAllTexts();
             WireButtons();
 
@@ -50,6 +51,7 @@ namespace CardMesh
             }
 
             BindSceneReferences();
+            ApplyUiPolish();
             ApplyFontsToAllTexts();
             WireButtons();
         }
@@ -61,10 +63,13 @@ namespace CardMesh
 
         public void Show()
         {
+            MainMenuPopupExclusivity.OpenExclusive(this);
             hasShownRuntime = true;
             gameObject.SetActive(true);
             transform.SetAsLastSibling();
+            MainMenuNavigationVisibility.SetBottomNavigationVisible(this, true);
             BindSceneReferences();
+            ApplyUiPolish();
             ApplyFontsToAllTexts();
             WireButtons();
             StartOpenAnimation();
@@ -79,6 +84,7 @@ namespace CardMesh
             }
 
             gameObject.SetActive(false);
+            MainMenuNavigationVisibility.SetBottomNavigationVisible(this, true);
         }
 
         private void ShowInfo()
@@ -158,6 +164,54 @@ namespace CardMesh
                 return;
             }
 
+            RectTransform topBadge = FindRect(panel, "TopBadge") ?? FindRect(panel, "HeaderIcon");
+            LevelFrameChrome chrome = panel.GetComponent<LevelFrameChrome>() ?? panel.gameObject.AddComponent<LevelFrameChrome>();
+            chrome.Configure(LevelFrameChrome.Preset.Tall, topBadge, closeButton, infoButton);
+            chrome.SetPanelLayoutOverride(1020f, LevelFrameChrome.GetMetrics(LevelFrameChrome.Preset.Tall).PanelPosition);
+            chrome.SetBadgeLayoutOverride(new Vector2(152f, 152f), new Vector2(0f, -168f));
+            // Use the same authored tall frame as Collection/Daily/Royal. Its top
+            // diamond is baked into the frame at the correct scale and position;
+            // the shop-only texture intentionally omitted it.
+            chrome.SetSurfaceSpriteOverride(Resources.Load<Sprite>("UI/Premium/popup_frame_mobile_h3"));
+            chrome.SetTopJewelVisible(false);
+            Transform topJewel = panel.Find("LevelFrameChrome/JewelTop");
+            if (topJewel != null)
+            {
+                topJewel.gameObject.SetActive(false);
+            }
+            Transform legacyTopGem = panel.Find("TopGem");
+            if (legacyTopGem != null)
+            {
+                legacyTopGem.gameObject.SetActive(false);
+            }
+            Transform legacyTopFrameJewel = panel.Find("TopFrameJewel");
+            if (legacyTopFrameJewel != null)
+            {
+                legacyTopFrameJewel.gameObject.SetActive(false);
+            }
+            if (topBadge != null)
+            {
+                // The source icon has generous transparent padding; scale its rect up
+                // so the bag fills the authored header medallion instead of floating in it.
+                topBadge.sizeDelta = new Vector2(152f, 152f);
+                topBadge.anchoredPosition = new Vector2(0f, -168f);
+            }
+            if (infoButton != null)
+            {
+                infoButton.gameObject.SetActive(false);
+            }
+#if UNITY_EDITOR
+            Image headerIcon = topBadge?.GetComponent<Image>();
+            if (headerIcon != null)
+            {
+                headerIcon.sprite = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>(
+                    "Assets/Art/UI/MainMenuEmeraldVault/icon_shop_royal_seal.png");
+                headerIcon.preserveAspect = true;
+                headerIcon.color = Color.white;
+                headerIcon.raycastTarget = false;
+            }
+#endif
+
             RectTransform header = FindRect(panel, "Header");
             RectTransform content = FindRect(panel, "ShopContent");
             if (content == null)
@@ -165,10 +219,7 @@ namespace CardMesh
                 return;
             }
 
-            float panelWidth = panel.rect.width > 100f ? panel.rect.width : 1510f;
-            float premiumWidth = Mathf.Clamp(panelWidth * 0.82f, 1080f, 1240f);
-            float resourcesWidth = Mathf.Clamp(panelWidth * 0.715f, 920f, 1080f);
-
+            SetRelativeAnchor(content, new Vector2(0.5f, 0.494f), new Vector2(840f, 1240f));
             ConfigureHeader(header);
             ConfigureSectionText(content);
 
@@ -179,16 +230,16 @@ namespace CardMesh
             RectTransform resourcesTitle = FindRect(content, "ResourcesTitle");
             RectTransform resources = FindRect(content, "Resources");
 
-            SetRelativeAnchor(treasuryTitle, new Vector2(0.5f, 0.77f), new Vector2(900f, 40f));
-            SetRelativeAnchor(treasuryCopy, new Vector2(0.5f, 0.725f), new Vector2(960f, 28f));
-            SetRelativeAnchor(premiumTitle, new Vector2(0.5f, 0.68f), new Vector2(620f, 34f));
-            SetRelativeAnchor(premiumBundles, new Vector2(0.5f, 0.48f), new Vector2(premiumWidth, 348f));
-            SetRelativeAnchor(resourcesTitle, new Vector2(0.5f, 0.295f), new Vector2(760f, 30f));
-            SetRelativeAnchor(resources, new Vector2(0.5f, 0.155f), new Vector2(resourcesWidth, 200f));
+            if (treasuryTitle != null) treasuryTitle.gameObject.SetActive(false);
+            if (treasuryCopy != null) treasuryCopy.gameObject.SetActive(false);
+            SetRelativeAnchor(premiumTitle, new Vector2(0.5f, 0.89f), new Vector2(800f, 34f));
+            SetRelativeAnchor(premiumBundles, new Vector2(0.5f, 0.618f), new Vector2(840f, 700f));
+            SetRelativeAnchor(resourcesTitle, new Vector2(0.5f, 0.312f), new Vector2(800f, 38f));
+            SetRelativeAnchor(resources, new Vector2(0.5f, 0.108f), new Vector2(840f, 448f));
 
             ConfigurePremiumBundles(premiumBundles);
             ConfigureResourceOffers(resources);
-            EnsurePremiumMotion();
+            DisablePremiumMotion();
         }
 
         private static void ConfigureHeader(RectTransform header)
@@ -198,13 +249,19 @@ namespace CardMesh
                 return;
             }
 
-            SetRelativeAnchor(header, new Vector2(0.5f, 0.85f), new Vector2(1180f, 94f));
+            SetRelativeAnchor(header, new Vector2(0.5f, 0.79f), new Vector2(720f, 124f));
             TextMeshProUGUI title = header.Find("Title")?.GetComponent<TextMeshProUGUI>();
             TextMeshProUGUI subtitle = header.Find("Subtitle")?.GetComponent<TextMeshProUGUI>();
-            SetLocalRect(title?.rectTransform, new Vector2(0f, 17f), new Vector2(900f, 58f));
-            SetLocalRect(subtitle?.rectTransform, new Vector2(0f, -27f), new Vector2(1100f, 32f));
-            ConfigureText(title, 50f, 44f, 54f, Gold, FontStyles.Bold);
-            ConfigureText(subtitle, 22f, 18f, 23f, new Color(1f, 0.92f, 0.72f, 0.94f), FontStyles.Bold);
+            SetLocalRect(title?.rectTransform, new Vector2(0f, 24f), new Vector2(720f, 64f));
+            SetLocalRect(subtitle?.rectTransform, new Vector2(0f, -10f), new Vector2(760f, 34f));
+            ConfigureText(title, 48f, 38f, 52f, Gold, FontStyles.Bold);
+            ConfigureText(subtitle, 21f, 17f, 23f, new Color(1f, 0.92f, 0.72f, 0.94f), FontStyles.Bold);
+            if (subtitle != null)
+            {
+                subtitle.enableAutoSizing = false;
+                subtitle.fontSize = 20f;
+                subtitle.textWrappingMode = TextWrappingModes.NoWrap;
+            }
         }
 
         private static void ConfigureSectionText(RectTransform content)
@@ -213,6 +270,16 @@ namespace CardMesh
             TextMeshProUGUI treasuryCopy = content.Find("TreasuryCopy")?.GetComponent<TextMeshProUGUI>();
             TextMeshProUGUI premiumTitle = content.Find("PremiumTitle")?.GetComponent<TextMeshProUGUI>();
             TextMeshProUGUI resourcesTitle = content.Find("ResourcesTitle")?.GetComponent<TextMeshProUGUI>();
+            if (resourcesTitle != null)
+            {
+                resourcesTitle.gameObject.SetActive(true);
+                resourcesTitle.text = "РЕСУРСЫ";
+            }
+
+            if (premiumTitle != null)
+            {
+                premiumTitle.text = "НАБОРЫ";
+            }
 
             ConfigureText(treasuryTitle, 31f, 25f, 32f, new Color(1f, 0.76f, 0.22f, 0.96f), FontStyles.Bold);
             ConfigureText(treasuryCopy, 18f, 15f, 19f, new Color(1f, 0.9f, 0.7f, 0.82f), FontStyles.Normal);
@@ -228,8 +295,12 @@ namespace CardMesh
             }
 
             string[] names = { "StarterBundle", "RoyalBundle", "EmperorBundle" };
-            float[] anchors = { 0.16f, 0.5f, 0.84f };
-            float cardWidth = Mathf.Clamp(container.rect.width * 0.29f, 330f, 360f);
+            Vector2[] positions =
+            {
+                new(-205f, -195f),
+                new(0f, 145f),
+                new(205f, -195f)
+            };
 
             for (int index = 0; index < names.Length; index++)
             {
@@ -239,26 +310,22 @@ namespace CardMesh
                     continue;
                 }
 
-                SetRelativeAnchor(card, new Vector2(anchors[index], 0.5f), new Vector2(cardWidth, 348f));
-                card.localScale = index == 1 ? Vector3.one * 1.025f : Vector3.one;
-                ConfigurePremiumCard(card, index == 1);
+                bool hero = index == 1;
+                Vector2 size = hero ? new Vector2(820f, 350f) : new Vector2(398f, 310f);
+                SetLocalRect(card, positions[index], size);
+                card.localScale = Vector3.one;
+                ConfigurePremiumCard(card, hero);
             }
         }
 
         private static void ConfigurePremiumCard(RectTransform card, bool recommended)
         {
+            ConfigureTreasurySurface(card, recommended);
+
             Image fill = card.Find("CardFill")?.GetComponent<Image>();
             if (fill != null)
             {
-                fill.color = recommended
-                    ? new Color(0.028f, 0.17f, 0.1f, 0.98f)
-                    : PremiumFill;
-                Outline outline = GetOrAdd<Outline>(fill.gameObject);
-                outline.effectColor = recommended
-                    ? new Color(1f, 0.75f, 0.16f, 0.62f)
-                    : new Color(0.86f, 0.62f, 0.13f, 0.38f);
-                outline.effectDistance = recommended ? new Vector2(1.7f, -1.7f) : new Vector2(1.15f, -1.15f);
-                outline.useGraphicAlpha = true;
+                fill.gameObject.SetActive(false);
             }
 
             RectTransform titleRect = FindRect(card, "Title");
@@ -268,30 +335,91 @@ namespace CardMesh
             RectTransform premiumRect = FindRect(card, "Premium");
             RectTransform buyButton = FindRect(card, "BuyButton");
 
-            SetLocalRect(titleRect, new Vector2(0f, 142f), new Vector2(card.rect.width - 24f, 30f));
-            if (iconRect != null)
+            // Keep every element inside the decorative niche.  The art has a deep
+            // top/bottom frame, so content must use the same visual guides instead
+            // of the old card-local offsets.
+            bool starter = card.name == "StarterBundle";
+            bool emperor = card.name == "EmperorBundle";
+            if (titleRect != null && !recommended)
             {
-                iconRect.anchoredPosition = new Vector2(0f, 70f);
+                TextMeshProUGUI smallTitle = titleRect.GetComponent<TextMeshProUGUI>();
+                if (smallTitle != null)
+                {
+                    smallTitle.text = starter ? "СТАРТОВЫЙ\nНАБОР" : "ИМПЕРАТОРСКИЙ\nНАБОР";
+                }
             }
 
-            SetLocalRect(contentsRect, new Vector2(45f, -61f), new Vector2(220f, 86f));
-            SetLocalRect(rewardIconsRect, new Vector2(-112f, -61f), new Vector2(26f, 86f));
-            SetLocalRect(premiumRect, new Vector2(45f, -104f), new Vector2(210f, 18f));
-            SetLocalRect(buyButton, new Vector2(0f, -143f), new Vector2(252f, 50f));
+            SetLocalRect(
+                titleRect,
+                new Vector2(0f, recommended ? 108f : 76f),
+                recommended ? new Vector2(card.rect.width - 70f, 40f) : new Vector2(300f, 58f));
+            float iconColumnX = recommended ? -205f : (emperor ? -76f : -92f);
+            float detailsColumnX = recommended ? 172f : (emperor ? 88f : 72f);
+            float detailsWidth = recommended ? 300f : (emperor ? 150f : 190f);
+            if (iconRect != null)
+            {
+                Image iconImage = iconRect.GetComponent<Image>();
+                if (recommended && iconImage != null)
+                {
+                    Sprite openRoyalChest = Resources.Load<Sprite>("UI/Shop/royal_chest_open");
+                    if (openRoyalChest != null)
+                    {
+                        iconImage.sprite = openRoyalChest;
+                        iconImage.preserveAspect = true;
+                        iconImage.color = Color.white;
+                    }
+                }
 
-            ConfigureText(titleRect?.GetComponent<TextMeshProUGUI>(), 24f, 18f, 25f, Gold, FontStyles.Bold);
-            ConfigureText(contentsRect?.GetComponent<TextMeshProUGUI>(), 19f, 16f, 20f, new Color(1f, 0.94f, 0.76f, 1f), FontStyles.Bold);
+                SetLocalRect(
+                    iconRect,
+                    new Vector2(iconColumnX, recommended ? -5f : -4f),
+                    recommended ? new Vector2(300f, 190f) : new Vector2(155f, 104f));
+            }
+
+            SetLocalRect(contentsRect, new Vector2(detailsColumnX, recommended ? 8f : 0f), new Vector2(detailsWidth, recommended ? 130f : 104f));
+            if (rewardIconsRect != null)
+            {
+                rewardIconsRect.gameObject.SetActive(false);
+            }
+            if (premiumRect != null)
+            {
+                premiumRect.gameObject.SetActive(false);
+            }
+            PlacePriceButton(
+                card,
+                buyButton,
+                recommended ? 330f : 258f,
+                54f,
+                recommended ? 42f : 38f,
+                0f);
+
+            ConfigureText(titleRect?.GetComponent<TextMeshProUGUI>(), recommended ? 27f : 20f, 18f, recommended ? 28f : 21f, Gold, FontStyles.Bold);
+            TextMeshProUGUI cardTitle = titleRect?.GetComponent<TextMeshProUGUI>();
+            if (cardTitle != null)
+            {
+                cardTitle.alignment = TextAlignmentOptions.Center;
+                cardTitle.textWrappingMode = TextWrappingModes.NoWrap;
+                cardTitle.overflowMode = TextOverflowModes.Overflow;
+                if (!recommended)
+                {
+                    cardTitle.enableAutoSizing = false;
+                    cardTitle.fontSize = 20f;
+                    cardTitle.lineSpacing = -8f;
+                }
+            }
+            TextMeshProUGUI contents = contentsRect?.GetComponent<TextMeshProUGUI>();
+            ConfigureText(contents, recommended ? 20f : 17f, recommended ? 16f : 14f, recommended ? 21f : 18f, new Color(1f, 0.94f, 0.76f, 1f), FontStyles.Bold);
+            if (contents != null)
+            {
+                contents.alignment = TextAlignmentOptions.MidlineLeft;
+                contents.lineSpacing = 10f;
+                contents.overflowMode = TextOverflowModes.Overflow;
+            }
             ConfigureText(premiumRect?.GetComponent<TextMeshProUGUI>(), 14f, 12f, 15f, new Color(1f, 0.79f, 0.26f, 0.92f), FontStyles.Bold);
             ConfigureBuyButton(buyButton, 25f);
 
             if (recommended)
             {
-                SetLocalRect(titleRect, new Vector2(0f, 124f), new Vector2(card.rect.width - 24f, 28f));
-                if (iconRect != null)
-                {
-                    iconRect.anchoredPosition = new Vector2(0f, 55f);
-                }
-
                 EnsurePopularBadge(card);
             }
             else
@@ -312,8 +440,15 @@ namespace CardMesh
             }
 
             string[] names = { "Coins10000", "Hints20", "Moves50", "RemoveAds" };
-            float[] anchors = { 0.125f, 0.375f, 0.625f, 0.875f };
-            float cardWidth = Mathf.Clamp(container.rect.width * 0.215f, 206f, 230f);
+            Vector2[] anchors =
+            {
+                new(0.25f, 0.75f),
+                new(0.75f, 0.75f),
+                new(0.25f, 0.25f),
+                new(0.75f, 0.25f)
+            };
+            const float cardWidth = 400f;
+            const float cardHeight = 212f;
 
             for (int index = 0; index < names.Length; index++)
             {
@@ -323,31 +458,212 @@ namespace CardMesh
                     continue;
                 }
 
-                SetRelativeAnchor(card, new Vector2(anchors[index], 0.5f), new Vector2(cardWidth, 194f));
+                SetRelativeAnchor(card, anchors[index], new Vector2(cardWidth, cardHeight));
+                ConfigureTreasurySurface(card, false);
                 Image fill = card.Find("CardFill")?.GetComponent<Image>();
                 if (fill != null)
                 {
-                    fill.color = ResourceFill;
-                    Outline outline = GetOrAdd<Outline>(fill.gameObject);
-                    outline.effectColor = new Color(0.9f, 0.67f, 0.16f, 0.4f);
-                    outline.effectDistance = new Vector2(1f, -1f);
-                    outline.useGraphicAlpha = true;
+                    fill.gameObject.SetActive(false);
                 }
 
                 RectTransform offerTitle = FindRect(card, "OfferTitle");
+                RectTransform offerIcon = FindRect(card, "Icon");
+                if (index == 3 && offerIcon == null)
+                {
+                    offerIcon = FindRect(card, "IconBase");
+                }
                 RectTransform offerAmount = FindRect(card, "OfferAmount");
                 RectTransform offerDetail = FindRect(card, "OfferDetail");
                 RectTransform buyButton = FindRect(card, "BuyButton");
-                SetLocalRect(offerTitle, new Vector2(0f, 78f), new Vector2(cardWidth - 20f, 28f));
-                SetLocalRect(offerAmount, new Vector2(0f, -26f), new Vector2(cardWidth - 20f, 30f));
-                SetLocalRect(offerDetail, new Vector2(0f, -49f), new Vector2(cardWidth - 20f, 22f));
-                SetLocalRect(buyButton, new Vector2(0f, -76f), new Vector2(cardWidth - 40f, 40f));
+                if (index == 0)
+                {
+                    SetOfferText(offerDetail, "МОНЕТ");
+                }
+                if (index == 3)
+                {
+                    TextMeshProUGUI removeAdsTitle = offerTitle?.GetComponent<TextMeshProUGUI>();
+                    if (removeAdsTitle != null)
+                    {
+                        removeAdsTitle.text = "БЕЗ РЕКЛАМЫ";
+                    }
 
-                ConfigureText(offerTitle?.GetComponent<TextMeshProUGUI>(), 21f, 15f, 22f, Gold, FontStyles.Bold);
-                ConfigureText(offerAmount?.GetComponent<TextMeshProUGUI>(), 25f, 19f, 26f, new Color(1f, 0.94f, 0.74f, 1f), FontStyles.Bold);
-                ConfigureText(offerDetail?.GetComponent<TextMeshProUGUI>(), 14f, 11f, 15f, new Color(1f, 0.9f, 0.7f, 0.9f), FontStyles.Bold);
-                ConfigureBuyButton(buyButton, 21f);
+                    SetOfferText(offerAmount, "НАВСЕГДА");
+                    SetOfferText(offerDetail, "БЕЗ БАННЕРОВ");
+                }
+
+                SetLocalRect(
+                    offerTitle,
+                    new Vector2(0f, 48f),
+                    new Vector2(300f, 42f));
+                float offerIconX = index == 3 ? -108f : -110f;
+                Vector2 offerIconSize = index == 3 ? new Vector2(58f, 58f) : new Vector2(54f, 54f);
+                SetLocalRect(offerIcon, new Vector2(offerIconX, -17f), offerIconSize);
+                if (offerIcon != null)
+                {
+                    offerIcon.gameObject.SetActive(true);
+                    if (index == 1)
+                    {
+                        ApplyGameplayHintIcon(offerIcon);
+                    }
+                }
+                if (index == 3)
+                {
+                    ConfigureRemoveAdsIcon(card, offerIcon);
+                }
+                SetLocalRect(offerAmount, new Vector2(-35f, -5f), new Vector2(82f, 30f));
+                SetLocalRect(offerDetail, new Vector2(-35f, -30f), new Vector2(88f, 18f));
+                SetLocalRect(buyButton, new Vector2(74f, -17f), new Vector2(128f, 46f));
+
+                ConfigureText(offerTitle?.GetComponent<TextMeshProUGUI>(), 18f, 17f, 18f, Gold, FontStyles.Bold);
+                ConfigureText(offerAmount?.GetComponent<TextMeshProUGUI>(), 23f, 23f, 23f, new Color(1f, 0.94f, 0.74f, 1f), FontStyles.Bold);
+                ConfigureText(offerDetail?.GetComponent<TextMeshProUGUI>(), 13f, 13f, 13f, new Color(1f, 0.9f, 0.7f, 0.9f), FontStyles.Bold);
+                ConfigureBuyButton(buyButton, 19f);
+
+                TextMeshProUGUI resourceTitle = offerTitle?.GetComponent<TextMeshProUGUI>();
+                if (resourceTitle != null)
+                {
+                    resourceTitle.alignment = TextAlignmentOptions.Center;
+                    resourceTitle.textWrappingMode = TextWrappingModes.Normal;
+                    resourceTitle.enableAutoSizing = false;
+                    resourceTitle.fontSize = 18f;
+                    resourceTitle.lineSpacing = -6f;
+                }
+
+                TextMeshProUGUI amountText = offerAmount?.GetComponent<TextMeshProUGUI>();
+                TextMeshProUGUI detailText = offerDetail?.GetComponent<TextMeshProUGUI>();
+                if (amountText != null)
+                {
+                    amountText.enableAutoSizing = false;
+                    amountText.fontSize = index == 3 ? 17f : 23f;
+                }
+                if (detailText != null)
+                {
+                    detailText.enableAutoSizing = false;
+                    detailText.fontSize = index == 3 ? 11f : 13f;
+                }
             }
+        }
+
+        private static void ApplyGameplayHintIcon(RectTransform iconRect)
+        {
+            if (iconRect == null)
+            {
+                return;
+            }
+
+            Image icon = iconRect.GetComponent<Image>();
+            if (icon == null)
+            {
+                return;
+            }
+
+#if UNITY_EDITOR
+            icon.sprite = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>(
+                "Assets/Art/UI/GameActions/VariantA/icon_hint_oracle_final.png");
+#else
+            // The authored scene keeps the same sprite reference in player builds.
+#endif
+            icon.preserveAspect = true;
+            icon.type = Image.Type.Simple;
+            icon.color = Color.white;
+            icon.raycastTarget = false;
+        }
+
+        private static void SetOfferText(RectTransform rect, string value)
+        {
+            if (rect == null)
+            {
+                return;
+            }
+
+            rect.gameObject.SetActive(true);
+            TextMeshProUGUI label = rect.GetComponent<TextMeshProUGUI>();
+            if (label != null)
+            {
+                label.text = value;
+                RuntimeCyrillicFontProvider.Apply(label, value);
+            }
+        }
+
+        private static void ConfigureRemoveAdsIcon(RectTransform card, RectTransform iconRect)
+        {
+            RectTransform iconBase = FindRect(card, "IconBase");
+            RectTransform iconText = FindRect(card, "IconText");
+            RectTransform slash = FindRect(card, "NoAdsSlash");
+            RectTransform visualRoot = iconRect != null ? iconRect : iconBase;
+            if (visualRoot == null)
+            {
+                return;
+            }
+
+            if (iconBase != null)
+            {
+                iconBase.gameObject.SetActive(true);
+                SetLocalRect(iconBase, visualRoot.anchoredPosition, visualRoot.sizeDelta);
+                Image baseImage = iconBase.GetComponent<Image>();
+                if (baseImage != null)
+                {
+                    baseImage.preserveAspect = true;
+                    baseImage.color = Color.white;
+                    baseImage.raycastTarget = false;
+                }
+            }
+
+            if (iconText != null)
+            {
+                iconText.gameObject.SetActive(true);
+                SetLocalRect(iconText, visualRoot.anchoredPosition, visualRoot.sizeDelta - new Vector2(12f, 12f));
+                TextMeshProUGUI label = iconText.GetComponent<TextMeshProUGUI>();
+                if (label != null)
+                {
+                    label.text = "ADS";
+                    ConfigureText(label, 19f, 16f, 20f, SoftGold, FontStyles.Bold);
+                    label.alignment = TextAlignmentOptions.Center;
+                    label.raycastTarget = false;
+                    RuntimeCyrillicFontProvider.Apply(label, label.text);
+                }
+            }
+
+            if (slash != null)
+            {
+                slash.gameObject.SetActive(true);
+                SetLocalRect(slash, visualRoot.anchoredPosition, new Vector2(82f, 8f));
+                slash.localRotation = Quaternion.Euler(0f, 0f, -42f);
+                Image strike = slash.GetComponent<Image>();
+                if (strike != null)
+                {
+                    strike.sprite = null;
+                    strike.type = Image.Type.Simple;
+                    strike.color = new Color(0.9f, 0.18f, 0.08f, 1f);
+                    strike.raycastTarget = false;
+                }
+            }
+
+            iconBase?.SetAsLastSibling();
+            iconText?.SetAsLastSibling();
+            slash?.SetAsLastSibling();
+        }
+
+        private static void ConfigureTreasurySurface(RectTransform card, bool hero)
+        {
+            if (card == null)
+            {
+                return;
+            }
+
+            Image surface = card.GetComponent<Image>() ?? card.gameObject.AddComponent<Image>();
+            surface.sprite = Resources.Load<Sprite>(hero
+                ? "UI/Shop/treasury_hero_niche"
+                : "UI/Shop/treasury_card_niche");
+            surface.type = Image.Type.Simple;
+            surface.preserveAspect = false;
+            surface.color = Color.white;
+            surface.material = null;
+            surface.enabled = true;
+            surface.raycastTarget = false;
+
+            Outline outline = card.GetComponent<Outline>() ?? card.gameObject.AddComponent<Outline>();
+            outline.enabled = false;
         }
 
         private static void ConfigureBuyButton(RectTransform buttonRect, float priceSize)
@@ -391,47 +707,40 @@ namespace CardMesh
                 label.alignment = TextAlignmentOptions.Center;
             }
 
-            EnsureHoverGlow(buttonRect, image);
+            DisableHoverGlow(buttonRect);
             if (buttonRect.GetComponent<UIJuicyButton>() == null)
             {
                 buttonRect.gameObject.AddComponent<UIJuicyButton>();
             }
         }
 
-        private static void EnsureHoverGlow(RectTransform buttonRect, Image source)
+        private static void PlacePriceButton(
+            RectTransform card,
+            RectTransform button,
+            float width,
+            float height,
+            float bottomInset,
+            float x)
         {
-            if (source == null)
+            if (card == null || button == null)
             {
                 return;
             }
 
-            RectTransform glowRect = buttonRect.Find("HoverGlow") as RectTransform;
-            Image glow;
-            CanvasGroup group;
-            if (glowRect == null)
-            {
-                GameObject glowObject = new("HoverGlow", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(CanvasGroup));
-                glowObject.layer = buttonRect.gameObject.layer;
-                glowObject.transform.SetParent(buttonRect, false);
-                glowRect = glowObject.GetComponent<RectTransform>();
-                glowRect.SetAsFirstSibling();
-                glow = glowObject.GetComponent<Image>();
-                group = glowObject.GetComponent<CanvasGroup>();
-            }
-            else
-            {
-                glow = glowRect.GetComponent<Image>() ?? glowRect.gameObject.AddComponent<Image>();
-                group = glowRect.GetComponent<CanvasGroup>() ?? glowRect.gameObject.AddComponent<CanvasGroup>();
-            }
+            // One rule for every product card: the CTA baseline is derived from
+            // the card's lower edge. This keeps prices stable if a card changes
+            // size and prevents per-card hand-tuned vertical drift.
+            float y = (-card.rect.height * 0.5f) + bottomInset + (height * 0.5f);
+            SetLocalRect(button, new Vector2(x, y), new Vector2(width, height));
+        }
 
-            Stretch(glowRect, -4f, -4f, -3f, -3f);
-            glow.sprite = source.sprite;
-            glow.type = source.type;
-            glow.color = new Color(1f, 0.78f, 0.22f, 0.22f);
-            glow.raycastTarget = false;
-            group.alpha = 0f;
-            group.interactable = false;
-            group.blocksRaycasts = false;
+        private static void DisableHoverGlow(RectTransform buttonRect)
+        {
+            RectTransform glowRect = buttonRect.Find("HoverGlow") as RectTransform;
+            if (glowRect != null)
+            {
+                glowRect.gameObject.SetActive(false);
+            }
         }
 
         private static void EnsurePopularBadge(RectTransform card)
@@ -469,8 +778,8 @@ namespace CardMesh
             badge.anchorMin = new Vector2(0.5f, 0.5f);
             badge.anchorMax = badge.anchorMin;
             badge.pivot = new Vector2(0.5f, 0.5f);
-            badge.anchoredPosition = new Vector2(0f, 157f);
-            badge.sizeDelta = new Vector2(150f, 26f);
+            badge.anchoredPosition = new Vector2(-294f, 96f);
+            badge.sizeDelta = new Vector2(188f, 34f);
             badge.localScale = Vector3.one;
             badgeImage.sprite = PremiumUISprites.CategoryLabel != null
                 ? PremiumUISprites.CategoryLabel
@@ -480,18 +789,19 @@ namespace CardMesh
             badgeImage.raycastTarget = false;
 
             Stretch(label.rectTransform, 10f, 10f, 3f, 3f);
-            label.text = "ПОПУЛЯРНЫЙ";
+            label.text = "ЛУЧШАЯ ЦЕНА";
             label.alignment = TextAlignmentOptions.Center;
             ConfigureText(label, 14f, 12f, 15f, new Color(0.16f, 0.075f, 0.012f, 1f), FontStyles.Bold);
             RuntimeCyrillicFontProvider.Apply(label, label.text);
             badge.SetAsLastSibling();
         }
 
-        private void EnsurePremiumMotion()
+        private void DisablePremiumMotion()
         {
-            if (GetComponent<ShopPremiumMotion>() == null)
+            ShopPremiumMotion motion = GetComponent<ShopPremiumMotion>();
+            if (motion != null)
             {
-                gameObject.AddComponent<ShopPremiumMotion>();
+                motion.enabled = false;
             }
         }
 
@@ -554,8 +864,8 @@ namespace CardMesh
             text.color = color;
             text.fontStyle = style;
             text.alignment = TextAlignmentOptions.Center;
-            text.enableWordWrapping = true;
-            text.overflowMode = TextOverflowModes.Ellipsis;
+            text.textWrappingMode = TextWrappingModes.Normal;
+            text.overflowMode = TextOverflowModes.Truncate;
         }
 
         private static RectTransform FindRect(Transform root, string childName)
@@ -575,6 +885,7 @@ namespace CardMesh
             rect.pivot = new Vector2(0.5f, 0.5f);
             rect.anchoredPosition = Vector2.zero;
             rect.sizeDelta = size;
+            rect.localScale = Vector3.one;
         }
 
         private static void SetLocalRect(RectTransform rect, Vector2 position, Vector2 size)
@@ -589,6 +900,7 @@ namespace CardMesh
             rect.pivot = new Vector2(0.5f, 0.5f);
             rect.anchoredPosition = position;
             rect.sizeDelta = size;
+            rect.localScale = Vector3.one;
         }
 
         private static void Stretch(RectTransform rect, float left, float right, float top, float bottom)

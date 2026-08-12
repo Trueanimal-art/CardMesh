@@ -18,7 +18,11 @@ namespace CardMesh.EditorTools
         {
             PlayerSettings.companyName = "One Tap Garage";
             PlayerSettings.productName = "Card Mesh";
-            PlayerSettings.bundleVersion = "1.0.0";
+            if (string.IsNullOrWhiteSpace(PlayerSettings.bundleVersion))
+            {
+                PlayerSettings.bundleVersion = "1.0.0";
+            }
+
             PlayerSettings.SetApplicationIdentifier(NamedBuildTarget.Android, PackageId);
             PlayerSettings.defaultInterfaceOrientation = UIOrientation.Portrait;
             PlayerSettings.allowedAutorotateToPortrait = true;
@@ -26,10 +30,14 @@ namespace CardMesh.EditorTools
             PlayerSettings.allowedAutorotateToLandscapeLeft = false;
             PlayerSettings.allowedAutorotateToLandscapeRight = false;
 
-            PlayerSettings.Android.bundleVersionCode = 1;
+            PlayerSettings.Android.bundleVersionCode =
+                Mathf.Max(1, PlayerSettings.Android.bundleVersionCode);
             PlayerSettings.Android.minSdkVersion = AndroidSdkVersions.AndroidApiLevel25;
             PlayerSettings.Android.targetSdkVersion = AndroidSdkVersions.AndroidApiLevel36;
             PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARM64;
+            PlayerSettings.Android.preferredInstallLocation =
+                AndroidPreferredInstallLocation.Auto;
+            PlayerSettings.Android.maxAspectRatio = 2.4f;
             PlayerSettings.Android.appCategory = "game";
             PlayerSettings.Android.androidTVCompatibility = false;
             PlayerSettings.Android.buildApkPerCpuArchitecture = false;

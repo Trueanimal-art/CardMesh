@@ -1633,38 +1633,8 @@ namespace CardMesh
 
         private static TMP_FontAsset GetOrCreateRuntimeCyrillicFont()
         {
-            if (runtimeCyrillicFontAsset != null)
-            {
-                return runtimeCyrillicFontAsset;
-            }
-
-            Font sourceFont = Resources.Load<Font>(RuntimeFontResourcePath);
-            if (sourceFont == null)
-            {
-                sourceFont = LoadBuiltinRuntimeFont();
-            }
-
-            if (sourceFont == null)
-            {
-                return null;
-            }
-
-            runtimeCyrillicFontAsset = TMP_FontAsset.CreateFontAsset(
-                sourceFont,
-                90,
-                9,
-                GlyphRenderMode.SDFAA,
-                1024,
-                1024,
-                AtlasPopulationMode.Dynamic,
-                true);
-
-            if (runtimeCyrillicFontAsset != null)
-            {
-                runtimeCyrillicFontAsset.name = $"Runtime_{sourceFont.name}_CardCyrillic";
-            }
-
-            return runtimeCyrillicFontAsset;
+            return runtimeCyrillicFontAsset ??=
+                RuntimeCyrillicFontProvider.FontAsset;
         }
 
         private static Font LoadBuiltinRuntimeFont()
@@ -1758,10 +1728,11 @@ namespace CardMesh
                 titleLabel.fontSizeMin = useTopHistoryTitle
                     ? Mathf.Min(11f, fontSizeMin)
                     : isGoldCard ? Mathf.Min(GoldTitleFontSizeMin, fontSizeMin) : isImageCard ? Mathf.Min(11f, fontSizeMin) : Mathf.Min(RegularTitleFontSizeMin, fontSizeMin);
-                titleLabel.enableWordWrapping = !useTopHistoryTitle && !isImageCard;
-                titleLabel.overflowMode = useTopHistoryTitle || isImageCard
-                    ? TextOverflowModes.Ellipsis
-                    : TextOverflowModes.Ellipsis;
+                titleLabel.textWrappingMode =
+                    !useTopHistoryTitle && !isImageCard
+                        ? TextWrappingModes.Normal
+                        : TextWrappingModes.NoWrap;
+                titleLabel.overflowMode = TextOverflowModes.Truncate;
             }
 
             if (footerRoot != null)
@@ -1788,8 +1759,8 @@ namespace CardMesh
                 footerLabel.alignment = useProgressFooterLayout
                     ? TextAlignmentOptions.Right
                     : TextAlignmentOptions.TopRight;
-                footerLabel.enableWordWrapping = false;
-                footerLabel.overflowMode = TextOverflowModes.Ellipsis;
+                footerLabel.textWrappingMode = TextWrappingModes.NoWrap;
+                footerLabel.overflowMode = TextOverflowModes.Truncate;
                 if (useProgressFooterLayout)
                 {
                     footerLabel.fontSizeMax = 22f;

@@ -7,10 +7,6 @@ using CardMesh;
 
 public class MainMenuController : MonoBehaviour
 {
-    private const float TopEventIconSize = 144f;
-    private const float TopEventIconRightX = -120f;
-    private const float TopEventIconSpacing = 176f;
-
     private LevelProgressionManager progressionManager;
     private LevelSelectionPopup levelSelectionPopup;
     private SettingsPopup settingsPopup;
@@ -28,7 +24,6 @@ public class MainMenuController : MonoBehaviour
             ApplyPremiumStyles();
         }
 #endif
-        BindShopButton();
         BindChestChaseButton();
         BindDailyRewardsButton();
         SubscribeChestChaseUpdates();
@@ -163,13 +158,15 @@ public class MainMenuController : MonoBehaviour
 
     private static void ApplyPremiumStyles()
     {
-        Color menuTextColor = new(1f, 0.847f, 0.353f, 1f);
-        StyleButton("PlayButton", PremiumUISprites.PrimaryButton, menuTextColor, 42f, true);
-        StyleButton("LevelsButton", PremiumUISprites.PrimaryButton, menuTextColor, 28f, true);
-        StyleButton("SettingsButton", PremiumUISprites.PrimaryButton, menuTextColor, 28f, true);
-        StyleMainMenuButtonText("PlayButton", "ИГРАТЬ", 60f, 40f, 2f, 0f);
-        StyleMainMenuButtonText("LevelsButton", "УРОВНИ", 38f, 27f, 4f, -3f);
-        StyleMainMenuButtonText("SettingsButton", "НАСТРОЙКИ", 30f, 22f, 9f, -3f);
+        Color playTextColor = new(0.89f, 0.73f, 0.36f, 1f);
+        Color navigationTextColor = new(0.93f, 0.86f, 0.67f, 1f);
+        StyleAuthoredLabel("PlayButton", "ИГРАТЬ", playTextColor, 64f);
+        StyleNavigationLabel("DailyRewardsButton", "НАГРАДА", navigationTextColor);
+        StyleNavigationLabel("ChestChaseButton", "СУНДУКИ", navigationTextColor);
+        StyleNavigationLabel("LevelsButton", "УРОВНИ", navigationTextColor);
+        StyleNavigationLabel("SettingsButton", "НАСТРОЙКИ", navigationTextColor);
+        StyleNavigationLabel("CollectionBookButton", "КОЛЛЕКЦИЯ", navigationTextColor);
+        StyleNavigationLabel("ShopButton", "МАГАЗИН", navigationTextColor);
         StyleTopEventButtons();
     }
 
@@ -182,91 +179,26 @@ public class MainMenuController : MonoBehaviour
 
     private static void StyleTopEventButtons()
     {
-        RectTransform shop = GameObject.Find("ShopButton")?.GetComponent<RectTransform>();
-        ApplyTopEventIconLayout(shop, null);
-
         RectTransform dailyRewards = GameObject.Find("DailyRewardsButton")?.GetComponent<RectTransform>();
-        ApplyTopEventIconLayout(dailyRewards, TopEventIconRightX);
+        ApplyTopEventIconLayout(dailyRewards);
 
         RectTransform chestChase = GameObject.Find("ChestChaseButton")?.GetComponent<RectTransform>();
-        ApplyTopEventIconLayout(chestChase, TopEventIconRightX - TopEventIconSpacing);
-
-        SoundToggleButton collectionBookButton = FindFirstObjectByType<SoundToggleButton>(FindObjectsInactive.Include);
-        RectTransform collectionBook = collectionBookButton != null ? collectionBookButton.GetComponent<RectTransform>() : null;
-        ApplyTopEventIconLayout(collectionBook, TopEventIconRightX - (TopEventIconSpacing * 2f));
+        ApplyTopEventIconLayout(chestChase);
     }
 
-    private static void ApplyTopEventIconLayout(RectTransform rect, float? xPosition)
+    private static void ApplyTopEventIconLayout(RectTransform rect)
     {
         if (rect == null)
         {
             return;
         }
 
-        rect.sizeDelta = new Vector2(TopEventIconSize, TopEventIconSize);
-        if (xPosition.HasValue)
-        {
-            rect.anchoredPosition = new Vector2(xPosition.Value, rect.anchoredPosition.y);
-        }
-
-        Image image = rect.GetComponent<Image>();
+        Image image = rect.Find("Icon")?.GetComponent<Image>();
         if (image != null)
         {
-            RestoreTopEventIconImage(rect, image);
             image.preserveAspect = true;
             image.color = Color.white;
         }
-    }
-
-    private static void RestoreTopEventIconImage(RectTransform rect, Image image)
-    {
-        Transform generatedIcon = rect.Find("TopEventIcon");
-        if (generatedIcon != null && generatedIcon.TryGetComponent(out Image iconImage) && iconImage.sprite != null)
-        {
-            image.sprite = iconImage.sprite;
-            image.type = Image.Type.Simple;
-            image.color = iconImage.color;
-        }
-
-        RemoveGeneratedTopEventLayer(rect, "TopEventFrameGlow");
-        RemoveGeneratedTopEventLayer(rect, "TopEventIconHalo");
-        RemoveGeneratedTopEventLayer(rect, "TopEventIcon");
-        RemoveGeneratedTopEventLayer(rect, "TopEventTopGloss");
-    }
-
-    private static void RemoveGeneratedTopEventLayer(RectTransform parent, string childName)
-    {
-        Transform child = parent.Find(childName);
-        if (child == null)
-        {
-            return;
-        }
-
-        if (Application.isPlaying)
-        {
-            Destroy(child.gameObject);
-        }
-        else
-        {
-            DestroyImmediate(child.gameObject);
-        }
-    }
-
-    private void BindShopButton()
-    {
-        GameObject existing = GameObject.Find("ShopButton");
-        RectTransform root = existing != null ? existing.GetComponent<RectTransform>() : null;
-        Button button = existing != null ? existing.GetComponent<Button>() : null;
-
-        if (root == null || button == null)
-        {
-            return;
-        }
-
-        Image image = root.GetComponent<Image>();
-        button.targetGraphic = image;
-        button.onClick.RemoveListener(OnShopClicked);
-        button.onClick.AddListener(OnShopClicked);
     }
 
     private void BindChestChaseButton()
@@ -309,16 +241,25 @@ public class MainMenuController : MonoBehaviour
     private static void RefreshChestChaseBadge(RectTransform root)
     {
         TMP_Text badgeText = root.Find("ProgressBadge/BadgeText")?.GetComponent<TMP_Text>();
-        if (badgeText == null)
-        {
-            return;
-        }
-
         ChestChaseManager manager = ChestChaseManager.GetOrCreate(root);
         int required = Mathf.Max(1, manager.KeysRequired);
         int current = Mathf.Clamp(manager.CurrentKeys, 0, required);
-        badgeText.text = $"{current}/{required}";
-        RuntimeCyrillicFontProvider.Apply(badgeText, badgeText.text);
+        Transform badge = root.Find("ProgressBadge");
+        if (badge != null)
+        {
+            badge.gameObject.SetActive(current > 0);
+        }
+
+        if (badgeText != null)
+        {
+            badgeText.text = $"{current}/{required}";
+        }
+
+        TMP_Text status = root.Find("Status")?.GetComponent<TMP_Text>();
+        if (status != null)
+        {
+            status.text = current >= required ? "ГОТОВО К ОТКРЫТИЮ" : $"ДОСТУПНО: {current}";
+        }
     }
 
     private static void RefreshDailyRewardsBadge(RectTransform root)
@@ -423,7 +364,7 @@ public class MainMenuController : MonoBehaviour
             label.enableAutoSizing = true;
             label.fontSizeMax = fontSize;
             label.fontSizeMin = Mathf.Max(14f, fontSize * 0.58f);
-            label.enableWordWrapping = false;
+            label.textWrappingMode = TextWrappingModes.NoWrap;
             label.alignment = TextAlignmentOptions.Center;
             label.color = textColor;
             label.fontStyle = FontStyles.Bold;
@@ -449,10 +390,9 @@ public class MainMenuController : MonoBehaviour
             outline.useGraphicAlpha = true;
         }
 
-        if (target.GetComponent<UIJuicyButton>() == null)
-        {
-            target.AddComponent<UIJuicyButton>();
-        }
+        UIJuicyButton juicyButton = target.GetComponent<UIJuicyButton>()
+            ?? target.AddComponent<UIJuicyButton>();
+        juicyButton.ConfigureMobileFeedback(0.96f, 0.08f);
 
         Shadow shadow = target.GetComponent<Shadow>();
         if (shadow == null)
@@ -465,78 +405,82 @@ public class MainMenuController : MonoBehaviour
         shadow.useGraphicAlpha = true;
     }
 
-    private static void StyleMainMenuButtonText(string objectName, string text, float maxSize, float minSize, float xOffset, float yOffset)
+    private static void StyleAuthoredLabel(string objectName, string text, Color color, float maxSize)
     {
         GameObject target = GameObject.Find(objectName);
-        TMP_Text label = target != null ? target.GetComponentInChildren<TMP_Text>(true) : null;
+        TMP_Text label = FindExactLabel(target);
         if (label == null)
         {
             return;
         }
 
         label.text = text;
-        label.color = new Color(1f, 0.847f, 0.353f, 1f);
+        label.color = color;
         label.enableVertexGradient = false;
-        label.enableAutoSizing = true;
-        label.fontSizeMax = maxSize;
-        label.fontSizeMin = minSize;
+        label.enableAutoSizing = false;
+        label.fontSize = maxSize;
         label.fontStyle = FontStyles.Bold;
-        label.enableWordWrapping = false;
+        label.fontWeight = FontWeight.Bold;
+        label.textWrappingMode = TextWrappingModes.NoWrap;
         label.alignment = TextAlignmentOptions.Center;
-        label.characterSpacing = 0f;
-
-        RectTransform targetRect = target.GetComponent<RectTransform>();
-        RectTransform labelRect = label.rectTransform;
-        if (targetRect != null && labelRect != null)
+        label.characterSpacing = 1.2f;
+        label.margin = Vector4.zero;
+        label.extraPadding = true;
+        TMP_FontAsset displayFont =
+            Resources.Load<TMP_FontAsset>("Fonts/Prata Cyrillic SDF");
+        if (displayFont != null)
         {
-            float rectWidth = Mathf.Max(120f, targetRect.rect.width * 0.72f);
-            float rectHeight = Mathf.Max(54f, targetRect.rect.height * 0.34f);
-            labelRect.anchorMin = new Vector2(0.5f, 0.5f);
-            labelRect.anchorMax = new Vector2(0.5f, 0.5f);
-            labelRect.pivot = new Vector2(0.5f, 0.5f);
-            labelRect.anchoredPosition = new Vector2(xOffset, yOffset);
-            labelRect.sizeDelta = new Vector2(rectWidth, rectHeight);
+            label.font = displayFont;
+            Material playMaterial =
+                Resources.Load<Material>("Fonts/Prata Cyrillic CTA");
+            label.fontSharedMaterial =
+                playMaterial != null ? playMaterial : displayFont.material;
+        }
+    }
+
+    private static void StyleNavigationLabel(string objectName, string text, Color color)
+    {
+        GameObject target = GameObject.Find(objectName);
+        TMP_Text label = FindExactLabel(target);
+        if (label == null)
+        {
+            return;
         }
 
-        Material material = label.fontMaterial;
-        if (material != null)
+        label.text = text;
+        label.color = color;
+        label.enableVertexGradient = false;
+        label.enableAutoSizing = false;
+        label.fontSize = 27f;
+        label.fontStyle = FontStyles.Normal;
+        label.textWrappingMode = TextWrappingModes.NoWrap;
+        label.alignment = TextAlignmentOptions.Center;
+        label.characterSpacing = 0.2f;
+        TMP_FontAsset navigationFont =
+            Resources.Load<TMP_FontAsset>("Fonts/Roboto-Bold Cyrillic SDF");
+        if (navigationFont != null)
         {
-            material.EnableKeyword("OUTLINE_ON");
-            material.DisableKeyword("UNDERLAY_ON");
-            material.DisableKeyword("GLOW_ON");
-            material.SetColor(ShaderUtilities.ID_FaceColor, new Color(1f, 0.847f, 0.353f, 1f));
-            material.SetColor(ShaderUtilities.ID_OutlineColor, new Color(0.169f, 0.078f, 0.016f, 1f));
-            material.SetFloat(ShaderUtilities.ID_OutlineWidth, 0.2f);
-            material.SetFloat(ShaderUtilities.ID_OutlineSoftness, 0.01f);
-            material.SetFloat(ShaderUtilities.ID_FaceDilate, 0.055f);
-            material.SetFloat(ShaderUtilities.ID_UnderlayOffsetX, 0f);
-            material.SetFloat(ShaderUtilities.ID_UnderlayOffsetY, 0f);
-            material.SetFloat(ShaderUtilities.ID_UnderlaySoftness, 0f);
-            material.SetColor(ShaderUtilities.ID_UnderlayColor, Color.clear);
-            label.fontMaterial = material;
+            label.font = navigationFont;
+            label.fontSharedMaterial = navigationFont.material;
+        }
+    }
+
+    private static TMP_Text FindExactLabel(GameObject target)
+    {
+        if (target == null)
+        {
+            return null;
         }
 
-        Shadow textShadow = label.GetComponent<Shadow>();
-        if (textShadow == null)
+        foreach (TMP_Text candidate in target.GetComponentsInChildren<TMP_Text>(true))
         {
-            textShadow = label.gameObject.AddComponent<Shadow>();
+            if (candidate.name == "Label")
+            {
+                return candidate;
+            }
         }
 
-        textShadow.effectColor = new Color(0.03f, 0.012f, 0f, 0.3f);
-        textShadow.effectDistance = new Vector2(1f, -2f);
-        textShadow.useGraphicAlpha = true;
-
-        Outline outline = label.GetComponent<Outline>();
-        if (outline == null)
-        {
-            outline = label.gameObject.AddComponent<Outline>();
-        }
-
-        outline.effectColor = new Color(0.17f, 0.078f, 0.016f, 0.7f);
-        outline.effectDistance = new Vector2(1.25f, -1.25f);
-        outline.useGraphicAlpha = true;
-        label.UpdateMeshPadding();
-        label.ForceMeshUpdate();
+        return null;
     }
 
     private LevelProgressionManager EnsureProgressionManager()

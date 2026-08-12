@@ -434,7 +434,7 @@ namespace CardMesh
             titleLabel.enableAutoSizing = true;
             titleLabel.fontSizeMin = 24f;
             titleLabel.fontSizeMax = 48f;
-            titleLabel.enableWordWrapping = true;
+            titleLabel.textWrappingMode = TextWrappingModes.Normal;
             titleLabel.alignment = TextAlignmentOptions.Center;
             titleLabel.color = new Color(0.26f, 0.2f, 0.16f, 1f);
             titleLabel.raycastTarget = false;
@@ -648,39 +648,8 @@ namespace CardMesh
 
         private static TMP_FontAsset CreateCyrillicRuntimeFontAsset()
         {
-            Font resourceFont = Resources.Load<Font>(RuntimeFontResourcePath);
-            Font builtinFont = LoadBuiltinRuntimeFont();
-            TMP_FontAsset fallbackFontAsset = null;
-
-            if (TryCreateRuntimeFontAsset(resourceFont, out TMP_FontAsset resourceFontAsset))
-            {
-                if (HasRequiredCharacters(resourceFontAsset))
-                {
-                    return resourceFontAsset;
-                }
-
-                fallbackFontAsset = resourceFontAsset;
-            }
-
-            if (builtinFont != null
-                && builtinFont != resourceFont
-                && TryCreateRuntimeFontAsset(builtinFont, out TMP_FontAsset builtinFontAsset))
-            {
-                if (HasRequiredCharacters(builtinFontAsset))
-                {
-                    return builtinFontAsset;
-                }
-
-                fallbackFontAsset ??= builtinFontAsset;
-            }
-
-            if (fallbackFontAsset != null)
-            {
-                return fallbackFontAsset;
-            }
-
-            Debug.LogWarning("RuntimeSceneBootstrapper: failed to locate a runtime font with Cyrillic support.");
-            return null;
+            TMP_FontAsset sharedAsset = RuntimeCyrillicFontProvider.FontAsset;
+            return HasRequiredCharacters(sharedAsset) ? sharedAsset : null;
         }
 
         private static Font LoadBuiltinRuntimeFont()

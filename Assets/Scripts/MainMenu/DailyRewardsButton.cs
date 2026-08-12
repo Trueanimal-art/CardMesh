@@ -123,18 +123,22 @@ namespace CardMesh
 
         private void RefreshState()
         {
-            if (notificationDot == null)
-            {
-                return;
-            }
-
             manager ??= DailyRewardsManager.GetOrCreate(this);
             bool canClaim = manager == null || manager.CanClaimToday;
-            notificationDot.SetActive(canClaim);
+            if (notificationDot != null)
+            {
+                notificationDot.SetActive(canClaim);
+            }
+
             if (notificationText != null)
             {
                 notificationText.text = "!";
-                RuntimeCyrillicFontProvider.Apply(notificationText, notificationText.text);
+            }
+
+            TMP_Text status = transform.Find("Status")?.GetComponent<TMP_Text>();
+            if (status != null)
+            {
+                status.text = canClaim ? "ЗАБРАТЬ" : "ПОЛУЧЕНО";
             }
         }
 
@@ -171,9 +175,7 @@ namespace CardMesh
             Image rootImage = GetComponent<Image>();
             if (rootImage != null)
             {
-                rootImage.color = Color.white;
                 rootImage.raycastTarget = true;
-                rootImage.preserveAspect = true;
             }
 
             if (GetComponent<UIJuicyButton>() == null)

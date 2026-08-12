@@ -9,30 +9,70 @@ internal sealed class GoogleMobileAdsProvider : IAdsProvider
 {
     private InterstitialAd interstitialAd;
     private RewardedAd rewardedAd;
+    private BannerView bannerView;
     private bool consentFlowStarted;
     private bool initializing;
     private bool initialized;
     private bool interstitialLoading;
     private bool rewardedLoading;
+    private bool bannerLoading;
+    private bool bannerDesiredVisible;
     private bool disposed;
     private bool privacyOptionsRequired;
+    private int bannerRetryAttempt;
+    private float nextBannerRetryAt;
+    private int bannerScreenWidth;
+    private int bannerScreenHeight;
+    private Rect bannerSafeArea;
 
     internal GoogleMobileAdsProvider()
     {
         MobileAdsEventExecutor.Initialize();
-        MobileAds.SetRequestConfiguration(new RequestConfiguration
+        var requestConfiguration = new RequestConfiguration
         {
             MaxAdContentRating = MaxAdContentRating.G,
-            TagForChildDirectedTreatment =
-                TagForChildDirectedTreatment.Unspecified,
-            TagForUnderAgeOfConsent =
-                GoogleMobileAds.Api.TagForUnderAgeOfConsent.False
-        });
+            AgeRestrictedTreatment =
+                GoogleMobileAds.Api.AgeRestrictedTreatment.Unspecified
+        };
+#if DEVELOPMENT_BUILD
+        requestConfiguration.TestDeviceIds = new System.Collections.Generic.List<string>
+        {
+            AdRequest.TestDeviceSimulator
+        };
+#endif
+        MobileAds.SetRequestConfiguration(requestConfiguration);
         BeginConsentFlow();
     }
 
     public string ProviderName => "GoogleMobileAdsProvider";
     public bool PrivacyOptionsRequired => privacyOptionsRequired;
+
+    public void SetBannerVisible(bool visible)
+    {
+        bannerDesiredVisible = visible;
+        if (disposed)
+        {
+            return;
+        }
+
+        if (!visible)
+        {
+            bannerView?.Hide();
+            return;
+        }
+
+        TryInitializeIfAllowed();
+        if (initialized)
+        {
+            if (bannerView != null && BannerGeometryChanged())
+            {
+                DestroyBanner();
+            }
+
+            LoadBanner();
+            bannerView?.Show();
+        }
+    }
 
     public bool ShowInterstitial(Action onCompleted, Action onFailed)
     {
@@ -201,11 +241,10 @@ internal sealed class GoogleMobileAdsProvider : IAdsProvider
         }
 
         consentFlowStarted = true;
-        var parameters = new ConsentRequestParameters
-        {
-            // Card Mesh is configured for a 13+ audience in the first release.
-            TagForUnderAgeOfConsent = false
-        };
+        // Do not assert an age-consent status before the player supplies one.
+        // Play Console target-audience settings and the final consent design
+        // must remain the source of truth for the 13+ release.
+        var parameters = new ConsentRequestParameters();
 
         ConsentInformation.Update(parameters, updateError =>
         {
@@ -250,7 +289,9 @@ internal sealed class GoogleMobileAdsProvider : IAdsProvider
         if (string.IsNullOrWhiteSpace(
                 AdMobConfiguration.AndroidInterstitialAdUnitId)
             || string.IsNullOrWhiteSpace(
-                AdMobConfiguration.AndroidRewardedAdUnitId))
+                AdMobConfiguration.AndroidRewardedAdUnitId)
+            || string.IsNullOrWhiteSpace(
+                AdMobConfiguration.AndroidBannerAdUnitId))
         {
             Debug.LogError(
                 "[ADS] Production AdMob ad unit IDs are not configured.");
@@ -258,6 +299,13 @@ internal sealed class GoogleMobileAdsProvider : IAdsProvider
         }
 
         initializing = true;
+#if DEVELOPMENT_BUILD
+        Debug.Log(
+            "[ADS] Development IDs: "
+            + $"interstitial={AdMobConfiguration.AndroidInterstitialAdUnitId}, "
+            + $"rewarded={AdMobConfiguration.AndroidRewardedAdUnitId}, "
+            + $"banner={AdMobConfiguration.AndroidBannerAdUnitId}.");
+#endif
         MobileAds.Initialize(status =>
         {
             RunOnMainThread(() =>
@@ -280,6 +328,90 @@ internal sealed class GoogleMobileAdsProvider : IAdsProvider
     {
         LoadInterstitial();
         LoadRewarded();
+        if (bannerDesiredVisible)
+        {
+            LoadBanner();
+        }
+    }
+
+    private void LoadBanner()
+    {
+        if (disposed || !initialized || bannerLoading || bannerView != null
+            || Time.unscaledTime < nextBannerRetryAt)
+        {
+            return;
+        }
+
+        int safeWidthDp = MobileAds.Utils.GetDeviceSafeWidth();
+        AdSize bannerSize =
+            AdSize.GetCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(
+                safeWidthDp);
+        bannerView = new BannerView(
+            AdMobConfiguration.AndroidBannerAdUnitId,
+            bannerSize,
+            AdPosition.Bottom);
+        bannerLoading = true;
+
+        bannerView.OnBannerAdLoaded += () =>
+        {
+            RunOnMainThread(() =>
+            {
+                bannerLoading = false;
+                bannerRetryAttempt = 0;
+                nextBannerRetryAt = 0f;
+                if (disposed || bannerView == null)
+                {
+                    return;
+                }
+
+                RememberBannerGeometry();
+                PositionBannerInsideSafeArea();
+                if (bannerDesiredVisible)
+                {
+                    bannerView.Show();
+                }
+                else
+                {
+                    bannerView.Hide();
+                }
+
+                Debug.Log(
+                    $"[ADS] Banner loaded. "
+                    + $"safeWidthDp={safeWidthDp}, safeArea={Screen.safeArea}, "
+                    + $"sizePx={bannerView.GetWidthInPixels()}x"
+                    + $"{bannerView.GetHeightInPixels()}.");
+            });
+        };
+        bannerView.OnBannerAdLoadFailed += error =>
+        {
+            RunOnMainThread(() =>
+            {
+                bannerLoading = false;
+                Debug.LogWarning($"[ADS] Banner load failed: {error}");
+                DestroyBanner();
+                bannerRetryAttempt++;
+                nextBannerRetryAt = Time.unscaledTime
+                    + Mathf.Min(60f, Mathf.Pow(2f, bannerRetryAttempt));
+            });
+        };
+        bannerView.LoadAd(new AdRequest());
+    }
+
+    private void PositionBannerInsideSafeArea()
+    {
+        if (bannerView == null)
+        {
+            return;
+        }
+
+        float widthPx = bannerView.GetWidthInPixels();
+        float heightPx = bannerView.GetHeightInPixels();
+        Rect safeArea = Screen.safeArea;
+        int x = Mathf.RoundToInt(
+            safeArea.xMin + Mathf.Max(0f, (safeArea.width - widthPx) * 0.5f));
+        int y = Mathf.RoundToInt(
+            Screen.height - safeArea.yMin - heightPx);
+        bannerView.SetPosition(x, y);
     }
 
     private void LoadInterstitial()
@@ -366,6 +498,33 @@ internal sealed class GoogleMobileAdsProvider : IAdsProvider
         interstitialAd = null;
         rewardedAd?.Destroy();
         rewardedAd = null;
+        DestroyBanner();
+        bannerRetryAttempt = 0;
+        nextBannerRetryAt = 0f;
+    }
+
+    private bool BannerGeometryChanged()
+    {
+        return bannerScreenWidth != Screen.width
+            || bannerScreenHeight != Screen.height
+            || bannerSafeArea != Screen.safeArea;
+    }
+
+    private void RememberBannerGeometry()
+    {
+        bannerScreenWidth = Screen.width;
+        bannerScreenHeight = Screen.height;
+        bannerSafeArea = Screen.safeArea;
+    }
+
+    private void DestroyBanner()
+    {
+        bannerView?.Destroy();
+        bannerView = null;
+        bannerLoading = false;
+        bannerScreenWidth = 0;
+        bannerScreenHeight = 0;
+        bannerSafeArea = default;
     }
 
     private void UpdatePrivacyRequirement()

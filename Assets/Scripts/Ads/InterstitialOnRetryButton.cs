@@ -70,7 +70,7 @@ public class InterstitialOnRetryButton : MonoBehaviour
         AdsManager adsManager = AdsManager.Instance;
         if (adsManager == null)
         {
-            var found = FindObjectOfType<AdsManager>();
+            var found = FindFirstObjectByType<AdsManager>();
             if (debugLogs) Debug.Log($"[InterstitialOnRetryButton] AdsManager.Instance == null. Found in scene: {(found != null)}");
 
             // Если вообще нет AdsManager — продолжаем (но это и есть причина “без рекламы”)

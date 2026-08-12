@@ -15,20 +15,22 @@ public static class MainMenuTypographyInstaller
         Scene scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
         MainMenuController.EditorApplyPremiumStyles();
 
-        RecordAndValidateLabel("PlayButton", "ИГРАТЬ", 60f);
-        RecordAndValidateLabel("LevelsButton", "УРОВНИ", 38f);
-        RecordAndValidateLabel("SettingsButton", "НАСТРОЙКИ", 30f);
+        RecordAndValidateLabel("PlayButton", "ИГРАТЬ", 52f);
+        RecordAndValidateLabel("LevelsButton", "УРОВНИ", 27f);
+        RecordAndValidateLabel("CollectionBookButton", "КОЛЛЕКЦИЯ", 27f);
+        RecordAndValidateLabel("ShopButton", "МАГАЗИН", 27f);
+        RecordAndValidateLabel("SettingsButton", "НАСТРОЙКИ", 27f);
 
         EditorSceneManager.MarkSceneDirty(scene);
         EditorSceneManager.SaveScene(scene);
         AssetDatabase.SaveAssets();
-        Debug.Log("Main menu button typography fixed: Play 60, Levels 38, Settings 30 maximum font size.");
+        Debug.Log("Main menu mobile navigation typography validated.");
     }
 
     private static void RecordAndValidateLabel(string buttonName, string expectedText, float expectedMaxSize)
     {
         GameObject button = GameObject.Find(buttonName);
-        TMP_Text label = button != null ? button.GetComponentInChildren<TMP_Text>(true) : null;
+        TMP_Text label = button != null ? FindNamedLabel(button.transform) : null;
         if (label == null)
         {
             throw new UnityException($"MainMenuTypographyInstaller: label for {buttonName} was not found.");
@@ -53,7 +55,9 @@ public static class MainMenuTypographyInstaller
             PrefabUtility.RecordPrefabInstancePropertyModifications(outline);
         }
 
-        if (label.text != expectedText || !label.enableAutoSizing || !Mathf.Approximately(label.fontSizeMax, expectedMaxSize))
+        if (label.text != expectedText
+            || label.enableAutoSizing
+            || !Mathf.Approximately(label.fontSize, expectedMaxSize))
         {
             throw new UnityException($"MainMenuTypographyInstaller: {buttonName} typography was not applied.");
         }
@@ -63,5 +67,18 @@ public static class MainMenuTypographyInstaller
             throw new UnityException(
                 $"MainMenuTypographyInstaller: {buttonName} text width {label.preferredWidth:F1} exceeds label rect {label.rectTransform.rect.width:F1}.");
         }
+    }
+
+    private static TMP_Text FindNamedLabel(Transform root)
+    {
+        foreach (TMP_Text text in root.GetComponentsInChildren<TMP_Text>(true))
+        {
+            if (text.name == "Label")
+            {
+                return text;
+            }
+        }
+
+        return null;
     }
 }

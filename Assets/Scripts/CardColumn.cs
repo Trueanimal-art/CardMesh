@@ -8,8 +8,8 @@ namespace CardMesh
     public sealed class CardColumn : MonoBehaviour, ICardContainer, IDropHandler, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
     {
         private const float FaceDownOffsetFactor = 0.65f;
-        private const float StackSpacingMultiplier = 1.2f;
-        private const float MaxVisualStackOffset = 50f;
+        private const float StackSpacingMultiplier = 1f;
+        private const float MaxVisualStackOffset = 72f;
         private const float MinReadableStackOffset = 16f;
         private const float LinkedStackPeekHeight = 40f;
         private const float LinkedStackStepHeight = 40f;

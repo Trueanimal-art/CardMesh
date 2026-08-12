@@ -93,7 +93,7 @@ namespace CardMesh.EditorTools
             {
                 throw new BuildFailedException(
                     "Release build blocked: create the Card Mesh app and "
-                    + "interstitial/rewarded units in AdMob, then set all "
+                    + "interstitial/rewarded/banner units in AdMob, then set all "
                     + "ProductionAndroid* IDs in AdMobConfiguration.cs. "
                     + "Google test IDs must never ship to production.");
             }

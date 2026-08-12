@@ -591,8 +591,8 @@ namespace CardMesh
             current.enableAutoSizing = true;
             current.fontSizeMax = 20f;
             current.fontSizeMin = 11f;
-            current.enableWordWrapping = false;
-            current.overflowMode = TextOverflowModes.Ellipsis;
+            current.textWrappingMode = TextWrappingModes.NoWrap;
+            current.overflowMode = TextOverflowModes.Truncate;
             current.alignment = alignment;
             current.color = new Color(0.24f, 0.16f, 0.06f, 1f);
             current.raycastTarget = false;
@@ -638,33 +638,9 @@ namespace CardMesh
 
         private static TMP_FontAsset GetOrCreateHeaderFont()
         {
-            if (headerFontAsset != null)
-            {
-                return headerFontAsset;
-            }
-
-            Font sourceFont = Resources.Load<Font>(RuntimeFontResourcePath);
-            if (sourceFont == null)
-            {
-                return TMP_Settings.defaultFontAsset;
-            }
-
-            headerFontAsset = TMP_FontAsset.CreateFontAsset(
-                sourceFont,
-                90,
-                9,
-                GlyphRenderMode.SDFAA,
-                1024,
-                1024,
-                AtlasPopulationMode.Dynamic,
-                true);
-
-            if (headerFontAsset != null)
-            {
-                headerFontAsset.name = $"Runtime_{sourceFont.name}_GoalHeader";
-            }
-
-            return headerFontAsset != null ? headerFontAsset : TMP_Settings.defaultFontAsset;
+            return headerFontAsset ??=
+                RuntimeCyrillicFontProvider.FontAsset
+                ?? TMP_Settings.defaultFontAsset;
         }
 
         private void LogLayoutFlow(string reason, CardView cardView)

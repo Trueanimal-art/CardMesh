@@ -11,9 +11,12 @@ namespace CardMesh
     public sealed class MobileDisplayBootstrap : MonoBehaviour
     {
         private static readonly Vector2 PortraitReferenceResolution = new(1080f, 1920f);
+        private const float GameplayVerticalOffset = 480f;
+        private const float DeckLiftAboveTargets = 225f;
         private readonly Dictionary<int, Rect> lastSafeAreas = new();
         private int lastWidth;
         private int lastHeight;
+        private Rect lastScreenSafeArea = new(-1f, -1f, -1f, -1f);
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Install()
@@ -47,7 +50,10 @@ namespace CardMesh
 
         private void Update()
         {
-            if (Screen.width == lastWidth && Screen.height == lastHeight)
+            Rect currentSafeArea = Screen.safeArea;
+            if (Screen.width == lastWidth
+                && Screen.height == lastHeight
+                && currentSafeArea == lastScreenSafeArea)
             {
                 return;
             }
@@ -72,6 +78,7 @@ namespace CardMesh
         {
             lastWidth = Screen.width;
             lastHeight = Screen.height;
+            lastScreenSafeArea = Screen.safeArea;
             ApplyPortraitOrientation();
             ConfigureEventSystems();
 
@@ -89,14 +96,6 @@ namespace CardMesh
                     ConfigureCameraBackgrounds(sceneRoot);
                 }
 
-                if (scene.name == "Main")
-                {
-                    ApplyGameplayLayout(scene);
-                }
-                else if (scene.name == "MainMenu")
-                {
-                    ApplyMainMenuLayout(scene);
-                }
             }
         }
 
@@ -121,19 +120,12 @@ namespace CardMesh
                     continue;
                 }
 
-                scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-                scaler.referenceResolution = PortraitReferenceResolution;
-                scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
-                scaler.matchWidthOrHeight = 0.5f;
-
                 RectTransform safeRoot = FindNamedRect(canvas.transform, "SafeAreaRoot")
                     ?? FindNamedRect(canvas.transform, "SafeArea");
                 if (safeRoot != null)
                 {
                     ApplySafeArea(safeRoot, canvas);
                 }
-
-                FitLargeWindows(canvas.transform as RectTransform);
             }
         }
 
@@ -187,7 +179,10 @@ namespace CardMesh
             }
         }
 
-        private static void ApplyGameplayLayout(Scene scene)
+#if UNITY_EDITOR
+        // These methods are authoring commands. Runtime only applies orientation and safe areas;
+        // all stable mobile geometry is saved directly into the Unity scenes.
+        public static void ApplyGameplayLayoutToScene(Scene scene)
         {
             CardMeshSceneRefs sceneRefs = FindInScene<CardMeshSceneRefs>(scene);
             if (sceneRefs == null || sceneRefs.SafeAreaRoot == null)
@@ -196,16 +191,73 @@ namespace CardMesh
             }
 
             RectTransform root = sceneRefs.SafeAreaRoot;
-            SetRect(FindNamedRect(root, "TopHUD"), 0f, 1f, 1f, 1f, 0f, 190f, 0f, -20f);
-            SetRect(FindNamedRect(root, "MovesPanel"), 0f, 1f, 0f, 1f, 190f, 170f, 125f, -285f);
-            SetRect(FindNamedRect(root, "DeckArea"), 1f, 1f, 1f, 1f, 330f, 300f, -175f, -330f);
-            SetRect(FindNamedRect(root, "BoardArea"), 0f, 0f, 1f, 1f, -80f, -760f, 0f, -70f);
-            SetRect(FindNamedRect(root, "BottomHUD"), 0f, 0f, 1f, 0f, 0f, 250f, 0f, 42f);
+            Canvas canvas = root.GetComponentInParent<Canvas>();
+            RectTransform canvasRoot = canvas != null
+                ? canvas.transform as RectTransform
+                : null;
+            RectTransform background = FindNamedRect(canvasRoot, "Background");
+            if (canvas != null && background != null)
+            {
+                background.SetParent(canvas.transform, false);
+                Stretch(background);
+                background.SetAsFirstSibling();
+                ConfigureFullBleedBackground(background);
+            }
+
+            SetRect(FindNamedRect(root, "TopHUD"), 0f, 1f, 1f, 1f, 0f, 224f, 0f, 0f);
+            RectTransform livesHud = FindNamedRect(root, "LivesHud");
+            RectTransform coinsPanel = FindNamedRect(root, "CoinsPanel");
+            RectTransform movesPanel = FindNamedRect(root, "MovesPanel");
+            RectTransform statusPlates = FindNamedRect(root, "GameplayStatusPlates");
+            if (statusPlates != null)
+            {
+                SetRect(statusPlates, 0.5f, 1f, 0.5f, 1f, 960f, 96f, 35f, -162f);
+                livesHud?.SetParent(statusPlates, false);
+                coinsPanel?.SetParent(statusPlates, false);
+                movesPanel?.SetParent(statusPlates, false);
+                SetRect(livesHud, 0.5f, 0.5f, 0.5f, 0.5f, 280f, 96f, -330f, 0f);
+                SetRect(coinsPanel, 0.5f, 0.5f, 0.5f, 0.5f, 190f, 96f, 0f, 0f);
+                SetRect(movesPanel, 0.5f, 0.5f, 0.5f, 0.5f, 240f, 96f, 280f, 0f);
+            }
+            else
+            {
+                SetRect(livesHud, 0f, 1f, 0f, 1f, 238f, 66f, 125f, -220f);
+                SetRect(coinsPanel, 0f, 1f, 0f, 1f, 238f, 60f, 365f, -220f);
+                SetRect(movesPanel, 0f, 1f, 0f, 1f, 238f, 60f, 605f, -220f);
+            }
+            SetRect(
+                FindNamedRect(root, "DeckArea"),
+                1f,
+                1f,
+                1f,
+                1f,
+                520f,
+                310f,
+                -283f,
+                -220f - GameplayVerticalOffset + DeckLiftAboveTargets);
+            SetRect(
+                FindNamedRect(root, "BoardArea"),
+                0f,
+                0f,
+                1f,
+                1f,
+                -80f,
+                -980f,
+                0f,
+                40f - GameplayVerticalOffset);
+            SetBottomStretch(FindNamedRect(root, "BottomHUD"), 224f, 208f);
 
             RectTransform ad = FindNamedRect(root, "AdBannerPlaceholder");
             if (ad != null)
             {
-                ad.gameObject.SetActive(false);
+                ad.gameObject.SetActive(true);
+                SetBottomStretch(ad, 240f, 0f);
+                Image adImage = ad.GetComponent<Image>();
+                if (adImage != null)
+                {
+                    adImage.color = new Color(0f, 0f, 0f, 0f);
+                    adImage.raycastTarget = false;
+                }
             }
 
             RectTransform columnsRoot = sceneRefs.ColumnSlotsRoot;
@@ -217,60 +269,24 @@ namespace CardMesh
                 {
                     group.padding = new RectOffset(12, 12, 0, 0);
                     group.childAlignment = TextAnchor.UpperCenter;
+                    group.childControlWidth = true;
+                    group.childForceExpandWidth = false;
                 }
             }
 
-            foreach (ColumnRef column in sceneRefs.Columns)
-            {
-                if (column?.Root is not RectTransform columnRect)
-                {
-                    continue;
-                }
+            sceneRefs.SetEditorPreviewColumns(sceneRefs.EditorPreviewColumns);
 
-                LayoutElement element = columnRect.GetComponent<LayoutElement>();
-                if (element != null)
-                {
-                    element.preferredHeight = 1040f;
-                    element.minHeight = 1040f;
-                }
-
-                if (column.CardsStackRoot is RectTransform stackRect)
-                {
-                    stackRect.sizeDelta = new Vector2(stackRect.sizeDelta.x, 820f);
-                }
-            }
-
-            ArrangeBottomButton(root, "HintButton", -330f);
-            ArrangeBottomButton(root, "UndoButton", 0f);
-            ArrangeBottomButton(root, "BoosterDeckButton", 330f);
+            ArrangeBottomButton(root, "HintButton", -250f, 0f);
+            ArrangeBottomButton(root, "UndoButton", 0f, 14f);
+            ArrangeBottomButton(root, "BoosterDeckButton", 250f, 0f);
         }
 
-        private static void ApplyMainMenuLayout(Scene scene)
+        public static void ApplyMainMenuLayoutToScene(Scene scene)
         {
-            Canvas canvas = FindInScene<Canvas>(scene);
-            if (canvas == null)
-            {
-                return;
-            }
-
-            RectTransform root = canvas.transform as RectTransform;
-            RectTransform background = FindNamedRect(root, "Background");
-            if (background != null)
-            {
-                Stretch(background);
-                Image image = background.GetComponent<Image>();
-                if (image != null)
-                {
-                    image.preserveAspect = false;
-                }
-            }
-
-            SetRect(FindNamedRect(root, "PlayButton"), 0.5f, 0f, 0.5f, 0f, 500f, 260f, 0f, 430f);
-            SetRect(FindNamedRect(root, "LevelsButton"), 0.5f, 0f, 0.5f, 0f, 330f, 220f, -205f, 180f);
-            SetRect(FindNamedRect(root, "SettingsButton"), 0.5f, 0f, 0.5f, 0f, 330f, 220f, 205f, 180f);
-            SetRect(FindNamedRect(root, "ChestChaseButton"), 0f, 1f, 0f, 1f, 144f, 144f, 105f, -115f);
-            SetRect(FindNamedRect(root, "DailyRewardsButton"), 0.5f, 1f, 0.5f, 1f, 144f, 144f, 0f, -115f);
-            SetRect(FindNamedRect(root, "ShopButton"), 1f, 1f, 1f, 1f, 144f, 144f, -105f, -115f);
+            Debug.LogWarning(
+                "MobileDisplayBootstrap.ApplyMainMenuLayoutToScene is intentionally disabled. "
+                + "MainMenu geometry is authored and saved by "
+                + "MainMenuMobileNavigationInstaller.RebuildMainMenuNavigation.");
         }
 
         private static void FitLargeWindows(RectTransform canvasRoot)
@@ -298,10 +314,110 @@ namespace CardMesh
             }
         }
 
-        private static void ArrangeBottomButton(Transform root, string name, float x)
+        private static void ArrangeBottomButton(Transform root, string name, float x, float y)
         {
-            SetRect(FindNamedRect(root, name), 0.5f, 0.5f, 0.5f, 0.5f, 280f, 108f, x, 0f);
+            SetRect(FindNamedRect(root, name), 0.5f, 0.5f, 0.5f, 0.5f, 224f, 224f, x, y);
         }
+
+        private static RectTransform EnsureMainMenuSafeAreaRoot(
+            RectTransform canvasRoot,
+            RectTransform background)
+        {
+            if (canvasRoot == null)
+            {
+                return null;
+            }
+
+            RectTransform safeRoot = null;
+            for (int index = 0; index < canvasRoot.childCount; index++)
+            {
+                if (canvasRoot.GetChild(index) is RectTransform child
+                    && child.name == "SafeAreaRoot")
+                {
+                    safeRoot = child;
+                    break;
+                }
+            }
+
+            if (safeRoot == null)
+            {
+                GameObject safeObject = new("SafeAreaRoot", typeof(RectTransform));
+                safeRoot = safeObject.GetComponent<RectTransform>();
+                safeRoot.SetParent(canvasRoot, false);
+            }
+
+            Stretch(safeRoot);
+
+            List<RectTransform> content = new();
+            for (int index = 0; index < canvasRoot.childCount; index++)
+            {
+                if (canvasRoot.GetChild(index) is RectTransform child
+                    && child != background
+                    && child != safeRoot)
+                {
+                    if (child.name == "BottomRailVisual")
+                    {
+                        continue;
+                    }
+
+                    content.Add(child);
+                }
+            }
+
+            foreach (RectTransform child in content)
+            {
+                child.SetParent(safeRoot, false);
+            }
+
+            safeRoot.SetAsLastSibling();
+            return safeRoot;
+        }
+
+        private static void ConfigureFullBleedBackground(RectTransform background)
+        {
+            if (background == null)
+            {
+                return;
+            }
+
+            Image image = background.GetComponent<Image>();
+            if (image != null)
+            {
+                image.preserveAspect = false;
+            }
+
+            AspectRatioFitter fitter = background.GetComponent<AspectRatioFitter>();
+            if (fitter == null)
+            {
+                fitter = background.gameObject.AddComponent<AspectRatioFitter>();
+            }
+
+            fitter.aspectMode = AspectRatioFitter.AspectMode.EnvelopeParent;
+            if (image != null && image.sprite != null)
+            {
+                float aspectRatio = image.sprite.rect.height > 0f
+                    ? image.sprite.rect.width / image.sprite.rect.height
+                    : 1f;
+                string assetPath =
+                    UnityEditor.AssetDatabase.GetAssetPath(image.sprite);
+                UnityEditor.TextureImporter importer =
+                    UnityEditor.AssetImporter.GetAtPath(assetPath)
+                    as UnityEditor.TextureImporter;
+                if (importer != null)
+                {
+                    importer.GetSourceTextureWidthAndHeight(
+                        out int sourceWidth,
+                        out int sourceHeight);
+                    if (sourceHeight > 0)
+                    {
+                        aspectRatio = (float)sourceWidth / sourceHeight;
+                    }
+                }
+
+                fitter.aspectRatio = aspectRatio;
+            }
+        }
+#endif
 
         private static void SetRect(
             RectTransform rect,
@@ -324,6 +440,7 @@ namespace CardMesh
             rect.pivot = new Vector2(0.5f, 0.5f);
             rect.sizeDelta = new Vector2(width, height);
             rect.anchoredPosition = new Vector2(x, y);
+            rect.localScale = Vector3.one;
         }
 
         private static void Stretch(RectTransform rect)
@@ -337,6 +454,25 @@ namespace CardMesh
             rect.anchorMax = Vector2.one;
             rect.offsetMin = Vector2.zero;
             rect.offsetMax = Vector2.zero;
+            rect.localScale = Vector3.one;
+        }
+
+        private static void SetBottomStretch(
+            RectTransform rect,
+            float height,
+            float bottomInset)
+        {
+            if (rect == null)
+            {
+                return;
+            }
+
+            rect.anchorMin = new Vector2(0f, 0f);
+            rect.anchorMax = new Vector2(1f, 0f);
+            rect.pivot = new Vector2(0.5f, 0f);
+            rect.sizeDelta = new Vector2(0f, height);
+            rect.anchoredPosition = new Vector2(0f, bottomInset);
+            rect.localScale = Vector3.one;
         }
 
         private static RectTransform FindNamedRect(Transform root, string objectName)

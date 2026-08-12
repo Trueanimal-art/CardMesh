@@ -64,6 +64,7 @@ namespace CardMesh
 
         public void Show(ChestChaseManager targetManager)
         {
+            MainMenuPopupExclusivity.OpenExclusive(this);
             manager = targetManager != null ? targetManager : ChestChaseManager.GetOrCreate(this);
             Subscribe();
 

@@ -11,19 +11,18 @@ namespace CardMesh
 {
     public sealed class UIManager : MonoBehaviour
     {
-        private const float LivesTopInset = 417f;
-        private const float CoinsTopInset = 485f;
-        private const float MovesTopInset = 553f;
+        private const float HudRowTopInset = 220f;
+        private const float LivesHudCenterX = 125f;
         private const float LivesLeftInsetX = 154f;
         private const float LivesExpandedWidthOffset = 43f;
         private const float RightDeckInset = 269f;
         private const float DeckCardBackInsetX = 239f;
         private static readonly Vector2 GameplayCardSize = new(196f, 286f);
-        private const float BottomButtonMaxWidth = 392f;
-        private const float BottomButtonMinWidth = 210f;
-        private const float BottomHudHeight = 178f;
-        private const float BottomHudBottomInset = 40f;
-        private const float BottomButtonYOffset = 3f;
+        private const float BottomButtonMaxWidth = 300f;
+        private const float BottomButtonMinWidth = 300f;
+        private const float BottomHudHeight = 200f;
+        private const float BottomHudBottomInset = 264f;
+        private const float BottomButtonYOffset = 0f;
         private const int HintCost = 900;
 
         [SerializeField] private TMP_Text movesLabel;
@@ -61,6 +60,7 @@ namespace CardMesh
         private CanvasGroup movesBonusGroup;
         private Coroutine movesBonusTextRoutine;
         private LivesManager activeLivesManager;
+        private CoinsManager activeCoinsManager;
         private Coroutine livesEmptyTimerRoutine;
         private Action pauseRestartAction;
         private Action pauseMainMenuAction;
@@ -108,11 +108,15 @@ namespace CardMesh
             hintButton = sceneRefs != null ? sceneRefs.HintButton : null;
             undoButton = sceneRefs != null ? sceneRefs.UndoButton : null;
             boosterDeckButton = sceneRefs != null ? sceneRefs.BoosterDeckButton : null;
+            coinsPanel = FindChildRecursive<RectTransform>(safeAreaRoot, "CoinsPanel");
+            movesPanel = FindChildRecursive<RectTransform>(safeAreaRoot, "MovesPanel");
             CacheHudTextStyles();
         }
 
         public void Initialize(GameManager gameManager, IReadOnlyList<GameManager.ObjectiveState> objectiveStates)
         {
+            activeLivesManager = gameManager != null ? gameManager.LivesManager : null;
+            activeCoinsManager = gameManager != null ? gameManager.CoinsManager : null;
             ResetPauseState();
             ApplyGameplayPolish();
 
@@ -138,11 +142,12 @@ namespace CardMesh
             EnsureLivesHud(gameManager != null ? gameManager.LivesManager : null);
             ShowStatus(string.Empty, new Color(1f, 1f, 1f, 0f));
             UpdateDeckCounter(0);
-            SetBoosterBadgeVisible(false);
+            UpdateBoosterCount(boosterCount);
         }
 
         public void ResetPauseState()
         {
+            AdsManager.Instance?.SetBannerBlocker("GameplayModal", false);
             Time.timeScale = 1f;
 
             pausePopup = HideModalImmediate(pausePopup, "PauseSettingsPopup");
@@ -187,6 +192,11 @@ namespace CardMesh
                 ApplyMovesValueStyle(movesLabel);
                 movesLabel.SetText(remainingMoves.ToString());
                 ApplyMovesValueStyle(movesLabel);
+                movesLabel.color = remainingMoves <= 5
+                    ? new Color(1f, 0.42f, 0.34f, 1f)
+                    : remainingMoves <= 10
+                        ? new Color(1f, 0.71f, 0.36f, 1f)
+                        : new Color(1f, 0.95f, 0.80f, 1f);
                 movesLabel.ForceMeshUpdate(true, true);
             }
         }
@@ -368,7 +378,7 @@ namespace CardMesh
             {
                 if (boosterBadgeText != null)
                 {
-                    boosterBadgeText.text = $"x{boosterCount}";
+                    boosterBadgeText.text = FormatActionCount(boosterCount);
                 }
 
                 boosterBadge.SetActive(isVisible);
@@ -380,7 +390,7 @@ namespace CardMesh
             undoCount = Mathf.Max(0, count);
             if (undoBadgeText != null)
             {
-                undoBadgeText.text = $"x{undoCount}";
+                undoBadgeText.text = FormatActionCount(undoCount);
             }
 
             if (undoBadgeRoot != null)
@@ -396,7 +406,7 @@ namespace CardMesh
             hintCount = Mathf.Max(0, count);
             if (hintBadgeText != null)
             {
-                hintBadgeText.text = $"x{hintCount}";
+                hintBadgeText.text = FormatActionCount(hintCount);
             }
 
             if (hintBadgeRoot != null)
@@ -419,10 +429,23 @@ namespace CardMesh
             boosterCount = Mathf.Max(0, count);
             if (boosterBadgeText != null)
             {
-                boosterBadgeText.text = $"x{boosterCount}";
+                boosterBadgeText.text = FormatActionCount(boosterCount);
             }
 
             SetBoosterBadgeVisible(boosterCount > 0);
+            RectTransform boosterRoot = boosterDeckButton != null
+                ? boosterDeckButton.GetComponent<RectTransform>()
+                : null;
+            RectTransform adRow = boosterRoot != null
+                ? FindChildRecursive<RectTransform>(
+                    boosterRoot,
+                    "BoosterDeckButtonSubRow")
+                : null;
+            if (adRow != null)
+            {
+                adRow.gameObject.SetActive(boosterCount <= 0);
+            }
+
             PlayBadgePulse(boosterBadgeRoot, ref boosterBadgePulseRoutine);
         }
 
@@ -439,6 +462,7 @@ namespace CardMesh
 
         public void ShowRestartConfirmation(Func<bool> onConfirmed, Action onClosed = null)
         {
+            AdsManager.Instance?.SetBannerBlocker("GameplayModal", true);
             EnsureRestartConfirmationPopup(onConfirmed, onClosed);
             ClosePausePopup(false);
 
@@ -464,6 +488,7 @@ namespace CardMesh
 
         public void ShowLevelFailedPopup(Func<bool> onRetry)
         {
+            AdsManager.Instance?.SetBannerBlocker("GameplayModal", true);
             EnsureLevelFailedPopup(onRetry);
 
             if (levelFailedPopup != null)
@@ -480,22 +505,29 @@ namespace CardMesh
 
         public void ShowLivesEmptyPopup(LivesManager livesManager)
         {
-            activeLivesManager = livesManager;
+            AdsManager.Instance?.SetBannerBlocker("GameplayModal", true);
+            activeLivesManager = livesManager ?? activeLivesManager;
+            activeCoinsManager ??= FindFirstObjectByType<CoinsManager>(FindObjectsInactive.Include);
             EnsureLivesEmptyPopup();
-            UpdateLivesEmptyTimerText();
 
             if (livesEmptyPopup != null)
             {
+                LivesOfferPopupController controller =
+                    livesEmptyPopup.GetComponent<LivesOfferPopupController>();
+                controller?.Configure(
+                    activeLivesManager,
+                    activeCoinsManager,
+                    AdsManager.Instance,
+                    onClose: () => HideModal(livesEmptyPopup),
+                    onCoinsChanged: UpdateCoins);
                 ShowModalImmediate(livesEmptyPopup);
                 Time.timeScale = 0f;
             }
+        }
 
-            if (livesEmptyTimerRoutine != null)
-            {
-                StopCoroutine(livesEmptyTimerRoutine);
-            }
-
-            livesEmptyTimerRoutine = StartCoroutine(UpdateLivesEmptyTimer());
+        private void ShowLivesOfferFromHud()
+        {
+            ShowLivesEmptyPopup(activeLivesManager);
         }
 
         private void ApplyGameplayPolish()
@@ -510,15 +542,25 @@ namespace CardMesh
                 return;
             }
 
-            if (HasPrefabAuthoredGameplayUi())
+            // The mobile action row is authored in prefabs and in Main.unity.
+            // Its visual hierarchy is intentionally not rebuilt or restyled at
+            // runtime: the Scene view must remain the source of truth.
+            if (hintButton != null && undoButton != null && boosterDeckButton != null)
             {
                 BindAuthoredGameplayButtonBadges();
-            }
-            else
-            {
-                EnsureBackgroundVignette();
+                RectTransform authoredHintCostRow =
+                    FindChildRecursive<RectTransform>(hintButton.transform, "HintButtonSubRow");
+                if (authoredHintCostRow != null)
+                {
+                    authoredHintCostRow.gameObject.SetActive(hintCount <= 0);
+                }
+                coinsPanel = FindChildRecursive<RectTransform>(safeAreaRoot, "CoinsPanel");
+                movesPanel = FindChildRecursive<RectTransform>(safeAreaRoot, "MovesPanel");
+                HideAdPlaceholder();
+                return;
             }
 
+            EnsureBackgroundVignette();
             EnsureResourceStackPanel();
             StyleTopHud();
             StyleMovesPanel();
@@ -534,8 +576,7 @@ namespace CardMesh
             return safeAreaRoot != null
                 && FindChildRecursive<RectTransform>(safeAreaRoot, "HintButtonIcon") != null
                 && FindChildRecursive<RectTransform>(safeAreaRoot, "UndoButtonIcon") != null
-                && FindChildRecursive<RectTransform>(safeAreaRoot, "BoosterDeckButtonIcon") != null
-                && FindChildRecursive<RectTransform>(safeAreaRoot, "LivesHud") != null;
+                && FindChildRecursive<RectTransform>(safeAreaRoot, "BoosterDeckButtonIcon") != null;
         }
 
         private void EnsureResourceStackPanel()
@@ -597,7 +638,43 @@ namespace CardMesh
                 return;
             }
 
-            RectTransform root = FindChildRecursive<RectTransform>(safeAreaRoot, "LivesHud");
+            // The authored gameplay plate is a prefab instance under TopHUD. Resolve it by
+            // component/ancestry first: runtime scene setup can temporarily expose a different
+            // SafeAreaRoot hierarchy, which previously made the legacy fallback dismantle this
+            // plate (transparent background + top-left anchors) only in Play Mode.
+            foreach (LivesHudView candidate in UnityEngine.Object.FindObjectsByType<LivesHudView>(
+                         FindObjectsInactive.Include,
+                         FindObjectsSortMode.None))
+            {
+                if (candidate == null || !HasAncestorNamed(candidate.transform, "GameplayStatusPlates"))
+                {
+                    continue;
+                }
+
+                RectTransform authoredRoot = candidate.transform as RectTransform;
+                if (TryBindAuthoredLivesHud(authoredRoot, livesManager))
+                {
+                    authoredRoot.gameObject.SetActive(true);
+                    return;
+                }
+            }
+
+            RectTransform statusPlates = FindChildRecursive<RectTransform>(safeAreaRoot, "GameplayStatusPlates");
+            RectTransform root = statusPlates != null
+                ? FindChildRecursive<RectTransform>(statusPlates, "LivesHud")
+                : FindChildRecursive<RectTransform>(safeAreaRoot, "LivesHud");
+            if (statusPlates != null && root != null)
+            {
+                TryBindAuthoredLivesHud(root, livesManager);
+                root.gameObject.SetActive(true);
+                return;
+            }
+
+            if (TryBindAuthoredLivesHud(root, livesManager))
+            {
+                return;
+            }
+
             if (root == null)
             {
                 root = CreateRect(
@@ -607,17 +684,7 @@ namespace CardMesh
                     new Vector2(0f, 1f),
                     new Vector2(0.5f, 0.5f),
                     new Vector2(238f, 66f),
-                    new Vector2(184f, -LivesTopInset));
-            }
-            else
-            {
-                SetAnchored(
-                    root,
-                    new Vector2(0f, 1f),
-                    new Vector2(0f, 1f),
-                    new Vector2(0.5f, 0.5f),
-                    new Vector2(238f, 66f),
-                    new Vector2(184f, -LivesTopInset));
+                    new Vector2(LivesHudCenterX, -HudRowTopInset));
             }
 
             foreach (LivesHudView candidate in UnityEngine.Object.FindObjectsByType<LivesHudView>(
@@ -704,8 +771,8 @@ namespace CardMesh
             status.fontSize = 19f;
             status.fontSizeMin = 15f;
             status.fontSizeMax = 19f;
-            status.enableWordWrapping = false;
-            status.overflowMode = TextOverflowModes.Ellipsis;
+            status.textWrappingMode = TextWrappingModes.NoWrap;
+            status.overflowMode = TextOverflowModes.Truncate;
             SetAnchored(
                 status.rectTransform,
                 new Vector2(0f, 0.5f),
@@ -828,7 +895,94 @@ namespace CardMesh
                 status,
                 addLifeButton,
                 null);
+            livesHudView.AddLifeRequested -= ShowLivesOfferFromHud;
+            livesHudView.AddLifeRequested += ShowLivesOfferFromHud;
             root.SetAsLastSibling();
+        }
+
+        private static bool HasAncestorNamed(Transform transform, string objectName)
+        {
+            for (Transform current = transform != null ? transform.parent : null;
+                 current != null;
+                 current = current.parent)
+            {
+                if (current.name == objectName)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private bool TryBindAuthoredLivesHud(RectTransform root, LivesManager livesManager)
+        {
+            if (root == null)
+            {
+                return false;
+            }
+
+            TMP_Text count =
+                FindDirectText(root, "LivesCount")
+                ?? FindChildRecursive<TMP_Text>(root, "LivesCount");
+            Image heart =
+                FindChildRecursive<RectTransform>(root, "HeartIcon")?.GetComponent<Image>();
+            TMP_Text status =
+                FindDirectText(root, "LivesStatus")
+                ?? FindChildRecursive<TMP_Text>(root, "LivesStatus");
+            RectTransform addLifeRoot = FindChildRecursive<RectTransform>(root, "AddLifeButton");
+            Button addLifeButton = addLifeRoot != null
+                ? addLifeRoot.GetComponent<Button>() ?? addLifeRoot.gameObject.AddComponent<Button>()
+                : null;
+            if (addLifeRoot != null)
+            {
+                SetAnchored(
+                    addLifeRoot,
+                    new Vector2(0.5f, 0.5f),
+                    new Vector2(0.5f, 0.5f),
+                    new Vector2(0.5f, 0.5f),
+                    new Vector2(52f, 52f),
+                    new Vector2(-56f, -19f));
+                RectTransform addLifeVisual = FindChildRecursive<RectTransform>(addLifeRoot, "AddLifeVisual");
+                if (addLifeVisual != null)
+                {
+                    SetAnchored(
+                        addLifeVisual,
+                        new Vector2(0.5f, 0.5f),
+                        new Vector2(0.5f, 0.5f),
+                        new Vector2(0.5f, 0.5f),
+                        new Vector2(42f, 42f),
+                        Vector2.zero);
+                    addLifeButton.targetGraphic = addLifeVisual.GetComponent<Image>();
+                }
+            }
+            LivesHudView authoredView = root.GetComponent<LivesHudView>();
+            RectTransform statusPlates = FindChildRecursive<RectTransform>(safeAreaRoot, "GameplayStatusPlates");
+            bool isAuthoredStatusPlate = statusPlates != null && root.IsChildOf(statusPlates);
+            if (authoredView == null && isAuthoredStatusPlate)
+            {
+                authoredView = root.gameObject.AddComponent<LivesHudView>();
+            }
+
+            if (count == null
+                || heart == null
+                || status == null
+                || authoredView == null)
+            {
+                return false;
+            }
+
+            livesHudView = authoredView;
+            livesHudView.Configure(
+                livesManager,
+                count,
+                heart,
+                status,
+                addLifeButton,
+                null);
+            livesHudView.AddLifeRequested -= ShowLivesOfferFromHud;
+            livesHudView.AddLifeRequested += ShowLivesOfferFromHud;
+            return true;
         }
 
         private static void NormalizeLivesHudChildren(
@@ -940,12 +1094,12 @@ namespace CardMesh
             text.enabled = true;
             text.canvasRenderer.SetAlpha(1f);
             text.enableAutoSizing = false;
-            text.fontSize = 32f;
-            text.fontSizeMin = 32f;
-            text.fontSizeMax = 32f;
+            text.fontSize = 38f;
+            text.fontSizeMin = 38f;
+            text.fontSizeMax = 38f;
             text.fontStyle = FontStyles.Bold;
             text.fontWeight = FontWeight.Bold;
-            text.enableWordWrapping = false;
+            text.textWrappingMode = TextWrappingModes.NoWrap;
             text.overflowMode = TextOverflowModes.Overflow;
             text.alignment = TextAlignmentOptions.Center;
             text.color = new Color(1f, 0.91f, 0.64f, 0.96f);
@@ -971,7 +1125,7 @@ namespace CardMesh
             text.fontSizeMax = 36f;
             text.fontStyle = FontStyles.Bold;
             text.fontWeight = FontWeight.Bold;
-            text.enableWordWrapping = false;
+            text.textWrappingMode = TextWrappingModes.NoWrap;
             text.overflowMode = TextOverflowModes.Overflow;
             text.alignment = TextAlignmentOptions.Center;
             text.color = Color.white;
@@ -984,26 +1138,32 @@ namespace CardMesh
 
         private void StyleTopHud()
         {
-            RectTransform topHud = FindChildRecursive<RectTransform>(safeAreaRoot, "TopHUD");
-            if (topHud != null)
-            {
-                SetAnchored(topHud, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, 128f), new Vector2(0f, -18f));
-            }
-
             if (menuButton != null && menuButton != rewardBonusButton)
             {
                 menuButton.gameObject.SetActive(false);
             }
 
             coinsPanel = FindChildRecursive<RectTransform>(safeAreaRoot, "CoinsPanel");
-            if (coinsPanel != null)
+            bool hasAuthoredStatusPlates = FindChildRecursive<RectTransform>(safeAreaRoot, "GameplayStatusPlates") != null;
+            if (coinsPanel != null && hasAuthoredStatusPlates)
+            {
+                Image plateImage = EnsureGraphic<Image>(coinsPanel.gameObject);
+                plateImage.raycastTarget = false;
+                TextMeshProUGUI coinsCaption = FindDirectText(coinsPanel, "CoinsLabel")
+                    ?? FindChildRecursive<TextMeshProUGUI>(coinsPanel, "CoinsLabel");
+                if (coinsCaption != null)
+                {
+                    coinsCaption.text = "МОНЕТЫ";
+                    coinsCaption.raycastTarget = false;
+                }
+            }
+            else if (coinsPanel != null)
             {
                 if (coinsPanel.parent != safeAreaRoot)
                 {
                     coinsPanel.SetParent(safeAreaRoot, false);
                 }
 
-                SetAnchored(coinsPanel, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0.5f, 0.5f), new Vector2(238f, 60f), new Vector2(184f, -CoinsTopInset));
                 Image panelImage = EnsureGraphic<Image>(coinsPanel.gameObject);
                 panelImage.sprite = null;
                 panelImage.color = new Color(1f, 1f, 1f, 0f);
@@ -1041,7 +1201,7 @@ namespace CardMesh
                     coinsLabel.fontSizeMax = 32f;
                     coinsLabel.fontStyle = FontStyles.Bold;
                     coinsLabel.fontWeight = FontWeight.Bold;
-                    coinsLabel.overflowMode = TextOverflowModes.Ellipsis;
+                    coinsLabel.overflowMode = TextOverflowModes.Truncate;
                     if (coinsLabel.GetComponent<HudValuePulse>() == null)
                     {
                         coinsLabel.gameObject.AddComponent<HudValuePulse>();
@@ -1089,7 +1249,20 @@ namespace CardMesh
                 return;
             }
 
-            SetAnchored(movesPanel, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0.5f, 0.5f), new Vector2(238f, 60f), new Vector2(184f, -MovesTopInset));
+            if (movesPanel.parent != null && movesPanel.parent.name == "GameplayStatusPlates")
+            {
+                Image authoredPlate = EnsureGraphic<Image>(movesPanel.gameObject);
+                authoredPlate.raycastTarget = false;
+                TMP_Text authoredCaption = FindDirectText(movesPanel, "MovesLabel")
+                    ?? FindChildRecursive<TMP_Text>(movesPanel, "MovesLabel");
+                if (authoredCaption != null)
+                {
+                    authoredCaption.text = "ХОДОВ";
+                    authoredCaption.raycastTarget = false;
+                }
+                return;
+            }
+
             Image panelImage = EnsureGraphic<Image>(movesPanel.gameObject);
             panelImage.sprite = null;
             panelImage.color = new Color(1f, 1f, 1f, 0f);
@@ -1272,8 +1445,6 @@ namespace CardMesh
             RectTransform deckArea = FindChildRecursive<RectTransform>(safeAreaRoot, "DeckArea");
             if (deckArea != null)
             {
-                float deckAreaY = ResolveDeckAreaYAlignedToGoalRow(deckArea, -470f);
-                SetAnchored(deckArea, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 0.5f), new Vector2(520f, 310f), new Vector2(-RightDeckInset, deckAreaY));
                 Image deckAreaImage = EnsureGraphic<Image>(deckArea.gameObject);
                 deckAreaImage.color = new Color(1f, 1f, 1f, 0f);
                 deckAreaImage.raycastTarget = false;
@@ -1282,7 +1453,6 @@ namespace CardMesh
             RectTransform deckCardBack = sceneRefs != null ? sceneRefs.DeckCardBack : null;
             if (deckCardBack != null)
             {
-                SetAnchored(deckCardBack, new Vector2(1f, 0.54f), new Vector2(1f, 0.54f), new Vector2(0.5f, 0.5f), GameplayCardSize, new Vector2(-DeckCardBackInsetX, -2f));
                 Image deckImage = EnsureGraphic<Image>(deckCardBack.gameObject);
                 deckImage.raycastTarget = true;
             }
@@ -1290,7 +1460,6 @@ namespace CardMesh
             if (deckCounterLabel != null)
             {
                 RectTransform counterRect = deckCounterLabel.rectTransform;
-                SetAnchored(counterRect, new Vector2(1f, 0.54f), new Vector2(1f, 0.54f), new Vector2(0.5f, 0.5f), new Vector2(52f, 40f), new Vector2(-165f, 120f));
                 ConfigureText(deckCounterLabel, 32f, 22f, TextAlignmentOptions.Center, new Color(0.12f, 0.18f, 0.25f, 1f));
                 deckCounterLabel.fontStyle = FontStyles.Bold;
                 EnsureDeckCounterBadge(counterRect);
@@ -1381,7 +1550,7 @@ namespace CardMesh
                 "Подсказка",
                 PremiumUISprites.HintBulbIcon,
                 hintCount > 0 ? string.Empty : HintCost.ToString(),
-                $"x{hintCount}",
+                FormatActionCount(hintCount),
                 new Vector2(-buttonStep, BottomButtonYOffset),
                 buttonSize,
                 hintCount > 0,
@@ -1394,7 +1563,7 @@ namespace CardMesh
                 "Отмена",
                 PremiumUISprites.UndoIcon,
                 string.Empty,
-                $"x{undoCount}",
+                FormatActionCount(undoCount),
                 new Vector2(0f, BottomButtonYOffset),
                 buttonSize,
                 true,
@@ -1407,10 +1576,10 @@ namespace CardMesh
                 "+10 ходов",
                 PremiumUISprites.BoosterRocketIcon,
                 string.Empty,
-                string.Empty,
+                FormatActionCount(boosterCount),
                 new Vector2(buttonStep, BottomButtonYOffset),
                 buttonSize,
-                false,
+                boosterCount > 0,
                 out boosterBadgeRoot,
                 out boosterBadgeText);
         }
@@ -1445,7 +1614,7 @@ namespace CardMesh
             float idealGap = Mathf.Clamp(availableWidth * 0.035f, 22f, 48f);
             float maxFittingWidth = (availableWidth - (horizontalPadding * 2f) - (idealGap * 2f)) / 3f;
             float width = Mathf.Clamp(maxFittingWidth, BottomButtonMinWidth, BottomButtonMaxWidth);
-            float height = Mathf.Round(width * 0.295f);
+            float height = 200f;
             return new Vector2(width, height);
         }
 
@@ -1662,32 +1831,40 @@ namespace CardMesh
                 boosterBadge = badge.gameObject;
             }
 
-            bool isUndoCount = buttonName == "UndoButton";
-            Vector2 badgeSize = new(58f, 24f);
-            Vector2 badgePosition = new(-82f, -16f);
-            SetAnchored(badge, new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(0.5f, 0.5f), badgeSize, badgePosition);
+            Vector2 badgeSize = new(50f, 50f);
+            Vector2 badgePosition = new(-42f, -24f);
+            SetAnchored(badge, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 0.5f), badgeSize, badgePosition);
 
             Image badgeImage = EnsureGraphic<Image>(badge.gameObject);
-            badgeImage.sprite = GetHudCounterGoldSprite();
-            badgeImage.type = Image.Type.Sliced;
-            badgeImage.color = isUndoCount ? new Color(0.72f, 0.45f, 0.13f, 0.72f) : new Color(0.42f, 0.14f, 0.07f, 0.76f);
+            badgeImage.sprite = PremiumUISprites.CleanIconCircle != null
+                ? PremiumUISprites.CleanIconCircle
+                : GetGoldIconSprite();
+            badgeImage.type = Image.Type.Simple;
+            badgeImage.preserveAspect = true;
+            badgeImage.color = Color.white;
             badgeImage.raycastTarget = false;
             AddShadow(badge.gameObject, new Color(0.09f, 0.035f, 0f, 0.24f), new Vector2(0f, -1.4f));
 
             RectTransform badgeGloss = EnsureImageLayer(badge, "BadgeGloss", GetRoundedButtonSprite(), Image.Type.Sliced, new Color(1f, 0.86f, 0.42f, 0.09f));
-            SetAnchored(badgeGloss, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(-16f, 7f), new Vector2(0f, -7f));
+            badgeGloss.gameObject.SetActive(false);
 
             text = EnsureText(badge, "BadgeText");
             text.text = value;
-            ConfigureText(text, 20f, 14f, TextAlignmentOptions.Center, new Color(0.9f, 0.7f, 0.32f, 1f));
+            ConfigureText(text, 30f, 22f, TextAlignmentOptions.Center, new Color(0.98f, 0.94f, 0.82f, 1f));
             ApplyGameplayButtonTextStyle(text, 0.08f);
-            StretchToFill(text.rectTransform, 7f, 7f, 0f, 2f);
+            StretchToFill(text.rectTransform, 7f, 7f, 4f, 4f);
 
             AddTextOutline(text, new Color(0.18f, 0.055f, 0f, 0.68f), new Vector2(0.75f, -0.75f));
             badgeGloss.SetAsFirstSibling();
             text.rectTransform.SetAsLastSibling();
             badge.gameObject.SetActive(isVisible);
             return badge;
+        }
+
+        private static string FormatActionCount(int count)
+        {
+            int safeCount = Mathf.Max(0, count);
+            return safeCount > 99 ? "99+" : safeCount.ToString();
         }
 
         private RectTransform EnsureHintCostRow(RectTransform buttonRoot, string buttonName, string value)
@@ -1702,7 +1879,33 @@ namespace CardMesh
                 SetAnchored(row, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(112f, 28f), new Vector2(0f, -19f));
             }
 
+            // Older authored button prefabs used the SubRow object itself as a
+            // TMP text component. A Unity UI GameObject cannot host both that
+            // Graphic and an Image, so AddComponent<Image>() returns null.
+            // Keep those legacy instances functional while the editor
+            // installer migrates the prefab to a container + child text.
+            TextMeshProUGUI legacyRowText = row.GetComponent<TextMeshProUGUI>();
+            if (legacyRowText != null)
+            {
+                legacyRowText.text = value;
+                ConfigureText(legacyRowText, 21f, 14f, TextAlignmentOptions.Center, new Color(0.88f, 0.68f, 0.3f, 1f));
+                ApplyGameplayButtonTextStyle(legacyRowText, 0.08f);
+                AddTextOutline(legacyRowText, new Color(0.18f, 0.055f, 0f, 0.62f), new Vector2(0.65f, -0.65f));
+                legacyRowText.raycastTarget = false;
+                row.gameObject.SetActive(true);
+                return row;
+            }
+
             Image rowImage = EnsureGraphic<Image>(row.gameObject);
+            if (rowImage == null)
+            {
+                // A third-party Graphic on the same object can also prevent an
+                // Image from being added. Do not let optional button polish
+                // break level loading.
+                row.gameObject.SetActive(true);
+                return row;
+            }
+
             rowImage.sprite = GetHudCounterGoldSprite();
             rowImage.type = Image.Type.Sliced;
             rowImage.color = new Color(0.64f, 0.32f, 0.09f, 0.62f);
@@ -1809,7 +2012,13 @@ namespace CardMesh
             RectTransform adPlaceholder = FindChildRecursive<RectTransform>(safeAreaRoot, "AdBannerPlaceholder");
             if (adPlaceholder != null)
             {
-                adPlaceholder.gameObject.SetActive(false);
+                adPlaceholder.gameObject.SetActive(true);
+                Image image = adPlaceholder.GetComponent<Image>();
+                if (image != null)
+                {
+                    image.color = new Color(0f, 0f, 0f, 0f);
+                    image.raycastTarget = false;
+                }
             }
         }
 
@@ -1881,6 +2090,7 @@ namespace CardMesh
 
         private void ShowPausePopup()
         {
+            AdsManager.Instance?.SetBannerBlocker("GameplayModal", true);
             EnsurePausePopup();
             if (pausePopup != null)
             {
@@ -1927,6 +2137,7 @@ namespace CardMesh
             if (resumeGame && !HasActiveModal())
             {
                 Time.timeScale = 1f;
+                AdsManager.Instance?.SetBannerBlocker("GameplayModal", false);
             }
         }
 
@@ -1941,7 +2152,9 @@ namespace CardMesh
             safeAreaRoot ??= sceneRefs != null ? sceneRefs.SafeAreaRoot : null;
             if (safeAreaRoot == null)
             {
-                Canvas canvas = GetComponentInParent<Canvas>() ?? FindObjectOfType<Canvas>();
+                Canvas canvas =
+                    GetComponentInParent<Canvas>()
+                    ?? FindFirstObjectByType<Canvas>();
                 safeAreaRoot = canvas != null ? canvas.transform as RectTransform : null;
             }
 
@@ -2126,7 +2339,9 @@ namespace CardMesh
             safeAreaRoot ??= sceneRefs != null ? sceneRefs.SafeAreaRoot : null;
             if (safeAreaRoot == null)
             {
-                Canvas canvas = GetComponentInParent<Canvas>() ?? FindObjectOfType<Canvas>();
+                Canvas canvas =
+                    GetComponentInParent<Canvas>()
+                    ?? FindFirstObjectByType<Canvas>();
                 safeAreaRoot = canvas != null ? canvas.transform as RectTransform : null;
             }
 
@@ -2187,17 +2402,15 @@ namespace CardMesh
                 return;
             }
 
-            livesEmptyPopup = CreateModalRoot("LivesEmptyPopup", out RectTransform panel, new Vector2(420f, 280f));
-            CreateModalTitle(panel, "Жизни закончились", new Vector2(0f, 72f), new Vector2(0f, -30f), 34f);
+            livesEmptyPopup = FindAuthoredModal("LivesEmptyPopup");
+            if (livesEmptyPopup == null)
+            {
+                Debug.LogWarning("UIManager: authored LivesEmptyPopup was not found in the scene.");
+                return;
+            }
 
-            livesEmptyTimerText = CreateText("Timer", panel, string.Empty, 26f, new Color(0.38f, 0.25f, 0.12f, 1f));
-            livesEmptyTimerText.fontStyle = FontStyles.Bold;
-            SetAnchored(livesEmptyTimerText.rectTransform, new Vector2(0f, 0.5f), new Vector2(1f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-52f, 52f), new Vector2(0f, 18f));
-
-            Button okButton = CreateButton("OkButton", panel, "Понятно");
-            SetAnchored(okButton.GetComponent<RectTransform>(), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(280f, 62f), new Vector2(0f, 34f));
-            ConfigureModalButton(okButton, true);
-            okButton.onClick.AddListener(() => HideModal(livesEmptyPopup));
+            livesEmptyTimerText =
+                FindChildRecursive<TextMeshProUGUI>(livesEmptyPopup.transform, "TimerText");
         }
 
         private IEnumerator UpdateLivesEmptyTimer()
@@ -2290,6 +2503,7 @@ namespace CardMesh
             if (!HasActiveModal())
             {
                 Time.timeScale = 1f;
+                AdsManager.Instance?.SetBannerBlocker("GameplayModal", false);
             }
         }
 
@@ -2386,6 +2600,13 @@ namespace CardMesh
             if (button != null)
             {
                 button.interactable = isInteractable;
+                CanvasGroup canvasGroup = button.GetComponent<CanvasGroup>();
+                if (canvasGroup != null)
+                {
+                    canvasGroup.alpha = isInteractable ? 1f : 0.46f;
+                    canvasGroup.interactable = isInteractable;
+                    canvasGroup.blocksRaycasts = isInteractable;
+                }
             }
         }
 
@@ -2417,7 +2638,7 @@ namespace CardMesh
             {
                 movesBonusText = CreateText("MovesBonusText", safeAreaRoot, string.Empty, 34f, new Color(1f, 0.84f, 0.24f, 1f));
                 movesBonusText.fontStyle = FontStyles.Bold;
-                movesBonusText.enableWordWrapping = false;
+                movesBonusText.textWrappingMode = TextWrappingModes.NoWrap;
                 SetAnchored(movesBonusText.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 0.5f), new Vector2(360f, 54f), new Vector2(0f, -198f));
                 AddTextOutline(movesBonusText, new Color(0.22f, 0.1f, 0f, 0.46f), new Vector2(1.2f, -1.2f));
                 AddShadow(movesBonusText.gameObject, new Color(0.13f, 0.06f, 0f, 0.22f), new Vector2(0f, -2f));
@@ -2710,8 +2931,8 @@ namespace CardMesh
             text.enableAutoSizing = true;
             text.fontSizeMax = fontSizeMax;
             text.fontSizeMin = fontSizeMin;
-            text.enableWordWrapping = false;
-            text.overflowMode = TextOverflowModes.Ellipsis;
+            text.textWrappingMode = TextWrappingModes.NoWrap;
+            text.overflowMode = TextOverflowModes.Truncate;
             text.alignment = alignment;
             text.color = color;
         }

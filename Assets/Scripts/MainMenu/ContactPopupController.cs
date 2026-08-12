@@ -79,6 +79,7 @@ namespace CardMesh
 
         public void Open()
         {
+            MainMenuPopupExclusivity.OpenExclusive(this);
             GameObject root = popupRoot != null ? popupRoot : gameObject;
             root.SetActive(true);
             root.transform.SetAsLastSibling();

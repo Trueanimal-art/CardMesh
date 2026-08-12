@@ -10,6 +10,8 @@ namespace CardMesh
     public static class RuntimeCyrillicFontProvider
     {
         private const string RuntimeFontResourcePath = "Fonts/Roboto-Bold";
+        private const string SharedFontAssetResourcePath =
+            "Fonts/Roboto-Bold Cyrillic SDF";
         private const string CyrillicWarmup =
             "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ" +
             "абвгдеёжзийклмнопрстуфхцчшщъыьэюя" +
@@ -42,7 +44,7 @@ namespace CardMesh
             WarmUp(targetFont, warmupText);
             text.font = targetFont;
             text.fontSharedMaterial = targetFont.material;
-            text.enableWordWrapping = true;
+            text.textWrappingMode = TextWrappingModes.Normal;
             text.richText = true;
         }
 
@@ -53,6 +55,20 @@ namespace CardMesh
 
         private static TMP_FontAsset CreateFontAsset()
         {
+            TMP_FontAsset sharedAsset =
+                Resources.Load<TMP_FontAsset>(SharedFontAssetResourcePath);
+            if (sharedAsset != null)
+            {
+                return sharedAsset;
+            }
+
+#if UNITY_EDITOR
+            if (!Application.isPlaying)
+            {
+                return TMP_Settings.defaultFontAsset;
+            }
+#endif
+
             Font sourceFont = Resources.Load<Font>(RuntimeFontResourcePath);
             if (sourceFont == null)
             {

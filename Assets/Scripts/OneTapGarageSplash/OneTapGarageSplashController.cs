@@ -13,12 +13,13 @@ namespace CardMesh.OneTapGarage
         private const string SfxVolumeKey = "SfxVolume";
         private const string AudioMutedKey = "AudioMuted";
         private const string EditorSkipKey = "CardMesh.OneTapGarage.SkipInEditor";
+        private const string EditorCapturePendingKey =
+            "CardMesh.OneTapGarage.CapturePending";
         private const float DefaultSfxVolume = 0.8f;
         private const float SafeFirstLaunchVolume = 0.65f;
 
         [Header("Approved timing")]
         [SerializeField, Min(0.1f)] private float splashDuration = 2.1f;
-        [SerializeField, Min(0f)] private float mainMenuActivationTime = 0.75f;
         [SerializeField, Min(0f)] private float liveMenuWipeStartTime = 1.25f;
         [SerializeField, Range(0.2f, 0.4f)] private float liveMenuWipeDuration = 0.4f;
 
@@ -35,6 +36,16 @@ namespace CardMesh.OneTapGarage
         [SerializeField] private GameObject staticFallback;
         [SerializeField] private GameObject fallbackLogo;
         [SerializeField] private RectTransform safeAreaRoot;
+        [SerializeField] private RectTransform oneTapRevealMask;
+        [SerializeField] private RectTransform garageRevealMask;
+        [SerializeField] private RectTransform oneTapLogo;
+        [SerializeField] private RectTransform garageModule;
+        [SerializeField] private RectTransform tapPoint;
+        [SerializeField] private RectTransform ambientGlow;
+        [SerializeField] private CanvasGroup oneTapLogoGroup;
+        [SerializeField] private CanvasGroup garageModuleGroup;
+        [SerializeField] private CanvasGroup tapPointGroup;
+        [SerializeField] private CanvasGroup ambientGlowGroup;
 
         private static bool playedThisProcess;
 
@@ -46,12 +57,21 @@ namespace CardMesh.OneTapGarage
         private bool playbackStarted;
         private bool transitionFinished;
         private bool menuAudioCaptured;
+        private bool usePortraitComposition;
         private float liveMenuWipeStartedAt = -1f;
         private Rect baseVideoUv = new(0f, 0f, 1f, 1f);
         private float elapsed;
         private int lastScreenWidth;
         private int lastScreenHeight;
         private Rect lastSafeArea;
+        private Vector2 oneTapLogoRestPosition;
+        private Vector2 garageModuleRestPosition;
+        private Vector2 tapPointRestPosition;
+        private Vector2 ambientGlowRestPosition;
+        private Vector2 oneTapRevealMaskRestSize;
+        private Vector2 garageRevealMaskRestSize;
+        private RectMask2D oneTapClip;
+        private RectMask2D garageClip;
 
         public float Elapsed => elapsed;
         public bool MainMenuLoadStarted => mainMenuLoad != null;
@@ -67,6 +87,32 @@ namespace CardMesh.OneTapGarage
         {
             ForcePortrait();
             ApplySafeArea(true);
+            usePortraitComposition =
+                Application.platform == RuntimePlatform.Android
+                || Screen.height >= Screen.width;
+
+            if (usePortraitComposition)
+            {
+                if (staticFallback != null)
+                {
+                    staticFallback.SetActive(true);
+                }
+
+                if (fallbackLogo != null)
+                {
+                    fallbackLogo.SetActive(true);
+                }
+
+                if (videoSurface != null)
+                {
+                    videoSurface.enabled = false;
+                }
+
+                // Establish frame zero before Unity can render the first runtime
+                // frame. Doing this later in the coroutine caused a saved
+                // full-logo preview to flash, disappear, and reveal a second time.
+                PreparePortraitAnimation();
+            }
 
             if (splashCanvasGroup != null)
             {
@@ -122,6 +168,16 @@ namespace CardMesh.OneTapGarage
 
         private IEnumerator RunSplash()
         {
+#if UNITY_EDITOR
+            if (UnityEditor.SessionState.GetBool(EditorCapturePendingKey, false))
+            {
+                // The first full-resolution Editor screenshot warms up slowly.
+                // Hold the splash before frame zero so the capture includes the
+                // actual Figma-authored reveal instead of skipping over it.
+                yield return new WaitForSecondsRealtime(1.75f);
+            }
+#endif
+
             mainMenuLoad = SceneManager.LoadSceneAsync(mainMenuSceneName, LoadSceneMode.Additive);
             if (mainMenuLoad == null)
             {
@@ -130,8 +186,26 @@ namespace CardMesh.OneTapGarage
             }
 
             mainMenuLoad.allowSceneActivation = false;
+            bool preparedLandscapeVideo = false;
 
-            if (videoPlayer != null && videoPlayer.clip != null)
+            if (usePortraitComposition)
+            {
+                if (staticFallback != null)
+                {
+                    staticFallback.SetActive(true);
+                }
+
+                if (fallbackLogo != null)
+                {
+                    fallbackLogo.SetActive(true);
+                }
+
+                if (videoSurface != null)
+                {
+                    videoSurface.enabled = false;
+                }
+            }
+            else if (videoPlayer != null && videoPlayer.clip != null)
             {
                 videoPlayer.Prepare();
                 float prepareElapsed = 0f;
@@ -161,10 +235,9 @@ namespace CardMesh.OneTapGarage
                         videoSurface.enabled = true;
                     }
 
-                    videoPlayer.Play();
-                    playbackStarted = true;
+                    preparedLandscapeVideo = true;
                     Debug.Log(
-                        $"OneTapGarageSplash: video playback started after "
+                        $"OneTapGarageSplash: video prepared after "
                         + $"{prepareElapsed:0.000}s preparation.");
                 }
                 else if (fallbackLogo != null)
@@ -172,6 +245,49 @@ namespace CardMesh.OneTapGarage
                     fallbackLogo.SetActive(true);
                     Debug.LogError("OneTapGarageSplash: approved video could not be prepared; static approved lockup fallback is active.");
                 }
+            }
+
+            // Preload and activate the live menu before frame zero of the logo
+            // animation. Activating it at 0.75 s used to stall the exact moment
+            // ONE TAP was revealing and made the motion look like a hard pop.
+            while (mainMenuLoad.progress < 0.9f)
+            {
+                yield return null;
+            }
+
+            // MainMenu owns the single EventSystem after activation. Disable the
+            // splash copy first so Unity never observes two active systems in
+            // the same frame.
+            DisableSplashEventSystem();
+            if (splashAudioListener != null)
+            {
+                splashAudioListener.enabled = false;
+            }
+
+            mainMenuLoad.allowSceneActivation = true;
+            while (!mainMenuLoad.isDone)
+            {
+                yield return null;
+            }
+
+            PauseMenuAudioUntilReveal();
+
+            Scene loadedMainMenu = SceneManager.GetSceneByName(mainMenuSceneName);
+            if (loadedMainMenu.IsValid() && loadedMainMenu.isLoaded)
+            {
+                SceneManager.SetActiveScene(loadedMainMenu);
+            }
+
+            elapsed = 0f;
+            if (preparedLandscapeVideo && videoPlayer != null)
+            {
+                videoPlayer.frame = 0;
+                videoPlayer.time = 0d;
+                videoPlayer.Play();
+                playbackStarted = true;
+                Debug.Log(
+                    "OneTapGarageSplash: video playback started after the "
+                    + "live MainMenu finished loading.");
             }
 
             if (audioSource != null && audioSource.clip != null && audioSource.volume > 0f)
@@ -183,53 +299,19 @@ namespace CardMesh.OneTapGarage
             while (elapsed < splashDuration)
             {
                 elapsed += Time.unscaledDeltaTime;
+                if (usePortraitComposition)
+                {
+                    UpdatePortraitAnimation(elapsed);
+                }
+
                 if (playbackStarted && videoPlayer != null)
                 {
                     videoPlayer.externalReferenceTime = elapsed;
                 }
 
-                if (!mainMenuLoad.allowSceneActivation && elapsed >= mainMenuActivationTime)
-                {
-                    Debug.Log(
-                        $"OneTapGarageSplash: MainMenu activation allowed at "
-                        + $"{elapsed:0.000}s of splash playback.");
-                    DisableSplashEventSystem();
-
-                    if (splashAudioListener != null)
-                    {
-                        splashAudioListener.enabled = false;
-                    }
-
-                    mainMenuLoad.allowSceneActivation = true;
-                }
-
-                if (mainMenuLoad.isDone && !menuAudioCaptured)
-                {
-                    PauseMenuAudioUntilReveal();
-                }
-
                 UpdateLiveMenuWipe();
                 yield return null;
             }
-
-            if (!mainMenuLoad.allowSceneActivation)
-            {
-                DisableSplashEventSystem();
-
-                if (splashAudioListener != null)
-                {
-                    splashAudioListener.enabled = false;
-                }
-
-                mainMenuLoad.allowSceneActivation = true;
-            }
-
-            while (!mainMenuLoad.isDone)
-            {
-                yield return null;
-            }
-
-            PauseMenuAudioUntilReveal();
 
             Scene mainMenu = SceneManager.GetSceneByName(mainMenuSceneName);
             if (mainMenu.IsValid() && mainMenu.isLoaded)
@@ -245,6 +327,199 @@ namespace CardMesh.OneTapGarage
             }
 
             FinishTransition();
+        }
+
+        private void PreparePortraitAnimation()
+        {
+            oneTapLogoRestPosition =
+                oneTapLogo != null ? oneTapLogo.anchoredPosition : Vector2.zero;
+            garageModuleRestPosition =
+                garageModule != null ? garageModule.anchoredPosition : Vector2.zero;
+            tapPointRestPosition =
+                tapPoint != null ? tapPoint.anchoredPosition : Vector2.zero;
+            ambientGlowRestPosition =
+                ambientGlow != null ? ambientGlow.anchoredPosition : Vector2.zero;
+            oneTapRevealMaskRestSize =
+                oneTapRevealMask != null
+                    ? oneTapRevealMask.sizeDelta
+                    : Vector2.zero;
+            garageRevealMaskRestSize =
+                garageRevealMask != null
+                    ? garageRevealMask.sizeDelta
+                    : Vector2.zero;
+            oneTapClip =
+                oneTapRevealMask != null
+                    ? oneTapRevealMask.GetComponent<RectMask2D>()
+                    : null;
+            garageClip =
+                garageRevealMask != null
+                    ? garageRevealMask.GetComponent<RectMask2D>()
+                    : null;
+
+            SetCanvasGroupAlpha(oneTapLogoGroup, 0f);
+            SetCanvasGroupAlpha(garageModuleGroup, 0f);
+            SetCanvasGroupAlpha(tapPointGroup, 0f);
+            SetCanvasGroupAlpha(ambientGlowGroup, 0f);
+
+            if (oneTapClip != null)
+            {
+                float contactFromLeft =
+                    (oneTapRevealMaskRestSize.x * 0.5f)
+                    + tapPointRestPosition.x;
+                float contactFromRight =
+                    oneTapRevealMaskRestSize.x - contactFromLeft;
+                oneTapClip.padding =
+                    new Vector4(contactFromLeft, 0f, contactFromRight, 0f);
+            }
+
+            if (garageClip != null)
+            {
+                garageClip.padding =
+                    new Vector4(0f, 0f, 0f, garageRevealMaskRestSize.y);
+            }
+
+            if (oneTapLogo != null)
+            {
+                oneTapLogo.anchoredPosition =
+                    oneTapLogoRestPosition + new Vector2(0f, 12f);
+                oneTapLogo.localScale = Vector3.one * 0.94f;
+            }
+
+            if (garageModule != null)
+            {
+                garageModule.anchoredPosition =
+                    garageModuleRestPosition + new Vector2(0f, -18f);
+                garageModule.localScale = Vector3.one * 0.96f;
+            }
+
+            if (tapPoint != null)
+            {
+                tapPoint.anchoredPosition =
+                    tapPointRestPosition + new Vector2(0f, 92f);
+                tapPoint.localScale = Vector3.one * 1.12f;
+            }
+
+            if (ambientGlow != null)
+            {
+                ambientGlow.anchoredPosition = ambientGlowRestPosition;
+                ambientGlow.localScale = Vector3.one * 0.58f;
+            }
+        }
+
+        private void UpdatePortraitAnimation(float time)
+        {
+            float pointIn = EaseOutCubic(Mathf.InverseLerp(0.12f, 0.25f, time));
+            float pointTravel =
+                EaseInOutCubic(Mathf.InverseLerp(0.19f, 0.39f, time));
+            float contactImpulse =
+                Mathf.Clamp01(1f - Mathf.Abs((time - 0.39f) / 0.11f));
+            float oneTapReveal =
+                EaseOutCubic(Mathf.InverseLerp(0.43f, 0.92f, time));
+            float garageReveal =
+                EaseOutCubic(Mathf.InverseLerp(0.72f, 1.08f, time));
+            float logoFade =
+                1f - EaseOutCubic(Mathf.InverseLerp(1.34f, 1.62f, time));
+
+            SetCanvasGroupAlpha(oneTapLogoGroup, oneTapReveal * logoFade);
+            SetCanvasGroupAlpha(garageModuleGroup, garageReveal * logoFade);
+            SetCanvasGroupAlpha(tapPointGroup, pointIn * logoFade);
+            SetCanvasGroupAlpha(
+                ambientGlowGroup,
+                Mathf.Clamp01((pointIn * 0.25f) + contactImpulse) * logoFade);
+
+            if (oneTapClip != null)
+            {
+                float hidden = 1f - oneTapReveal;
+                float contactFromLeft =
+                    (oneTapRevealMaskRestSize.x * 0.5f)
+                    + tapPointRestPosition.x;
+                float contactFromRight =
+                    oneTapRevealMaskRestSize.x - contactFromLeft;
+                oneTapClip.padding = new Vector4(
+                    contactFromLeft * hidden,
+                    0f,
+                    contactFromRight * hidden,
+                    0f);
+            }
+
+            if (garageClip != null)
+            {
+                garageClip.padding = new Vector4(
+                    0f,
+                    0f,
+                    0f,
+                    garageRevealMaskRestSize.y * (1f - garageReveal));
+            }
+
+            if (oneTapLogo != null)
+            {
+                oneTapLogo.anchoredPosition = Vector2.LerpUnclamped(
+                    oneTapLogoRestPosition + new Vector2(0f, 12f),
+                    oneTapLogoRestPosition,
+                    oneTapReveal);
+                float scale = Mathf.LerpUnclamped(0.94f, 1f, oneTapReveal);
+                oneTapLogo.localScale = Vector3.one * scale;
+            }
+
+            if (garageModule != null)
+            {
+                garageModule.anchoredPosition = Vector2.LerpUnclamped(
+                    garageModuleRestPosition + new Vector2(0f, -18f),
+                    garageModuleRestPosition,
+                    garageReveal);
+                float scale = Mathf.LerpUnclamped(0.96f, 1f, garageReveal);
+                garageModule.localScale = Vector3.one * scale;
+            }
+
+            if (tapPoint != null)
+            {
+                tapPoint.anchoredPosition = Vector2.LerpUnclamped(
+                    tapPointRestPosition + new Vector2(0f, 92f),
+                    tapPointRestPosition,
+                    pointTravel);
+                float scale = 1f + (contactImpulse * 0.22f);
+                tapPoint.localScale = Vector3.one * scale;
+            }
+
+            if (ambientGlow != null)
+            {
+                float glowScale = Mathf.LerpUnclamped(
+                    0.58f,
+                    1.18f,
+                    EaseOutCubic(Mathf.InverseLerp(0.30f, 0.50f, time)));
+                glowScale += contactImpulse * 0.16f;
+                ambientGlow.localScale = Vector3.one * glowScale;
+            }
+
+            if (splashCanvasGroup != null && time >= 1.58f)
+            {
+                float menuReveal =
+                    EaseInOutCubic(Mathf.InverseLerp(1.58f, 2.06f, time));
+                splashCanvasGroup.alpha = 1f - menuReveal;
+            }
+        }
+
+        private static void SetCanvasGroupAlpha(CanvasGroup group, float alpha)
+        {
+            if (group != null)
+            {
+                group.alpha = Mathf.Clamp01(alpha);
+            }
+        }
+
+        private static float EaseOutCubic(float value)
+        {
+            value = Mathf.Clamp01(value);
+            float inverse = 1f - value;
+            return 1f - (inverse * inverse * inverse);
+        }
+
+        private static float EaseInOutCubic(float value)
+        {
+            value = Mathf.Clamp01(value);
+            return value < 0.5f
+                ? 4f * value * value * value
+                : 1f - (Mathf.Pow((-2f * value) + 2f, 3f) * 0.5f);
         }
 
         private void ConfigureVideoSurface()

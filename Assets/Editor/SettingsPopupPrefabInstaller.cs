@@ -45,24 +45,12 @@ public static class SettingsPopupPrefabInstaller
             throw new UnityException($"Cannot install {PrefabPath}: Canvas not found in {MainMenuScenePath}.");
         }
 
-        GameObject instance = null;
         foreach (SettingsPopup existing in Object.FindObjectsByType<SettingsPopup>(FindObjectsInactive.Include, FindObjectsSortMode.None))
         {
-            GameObject source = PrefabUtility.GetCorrespondingObjectFromSource(existing.gameObject);
-            if (source == prefab && instance == null)
-            {
-                instance = existing.gameObject;
-            }
-            else
-            {
-                Object.DestroyImmediate(existing.gameObject);
-            }
+            Object.DestroyImmediate(existing.gameObject);
         }
 
-        if (instance == null)
-        {
-            instance = PrefabUtility.InstantiatePrefab(prefab, scene) as GameObject;
-        }
+        GameObject instance = PrefabUtility.InstantiatePrefab(prefab, scene) as GameObject;
 
         if (instance == null)
         {

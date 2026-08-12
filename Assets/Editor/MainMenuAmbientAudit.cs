@@ -64,7 +64,7 @@ public static class MainMenuAmbientAudit
 
         Transform root = ambient.transform;
         Transform background = canvas.transform.Find("Background");
-        Transform playButton = canvas.transform.Find("PlayButton");
+        Transform playButton = FindChildRecursive(canvas.transform, "PlayButton");
         Transform fog = root.Find("AmbientFog");
         Transform rays = root.Find("LightRays");
         Transform particles = root.Find("AmbientParticles");
@@ -72,10 +72,15 @@ public static class MainMenuAmbientAudit
 
         Require(root.name == "AmbientAnimation", "ambient root name");
         Require(background != null && root.GetSiblingIndex() == background.GetSiblingIndex() + 1, "ambient root must follow Background");
-        Require(playButton != null && root.GetSiblingIndex() < playButton.GetSiblingIndex(), "ambient root must render below PlayButton");
+        Transform playCanvasLayer = FindDirectChildUnder(canvas.transform, playButton);
+        Require(
+            playCanvasLayer != null && root.GetSiblingIndex() < playCanvasLayer.GetSiblingIndex(),
+            "ambient root must render below the PlayButton canvas layer");
         Require(fog != null && rays != null && particles != null && shine != null, "ambient hierarchy");
         Require(particles.childCount == 15, "particle pool must contain 15 objects");
-        Require(shine.parent.GetComponent<Image>() != null, "shine must be attached to the actual PlayButton Image");
+        Require(
+            shine.parent.name == "Visual" && shine.parent.GetComponent<Image>() != null,
+            "shine must be attached to the authored PlayButton Visual");
 
         Graphic[] ambientGraphics = root.GetComponentsInChildren<Graphic>(true);
         for (int i = 0; i < ambientGraphics.Length; i++)
@@ -248,5 +253,21 @@ public static class MainMenuAmbientAudit
         }
 
         return null;
+    }
+
+    private static Transform FindDirectChildUnder(Transform parent, Transform descendant)
+    {
+        if (parent == null || descendant == null)
+        {
+            return null;
+        }
+
+        Transform current = descendant;
+        while (current.parent != null && current.parent != parent)
+        {
+            current = current.parent;
+        }
+
+        return current.parent == parent ? current : null;
     }
 }

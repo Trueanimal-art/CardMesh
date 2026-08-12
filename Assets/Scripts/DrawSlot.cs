@@ -10,9 +10,10 @@ namespace CardMesh
     {
         private const int MaxVisibleRevealedCards = 3;
         private const float RevealedCardsBaseOffsetXFactor = -1.30f;
-        private const float RevealedCardsBaseOffsetY = -8f;
+        // Keep the three-card reveal fan visibly above the crown targets without pushing it into the top HUD.
+        private const float RevealedCardsBaseOffsetY = 40f;
         private const float RevealedCardsStepX = 12f;
-        private const float RevealedCardsStepY = -50f;
+        private const float RevealedCardsStepY = -20f;
         private const string EmptySlotRootName = "DeckEmptySlot";
 
         [SerializeField] private Image backgroundImage;

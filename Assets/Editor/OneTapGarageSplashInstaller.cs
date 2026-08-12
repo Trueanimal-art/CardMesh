@@ -20,7 +20,7 @@ public static class OneTapGarageSplashInstaller
     public const string AudioPath =
         "Assets/Audio/OneTapGarageSplash/ONE_TAP_GARAGE_Final_Splash.wav";
     public const string BackgroundPath =
-        "Assets/Art/OneTapGarageSplash/Final_Background_1920x1080.png";
+        "Assets/Art/OneTapGarageSplash/Final_Background_Mobile_v2.png";
     public const string OneTapPath =
         "Assets/Art/OneTapGarageSplash/Final_OneTap_2048.png";
     public const string GaragePath =
@@ -38,6 +38,25 @@ public static class OneTapGarageSplashInstaller
     private const string AudioMutedKey = "AudioMuted";
     private const string AndroidAuditBuildPath =
         "Artifacts/OneTapGarageSplash/UnityIntegration/Android/CardMesh-OneTapGarageSplash.apk";
+
+    [InitializeOnLoadMethod]
+    private static void EnsureSplashStartsEditorPlayMode()
+    {
+        EditorApplication.delayCall += () =>
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                return;
+            }
+
+            SceneAsset splashScene = AssetDatabase.LoadAssetAtPath<SceneAsset>(ScenePath);
+            if (splashScene != null
+                && EditorSceneManager.playModeStartScene != splashScene)
+            {
+                EditorSceneManager.playModeStartScene = splashScene;
+            }
+        };
+    }
 
     [MenuItem("Tools/ONE TAP GARAGE/Rebuild Approved Splash Scene")]
     public static void Rebuild()
@@ -76,9 +95,9 @@ public static class OneTapGarageSplashInstaller
 
         CanvasScaler scaler = canvasObject.GetComponent<CanvasScaler>();
         scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-        scaler.referenceResolution = new Vector2(1920f, 1080f);
+        scaler.referenceResolution = new Vector2(1080f, 1920f);
         scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
-        scaler.matchWidthOrHeight = 0.5f;
+        scaler.matchWidthOrHeight = 0f;
         scaler.referencePixelsPerUnit = 100f;
 
         CanvasGroup canvasGroup = canvasObject.GetComponent<CanvasGroup>();
@@ -94,13 +113,9 @@ public static class OneTapGarageSplashInstaller
             staticFallback.transform,
             LoadSprite(BackgroundPath),
             Vector2.zero,
-            new Vector2(1920f, 1080f));
+            new Vector2(1080f, 1920f));
         Stretch(background.rectTransform);
-        background.preserveAspect = true;
-        AspectRatioFitter backgroundFitter =
-            background.gameObject.AddComponent<AspectRatioFitter>();
-        backgroundFitter.aspectMode = AspectRatioFitter.AspectMode.EnvelopeParent;
-        backgroundFitter.aspectRatio = 16f / 9f;
+        background.preserveAspect = false;
 
         GameObject safeArea = CreateRectObject("SafeArea", staticFallback.transform);
         Stretch(safeArea.GetComponent<RectTransform>());
@@ -112,39 +127,65 @@ public static class OneTapGarageSplashInstaller
             "AmbientGlow",
             fallbackLogo.transform,
             LoadSprite(TapPointPath),
-            new Vector2(310f, 95f),
-            new Vector2(260f, 260f));
+            new Vector2(214f, 132f),
+            new Vector2(300f, 300f));
         ambientGlow.color = new Color(0.32f, 0.82f, 0.62f, 0.08f);
         ambientGlow.preserveAspect = true;
         ambientGlow.raycastTarget = false;
+        CanvasGroup ambientGlowGroup =
+            ambientGlow.gameObject.AddComponent<CanvasGroup>();
+        ambientGlowGroup.alpha = 0f;
 
+        GameObject oneTapRevealMaskObject =
+            CreateRectObject("OneTapRevealMask", fallbackLogo.transform);
+        RectTransform oneTapRevealMask =
+            oneTapRevealMaskObject.GetComponent<RectTransform>();
+        oneTapRevealMask.anchoredPosition = new Vector2(0f, 92f);
+        oneTapRevealMask.sizeDelta = new Vector2(880f, 210f);
+        oneTapRevealMaskObject.AddComponent<RectMask2D>();
         Image oneTapLogo = CreateImage(
             "OneTapLogo",
-            fallbackLogo.transform,
+            oneTapRevealMask,
             LoadSprite(OneTapPath),
-            new Vector2(0f, 42f),
-            new Vector2(1240f, 270f));
+            Vector2.zero,
+            new Vector2(880f, 210f));
         oneTapLogo.preserveAspect = true;
         oneTapLogo.raycastTarget = false;
+        CanvasGroup oneTapLogoGroup =
+            oneTapLogo.gameObject.AddComponent<CanvasGroup>();
+        oneTapLogoGroup.alpha = 0f;
 
+        GameObject garageRevealMaskObject =
+            CreateRectObject("GarageRevealMask", fallbackLogo.transform);
+        RectTransform garageRevealMask =
+            garageRevealMaskObject.GetComponent<RectTransform>();
+        garageRevealMask.anchoredPosition = new Vector2(0f, -82f);
+        garageRevealMask.sizeDelta = new Vector2(560f, 104f);
+        garageRevealMaskObject.AddComponent<RectMask2D>();
         Image garageModule = CreateImage(
             "GarageModule",
-            fallbackLogo.transform,
+            garageRevealMask,
             LoadSprite(GaragePath),
-            new Vector2(0f, -158f),
-            new Vector2(690f, 112f));
+            Vector2.zero,
+            new Vector2(560f, 104f));
         garageModule.preserveAspect = true;
         garageModule.raycastTarget = false;
+        CanvasGroup garageModuleGroup =
+            garageModule.gameObject.AddComponent<CanvasGroup>();
+        garageModuleGroup.alpha = 0f;
 
         Image tapPoint = CreateImage(
             "TapPoint",
             fallbackLogo.transform,
             LoadSprite(TapPointPath),
-            new Vector2(310f, 98f),
-            new Vector2(82f, 82f));
+            new Vector2(214f, 134f),
+            new Vector2(88f, 88f));
         tapPoint.preserveAspect = true;
         tapPoint.raycastTarget = false;
-        fallbackLogo.SetActive(false);
+        CanvasGroup tapPointGroup =
+            tapPoint.gameObject.AddComponent<CanvasGroup>();
+        tapPointGroup.alpha = 0f;
+        fallbackLogo.SetActive(true);
 
         GameObject transitionMask =
             CreateRectObject("TransitionMask", canvasObject.transform);
@@ -160,10 +201,6 @@ public static class OneTapGarageSplashInstaller
         lightPass.color = Color.white;
         lightPass.raycastTarget = true;
         lightPass.enabled = false;
-        AspectRatioFitter lightPassFitter =
-            lightPassObject.AddComponent<AspectRatioFitter>();
-        lightPassFitter.aspectMode = AspectRatioFitter.AspectMode.EnvelopeParent;
-        lightPassFitter.aspectRatio = 16f / 9f;
 
         GameObject audioObject = new("AudioSource", typeof(AudioSource));
         audioObject.transform.SetParent(root.transform, false);
@@ -197,11 +234,23 @@ public static class OneTapGarageSplashInstaller
             canvasGroup,
             staticFallback,
             fallbackLogo,
-            safeArea.GetComponent<RectTransform>());
+            safeArea.GetComponent<RectTransform>(),
+            oneTapRevealMask,
+            garageRevealMask,
+            oneTapLogo.rectTransform,
+            garageModule.rectTransform,
+            tapPoint.rectTransform,
+            ambientGlow.rectTransform,
+            oneTapLogoGroup,
+            garageModuleGroup,
+            tapPointGroup,
+            ambientGlowGroup);
 
         Directory.CreateDirectory(Path.GetDirectoryName(ScenePath) ?? "Assets/Scenes");
         EditorSceneManager.SaveScene(scene, ScenePath);
         PutSplashFirstInBuildSettings();
+        EditorSceneManager.playModeStartScene =
+            AssetDatabase.LoadAssetAtPath<SceneAsset>(ScenePath);
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
         Debug.Log(
@@ -442,11 +491,20 @@ public static class OneTapGarageSplashInstaller
         CanvasGroup canvasGroup,
         GameObject staticFallback,
         GameObject fallbackLogo,
-        RectTransform safeArea)
+        RectTransform safeArea,
+        RectTransform oneTapRevealMask,
+        RectTransform garageRevealMask,
+        RectTransform oneTapLogo,
+        RectTransform garageModule,
+        RectTransform tapPoint,
+        RectTransform ambientGlow,
+        CanvasGroup oneTapLogoGroup,
+        CanvasGroup garageModuleGroup,
+        CanvasGroup tapPointGroup,
+        CanvasGroup ambientGlowGroup)
     {
         SerializedObject serialized = new(controller);
         serialized.FindProperty("splashDuration").floatValue = 2.1f;
-        serialized.FindProperty("mainMenuActivationTime").floatValue = 1.05f;
         serialized.FindProperty("mainMenuSceneName").stringValue = "MainMenu";
         serialized.FindProperty("videoPlayer").objectReferenceValue = videoPlayer;
         serialized.FindProperty("videoSurface").objectReferenceValue = videoSurface;
@@ -459,6 +517,22 @@ public static class OneTapGarageSplashInstaller
         serialized.FindProperty("staticFallback").objectReferenceValue = staticFallback;
         serialized.FindProperty("fallbackLogo").objectReferenceValue = fallbackLogo;
         serialized.FindProperty("safeAreaRoot").objectReferenceValue = safeArea;
+        serialized.FindProperty("oneTapRevealMask").objectReferenceValue =
+            oneTapRevealMask;
+        serialized.FindProperty("garageRevealMask").objectReferenceValue =
+            garageRevealMask;
+        serialized.FindProperty("oneTapLogo").objectReferenceValue = oneTapLogo;
+        serialized.FindProperty("garageModule").objectReferenceValue = garageModule;
+        serialized.FindProperty("tapPoint").objectReferenceValue = tapPoint;
+        serialized.FindProperty("ambientGlow").objectReferenceValue = ambientGlow;
+        serialized.FindProperty("oneTapLogoGroup").objectReferenceValue =
+            oneTapLogoGroup;
+        serialized.FindProperty("garageModuleGroup").objectReferenceValue =
+            garageModuleGroup;
+        serialized.FindProperty("tapPointGroup").objectReferenceValue =
+            tapPointGroup;
+        serialized.FindProperty("ambientGlowGroup").objectReferenceValue =
+            ambientGlowGroup;
         serialized.ApplyModifiedPropertiesWithoutUndo();
     }
 

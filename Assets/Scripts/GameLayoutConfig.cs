@@ -17,30 +17,30 @@ namespace CardMesh
     public sealed class GameLayoutConfig
     {
         [SerializeField] private Vector2 referenceResolution = new(1080f, 1920f);
-        [SerializeField, Range(0f, 1f)] private float matchWidthOrHeight = 0.5f;
-        [SerializeField, Min(0f)] private float reservedBottomSpace = 72f;
+        [SerializeField, Range(0f, 1f)] private float matchWidthOrHeight = 0f;
+        [SerializeField, Min(0f)] private float reservedBottomSpace = 494f;
         [SerializeField] private List<ColumnLayoutProfile> columnProfiles = new()
         {
             new ColumnLayoutProfile
             {
                 columnCount = 3,
-                cardSize = new Vector2(196f, 286f),
-                columnSpacing = 112f,
-                verticalOffset = 48f
+                cardSize = new Vector2(216f, 315f),
+                columnSpacing = 64f,
+                verticalOffset = 64f
             },
             new ColumnLayoutProfile
             {
                 columnCount = 4,
-                cardSize = new Vector2(186f, 272f),
-                columnSpacing = 76f,
-                verticalOffset = 44f
+                cardSize = new Vector2(196f, 286f),
+                columnSpacing = 32f,
+                verticalOffset = 56f
             },
             new ColumnLayoutProfile
             {
                 columnCount = 5,
-                cardSize = new Vector2(170f, 248f),
-                columnSpacing = 48f,
-                verticalOffset = 40f
+                cardSize = new Vector2(164f, 239f),
+                columnSpacing = 18f,
+                verticalOffset = 44f
             }
         };
 

@@ -97,7 +97,7 @@ public static class RateUsUiPolishInstaller
         subtitle.enableAutoSizing = true;
         subtitle.fontSizeMin = 15f;
         subtitle.fontSizeMax = 21f;
-        subtitle.enableWordWrapping = false;
+        subtitle.textWrappingMode = TextWrappingModes.NoWrap;
         subtitle.color = new Color(0.93f, 0.88f, 0.72f, 0.9f);
         subtitle.raycastTarget = false;
 

@@ -7,9 +7,11 @@ namespace CardMesh
     {
         private const string HintCountKey = "CardMesh.Boosts.Hints";
         private const string UndoCountKey = "CardMesh.Boosts.Undo";
+        private const string InventoryVersionKey = "CardMesh.Boosts.InventoryVersion";
+        private const int CurrentInventoryVersion = 1;
 
-        [SerializeField, Min(0)] private int startingHints;
-        [SerializeField, Min(0)] private int startingUndos;
+        [SerializeField, Min(0)] private int startingHints = 1;
+        [SerializeField, Min(0)] private int startingUndos = 1;
 
         public int HintCount { get; private set; }
         public int UndoCount { get; private set; }
@@ -104,8 +106,22 @@ namespace CardMesh
 
         private void Load()
         {
+            int savedVersion = PlayerPrefs.GetInt(InventoryVersionKey, 0);
             HintCount = Mathf.Max(0, PlayerPrefs.GetInt(HintCountKey, startingHints));
             UndoCount = Mathf.Max(0, PlayerPrefs.GetInt(UndoCountKey, startingUndos));
+
+            if (savedVersion < CurrentInventoryVersion)
+            {
+                // Profiles created before action counters were introduced stored zero as
+                // their initial value. Grant the intended starter action once, then keep
+                // all subsequent inventory changes fully persistent.
+                HintCount = Mathf.Max(1, HintCount);
+                UndoCount = Mathf.Max(1, UndoCount);
+                PlayerPrefs.SetInt(HintCountKey, HintCount);
+                PlayerPrefs.SetInt(UndoCountKey, UndoCount);
+                PlayerPrefs.SetInt(InventoryVersionKey, CurrentInventoryVersion);
+                PlayerPrefs.Save();
+            }
         }
 
         private void Save()

@@ -30,9 +30,9 @@ public static class ContactButtonPrefabInstaller
         ConfigureSpriteImport();
         Directory.CreateDirectory(PrefabDirectory);
 
-        GameObject buttonPrefab = RebuildButtonPrefab();
+        RebuildButtonPrefab();
         GameObject popupPrefab = RebuildContactPopupPrefab();
-        InstallSceneInstance(buttonPrefab, popupPrefab);
+        InstallSceneInstance(popupPrefab);
     }
 
     private static void ConfigureSpriteImport()
@@ -124,14 +124,13 @@ public static class ContactButtonPrefabInstaller
         return prefab;
     }
 
-    private static void InstallSceneInstance(GameObject buttonPrefab, GameObject popupPrefab)
+    private static void InstallSceneInstance(GameObject popupPrefab)
     {
         Scene scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
-        Transform parent = FindButtonParent();
         Canvas canvas = Object.FindFirstObjectByType<Canvas>(FindObjectsInactive.Include);
-        if (parent == null || canvas == null)
+        if (canvas == null)
         {
-            throw new UnityException($"Cannot install contact UI: button parent or Canvas not found in {ScenePath}.");
+            throw new UnityException($"Cannot install contact UI: Canvas not found in {ScenePath}.");
         }
 
         RemoveExisting(ButtonName);
@@ -149,42 +148,9 @@ public static class ContactButtonPrefabInstaller
         ConfigurePopupInstance(popup.GetComponent<RectTransform>());
         popup.SetActive(false);
 
-        GameObject instance = PrefabUtility.InstantiatePrefab(buttonPrefab, parent) as GameObject;
-        if (instance == null)
-        {
-            throw new UnityException($"Cannot instantiate {PrefabPath}.");
-        }
-
-        instance.name = ButtonName;
-        instance.layer = parent.gameObject.layer;
-        ConfigureRoot(instance.GetComponent<RectTransform>());
-
-        ContactSupportButton contact = instance.GetComponent<ContactSupportButton>();
-        SerializedObject contactSerialized = new(contact);
-        contactSerialized.FindProperty("contactPopup").objectReferenceValue = popup.GetComponent<ContactPopupController>();
-        contactSerialized.ApplyModifiedPropertiesWithoutUndo();
-
-        Button uiButton = instance.GetComponent<Button>();
-        if (uiButton.onClick.GetPersistentEventCount() == 0)
-        {
-            UnityEventTools.AddPersistentListener(uiButton.onClick, contact.OpenContactMail);
-        }
-
         EditorSceneManager.MarkSceneDirty(scene);
         EditorSceneManager.SaveScene(scene);
         AssetDatabase.SaveAssets();
-    }
-
-    private static Transform FindButtonParent()
-    {
-        GameObject playButton = GameObject.Find("PlayButton");
-        if (playButton != null)
-        {
-            return playButton.transform.parent;
-        }
-
-        GameObject canvas = GameObject.Find("Canvas");
-        return canvas != null ? canvas.transform : null;
     }
 
     private static void ConfigureRoot(RectTransform rect)
@@ -336,7 +302,7 @@ public static class ContactButtonPrefabInstaller
         text.fontSize = 25f;
         text.fontStyle = FontStyles.Bold;
         text.alignment = TextAlignmentOptions.TopLeft;
-        text.enableWordWrapping = true;
+        text.textWrappingMode = TextWrappingModes.Normal;
         text.raycastTarget = false;
         RuntimeCyrillicFontProvider.Apply(text, value);
         return text;
@@ -409,7 +375,7 @@ public static class ContactButtonPrefabInstaller
         text.fontSizeMax = 30f;
         text.fontSizeMin = 20f;
         text.alignment = TextAlignmentOptions.Center;
-        text.enableWordWrapping = false;
+        text.textWrappingMode = TextWrappingModes.NoWrap;
         text.raycastTarget = false;
         RuntimeCyrillicFontProvider.Apply(text, label);
     }

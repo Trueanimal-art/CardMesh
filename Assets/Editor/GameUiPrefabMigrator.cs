@@ -35,7 +35,7 @@ public static class GameUiPrefabMigrator
         EditorApplication.delayCall += RunIfRequested;
     }
 
-    [MenuItem("Tools/CardMesh/Migrate Main UI To Prefabs")]
+    [MenuItem("Tools/CardMesh/Legacy/Migrate Main UI To Prefabs")]
     public static void RunFromMenu()
     {
         RunMigration();
@@ -799,8 +799,8 @@ public static class GameUiPrefabMigrator
         EnsureEventSystem();
         CanvasScaler scaler = GetOrAdd<CanvasScaler>(canvas.gameObject);
         scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-        scaler.referenceResolution = new Vector2(1920f, 1080f);
-        scaler.matchWidthOrHeight = 0.5f;
+        scaler.referenceResolution = new Vector2(1080f, 1920f);
+        scaler.matchWidthOrHeight = 0f;
 
         RectTransform safeArea = EnsureRect(canvas.transform, "SafeAreaRoot");
         StretchToFill(safeArea);
@@ -881,16 +881,18 @@ public static class GameUiPrefabMigrator
         deckBadge.SetSiblingIndex(deckCounter.transform.GetSiblingIndex());
 
         RectTransform bottomHud = EnsureRect(safeArea, "BottomHUD");
-        SetAnchored(bottomHud, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 178f), new Vector2(0f, 40f));
+        SetAnchored(bottomHud, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 190f), new Vector2(0f, 264f));
         EnsureImage(bottomHud).color = new Color(1f, 1f, 1f, 0f);
-        ConfigureSceneBottomButton(ReplaceWithPrefabRect(bottomHud, "HintButton", $"{PrefabRoot}/HintButton.prefab"), "HintButton", "Подсказка", PremiumUISprites.HintBulbIcon, new Vector2(-440f, 6f), true, true);
-        ConfigureSceneBottomButton(ReplaceWithPrefabRect(bottomHud, "UndoButton", $"{PrefabRoot}/UndoButton.prefab"), "UndoButton", "Отмена", PremiumUISprites.UndoIcon, new Vector2(0f, 6f), true, true);
-        ConfigureSceneBottomButton(ReplaceWithPrefabRect(bottomHud, "BoosterDeckButton", $"{PrefabRoot}/BoosterButton.prefab"), "BoosterDeckButton", "+10 ходов", PremiumUISprites.BoosterRocketIcon, new Vector2(440f, 6f), true, true);
+        ConfigureSceneBottomButton(ReplaceWithPrefabRect(bottomHud, "HintButton", $"{PrefabRoot}/HintButton.prefab"), "HintButton", "Подсказка", PremiumUISprites.HintBulbIcon, new Vector2(-350f, 0f), true, true);
+        ConfigureSceneBottomButton(ReplaceWithPrefabRect(bottomHud, "UndoButton", $"{PrefabRoot}/UndoButton.prefab"), "UndoButton", "Отмена", PremiumUISprites.UndoIcon, new Vector2(0f, 0f), true, true);
+        ConfigureSceneBottomButton(ReplaceWithPrefabRect(bottomHud, "BoosterDeckButton", $"{PrefabRoot}/BoosterButton.prefab"), "BoosterDeckButton", "+10 ходов", PremiumUISprites.BoosterRocketIcon, new Vector2(350f, 0f), true, true);
 
         RectTransform adBanner = FindChild<RectTransform>(safeArea, "AdBannerPlaceholder");
         if (adBanner != null)
         {
-            adBanner.gameObject.SetActive(false);
+            SetAnchored(adBanner, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 240f), Vector2.zero);
+            adBanner.gameObject.SetActive(true);
+            EnsureImage(adBanner).color = new Color(0f, 0f, 0f, 0f);
         }
 
         GameObject pausePopup = EnsurePauseSettingsPopup(safeArea);
@@ -1441,7 +1443,7 @@ public static class GameUiPrefabMigrator
         count.fontStyle = FontStyles.Bold;
         count.fontWeight = FontWeight.Bold;
         GetOrAdd<HudValuePulse>(count.gameObject);
-        count.enableWordWrapping = false;
+        count.textWrappingMode = TextWrappingModes.NoWrap;
         count.overflowMode = TextOverflowModes.Overflow;
         count.margin = Vector4.zero;
         count.extraPadding = false;
@@ -1457,8 +1459,8 @@ public static class GameUiPrefabMigrator
         status.fontSize = 19f;
         status.fontSizeMin = 15f;
         status.fontSizeMax = 19f;
-        status.enableWordWrapping = false;
-        status.overflowMode = TextOverflowModes.Ellipsis;
+        status.textWrappingMode = TextWrappingModes.NoWrap;
+        status.overflowMode = TextOverflowModes.Truncate;
         status.margin = Vector4.zero;
         SetAnchored(status.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(154f, 46f), new Vector2(153f, 0f));
 
@@ -1839,8 +1841,8 @@ public static class GameUiPrefabMigrator
         text.enableAutoSizing = true;
         text.fontSizeMax = maxSize;
         text.fontSizeMin = minSize;
-        text.enableWordWrapping = false;
-        text.overflowMode = TextOverflowModes.Ellipsis;
+        text.textWrappingMode = TextWrappingModes.NoWrap;
+        text.overflowMode = TextOverflowModes.Truncate;
         text.alignment = alignment;
         text.color = color;
         text.fontStyle = FontStyles.Bold;

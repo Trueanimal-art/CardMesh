@@ -1,3 +1,4 @@
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -191,7 +192,8 @@ namespace CardMesh
             panelRoot.anchorMax = new Vector2(1f, 0f);
             panelRoot.pivot = new Vector2(1f, 0f);
             panelRoot.sizeDelta = ExpandedSize;
-            panelRoot.anchoredPosition = new Vector2(-26f, 132f);
+            // Keep the collapsed editor-only header clear of the authored mobile navigation.
+            panelRoot.anchoredPosition = new Vector2(-26f, 304f);
 
             Image panelImage = panelRoot.gameObject.AddComponent<Image>();
             panelImage.color = PanelColor;
@@ -261,7 +263,7 @@ namespace CardMesh
             statusLabel = CreateText(bodyRoot, "Status", "Готово", 18f, FontStyles.Normal);
             statusLabel.alignment = TextAlignmentOptions.TopLeft;
             statusLabel.color = new Color(TextColor.r, TextColor.g, TextColor.b, 0.78f);
-            statusLabel.enableWordWrapping = true;
+            statusLabel.textWrappingMode = TextWrappingModes.Normal;
             LayoutElement statusLayout = statusLabel.gameObject.AddComponent<LayoutElement>();
             statusLayout.preferredHeight = 54f;
 
@@ -301,7 +303,7 @@ namespace CardMesh
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             scaler.referenceResolution = new Vector2(1080f, 1920f);
             scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
-            scaler.matchWidthOrHeight = 0.5f;
+            scaler.matchWidthOrHeight = 0f;
 
             if (GetComponent<GraphicRaycaster>() == null)
             {
@@ -1255,3 +1257,4 @@ namespace CardMesh
         }
     }
 }
+#endif
