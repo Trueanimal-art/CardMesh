@@ -1,0 +1,19 @@
+Generate an image. ONE square 1024x1024 PNG with a fully TRANSPARENT background (real alpha, no white, no green, no magenta, no checkerboard). It is a sprite atlas for my mobile card game: a 4x4 grid of 16 separate object icons. Match the attached reference exactly: the same glossy soft-3D cartoon icon style, bright saturated colours, gentle studio light, soft shading inside the objects, no outlines.
+Strict layout rules: each icon sits centred in its own invisible 256x256 cell and fills about 70% of it; nothing may touch or cross a cell border (keep at least 30 px of empty space on every side of every object); every object is complete and whole, nothing cut off; no grid lines, no frames, no cards, no backgrounds, no ground or cast shadows, no text, no letters, no numbers.
+Cells left to right, top to bottom:
+1. one big fluffy white cartoon cloud with soft blue shading
+2. a sheet of drawing paper with a pencil sketch of a little house, a yellow pencil lying across it
+3. a festive greeting card with a red heart and gold stars, half pulled out of a white envelope
+4. a white phone charger plug with a coiled USB cable and a small green lightning-bolt symbol
+5. four interlocking jigsaw puzzle pieces in red, blue, yellow and green
+6. a small round island of farmland: rows of green crops and a strip of golden wheat
+7. a small round lake diorama: blue water, reeds and a few round stones on the shore
+8. a red and white striped knitted scarf, loosely folded
+9. a round candy in shiny pink wrapper with twisted ends
+10. a takeaway coffee cup with a brown lid and cardboard sleeve, thin wisps of steam
+11. a pair of knitted blue mittens with a white snowflake pattern
+12. a cosy blue-and-white wool winter scarf with tassels, wrapped in a loop
+13. a blue ballpoint pen with a silver clip, lying diagonally
+14. a yellow highlighter marker with its cap off, a short yellow stroke under it
+15. a thick closed hardcover book with a deep red cover and gold decorations, no readable text
+16. a single curled sheet of paper with grey lines of text and a slightly folded corner

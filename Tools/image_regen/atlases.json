@@ -1,0 +1,60 @@
+{
+  "grid": [4, 4],
+  "note": "Row-major cells. Generated 2026-11 in Alina's ChatGPT (project Boris, chat CardMesh) to replace cut / chroma-stained / duplicate / off-style image cards.",
+  "atlases": {
+    "A": [
+      ["nature_sky", "a round puffy vignette of bright blue sky with two fluffy white clouds and a small warm sun peeking out, soft rounded silhouette, no hard edges"],
+      ["music_song", "two shiny golden eighth music notes joined together, floating above a small rolled sheet-music scroll"],
+      ["cinema_actor", "a cheerful cartoon actor, upper body, wearing a black top hat and red bow tie, holding a small theatre mask"],
+      ["business_team", "three friendly cartoon office workers standing shoulder to shoulder, upper bodies, all three fully visible"],
+      ["holidays_music", "a shiny golden festive trumpet with a red ribbon bow and a few colourful music notes around it"],
+      ["shoes_lace", "a single white shoelace tied in a neat bow, both loops and both plastic-tipped ends fully visible"],
+      ["garden_hose", "a coiled green garden hose with a yellow spray-gun nozzle"],
+      ["work_shift", "a yellow construction hard hat next to a small red alarm clock"],
+      ["phone_contact", "a smartphone whose screen shows a round person avatar and a green call button"],
+      ["body_back", "a cartoon person seen from behind, head, shoulders and back, wearing a plain t-shirt"],
+      ["insects_ant", "a cute cartoon red-brown ant, all six legs and both antennae visible"],
+      ["insects_beetle", "a glossy emerald-green cartoon beetle seen from above, all legs visible"],
+      ["insects_ladybug", "a glossy red ladybug with black spots seen from above, legs and antennae visible"],
+      ["winter_sleigh", "a wooden children's sled with curved red runners"],
+      ["school_desk", "a small wooden classroom school desk with an attached chair"],
+      ["camping_map", "a folded paper trail map with a red dotted route, a red X mark and a small compass rose"]
+    ],
+    "B": [
+      ["nature_cloud", "one big fluffy white cartoon cloud with soft blue shading"],
+      ["art_sketch", "a sheet of drawing paper with a pencil sketch of a little house, a yellow pencil lying across it"],
+      ["holidays_card", "a festive greeting card with a red heart and gold stars, half pulled out of a white envelope"],
+      ["phone_charge", "a white phone charger plug with a coiled USB cable and a small green lightning-bolt symbol"],
+      ["toys_puzzle", "four interlocking jigsaw puzzle pieces in red, blue, yellow and green"],
+      ["farm_field", "a small round island of farmland: rows of green crops and a strip of golden wheat"],
+      ["summer_lake", "a small round lake diorama: blue water, reeds and a few round stones on the shore"],
+      ["clothes_scarf", "a red and white striped knitted scarf, loosely folded"],
+      ["dessert_candy", "a round candy in shiny pink wrapper with twisted ends"],
+      ["drinks_coffee", "a takeaway coffee cup with a brown lid and cardboard sleeve, thin wisps of steam"],
+      ["winter_mitten", "a pair of knitted blue mittens with a white snowflake pattern"],
+      ["winter_scarf", "a cosy blue-and-white wool winter scarf with tassels, wrapped in a loop"],
+      ["office_pen", "a blue ballpoint pen with a silver clip, lying diagonally"],
+      ["school_marker", "a yellow highlighter marker with its cap off, a short yellow stroke under it"],
+      ["books_novel", "a thick closed hardcover book with a deep red cover and gold decorations, no readable text"],
+      ["books_page", "a single curled sheet of paper with grey lines of text and a slightly folded corner"]
+    ],
+    "C": [
+      ["school_notebook", "a spiral school notebook with a light-blue squared cover"],
+      ["photo_lens", "a black camera lens seen at three-quarter angle, glass front with colourful reflections"],
+      ["garden_apple", "a small round apple tree with green leaves and red apples, short brown trunk"],
+      ["holidays_table", "a small festive table with a white tablecloth, a birthday cake with candles and two plates"],
+      ["sea_sail", "a single big white sail billowing on a wooden mast, close-up, no boat hull"],
+      ["space_star", "a glowing yellow-white star with sparkles inside a small round piece of deep-blue night sky"],
+      ["weather_sun", "a weather icon: a bright yellow sun half hidden behind a white cloud"],
+      ["winter_snow", "a soft pile of white snow with three blue snowflakes above it"],
+      ["cup_coffee", "a small white espresso cup of black coffee on a saucer with two coffee beans"],
+      ["cup_cup", "an elegant white porcelain teacup with a thin gold rim and a blue floral pattern"],
+      ["cup_drink", "a clear glass tumbler half full of water with a lemon slice"],
+      ["cup_handle", "a large teal ceramic mug seen from the side, its curved handle in front and clearly emphasised"],
+      ["cup_mug", "a big orange ceramic mug with a round handle, hot chocolate inside"],
+      ["cup_saucer", "a single empty white porcelain saucer with a gold rim, seen at an angle"],
+      ["cup_tea", "a glass cup of amber tea with a lemon slice in a metal glass holder"],
+      ["cup_thermos", "a steel thermos flask with a red cup lid beside it"]
+    ]
+  }
+}

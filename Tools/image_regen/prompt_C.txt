@@ -1,0 +1,19 @@
+Generate an image. ONE square 1024x1024 PNG with a fully TRANSPARENT background (real alpha, no white, no green, no magenta, no checkerboard). It is a sprite atlas for my mobile card game: a 4x4 grid of 16 separate object icons. Match the attached reference exactly: the same glossy soft-3D cartoon icon style, bright saturated colours, gentle studio light, soft shading inside the objects, no outlines.
+Strict layout rules: each icon sits centred in its own invisible 256x256 cell and fills about 70% of it; nothing may touch or cross a cell border (keep at least 30 px of empty space on every side of every object); every object is complete and whole, nothing cut off; no grid lines, no frames, no cards, no backgrounds, no ground or cast shadows, no text, no letters, no numbers.
+Cells left to right, top to bottom:
+1. a spiral school notebook with a light-blue squared cover
+2. a black camera lens seen at three-quarter angle, glass front with colourful reflections
+3. a small round apple tree with green leaves and red apples, short brown trunk
+4. a small festive table with a white tablecloth, a birthday cake with candles and two plates
+5. a single big white sail billowing on a wooden mast, close-up, no boat hull
+6. a glowing yellow-white star with sparkles inside a small round piece of deep-blue night sky
+7. a weather icon: a bright yellow sun half hidden behind a white cloud
+8. a soft pile of white snow with three blue snowflakes above it
+9. a small white espresso cup of black coffee on a saucer with two coffee beans
+10. an elegant white porcelain teacup with a thin gold rim and a blue floral pattern
+11. a clear glass tumbler half full of water with a lemon slice
+12. a large teal ceramic mug seen from the side, its curved handle in front and clearly emphasised
+13. a big orange ceramic mug with a round handle, hot chocolate inside
+14. a single empty white porcelain saucer with a gold rim, seen at an angle
+15. a glass cup of amber tea with a lemon slice in a metal glass holder
+16. a steel thermos flask with a red cup lid beside it

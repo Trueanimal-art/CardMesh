@@ -1,0 +1,19 @@
+Generate an image. ONE square 1024x1024 PNG with a fully TRANSPARENT background (real alpha, no white, no green, no magenta, no checkerboard). It is a sprite atlas for my mobile card game: a 4x4 grid of 16 separate object icons. Match the attached reference exactly: the same glossy soft-3D cartoon icon style, bright saturated colours, gentle studio light, soft shading inside the objects, no outlines.
+Strict layout rules: each icon sits centred in its own invisible 256x256 cell and fills about 70% of it; nothing may touch or cross a cell border (keep at least 30 px of empty space on every side of every object); every object is complete and whole, nothing cut off; no grid lines, no frames, no cards, no backgrounds, no ground or cast shadows, no text, no letters, no numbers.
+Cells left to right, top to bottom:
+1. a round puffy vignette of bright blue sky with two fluffy white clouds and a small warm sun peeking out, soft rounded silhouette, no hard edges
+2. two shiny golden eighth music notes joined together, floating above a small rolled sheet-music scroll
+3. a cheerful cartoon actor, upper body, wearing a black top hat and red bow tie, holding a small theatre mask
+4. three friendly cartoon office workers standing shoulder to shoulder, upper bodies, all three fully visible
+5. a shiny golden festive trumpet with a red ribbon bow and a few colourful music notes around it
+6. a single white shoelace tied in a neat bow, both loops and both plastic-tipped ends fully visible
+7. a coiled green garden hose with a yellow spray-gun nozzle
+8. a yellow construction hard hat next to a small red alarm clock
+9. a smartphone whose screen shows a round person avatar and a green call button
+10. a cartoon person seen from behind, head, shoulders and back, wearing a plain t-shirt
+11. a cute cartoon red-brown ant, all six legs and both antennae visible
+12. a glossy emerald-green cartoon beetle seen from above, all legs visible
+13. a glossy red ladybug with black spots seen from above, legs and antennae visible
+14. a wooden children's sled with curved red runners
+15. a small wooden classroom school desk with an attached chair
+16. a folded paper trail map with a red dotted route, a red X mark and a small compass rose
