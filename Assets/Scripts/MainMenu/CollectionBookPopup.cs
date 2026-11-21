@@ -117,6 +117,7 @@ namespace CardMesh
             MainMenuNavigationVisibility.SetBottomNavigationVisible(this, true);
             BindSceneReferences();
             WireButtons();
+            ApplyReadableLayout();
             Refresh();
             if (premiumMotion != null)
             {
@@ -551,14 +552,242 @@ namespace CardMesh
                 RuntimeCyrillicFontProvider.Apply(text, formatted);
             }
 
-            text.enableAutoSizing = true;
-            text.fontSizeMin = 18f;
-            text.fontSizeMax = 23f;
+            // Two short lines ("+1" / "Подсказка"); the longest word is ~186
+            // units at 32, inside the 204-unit label rect on a 236-unit card.
+            ConfigureReadableText(text, RewardLabelFontSize, TextAlignmentOptions.Center);
             text.fontStyle = FontStyles.Bold;
-            text.alignment = TextAlignmentOptions.Center;
-            text.textWrappingMode = TextWrappingModes.Normal;
             text.lineSpacing = -8f;
         }
+
+        // Legible runtime layout on the authored 1020x1760 panel (CanvasScaler
+        // reference 1080x1920). The scene still carries 14-25 unit fine print
+        // from the editor-only authoring pass, so player builds re-apply this.
+        // Positions are centre distances from the panel top; panel sprites are
+        // sliced with transparent bands, so rect heights below are chosen to put
+        // the gold border lines where the comments say.
+        private const float TitleFontSize = 54f;
+        private const float BodyFontSize = 32f;
+        private const float SectionFontSize = 36f;
+        private const float ProgressValueFontSize = 52f;
+        private const float LevelTitleFontSize = 38f;
+        private const float RewardLabelFontSize = 32f;
+        private const float RewardPointsFontSize = 32f;
+        private const float RewardCardWidth = 236f;
+        private const float RewardCardHeight = 228f;
+        private const float RewardColumnSpacing = 275f;
+        private const float RewardRowSpacing = 248f;
+        private const float BlockTextWidth = 724f;
+
+        private void ApplyReadableLayout()
+        {
+            if (!Application.isPlaying || panel == null)
+            {
+                return;
+            }
+
+            // Header children are anchored to the Header top (34 below the panel
+            // top). Title centre 330, subtitle centre 404 (two lines, 366-441).
+            if (titleText != null)
+            {
+                ConfigureReadableText(titleText, TitleFontSize, TextAlignmentOptions.Center);
+                PlaceTopAnchored(titleText.rectTransform, -296f, new Vector2(826f, 66f));
+            }
+
+            if (subtitleText != null)
+            {
+                subtitleText.text = "Собирай категории, пополняй книгу\nи получай ценные награды!";
+                ConfigureReadableText(subtitleText, BodyFontSize, TextAlignmentOptions.Center);
+                subtitleText.lineSpacing = 0f;
+                PlaceTopAnchored(subtitleText.rectTransform, -370f, new Vector2(826f, 80f));
+            }
+
+            // Progress plate: gold lines at 461 and 663 from the panel top.
+            RectTransform progress = FindRect("Panel/ProgressBlock");
+            PlaceTopAnchored(progress, -564f, new Vector2(760f, 267f));
+            LayoutBlockText(progress, "ProgressTitle", SectionFontSize, 70f, 42f);
+            LayoutBlockText(progress, "ProgressValue", ProgressValueFontSize, 16f, 58f);
+            PlaceCenterAnchored(progress != null ? progress.Find("ProgressTrack") as RectTransform : null, 0f, -27f, new Vector2(540f, 16f));
+            LayoutBlockText(progress, "NextReward", BodyFontSize, -64f, 38f);
+
+            // Reward tiles: 3 + 3 grid, every row centred as a group.
+            PlaceTopAnchored(rewardCardsRoot, -925f, new Vector2(880f, RewardRowSpacing + RewardCardHeight));
+            LayoutRewardCards();
+
+            // "How to earn points": gold lines at 1185 and 1413.
+            if (scoreRowsRoot != null)
+            {
+                // Two compact lines instead of four: the window is not tall enough for both
+                // lower plates otherwise (the level plate ran under the frame's bottom ornament).
+                PlaceTopAnchored(scoreRowsRoot, -1252f, new Vector2(760f, 236f));
+                LayoutBlockText(scoreRowsRoot, "Title", SectionFontSize, 50f, 42f);
+                TMP_Text rows = LayoutBlockText(scoreRowsRoot, "Rows", BodyFontSize, -30f, 84f);
+                if (rows != null)
+                {
+                    rows.text = "Категория +1  ·  С картинками +2\nБез подсказок +1  ·  Без отмены +1";
+                    rows.lineSpacing = 0f;
+                }
+            }
+
+            // Collection level: gold lines at 1435 and 1637 (frame inner edge ~1670).
+            RectTransform level = FindRect("Panel/LevelBlock");
+            PlaceTopAnchored(level, -1500f, new Vector2(760f, 244f));
+            LayoutBlockText(level, "Title", SectionFontSize, 52f, 42f);
+            LayoutBlockText(level, "LevelTitle", LevelTitleFontSize, 4f, 46f);
+            LayoutBlockText(level, "LevelProgress", BodyFontSize, -44f, 38f);
+            // "До следующего уровня: N очков" repeated the progress line and did not fit.
+            Transform remaining = level != null ? level.Find("LevelRemaining") : null;
+            if (remaining != null)
+            {
+                remaining.gameObject.SetActive(false);
+            }
+        }
+
+        private void LayoutRewardCards()
+        {
+            if (rewardCardsRoot == null)
+            {
+                return;
+            }
+
+            int count = 0;
+            for (int childIndex = 0; childIndex < rewardCardsRoot.childCount; childIndex++)
+            {
+                if (rewardCardsRoot.GetChild(childIndex).name.StartsWith("RewardStage_"))
+                {
+                    count++;
+                }
+            }
+
+            int rows = Mathf.Max(1, Mathf.CeilToInt(count / 3f));
+            int index = 0;
+            for (int childIndex = 0; childIndex < rewardCardsRoot.childCount; childIndex++)
+            {
+                RectTransform card = rewardCardsRoot.GetChild(childIndex) as RectTransform;
+                if (card == null || !card.name.StartsWith("RewardStage_"))
+                {
+                    continue;
+                }
+
+                int row = index / 3;
+                int column = index % 3;
+                int columnsInRow = Mathf.Min(3, count - row * 3);
+                float x = (column - (columnsInRow - 1) * 0.5f) * RewardColumnSpacing;
+                float y = ((rows - 1) * 0.5f - row) * RewardRowSpacing;
+                PlaceCenterAnchored(card, x, y, new Vector2(RewardCardWidth, RewardCardHeight));
+
+                // Card gold lines sit at +108 / -106; content stack 71 / 17 / -54.
+                PlaceCenterAnchored(card.Find("ActiveGlow") as RectTransform, 0f, 0f, new Vector2(RewardCardWidth + 6f, RewardCardHeight + 6f));
+                LayoutBlockText(card, "Points", RewardPointsFontSize, 74f, 38f, 204f);
+                PlaceCenterAnchored(card.Find("RewardIcon") as RectTransform, 0f, 24f, new Vector2(56f, 56f));
+                RectTransform label = card.Find("Reward") as RectTransform;
+                PlaceCenterAnchored(label, 0f, -38f, new Vector2(204f, 70f));
+                TMP_Text labelText = label != null ? label.GetComponent<TMP_Text>() : null;
+                if (labelText != null)
+                {
+                    labelText.fontSize = 30f;
+                    labelText.fontSizeMin = 30f;
+                    labelText.fontSizeMax = 30f;
+                    labelText.lineSpacing = -12f;
+                }
+                index++;
+            }
+        }
+
+        private TMP_Text LayoutBlockText(RectTransform block, string childName, float fontSize, float y, float height, float width = BlockTextWidth)
+        {
+            if (block == null)
+            {
+                return null;
+            }
+
+            TMP_Text text = block.Find(childName)?.GetComponent<TMP_Text>();
+            if (text == null)
+            {
+                return null;
+            }
+
+            ConfigureReadableText(text, fontSize, TextAlignmentOptions.Center);
+            PlaceCenterAnchored(text.rectTransform, 0f, y, new Vector2(width, height));
+            return text;
+        }
+
+        private static void ConfigureReadableText(TMP_Text text, float size, TextAlignmentOptions alignment)
+        {
+            if (text == null)
+            {
+                return;
+            }
+
+            text.enableAutoSizing = false;
+            text.fontSize = size;
+            text.fontSizeMin = size;
+            text.fontSizeMax = size;
+            text.alignment = alignment;
+            text.textWrappingMode = TextWrappingModes.NoWrap;
+            text.overflowMode = TextOverflowModes.Overflow;
+            text.margin = Vector4.zero;
+        }
+
+        private static void PlaceTopAnchored(RectTransform rect, float centerY, Vector2 size)
+        {
+            if (rect == null)
+            {
+                return;
+            }
+
+            rect.anchorMin = new Vector2(0.5f, 1f);
+            rect.anchorMax = new Vector2(0.5f, 1f);
+            rect.pivot = new Vector2(0.5f, 0.5f);
+            rect.sizeDelta = size;
+            rect.anchoredPosition = new Vector2(0f, centerY);
+        }
+
+        private static void PlaceCenterAnchored(RectTransform rect, float x, float y, Vector2 size)
+        {
+            if (rect == null)
+            {
+                return;
+            }
+
+            rect.anchorMin = new Vector2(0.5f, 0.5f);
+            rect.anchorMax = new Vector2(0.5f, 0.5f);
+            rect.pivot = new Vector2(0.5f, 0.5f);
+            rect.sizeDelta = size;
+            rect.anchoredPosition = new Vector2(x, y);
+        }
+        private static void SetActiveIfExists(Transform parent, string childName, bool active)
+        {
+            if (parent == null)
+            {
+                return;
+            }
+            Transform child = parent.Find(childName);
+            if (child != null)
+            {
+                child.gameObject.SetActive(active);
+            }
+        }
+
+        private static void SetInactiveRecursive(Transform root, params string[] names)
+        {
+            if (root == null || names == null || names.Length == 0)
+            {
+                return;
+            }
+
+            foreach (Transform child in root.GetComponentsInChildren<Transform>(true))
+            {
+                foreach (string name in names)
+                {
+                    if (child.name == name)
+                    {
+                        child.gameObject.SetActive(false);
+                        break;
+                    }
+                }
+            }
+        }
+
 
 #if UNITY_EDITOR
         private void EnsureOpenBookButtonIsNonInteractive()
@@ -1835,38 +2064,7 @@ namespace CardMesh
             }
         }
 
-        private static void SetActiveIfExists(Transform parent, string childName, bool active)
-        {
-            if (parent == null)
-            {
-                return;
-            }
-            Transform child = parent.Find(childName);
-            if (child != null)
-            {
-                child.gameObject.SetActive(active);
-            }
-        }
 
-        private static void SetInactiveRecursive(Transform root, params string[] names)
-        {
-            if (root == null || names == null || names.Length == 0)
-            {
-                return;
-            }
-
-            foreach (Transform child in root.GetComponentsInChildren<Transform>(true))
-            {
-                foreach (string name in names)
-                {
-                    if (child.name == name)
-                    {
-                        child.gameObject.SetActive(false);
-                        break;
-                    }
-                }
-            }
-        }
 
         private static Sprite GetCollectionRewardIcon(int index)
         {

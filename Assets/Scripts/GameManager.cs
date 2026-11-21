@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace CardMesh
 {
-    public sealed class GameManager : MonoBehaviour
+    public sealed partial class GameManager : MonoBehaviour
     {
         private const float LooseGoalDropPadding = 84f;
         private const float LooseColumnDropPadding = 76f;
@@ -134,6 +134,11 @@ namespace CardMesh
         private readonly Dictionary<string, CardData> cardsById = new();
         private readonly Dictionary<string, CardData> goalCardsByAssociation = new();
         private readonly HashSet<string> completedAssociations = new();
+        // Categories already credited to the Collection Book this level (undo must not double-credit).
+        private readonly HashSet<string> collectionCreditedAssociations = new();
+        private bool levelUsedHint;
+        private bool levelUsedUndo;
+        private const string StoredExtraMovesKey = "CardMesh.Boosts.ExtraMoves";
         private readonly List<CardView> spawnedCards = new();
         private readonly List<CardView> draggedStack = new();
         private readonly Dictionary<CardView, Vector3> draggedStackOffsets = new();
@@ -221,6 +226,8 @@ namespace CardMesh
 
             if (HasPresentationBindings && levelDefinition != null)
             {
+                // First deal of the scene may continue the board saved last time.
+                resumeSessionOnNextRestart = true;
                 RestartLevel();
             }
         }
@@ -317,6 +324,11 @@ namespace CardMesh
             {
                 uiManager?.ShowStatus("Недостаточно подсказок", new Color(1f, 0.82f, 0.52f, 1f));
                 return;
+            }
+
+            if (consumeCharge)
+            {
+                levelUsedHint = true;
             }
 
             Debug.Log(consumeCharge ? "Hint: started." : "Hint: started by dev tools.");
@@ -418,6 +430,7 @@ namespace CardMesh
 
             if (consumeCharge)
             {
+                levelUsedUndo = true;
                 uiManager?.UpdateUndoCount(boostInventory.UndoCount);
             }
 
@@ -677,6 +690,7 @@ namespace CardMesh
             if (pauseStatus)
             {
                 CancelActivePointerInteraction();
+                SaveSessionNow();
             }
         }
 
@@ -961,6 +975,11 @@ namespace CardMesh
             }
 
             remainingMoves = generatedLevelData.ReferenceMoves;
+            collectionCreditedAssociations.Clear();
+            levelUsedHint = false;
+            levelUsedUndo = false;
+            int storedExtraMoves = ConsumeStoredExtraMoves();
+            remainingMoves += storedExtraMoves;
             ApplyLayout();
             if (!BuildLevelData())
             {
@@ -983,11 +1002,40 @@ namespace CardMesh
             }
 
             adsManager?.ResetRestartCounterForLevel(currentLevelNumber);
+            TryResumeSavedSession(currentLevelNumber, storedExtraMoves);
+            if (storedExtraMoves > 0)
+            {
+                uiManager.ShowMovesBonusText(storedExtraMoves);
+            }
 
             ResolveBoardState(false);
             LogGeneratedLevelDiagnostics(currentLevelNumber);
             Debug.Log($"GameManager: Started level {currentLevelNumber} with seed {generatedLevelData.GenerationSeed}.");
             platformService?.TrackEvent("level_restart");
+        }
+
+        // Daily reward "+N moves" is stored in PlayerPrefs and spent on the next level start.
+        private static int ConsumeStoredExtraMoves()
+        {
+            int stored = Mathf.Max(0, PlayerPrefs.GetInt(StoredExtraMovesKey, 0));
+            if (stored > 0)
+            {
+                PlayerPrefs.SetInt(StoredExtraMovesKey, 0);
+                PlayerPrefs.Save();
+            }
+
+            return stored;
+        }
+
+        private void CreditCollectionBook(CardData goalData)
+        {
+            if (goalData == null || !collectionCreditedAssociations.Add(goalData.AssociationId))
+            {
+                return;
+            }
+
+            CollectionBookManager collectionBook = CollectionBookManager.GetOrCreate(this);
+            collectionBook?.AddCategoryCompletion(goalData.IsImageGoal, levelUsedHint, levelUsedUndo);
         }
 
         private string ResolveDevTargetLayoutId(bool useDevColumnsOverride, int levelNumber)
@@ -2617,6 +2665,7 @@ namespace CardMesh
                     bool wasNewCompletion = completedAssociations.Add(goalCardView.Data.AssociationId);
                     if (wasNewCompletion)
                     {
+                        CreditCollectionBook(goalCardView.Data);
                         goalSlot.PlayCompleteFeedback();
                         global::MusicPlayer.Instance?.PlayCardComplete();
                         uiManager.PlayGoalCompletedFeedback(goalSlot.transform as RectTransform, 0);
@@ -2967,6 +3016,7 @@ namespace CardMesh
 
             // History is written only after a successful move/draw, so failed drag attempts never consume undo.
             moveHistory.Push(snapshot);
+            MarkSessionDirty();
         }
 
         private bool RestoreBoardSnapshot(BoardSnapshot snapshot)

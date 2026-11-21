@@ -189,17 +189,22 @@ namespace CardMesh
                 }
             }
 
-            for (int index = 0; index < cardRects.Count; index++)
+            // Overlapping stagger: the whole grid is visible ~0.4s after opening
+            // (the old one-card-at-a-time reveal took ~1s and was easy to
+            // capture half-done, which read as a left-aligned two-tile row).
+            const float duration = 0.16f;
+            const float stagger = 0.045f;
+            float total = duration + stagger * Mathf.Max(0, cardRects.Count - 1);
+            float elapsed = 0f;
+            while (elapsed < total)
             {
-                RectTransform card = cardRects[index];
-                CanvasGroup group = cardGroups[index];
-                const float duration = 0.13f;
-                float elapsed = 0f;
-                while (elapsed < duration)
+                elapsed += Time.unscaledDeltaTime;
+                for (int index = 0; index < cardRects.Count; index++)
                 {
-                    elapsed += Time.unscaledDeltaTime;
-                    float t = Mathf.Clamp01(elapsed / duration);
+                    float t = Mathf.Clamp01((elapsed - index * stagger) / duration);
                     float eased = 1f - Mathf.Pow(1f - t, 3f);
+                    CanvasGroup group = cardGroups[index];
+                    RectTransform card = cardRects[index];
                     if (group != null)
                     {
                         group.alpha = eased;
@@ -209,23 +214,12 @@ namespace CardMesh
                     {
                         card.localScale = Vector3.LerpUnclamped(Vector3.one * 0.975f, Vector3.one, eased);
                     }
-
-                    yield return null;
                 }
 
-                if (group != null)
-                {
-                    group.alpha = 1f;
-                }
-
-                if (card != null)
-                {
-                    card.localScale = Vector3.one;
-                }
-
-                yield return new WaitForSecondsRealtime(0.035f);
+                yield return null;
             }
 
+            ResetCards();
             revealRoutine = null;
         }
 

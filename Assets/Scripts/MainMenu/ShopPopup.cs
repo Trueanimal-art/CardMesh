@@ -8,7 +8,9 @@ namespace CardMesh
 {
     /// <summary>
     /// Runtime behaviour for the scene-authored shop popup.
-    /// All visual objects and RectTransform values live in MainMenu.unity.
+    /// Objects live in MainMenu.unity; ApplyUiPolish owns the runtime layout
+    /// (header, scrollable product list, card internals) in reference units of
+    /// the 1080x1920 canvas.
     /// </summary>
     public sealed class ShopPopup : MonoBehaviour
     {
@@ -26,6 +28,21 @@ namespace CardMesh
         private static readonly Color SoftGold = new(1f, 0.87f, 0.5f, 1f);
         private static readonly Color PremiumFill = new(0.018f, 0.115f, 0.072f, 0.96f);
         private static readonly Color ResourceFill = new(0.024f, 0.14f, 0.087f, 0.94f);
+
+        // Layout guides in reference units (panel is 1020x1760, centre origin).
+        private const string ScrollViewportName = "ShopScrollViewport";
+        private const float ViewportTop = 446f;
+        private const float ViewportBottom = -752f;
+        private const float ContentWidth = 840f;
+        private const float SectionLabelHeight = 48f;
+        private const float BundleCardWidth = 820f;
+        private const float HeroBundleHeight = 470f;
+        private const float BundleHeight = 440f;
+        private const float BundleGap = 24f;
+        private const float ResourceCardWidth = 404f;
+        private const float ResourceCardHeight = 330f;
+        private const float ResourceGap = 16f;
+        private const float ButtonLabelSize = 36f;
 
         public static ShopPopup SceneInstance =>
             FindFirstObjectByType<ShopPopup>(FindObjectsInactive.Include);
@@ -213,13 +230,13 @@ namespace CardMesh
 #endif
 
             RectTransform header = FindRect(panel, "Header");
-            RectTransform content = FindRect(panel, "ShopContent");
+            RectTransform content = FindRect(panel, "ShopContent")
+                ?? FindRect(panel, ScrollViewportName + "/ShopContent");
             if (content == null)
             {
                 return;
             }
 
-            SetRelativeAnchor(content, new Vector2(0.5f, 0.494f), new Vector2(840f, 1240f));
             ConfigureHeader(header);
             ConfigureSectionText(content);
 
@@ -232,14 +249,92 @@ namespace CardMesh
 
             if (treasuryTitle != null) treasuryTitle.gameObject.SetActive(false);
             if (treasuryCopy != null) treasuryCopy.gameObject.SetActive(false);
-            SetRelativeAnchor(premiumTitle, new Vector2(0.5f, 0.89f), new Vector2(800f, 34f));
-            SetRelativeAnchor(premiumBundles, new Vector2(0.5f, 0.618f), new Vector2(840f, 700f));
-            SetRelativeAnchor(resourcesTitle, new Vector2(0.5f, 0.312f), new Vector2(800f, 38f));
-            SetRelativeAnchor(resources, new Vector2(0.5f, 0.108f), new Vector2(840f, 448f));
 
+            // With the readable type scale (body >= 32, buttons >= 36 reference
+            // units) the products no longer fit the fixed 1020x1760 frame, so the
+            // product list scrolls inside the frame while the header stays fixed.
+            // Every block is placed top-down in content space (y grows downward).
+            // Starts 22 units down so the section label clears the mask's 20-unit edge fade.
+            float cursor = 22f;
+            PlaceFromTop(premiumTitle, cursor, new Vector2(800f, SectionLabelHeight));
+            // Extra room under the label: the "ЛУЧШАЯ ЦЕНА" ribbon sits on the
+            // hero card's top edge and must not touch the section label.
+            cursor += SectionLabelHeight + 46f;
+
+            float bundlesHeight = HeroBundleHeight + BundleGap + BundleHeight + BundleGap + BundleHeight;
+            PlaceFromTop(premiumBundles, cursor, new Vector2(ContentWidth, bundlesHeight));
+            cursor += bundlesHeight + 30f;
+
+            PlaceFromTop(resourcesTitle, cursor, new Vector2(800f, SectionLabelHeight));
+            cursor += SectionLabelHeight + 16f;
+
+            float resourcesHeight = (ResourceCardHeight * 2f) + ResourceGap;
+            PlaceFromTop(resources, cursor, new Vector2(ContentWidth, resourcesHeight));
+            cursor += resourcesHeight + 28f;
+
+            ConfigureScroll(content, cursor);
             ConfigurePremiumBundles(premiumBundles);
             ConfigureResourceOffers(resources);
             DisablePremiumMotion();
+        }
+
+        private void ConfigureScroll(RectTransform content, float contentHeight)
+        {
+            RectTransform viewport = content.parent as RectTransform;
+            if (viewport == null || viewport.name != ScrollViewportName)
+            {
+                GameObject viewportObject = new(
+                    ScrollViewportName,
+                    typeof(RectTransform),
+                    typeof(CanvasRenderer),
+                    typeof(Image),
+                    typeof(RectMask2D),
+                    typeof(ScrollRect));
+                viewportObject.layer = content.gameObject.layer;
+                RectTransform created = viewportObject.GetComponent<RectTransform>();
+                int siblingIndex = content.GetSiblingIndex();
+                created.SetParent(panel, false);
+                created.SetSiblingIndex(siblingIndex);
+                content.SetParent(created, false);
+                viewport = created;
+            }
+
+            // Panel-space window between the fixed header and the frame's bottom
+            // ornament; the inner frame border sits at x = +-418.
+            SetLocalRect(
+                viewport,
+                new Vector2(0f, (ViewportTop + ViewportBottom) * 0.5f),
+                new Vector2(ContentWidth, ViewportTop - ViewportBottom));
+
+            // Invisible hit area so the list can be dragged from the gaps between cards.
+            Image hitArea = GetOrAdd<Image>(viewport.gameObject);
+            hitArea.sprite = null;
+            hitArea.color = new Color(0f, 0f, 0f, 0f);
+            hitArea.raycastTarget = true;
+
+            RectMask2D mask = GetOrAdd<RectMask2D>(viewport.gameObject);
+            mask.softness = new Vector2Int(0, 20);
+
+            content.anchorMin = new Vector2(0.5f, 1f);
+            content.anchorMax = new Vector2(0.5f, 1f);
+            content.pivot = new Vector2(0.5f, 1f);
+            content.sizeDelta = new Vector2(ContentWidth, contentHeight);
+            content.anchoredPosition = Vector2.zero;
+            content.localScale = Vector3.one;
+
+            ScrollRect scroll = GetOrAdd<ScrollRect>(viewport.gameObject);
+            scroll.viewport = viewport;
+            scroll.content = content;
+            scroll.horizontal = false;
+            scroll.vertical = true;
+            scroll.movementType = ScrollRect.MovementType.Elastic;
+            scroll.elasticity = 0.1f;
+            scroll.inertia = true;
+            scroll.decelerationRate = 0.135f;
+            scroll.scrollSensitivity = 30f;
+            scroll.horizontalScrollbar = null;
+            scroll.verticalScrollbar = null;
+            scroll.StopMovement();
         }
 
         private static void ConfigureHeader(RectTransform header)
@@ -249,18 +344,20 @@ namespace CardMesh
                 return;
             }
 
-            SetRelativeAnchor(header, new Vector2(0.5f, 0.79f), new Vector2(720f, 124f));
+            // Header centre sits 500 units above the panel centre, under the
+            // medallion's lower diamond (~575). Title caps end ~553, the subtitle
+            // baseline is ~457 and the scroll window starts at 446.
+            SetLocalRect(header, new Vector2(0f, 500f), new Vector2(840f, 140f));
             TextMeshProUGUI title = header.Find("Title")?.GetComponent<TextMeshProUGUI>();
             TextMeshProUGUI subtitle = header.Find("Subtitle")?.GetComponent<TextMeshProUGUI>();
-            SetLocalRect(title?.rectTransform, new Vector2(0f, 24f), new Vector2(720f, 64f));
-            SetLocalRect(subtitle?.rectTransform, new Vector2(0f, -10f), new Vector2(760f, 34f));
-            ConfigureText(title, 48f, 38f, 52f, Gold, FontStyles.Bold);
-            ConfigureText(subtitle, 21f, 17f, 23f, new Color(1f, 0.92f, 0.72f, 0.94f), FontStyles.Bold);
+            SetLocalRect(title?.rectTransform, new Vector2(0f, 32f), new Vector2(780f, 68f));
+            SetLocalRect(subtitle?.rectTransform, new Vector2(0f, -32f), new Vector2(820f, 44f));
+            ConfigureFixedText(title, 56f, Gold, FontStyles.Bold);
             if (subtitle != null)
             {
-                subtitle.enableAutoSizing = false;
-                subtitle.fontSize = 20f;
-                subtitle.textWrappingMode = TextWrappingModes.NoWrap;
+                // Shortened from "...усиливай свой прогресс." so it stays on one line at 32.
+                subtitle.text = "Получай ресурсы и усиливай прогресс.";
+                ConfigureFixedText(subtitle, 32f, new Color(1f, 0.92f, 0.72f, 0.94f), FontStyles.Bold);
             }
         }
 
@@ -282,9 +379,9 @@ namespace CardMesh
             }
 
             ConfigureText(treasuryTitle, 31f, 25f, 32f, new Color(1f, 0.76f, 0.22f, 0.96f), FontStyles.Bold);
-            ConfigureText(treasuryCopy, 18f, 15f, 19f, new Color(1f, 0.9f, 0.7f, 0.82f), FontStyles.Normal);
-            ConfigureText(premiumTitle, 25f, 21f, 26f, Gold, FontStyles.Bold);
-            ConfigureText(resourcesTitle, 25f, 21f, 26f, Gold, FontStyles.Bold);
+            ConfigureText(treasuryCopy, 18f, 15f, 19f, new Color(1f, 0.9f, 0.7f, 0.82f), FontStyles.Bold);
+            ConfigureFixedText(premiumTitle, 36f, Gold, FontStyles.Bold);
+            ConfigureFixedText(resourcesTitle, 36f, Gold, FontStyles.Bold);
         }
 
         private static void ConfigurePremiumBundles(RectTransform container)
@@ -294,27 +391,23 @@ namespace CardMesh
                 return;
             }
 
-            string[] names = { "StarterBundle", "RoyalBundle", "EmperorBundle" };
-            Vector2[] positions =
-            {
-                new(-205f, -195f),
-                new(0f, 145f),
-                new(205f, -195f)
-            };
-
+            // Full-width cards stacked top-down: the hero first, then the two
+            // smaller bundles. Side-by-side half-width cards cannot hold a 32-unit
+            // item list next to the chest inside the niche columns.
+            string[] names = { "RoyalBundle", "StarterBundle", "EmperorBundle" };
+            float top = 0f;
             for (int index = 0; index < names.Length; index++)
             {
+                bool hero = index == 0;
+                float height = hero ? HeroBundleHeight : BundleHeight;
                 RectTransform card = FindRect(container, names[index]);
-                if (card == null)
+                if (card != null)
                 {
-                    continue;
+                    PlaceFromTop(card, top, new Vector2(BundleCardWidth, height));
+                    ConfigurePremiumCard(card, hero);
                 }
 
-                bool hero = index == 1;
-                Vector2 size = hero ? new Vector2(820f, 350f) : new Vector2(398f, 310f);
-                SetLocalRect(card, positions[index], size);
-                card.localScale = Vector3.one;
-                ConfigurePremiumCard(card, hero);
+                top += height + BundleGap;
             }
         }
 
@@ -335,27 +428,35 @@ namespace CardMesh
             RectTransform premiumRect = FindRect(card, "Premium");
             RectTransform buyButton = FindRect(card, "BuyButton");
 
-            // Keep every element inside the decorative niche.  The art has a deep
-            // top/bottom frame, so content must use the same visual guides instead
-            // of the old card-local offsets.
             bool starter = card.name == "StarterBundle";
-            bool emperor = card.name == "EmperorBundle";
-            if (titleRect != null && !recommended)
+            TextMeshProUGUI cardTitle = titleRect?.GetComponent<TextMeshProUGUI>();
+            if (cardTitle != null)
             {
-                TextMeshProUGUI smallTitle = titleRect.GetComponent<TextMeshProUGUI>();
-                if (smallTitle != null)
-                {
-                    smallTitle.text = starter ? "СТАРТОВЫЙ\nНАБОР" : "ИМПЕРАТОРСКИЙ\nНАБОР";
-                }
+                cardTitle.text = recommended
+                    ? "КОРОЛЕВСКИЙ НАБОР"
+                    : (starter ? "СТАРТОВЫЙ НАБОР" : "ИМПЕРАТОРСКИЙ НАБОР");
             }
 
-            SetLocalRect(
-                titleRect,
-                new Vector2(0f, recommended ? 108f : 76f),
-                recommended ? new Vector2(card.rect.width - 70f, 40f) : new Vector2(300f, 58f));
-            float iconColumnX = recommended ? -205f : (emperor ? -76f : -92f);
-            float detailsColumnX = recommended ? 172f : (emperor ? 88f : 72f);
-            float detailsWidth = recommended ? 300f : (emperor ? 150f : 190f);
+            // Card-local guides (centre origin). Hero (820x470, hero niche): top
+            // diamond tip ~+158, inner columns at x = +-250, bottom ornament ~-171.
+            // Small (820x440, card niche): arch top ~+151, columns at x = +-298,
+            // ledge ~-163. Title / chest + list / price button are stacked so the
+            // 32-unit list never meets a column or the button.
+            if (recommended)
+            {
+                SetLocalRect(titleRect, new Vector2(0f, 118f), new Vector2(620f, 44f));
+                SetLocalRect(iconRect, new Vector2(-190f, 4f), new Vector2(280f, 168f));
+                SetLocalRect(contentsRect, new Vector2(95f, 6f), new Vector2(300f, 160f));
+                SetLocalRect(buyButton, new Vector2(0f, -125f), new Vector2(340f, 70f));
+            }
+            else
+            {
+                SetLocalRect(titleRect, new Vector2(0f, 106f), new Vector2(640f, 44f));
+                SetLocalRect(iconRect, new Vector2(-180f, -2f), new Vector2(216f, 145f));
+                SetLocalRect(contentsRect, new Vector2(110f, 0f), new Vector2(300f, 160f));
+                SetLocalRect(buyButton, new Vector2(0f, -125f), new Vector2(300f, 70f));
+            }
+
             if (iconRect != null)
             {
                 Image iconImage = iconRect.GetComponent<Image>();
@@ -365,18 +466,16 @@ namespace CardMesh
                     if (openRoyalChest != null)
                     {
                         iconImage.sprite = openRoyalChest;
-                        iconImage.preserveAspect = true;
                         iconImage.color = Color.white;
                     }
                 }
 
-                SetLocalRect(
-                    iconRect,
-                    new Vector2(iconColumnX, recommended ? -5f : -4f),
-                    recommended ? new Vector2(300f, 190f) : new Vector2(155f, 104f));
+                if (iconImage != null)
+                {
+                    iconImage.preserveAspect = true;
+                }
             }
 
-            SetLocalRect(contentsRect, new Vector2(detailsColumnX, recommended ? 8f : 0f), new Vector2(detailsWidth, recommended ? 130f : 104f));
             if (rewardIconsRect != null)
             {
                 rewardIconsRect.gameObject.SetActive(false);
@@ -385,38 +484,18 @@ namespace CardMesh
             {
                 premiumRect.gameObject.SetActive(false);
             }
-            PlacePriceButton(
-                card,
-                buyButton,
-                recommended ? 330f : 258f,
-                54f,
-                recommended ? 42f : 38f,
-                0f);
 
-            ConfigureText(titleRect?.GetComponent<TextMeshProUGUI>(), recommended ? 27f : 20f, 18f, recommended ? 28f : 21f, Gold, FontStyles.Bold);
-            TextMeshProUGUI cardTitle = titleRect?.GetComponent<TextMeshProUGUI>();
-            if (cardTitle != null)
-            {
-                cardTitle.alignment = TextAlignmentOptions.Center;
-                cardTitle.textWrappingMode = TextWrappingModes.NoWrap;
-                cardTitle.overflowMode = TextOverflowModes.Overflow;
-                if (!recommended)
-                {
-                    cardTitle.enableAutoSizing = false;
-                    cardTitle.fontSize = 20f;
-                    cardTitle.lineSpacing = -8f;
-                }
-            }
+            ConfigureFixedText(cardTitle, 36f, Gold, FontStyles.Bold);
+
             TextMeshProUGUI contents = contentsRect?.GetComponent<TextMeshProUGUI>();
-            ConfigureText(contents, recommended ? 20f : 17f, recommended ? 16f : 14f, recommended ? 21f : 18f, new Color(1f, 0.94f, 0.76f, 1f), FontStyles.Bold);
+            ConfigureFixedText(contents, 32f, new Color(1f, 0.94f, 0.76f, 1f), FontStyles.Bold);
             if (contents != null)
             {
+                // 4 lines x 1.172 em x 32 = 150 units inside a 160-unit rect.
                 contents.alignment = TextAlignmentOptions.MidlineLeft;
-                contents.lineSpacing = 10f;
-                contents.overflowMode = TextOverflowModes.Overflow;
             }
-            ConfigureText(premiumRect?.GetComponent<TextMeshProUGUI>(), 14f, 12f, 15f, new Color(1f, 0.79f, 0.26f, 0.92f), FontStyles.Bold);
-            ConfigureBuyButton(buyButton, 25f);
+
+            ConfigureBuyButton(buyButton, ButtonLabelSize);
 
             if (recommended)
             {
@@ -440,15 +519,18 @@ namespace CardMesh
             }
 
             string[] names = { "Coins10000", "Hints20", "Moves50", "RemoveAds" };
-            Vector2[] anchors =
-            {
-                new(0.25f, 0.75f),
-                new(0.75f, 0.75f),
-                new(0.25f, 0.25f),
-                new(0.75f, 0.25f)
-            };
-            const float cardWidth = 400f;
-            const float cardHeight = 212f;
+            float columnOffset = (ResourceCardWidth + ResourceGap) * 0.5f;
+
+            // Card-local guides for the 404x330 card niche: fleur/arch top ~+113,
+            // niche columns at x = +-147, ledge ~-122. Stack: title (32) /
+            // icon + amount row (34) / caption (28) / price button (36).
+            const float titleY = 74f;
+            const float rowY = 30f;
+            const float captionY = -22f;
+            const float buttonY = -87f;
+            const float iconSize = 56f;
+            const float iconGap = 12f;
+            const float maxAmountWidth = 200f;
 
             for (int index = 0; index < names.Length; index++)
             {
@@ -458,7 +540,9 @@ namespace CardMesh
                     continue;
                 }
 
-                SetRelativeAnchor(card, anchors[index], new Vector2(cardWidth, cardHeight));
+                float x = index % 2 == 0 ? -columnOffset : columnOffset;
+                float top = index < 2 ? 0f : ResourceCardHeight + ResourceGap;
+                PlaceFromTop(card, top, new Vector2(ResourceCardWidth, ResourceCardHeight), x);
                 ConfigureTreasurySurface(card, false);
                 Image fill = card.Find("CardFill")?.GetComponent<Image>();
                 if (fill != null)
@@ -491,13 +575,31 @@ namespace CardMesh
                     SetOfferText(offerDetail, "БЕЗ БАННЕРОВ");
                 }
 
+                TextMeshProUGUI titleText = offerTitle?.GetComponent<TextMeshProUGUI>();
+                TextMeshProUGUI amountText = offerAmount?.GetComponent<TextMeshProUGUI>();
+                TextMeshProUGUI detailText = offerDetail?.GetComponent<TextMeshProUGUI>();
+
+                ConfigureFixedText(titleText, 32f, Gold, FontStyles.Bold);
+                ConfigureFixedText(amountText, 34f, new Color(1f, 0.94f, 0.74f, 1f), FontStyles.Bold);
+                ConfigureFixedText(detailText, 28f, new Color(1f, 0.9f, 0.7f, 0.9f), FontStyles.Bold);
+                if (amountText != null)
+                {
+                    amountText.alignment = TextAlignmentOptions.MidlineLeft;
+                    RuntimeCyrillicFontProvider.Apply(amountText, amountText.text);
+                }
+
+                SetLocalRect(offerTitle, new Vector2(0f, titleY), new Vector2(290f, 40f));
+                SetLocalRect(offerDetail, new Vector2(0f, captionY), new Vector2(290f, 34f));
+
+                // Icon + amount form one group centred on the card, so short
+                // amounts ("20") and long ones ("НАВСЕГДА") are both centred.
+                float amountWidth = MeasurePreferredWidth(amountText, maxAmountWidth);
+                float groupLeft = -(iconSize + iconGap + amountWidth) * 0.5f;
+                SetLocalRect(offerIcon, new Vector2(groupLeft + (iconSize * 0.5f), rowY), new Vector2(iconSize, iconSize));
                 SetLocalRect(
-                    offerTitle,
-                    new Vector2(0f, 48f),
-                    new Vector2(300f, 42f));
-                float offerIconX = index == 3 ? -108f : -110f;
-                Vector2 offerIconSize = index == 3 ? new Vector2(58f, 58f) : new Vector2(54f, 54f);
-                SetLocalRect(offerIcon, new Vector2(offerIconX, -17f), offerIconSize);
+                    offerAmount,
+                    new Vector2(groupLeft + iconSize + iconGap + ((amountWidth + 8f) * 0.5f), rowY),
+                    new Vector2(amountWidth + 8f, 44f));
                 if (offerIcon != null)
                 {
                     offerIcon.gameObject.SetActive(true);
@@ -510,38 +612,27 @@ namespace CardMesh
                 {
                     ConfigureRemoveAdsIcon(card, offerIcon);
                 }
-                SetLocalRect(offerAmount, new Vector2(-35f, -5f), new Vector2(82f, 30f));
-                SetLocalRect(offerDetail, new Vector2(-35f, -30f), new Vector2(88f, 18f));
-                SetLocalRect(buyButton, new Vector2(74f, -17f), new Vector2(128f, 46f));
 
-                ConfigureText(offerTitle?.GetComponent<TextMeshProUGUI>(), 18f, 17f, 18f, Gold, FontStyles.Bold);
-                ConfigureText(offerAmount?.GetComponent<TextMeshProUGUI>(), 23f, 23f, 23f, new Color(1f, 0.94f, 0.74f, 1f), FontStyles.Bold);
-                ConfigureText(offerDetail?.GetComponent<TextMeshProUGUI>(), 13f, 13f, 13f, new Color(1f, 0.9f, 0.7f, 0.9f), FontStyles.Bold);
-                ConfigureBuyButton(buyButton, 19f);
-
-                TextMeshProUGUI resourceTitle = offerTitle?.GetComponent<TextMeshProUGUI>();
-                if (resourceTitle != null)
-                {
-                    resourceTitle.alignment = TextAlignmentOptions.Center;
-                    resourceTitle.textWrappingMode = TextWrappingModes.Normal;
-                    resourceTitle.enableAutoSizing = false;
-                    resourceTitle.fontSize = 18f;
-                    resourceTitle.lineSpacing = -6f;
-                }
-
-                TextMeshProUGUI amountText = offerAmount?.GetComponent<TextMeshProUGUI>();
-                TextMeshProUGUI detailText = offerDetail?.GetComponent<TextMeshProUGUI>();
-                if (amountText != null)
-                {
-                    amountText.enableAutoSizing = false;
-                    amountText.fontSize = index == 3 ? 17f : 23f;
-                }
-                if (detailText != null)
-                {
-                    detailText.enableAutoSizing = false;
-                    detailText.fontSize = index == 3 ? 11f : 13f;
-                }
+                SetLocalRect(buyButton, new Vector2(0f, buttonY), new Vector2(200f, 70f));
+                ConfigureBuyButton(buyButton, ButtonLabelSize);
             }
+        }
+
+        private static float MeasurePreferredWidth(TextMeshProUGUI text, float maxWidth)
+        {
+            if (text == null || string.IsNullOrEmpty(text.text))
+            {
+                return 0f;
+            }
+
+            float width = text.GetPreferredValues(text.text, 10000f, 10000f).x;
+            if (float.IsNaN(width) || width <= 1f)
+            {
+                // Font not ready: rough Roboto Bold average incl. bold spacing.
+                width = text.text.Length * text.fontSize * 0.68f;
+            }
+
+            return Mathf.Min(width, maxWidth);
         }
 
         private static void ApplyGameplayHintIcon(RectTransform iconRect)
@@ -627,7 +718,7 @@ namespace CardMesh
             if (slash != null)
             {
                 slash.gameObject.SetActive(true);
-                SetLocalRect(slash, visualRoot.anchoredPosition, new Vector2(82f, 8f));
+                SetLocalRect(slash, visualRoot.anchoredPosition, new Vector2(visualRoot.sizeDelta.x * 1.4f, 8f));
                 slash.localRotation = Quaternion.Euler(0f, 0f, -42f);
                 Image strike = slash.GetComponent<Image>();
                 if (strike != null)
@@ -702,9 +793,11 @@ namespace CardMesh
             TextMeshProUGUI label = buttonRect.Find("Label")?.GetComponent<TextMeshProUGUI>();
             if (label != null)
             {
-                Stretch(label.rectTransform, 16f, 16f, 7f, 7f);
-                ConfigureText(label, priceSize, Mathf.Max(16f, priceSize - 5f), priceSize + 1f, SoftGold, FontStyles.Bold);
-                label.alignment = TextAlignmentOptions.Center;
+                // Fixed size (no autosize shrink): the button art's gold rim is
+                // ~9 units at a 70-unit height, so a 36-unit label keeps >= 14
+                // units of clearance on every side.
+                Stretch(label.rectTransform, 24f, 24f, 9f, 9f);
+                ConfigureFixedText(label, priceSize, SoftGold, FontStyles.Bold);
             }
 
             DisableHoverGlow(buttonRect);
@@ -712,26 +805,6 @@ namespace CardMesh
             {
                 buttonRect.gameObject.AddComponent<UIJuicyButton>();
             }
-        }
-
-        private static void PlacePriceButton(
-            RectTransform card,
-            RectTransform button,
-            float width,
-            float height,
-            float bottomInset,
-            float x)
-        {
-            if (card == null || button == null)
-            {
-                return;
-            }
-
-            // One rule for every product card: the CTA baseline is derived from
-            // the card's lower edge. This keeps prices stable if a card changes
-            // size and prevents per-card hand-tuned vertical drift.
-            float y = (-card.rect.height * 0.5f) + bottomInset + (height * 0.5f);
-            SetLocalRect(button, new Vector2(x, y), new Vector2(width, height));
         }
 
         private static void DisableHoverGlow(RectTransform buttonRect)
@@ -778,8 +851,10 @@ namespace CardMesh
             badge.anchorMin = new Vector2(0.5f, 0.5f);
             badge.anchorMax = badge.anchorMin;
             badge.pivot = new Vector2(0.5f, 0.5f);
-            badge.anchoredPosition = new Vector2(-294f, 96f);
-            badge.sizeDelta = new Vector2(188f, 34f);
+            // Ribbon straddling the hero card's top edge, left of the centre
+            // diamond and clear of the corner jewel (x <= -369) and the title.
+            badge.anchoredPosition = new Vector2(-205f, card.rect.height * 0.5f);
+            badge.sizeDelta = new Vector2(320f, 62f);
             badge.localScale = Vector3.one;
             badgeImage.sprite = PremiumUISprites.CategoryLabel != null
                 ? PremiumUISprites.CategoryLabel
@@ -788,10 +863,11 @@ namespace CardMesh
             badgeImage.color = new Color(0.98f, 0.78f, 0.22f, 0.96f);
             badgeImage.raycastTarget = false;
 
-            Stretch(label.rectTransform, 10f, 10f, 3f, 3f);
+            // The pill art has ~12/8 units of glow margin; 32/10 insets keep the
+            // 28-unit caption >= 14 units inside the visible gold pill.
+            Stretch(label.rectTransform, 32f, 32f, 10f, 10f);
             label.text = "ЛУЧШАЯ ЦЕНА";
-            label.alignment = TextAlignmentOptions.Center;
-            ConfigureText(label, 14f, 12f, 15f, new Color(0.16f, 0.075f, 0.012f, 1f), FontStyles.Bold);
+            ConfigureFixedText(label, 28f, new Color(0.16f, 0.075f, 0.012f, 1f), FontStyles.Bold);
             RuntimeCyrillicFontProvider.Apply(label, label.text);
             badge.SetAsLastSibling();
         }
@@ -868,22 +944,46 @@ namespace CardMesh
             text.overflowMode = TextOverflowModes.Truncate;
         }
 
+        private static void ConfigureFixedText(TextMeshProUGUI text, float size, Color color, FontStyles style)
+        {
+            if (text == null)
+            {
+                return;
+            }
+
+            text.enableAutoSizing = false;
+            text.fontSize = size;
+            text.fontSizeMin = size;
+            text.fontSizeMax = size;
+            text.color = color;
+            text.fontStyle = style;
+            text.alignment = TextAlignmentOptions.Center;
+            text.textWrappingMode = TextWrappingModes.Normal;
+            text.overflowMode = TextOverflowModes.Overflow;
+            text.lineSpacing = 0f;
+            text.characterSpacing = 0f;
+            text.margin = Vector4.zero;
+        }
+
         private static RectTransform FindRect(Transform root, string childName)
         {
             return root?.Find(childName) as RectTransform;
         }
 
-        private static void SetRelativeAnchor(RectTransform rect, Vector2 anchor, Vector2 size)
+        // Places a rect whose parent is laid out top-down (y grows downward from
+        // the parent's top edge). The pivot stays centred so press feedback
+        // scales cards around their middle.
+        private static void PlaceFromTop(RectTransform rect, float top, Vector2 size, float x = 0f)
         {
             if (rect == null)
             {
                 return;
             }
 
-            rect.anchorMin = anchor;
-            rect.anchorMax = anchor;
+            rect.anchorMin = new Vector2(0.5f, 1f);
+            rect.anchorMax = rect.anchorMin;
             rect.pivot = new Vector2(0.5f, 0.5f);
-            rect.anchoredPosition = Vector2.zero;
+            rect.anchoredPosition = new Vector2(x, -(top + (size.y * 0.5f)));
             rect.sizeDelta = size;
             rect.localScale = Vector3.one;
         }
@@ -920,7 +1020,8 @@ namespace CardMesh
 
         private static T GetOrAdd<T>(GameObject target) where T : Component
         {
-            return target.GetComponent<T>() ?? target.AddComponent<T>();
+            T component = target.GetComponent<T>();
+            return component != null ? component : target.AddComponent<T>();
         }
 
         private void StartOpenAnimation()

@@ -217,6 +217,32 @@ namespace CardMesh
             coinButton ??= FindButton("CoinButton");
             rewardedButton ??= FindButton("RewardedButton");
             closeButton ??= FindButton("CloseButton");
+            ApplyReadableTextSizes();
+        }
+
+        // Timer/caption/feedback lines were 16–25 reference units (5–8 pt on a phone).
+        private void ApplyReadableTextSizes()
+        {
+            MakeReadable(timerText, 30f, 26f, 44f);
+            MakeReadable(feedbackText, 30f, 26f, 44f);
+            MakeReadable(FindText("Caption"), 32f, 28f, 44f);
+        }
+
+        private static void MakeReadable(TMP_Text text, float max, float min, float height)
+        {
+            if (text == null)
+            {
+                return;
+            }
+
+            text.enableAutoSizing = true;
+            text.fontSizeMax = max;
+            text.fontSizeMin = min;
+            RectTransform rect = text.rectTransform;
+            if (rect.sizeDelta.y < height)
+            {
+                rect.sizeDelta = new Vector2(rect.sizeDelta.x, height);
+            }
         }
 
         private void WireButtons()

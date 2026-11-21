@@ -188,7 +188,7 @@ namespace CardMesh
         {
             SetText(currentTitleText, "ПРАВИЛА");
             SetText(currentRewardText, "1 раз в день");
-            SetText(currentDescriptionText, "Забирай ежедневную награду. Если пропустил день, серия не сбрасывается.");
+            SetText(currentDescriptionText, "Забирай награду раз в день. Пропуск дня не сбрасывает серию.");
         }
 
         private void Refresh()
@@ -201,6 +201,7 @@ namespace CardMesh
 
             manager ??= DailyRewardsManager.GetOrCreate(this);
             selectedDay = Mathf.Clamp(selectedDay <= 0 ? manager.CurrentDay : selectedDay, 1, 7);
+            ApplyReadableLayout();
 
             if (seriesText != null)
             {
@@ -216,6 +217,7 @@ namespace CardMesh
         private void RefreshEditorPreview()
         {
             selectedDay = EditorPreviewDay;
+            ApplyReadableLayout();
             SetText(seriesText, $"День серии: {EditorPreviewDay} из 7");
             RefreshCards();
             RefreshSelectedReward();
@@ -263,19 +265,19 @@ namespace CardMesh
 
                 SetText(FindRewardCardPart(card, "RewardAmount", "Amount")?.GetComponent<TMP_Text>(), BuildAmount(reward));
                 SetText(FindRewardCardPart(card, "RewardType", "Label")?.GetComponent<TMP_Text>(), BuildLabel(reward));
+                // Short status words: the old "ЗАБЛОКИРОВАНО"/"ПОЛУЧЕНО"/"ДОСТУПНО" cannot fit
+                // the 146-unit text column of a 200-unit card at the 28-unit caption minimum.
                 TMP_Text statusText = FindRewardCardPart(card, "Status")?.GetComponent<TMP_Text>();
-                SetText(statusText, claimed ? "ПОЛУЧЕНО" : current ? "ДОСТУПНО" : "ЗАБЛОКИРОВАНО");
-                if (statusText != null)
-                {
-                    statusText.color = claimed || current ? TextGreen : TextGold;
-                }
+                SetText(statusText, claimed ? "ВЗЯТО" : current ? "ЗАБЕРИ" : "СКОРО");
+                bool brightCard = current || selected;
+                Color statusColor = brightCard ? TextCream : claimed ? TextGreen : TextGold;
 
+                // The status sits on the card itself now; the small pill could not hold a
+                // legible caption with padding, so its backing art stays hidden.
                 Image statusBacking = FindRewardCardPart(card, "StatusArea", "StatusBacking")?.GetComponent<Image>();
                 if (statusBacking != null)
                 {
-                    statusBacking.color = claimed || current
-                        ? new Color(0.05f, 0.28f, 0.1f, 0.74f)
-                        : new Color(0.16f, 0.11f, 0.03f, 0.62f);
+                    statusBacking.enabled = false;
                 }
 
                 Image rewardIcon = FindRewardCardPart(card, "RewardIcon")?.GetComponent<Image>();
@@ -311,13 +313,14 @@ namespace CardMesh
 #endif
                     check.gameObject.SetActive(claimed);
                 }
-                NormalizeClaimCheck(card, claimed);
+                RectTransform claimCheck = NormalizeClaimCheck(card, claimed);
+                LayoutCardStatus(statusText, claimCheck, claimed, statusColor);
             }
         }
 
-        private static void NormalizeClaimCheck(Transform card, bool visible)
+        private static RectTransform NormalizeClaimCheck(Transform card, bool visible)
         {
-            if (card == null) return;
+            if (card == null) return null;
 
             RectTransform preferred = null;
             foreach (RectTransform candidate in card.GetComponentsInChildren<RectTransform>(true))
@@ -328,14 +331,18 @@ namespace CardMesh
                 candidate.gameObject.SetActive(false);
             }
 
-            preferred ??= FindRewardCardPart(card, "Check") as RectTransform;
-            if (preferred == null) return;
+            if (preferred == null)
+            {
+                preferred = FindRewardCardPart(card, "Check") as RectTransform;
+            }
+
+            if (preferred == null) return null;
             preferred.anchorMin = preferred.anchorMax = preferred.pivot = new Vector2(0.5f, 0.5f);
-            // Keep the tick immediately before the centred status word without
-            // touching either the glyphs or the left card rim.
+            // Position is finalised by LayoutCardStatus once the status word is known.
             preferred.anchoredPosition = new Vector2(-51f, 0f);
-            preferred.sizeDelta = new Vector2(23f, 18f);
+            preferred.sizeDelta = CardCheckSize;
             preferred.gameObject.SetActive(visible);
+            return preferred;
         }
 
         private void RefreshSelectedReward()
@@ -359,7 +366,7 @@ namespace CardMesh
             {
                 RewardViewState.Available => "ЗАБРАТЬ",
                 RewardViewState.Claimed => "ПОЛУЧЕНО",
-                _ => "ЗАБЛОКИРОВАНО"
+                _ => "ЗАКРЫТО"
             });
             StyleClaimButtonState(viewState);
             Image rewardIcon = currentRewardIcon != null ? currentRewardIcon.transform.Find("RewardIcon")?.GetComponent<Image>() : null;
@@ -386,7 +393,7 @@ namespace CardMesh
                 return;
             }
 
-            rect.sizeDelta = new Vector2(280f, 56f);
+            rect.sizeDelta = ClaimButtonSize;
 
             Image image = rect.GetComponent<Image>();
             if (image != null)
@@ -407,34 +414,47 @@ namespace CardMesh
             RemoveButtonGlow(rect);
             ConfigureDropShadow(rect.gameObject, new Color(0f, 0.02f, 0.01f, 0.18f), new Vector2(0f, -2f));
 
+            Transform check = rect.Find("Check");
+            RectTransform checkRect = check as RectTransform;
+            bool showCheck = state == RewardViewState.Claimed && checkRect != null;
+            if (checkRect != null)
+            {
+                checkRect.anchorMin = checkRect.anchorMax = checkRect.pivot = new Vector2(0.5f, 0.5f);
+                checkRect.sizeDelta = ButtonCheckSize;
+                checkRect.localScale = Vector3.one * (showCheck ? ButtonCheckScale : 1f);
+            }
+
             TMP_Text label = rect.Find("Label")?.GetComponent<TMP_Text>();
             if (label != null)
             {
-                label.rectTransform.anchoredPosition = state == RewardViewState.Claimed ? new Vector2(8f, 0f) : Vector2.zero;
-                label.rectTransform.sizeDelta = rect.sizeDelta - new Vector2(state == RewardViewState.Claimed ? 82f : 48f, 22f);
                 label.color = state switch
                 {
                     RewardViewState.Available => TextCream,
                     RewardViewState.Claimed => TextGreen,
                     _ => new Color(TextGold.r, TextGold.g, TextGold.b, 0.62f)
                 };
-                label.fontSizeMax = state == RewardViewState.Available ? 28f : 25f;
-                label.fontSizeMin = 16f;
+                // Button labels: fixed 36-38 units ("ЗАБРАТЬ" 184, "ЗАКРЫТО" 188,
+                // tick + "ПОЛУЧЕНО" ~258) inside a 290-unit label column (340 button
+                // minus 11-unit rim and 14-unit padding on both sides).
+                ConfigureFixedText(label, state == RewardViewState.Available ? 38f : 36f);
+                SetCenteredRect(label.rectTransform, new Vector2(ClaimButtonSize.x - 50f, 50f), Vector2.zero);
+
+                float checkWidth = showCheck ? ButtonCheckSize.x * ButtonCheckScale + ButtonCheckGap : 0f;
+                float textWidth = MeasureTextWidth(label);
+                float left = -(checkWidth + textWidth) * 0.5f;
+                label.rectTransform.anchoredPosition = new Vector2(left + checkWidth + textWidth * 0.5f, 0f);
+                if (showCheck)
+                {
+                    checkRect.anchoredPosition = new Vector2(left + (checkWidth - ButtonCheckGap) * 0.5f, 1f);
+                }
             }
 
-            Transform check = rect.Find("Check");
             if (check != null)
             {
-                RectTransform checkRect = check as RectTransform;
-                if (checkRect != null)
-                {
-                    checkRect.anchoredPosition = new Vector2(state == RewardViewState.Claimed ? -34f : -96f, 0f);
-                    checkRect.sizeDelta = new Vector2(28f, 22f);
-                }
 #if UNITY_EDITOR
-                StyleCheckIcon(check as RectTransform);
+                StyleCheckIcon(checkRect);
 #endif
-                check.gameObject.SetActive(state == RewardViewState.Claimed);
+                check.gameObject.SetActive(showCheck);
             }
         }
 
@@ -680,17 +700,20 @@ namespace CardMesh
                 return string.Empty;
             }
 
+            // Lower case keeps the noun readable at the 28-unit caption minimum:
+            // "ПОДСКАЗКА" is 186 units wide, "подсказка" 139, the card column 146.
+            // Day 7's "+1 hint" bonus is shown as an icon row (see EnsureFinaleBonus).
             if (reward.Day == 7)
             {
-                return "МОНЕТ\n+1 ПОДСКАЗКА";
+                return "монет";
             }
 
             return reward.RewardType switch
             {
-                DailyRewardType.Coins => "МОНЕТ",
-                DailyRewardType.Hint => "ПОДСКАЗКА",
-                DailyRewardType.ExtraMoves => "ХОДОВ",
-                _ => "НАГРАДА"
+                DailyRewardType.Coins => "монет",
+                DailyRewardType.Hint => "подсказка",
+                DailyRewardType.ExtraMoves => "ходов",
+                _ => "награда"
             };
         }
 
@@ -1400,6 +1423,390 @@ namespace CardMesh
             text.lineSpacing = lineSpacing;
             text.raycastTarget = false;
         }
+        private static void SetActiveIfExists(Transform parent, string childName, bool active)
+        {
+            Transform child = parent != null ? parent.Find(childName) : null;
+            if (child != null)
+            {
+                child.gameObject.SetActive(active);
+            }
+        }
+
+        // ------------------------------------------------------------------
+        // Readable runtime layout. Runs in player builds on every Refresh, so it
+        // wins over whatever older numbers are serialized in MainMenu.unity / the
+        // prefab. Units: WindowRoot-local reference units (1080 canvas, match width).
+        // Minimums: captions 28, body 32, buttons 36, headers 36, titles 54.
+        // ------------------------------------------------------------------
+        private const float ReadableCardWidth = 200f;
+        private const float ReadableCardHeight = 270f;
+        // Card art: gold rim ends 13 units inside the rect; 14 units padding on top.
+        private const float ReadableCardTextWidth = ReadableCardWidth - 2f * (13f + 14f);
+        private const float ReadableTopRowSpacing = 12f;
+        private const float ReadableBottomRowSpacing = 48f;
+        private const float ReadableTopRowY = 103f;
+        private const float ReadableBottomRowY = -215f;
+        private const float ReadableStreakY = -390f;
+        private const float CardIconY = 62f;
+        private const float CardAmountY = -2f;
+        private const float CardLabelY = -42f;
+        private const float ReadableCardStatusY = -86f;
+        private const float CardCheckScale = 1.5f;
+        private const float CardCheckGap = 6f;
+        private const float ButtonCheckScale = 1.25f;
+        private const float ButtonCheckGap = 10f;
+        private const float DetailsColumnX = 74f;
+        private const float DetailsColumnWidth = 598f;
+        private const string ReadableSubtitle = "Возвращайся каждый день за наградами";
+        private static readonly Vector2 ReadableRewardsColumnSize = new(840f, 830f);
+        private static readonly Vector2 ReadableDetailsPanelSize = new(790f, 440f);
+        private static readonly Vector2 ReadableDetailsPanelPosition = new(0f, -465f);
+        private static readonly Vector2 ClaimButtonSize = new(340f, 84f);
+        private static readonly Vector2 CardCheckSize = new(23f, 18f);
+        private static readonly Vector2 ButtonCheckSize = new(28f, 22f);
+
+        private void ApplyReadableLayout()
+        {
+            ApplyReadableHeaderLayout();
+            ApplyReadableRewardGridLayout();
+            ApplyReadableDetailsLayout();
+        }
+
+        private void ApplyReadableHeaderLayout()
+        {
+            RectTransform header = transform.Find("WindowRoot/Header") as RectTransform;
+            if (header == null)
+            {
+                return;
+            }
+
+            // Header centre stays at WindowRoot y=555: title 501..573, subtitle 448..492.
+            SetCenteredRect(header, HeaderSize, HeaderPosition);
+
+            RectTransform title = header.Find("Title") as RectTransform;
+            SetCenteredRect(title, new Vector2(840f, 72f), new Vector2(0f, -18f));
+            ConfigureReadableText(title != null ? title.GetComponent<TMP_Text>() : null, 56f, 54f);
+
+            RectTransform subtitle = header.Find("Subtitle") as RectTransform;
+            SetCenteredRect(subtitle, new Vector2(840f, 44f), new Vector2(0f, -85f));
+            TMP_Text subtitleText = subtitle != null ? subtitle.GetComponent<TMP_Text>() : null;
+            if (subtitleText != null)
+            {
+                // The full sentence is ~950 units at 32 and would need two lines.
+                SetText(subtitleText, ReadableSubtitle);
+                ConfigureReadableText(subtitleText, 34f, 32f);
+            }
+        }
+
+        private void ApplyReadableRewardGridLayout()
+        {
+            if (cardsRoot == null)
+            {
+                return;
+            }
+
+            // Column centre is WindowRoot y=160. Top cards 128..398, bottom cards
+            // -190..80 (WindowRoot), "ДЕНЬ N" labels sit 4 units above each card.
+            SetCenteredRect(cardsRoot, ReadableRewardsColumnSize, RewardsColumnPosition);
+            Vector2 cardSize = new(ReadableCardWidth, ReadableCardHeight);
+            RectTransform topRow = cardsRoot.Find("RewardsRowTop") as RectTransform;
+            RectTransform bottomRow = cardsRoot.Find("RewardsRowBottom") as RectTransform;
+            ConfigureReadableRow(topRow, ReadableTopRowY, ReadableTopRowSpacing, cardSize.y);
+            ConfigureReadableRow(bottomRow, ReadableBottomRowY, ReadableBottomRowSpacing, cardSize.y);
+
+            for (int day = 1; day <= 7; day++)
+            {
+                RectTransform cardRect = FindRewardCard(day) as RectTransform;
+                if (cardRect == null)
+                {
+                    continue;
+                }
+
+                cardRect.sizeDelta = cardSize;
+                cardRect.localScale = Vector3.one;
+                LayoutElement cardLayout = cardRect.GetComponent<LayoutElement>();
+                if (cardLayout == null)
+                {
+                    cardLayout = cardRect.gameObject.AddComponent<LayoutElement>();
+                }
+
+                cardLayout.minWidth = cardSize.x;
+                cardLayout.preferredWidth = cardSize.x;
+                cardLayout.minHeight = cardSize.y;
+                cardLayout.preferredHeight = cardSize.y;
+                LayoutReadableCardContent(cardRect, day);
+            }
+
+            RectTransform streak = cardsRoot.Find("StreakText") as RectTransform;
+            SetCenteredRect(streak, new Vector2(700f, 44f), new Vector2(0f, ReadableStreakY));
+            ConfigureReadableText(streak != null ? streak.GetComponent<TMP_Text>() : null, 34f, 32f);
+
+            if (topRow != null)
+            {
+                LayoutRebuilder.ForceRebuildLayoutImmediate(topRow);
+            }
+
+            if (bottomRow != null)
+            {
+                LayoutRebuilder.ForceRebuildLayoutImmediate(bottomRow);
+            }
+        }
+
+        private static void ConfigureReadableRow(RectTransform row, float y, float spacing, float height)
+        {
+            if (row == null)
+            {
+                return;
+            }
+
+            SetCenteredRect(row, new Vector2(RewardRowSize.x, height), new Vector2(0f, y));
+            HorizontalLayoutGroup layout = row.GetComponent<HorizontalLayoutGroup>();
+            if (layout == null)
+            {
+                return;
+            }
+
+            layout.padding = new RectOffset(0, 0, 0, 0);
+            layout.spacing = spacing;
+            layout.childAlignment = TextAnchor.MiddleCenter;
+            layout.childControlWidth = false;
+            layout.childControlHeight = false;
+            layout.childForceExpandWidth = false;
+            layout.childForceExpandHeight = false;
+        }
+
+        // Card-local stack (card 200x270, centre 0): icon 72 @ +62, amount 50 @ -2,
+        // label 36 @ -42, status 36 @ -86. Text rects stay inside x ±73 and
+        // y -104..+110, i.e. 14 units clear of the gold rim and its inner bevel.
+        private static void LayoutReadableCardContent(Transform card, int day)
+        {
+            bool finale = day == 7;
+
+            RectTransform badge = FindRewardCardPart(card, "DayBadge") as RectTransform;
+            SetCenteredRect(badge, new Vector2(190f, 40f), new Vector2(0f, ReadableCardHeight * 0.5f + 24f));
+            ConfigureReadableText(badge != null ? badge.GetComponent<TMP_Text>() : null, 32f, 30f);
+
+            SetCenteredRect(
+                FindRewardCardPart(card, "RewardIcon") as RectTransform,
+                finale ? new Vector2(60f, 60f) : new Vector2(72f, 72f),
+                new Vector2(finale ? -50f : 0f, CardIconY));
+
+            RectTransform amount = FindRewardCardPart(card, "RewardAmount", "Amount") as RectTransform;
+            SetCenteredRect(amount, new Vector2(ReadableCardTextWidth, 50f), new Vector2(0f, CardAmountY));
+            ConfigureReadableText(amount != null ? amount.GetComponent<TMP_Text>() : null, 46f, 40f);
+
+            RectTransform label = FindRewardCardPart(card, "RewardType", "Label") as RectTransform;
+            SetCenteredRect(label, new Vector2(ReadableCardTextWidth, 36f), new Vector2(0f, CardLabelY));
+            TMP_Text labelText = label != null ? label.GetComponent<TMP_Text>() : null;
+            if (labelText != null)
+            {
+                ConfigureReadableText(labelText, 30f, 28f);
+                // Roboto Bold glyphs without the extra faux-bold spacing.
+                labelText.fontStyle = FontStyles.Normal;
+            }
+
+            RectTransform statusArea = FindRewardCardPart(card, "StatusArea", "StatusBacking") as RectTransform;
+            SetCenteredRect(statusArea, new Vector2(ReadableCardTextWidth, 36f), new Vector2(0f, ReadableCardStatusY));
+            LayoutElement statusLayout = statusArea != null ? statusArea.GetComponent<LayoutElement>() : null;
+            if (statusLayout != null)
+            {
+                statusLayout.minHeight = 36f;
+                statusLayout.preferredHeight = 36f;
+            }
+
+            TMP_Text status = FindRewardCardPart(card, "Status")?.GetComponent<TMP_Text>();
+            if (status != null)
+            {
+                SetCenteredRect(status.rectTransform, new Vector2(ReadableCardTextWidth, 36f), Vector2.zero);
+                ConfigureFixedText(status, 28f);
+                status.fontStyle = FontStyles.Bold;
+            }
+
+            if (finale)
+            {
+                EnsureFinaleBonus(card);
+            }
+        }
+
+        // Day 7 = 300 coins + 1 hint. "+1 ПОДСКАЗКА" (231 units at 28) cannot fit
+        // the card, so the bonus reads as an icon row: [coin] +1 [hint].
+        private static void EnsureFinaleBonus(Transform card)
+        {
+            RectTransform plusRect = card.Find("BonusPlus") as RectTransform;
+            if (plusRect == null)
+            {
+                GameObject plusObject = new("BonusPlus", typeof(RectTransform));
+                plusObject.layer = card.gameObject.layer;
+                plusObject.transform.SetParent(card, false);
+                plusRect = plusObject.GetComponent<RectTransform>();
+            }
+
+            TMP_Text plus = plusRect.GetComponent<TMP_Text>();
+            if (plus == null)
+            {
+                plus = plusRect.gameObject.AddComponent<TextMeshProUGUI>();
+            }
+
+            SetCenteredRect(plusRect, new Vector2(60f, 40f), new Vector2(1f, CardIconY));
+            SetText(plus, "+1");
+            ConfigureFixedText(plus, 30f);
+            plus.fontStyle = FontStyles.Bold;
+            plus.color = TextCream;
+            plusRect.gameObject.SetActive(true);
+
+            RectTransform hintRect = card.Find("BonusHintIcon") as RectTransform;
+            if (hintRect == null)
+            {
+                GameObject hintObject = new("BonusHintIcon", typeof(RectTransform));
+                hintObject.layer = card.gameObject.layer;
+                hintObject.transform.SetParent(card, false);
+                hintRect = hintObject.GetComponent<RectTransform>();
+            }
+
+            Image hint = hintRect.GetComponent<Image>();
+            if (hint == null)
+            {
+                hint = hintRect.gameObject.AddComponent<Image>();
+            }
+
+            hint.sprite = CleanRoyalPopupSprites.GameplayHint != null
+                ? CleanRoyalPopupSprites.GameplayHint
+                : PremiumUISprites.HintBulbIcon;
+            hint.type = Image.Type.Simple;
+            hint.preserveAspect = true;
+            hint.raycastTarget = false;
+            hint.color = Color.white;
+            SetCenteredRect(hintRect, new Vector2(50f, 50f), new Vector2(52f, CardIconY));
+            hintRect.gameObject.SetActive(true);
+        }
+
+        // Centres [tick][gap][word] as one group inside the status row.
+        private static void LayoutCardStatus(TMP_Text status, RectTransform check, bool claimed, Color color)
+        {
+            bool showCheck = claimed && check != null;
+            if (check != null)
+            {
+                check.localScale = Vector3.one * (showCheck ? CardCheckScale : 1f);
+                foreach (Image part in check.GetComponentsInChildren<Image>(true))
+                {
+                    part.color = color;
+                    part.raycastTarget = false;
+                }
+            }
+
+            if (status == null)
+            {
+                return;
+            }
+
+            status.color = color;
+            status.textWrappingMode = TextWrappingModes.NoWrap;
+            float checkWidth = showCheck ? CardCheckSize.x * CardCheckScale + CardCheckGap : 0f;
+            float textWidth = MeasureTextWidth(status);
+            float left = -(checkWidth + textWidth) * 0.5f;
+            status.rectTransform.anchoredPosition = new Vector2(left + checkWidth + textWidth * 0.5f, 0f);
+            if (showCheck)
+            {
+                check.anchoredPosition = new Vector2(left + (checkWidth - CardCheckGap) * 0.5f, 0f);
+            }
+        }
+
+        // Details panel 790x440 at Content y=-465 (WindowRoot -685..-245). The hero
+        // sprite's rim sits ~6 units in from the sides, ~35 from the top and ~41 from
+        // the bottom, so text stays within x -375..373 and y -165..171.
+        private void ApplyReadableDetailsLayout()
+        {
+            RectTransform details = transform.Find("WindowRoot/Content/RewardDetailsPanel") as RectTransform;
+            if (details == null)
+            {
+                return;
+            }
+
+            SetCenteredRect(details, ReadableDetailsPanelSize, ReadableDetailsPanelPosition);
+            Image detailsImage = details.GetComponent<Image>();
+            if (detailsImage != null && detailsImage.sprite != null)
+            {
+                // The scene drew this plate with preserveAspect, so the art stayed ~324 tall
+                // inside the 440-tall rect and the texts sat on its rim. Fill the rect instead.
+                detailsImage.preserveAspect = false;
+                detailsImage.type = detailsImage.sprite.border.sqrMagnitude > 0f ? Image.Type.Sliced : Image.Type.Simple;
+            }
+
+            RectTransform title = details.Find("Title") as RectTransform;
+            SetCenteredRect(title, new Vector2(700f, 44f), new Vector2(0f, 122f));
+            ConfigureReadableText(title != null ? title.GetComponent<TMP_Text>() : null, 38f, 36f);
+
+            // Icon on the left (-362..-238); text column centred in the remaining
+            // -225..373 span (centre 74, width 598).
+            SetCenteredRect(details.Find("RewardIconFrame") as RectTransform, new Vector2(124f, 124f), new Vector2(-300f, -20f));
+
+            RectTransform rewardName = details.Find("RewardName") as RectTransform;
+            SetCenteredRect(rewardName, new Vector2(DetailsColumnWidth, 50f), new Vector2(DetailsColumnX, 70f));
+            ConfigureReadableText(rewardName != null ? rewardName.GetComponent<TMP_Text>() : null, 42f, 36f);
+
+            RectTransform description = details.Find("Description") as RectTransform;
+            SetCenteredRect(description, new Vector2(DetailsColumnWidth, 80f), new Vector2(DetailsColumnX, 4f));
+            ConfigureReadableText(description != null ? description.GetComponent<TMP_Text>() : null, 34f, 32f);
+
+            SetCenteredRect(details.Find("Status") as RectTransform, ClaimButtonSize, new Vector2(DetailsColumnX, -82f));
+
+            RectTransform footnote = details.Find("Footnote") as RectTransform;
+            SetCenteredRect(footnote, new Vector2(DetailsColumnWidth, 36f), new Vector2(DetailsColumnX, -152f));
+            ConfigureReadableText(footnote != null ? footnote.GetComponent<TMP_Text>() : null, 30f, 28f);
+        }
+
+        private static void ConfigureReadableText(TMP_Text text, float maxSize, float minSize)
+        {
+            if (text == null)
+            {
+                return;
+            }
+
+            text.enableAutoSizing = true;
+            text.fontSizeMin = minSize;
+            text.fontSizeMax = maxSize;
+            text.fontSize = maxSize;
+            text.alignment = TextAlignmentOptions.Center;
+            text.margin = Vector4.zero;
+            text.lineSpacing = 0f;
+            text.raycastTarget = false;
+        }
+
+        private static void ConfigureFixedText(TMP_Text text, float size)
+        {
+            if (text == null)
+            {
+                return;
+            }
+
+            text.enableAutoSizing = false;
+            text.fontSize = size;
+            text.fontSizeMin = size;
+            text.fontSizeMax = size;
+            text.alignment = TextAlignmentOptions.Center;
+            text.margin = Vector4.zero;
+            text.lineSpacing = 0f;
+            text.textWrappingMode = TextWrappingModes.NoWrap;
+            text.raycastTarget = false;
+        }
+
+        private static float MeasureTextWidth(TMP_Text text)
+        {
+            if (text == null || string.IsNullOrEmpty(text.text))
+            {
+                return 0f;
+            }
+
+            // Inactive objects (editor bakes) may not have TMP internals yet; use a
+            // Roboto Bold caps estimate there. At runtime the popup is active.
+            if (!text.isActiveAndEnabled)
+            {
+                return text.fontSize * 0.7f * text.text.Length;
+            }
+
+            return text.GetPreferredValues(text.text).x;
+        }
+
 
 #if UNITY_EDITOR
         public void MaterializeAuthoringLayout()
@@ -1972,14 +2379,6 @@ namespace CardMesh
             SetTextRect(rect.Find("Label") as RectTransform, Vector2.zero, new Vector2(252f, 42f));
         }
 
-        private static void SetActiveIfExists(Transform parent, string childName, bool active)
-        {
-            Transform child = parent != null ? parent.Find(childName) : null;
-            if (child != null)
-            {
-                child.gameObject.SetActive(active);
-            }
-        }
 
         private static void CreateRewardRows(RectTransform root)
         {

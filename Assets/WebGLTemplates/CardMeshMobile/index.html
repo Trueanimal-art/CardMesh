@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#04140a">
+  <title>{{{ PRODUCT_NAME }}}</title>
+  <style>
+    html, body { margin: 0; padding: 0; height: 100%; background: #04140a; overflow: hidden; touch-action: none; -webkit-user-select: none; user-select: none; }
+    #stage { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; }
+    #frame { position: relative; height: 100%; width: 100%; max-width: calc(100dvh * 0.5); background: #04140a; }
+    #unity-canvas { width: 100%; height: 100%; display: block; background: #04140a; outline: none; }
+    #loader { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px;
+      font: 600 15px/1.3 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #e9cf86; letter-spacing: .04em; }
+    #loader h1 { margin: 0; font: 700 30px/1 Georgia, "Times New Roman", serif; color: #f3dc98; letter-spacing: .08em; }
+    #bar { width: 62%; max-width: 260px; height: 8px; border-radius: 4px; background: rgba(233,207,134,.18); overflow: hidden; }
+    #fill { width: 0; height: 100%; background: linear-gradient(90deg, #b98a2e, #f3dc98); transition: width .2s; }
+    #error { display: none; max-width: 80%; text-align: center; color: #ffb4a8; font-weight: 500; }
+  </style>
+</head>
+<body>
+  <div id="stage">
+    <div id="frame">
+      <canvas id="unity-canvas" tabindex="-1"></canvas>
+      <div id="loader">
+        <h1>CARD MESH</h1>
+        <div id="bar"><div id="fill"></div></div>
+        <div id="status">Загрузка…</div>
+        <div id="error"></div>
+      </div>
+    </div>
+  </div>
+  <script src="Build/{{{ LOADER_FILENAME }}}"></script>
+  <script>
+    (function () {
+      var canvas = document.getElementById("unity-canvas");
+      var fill = document.getElementById("fill");
+      var loader = document.getElementById("loader");
+      var config = {
+        dataUrl: "Build/{{{ DATA_FILENAME }}}",
+        frameworkUrl: "Build/{{{ FRAMEWORK_FILENAME }}}",
+        codeUrl: "Build/{{{ CODE_FILENAME }}}",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: {{{ JSON.stringify(COMPANY_NAME) }}},
+        productName: {{{ JSON.stringify(PRODUCT_NAME) }}},
+        productVersion: {{{ JSON.stringify(PRODUCT_VERSION) }}},
+        devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2)
+      };
+      if (window.CARDMESH_DATA_URL) { config.dataUrl = window.CARDMESH_DATA_URL; }
+      function start() {
+        createUnityInstance(canvas, config, function (p) {
+          fill.style.width = Math.round(p * 100) + "%";
+        }).then(function (instance) {
+          window.unityInstance = instance;
+          loader.style.display = "none";
+        }).catch(function (message) {
+          var e = document.getElementById("error");
+          e.style.display = "block";
+          e.textContent = "Не удалось запустить игру: " + message;
+        });
+      }
+      if (window.CARDMESH_BEFORE_START) { window.CARDMESH_BEFORE_START(config).then(start); } else { start(); }
+    })();
+  </script>
+</body>
+</html>

@@ -1,5 +1,6 @@
 using System.Reflection;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -23,13 +24,18 @@ namespace CardMesh
         private const float GoldHeaderHeight = 32f;
         private const float GoldProgressWidth = 46f;
         private const float RegularTitleFontSizeMax = 30f;
-        private const float RegularTitleFontSizeMin = 16f;
+        private const float RegularTitleFontSizeMin = 20f;
         private const float GoldTitleFontSizeMax = 24f;
-        private const float GoldTitleFontSizeMin = 11f;
+        private const float GoldTitleFontSizeMin = 17f;
         private const float RegularTitleHorizontalPadding = 22f;
         private const float GoldTitleHorizontalPadding = 24f;
         private const float ImageCardTitleHeight = 54f;
         private const float ImageCardTitleSidePadding = 12f;
+        // Image-card picture fit (fractions of the card size), applied to the content bounding box of the sprite.
+        private const float ImageCardContentMaxWidthRatio = 0.66f;
+        private const float ImageCardContentMaxHeightRatio = 0.54f;
+        private const float ImageCardContentVisualSizeRatio = 0.58f;
+        private const float ImageCardMaxCanvasUnitsPerSpritePixel = 1f;
         private const float PremiumFrameInset = 8f;
         private const float PremiumFrameMainThickness = 1.35f;
         private const float PremiumFrameHighlightThickness = 0.75f;
@@ -228,6 +234,13 @@ namespace CardMesh
             RectTransform.sizeDelta = size;
             ApplyPeekBackgroundLayout();
             LayoutPremiumFrame();
+
+            // The image-card picture is sized from the card size, so re-fit it when the card is resized
+            // without a full RefreshVisual (columns / goal slots / draw slot call SetSize on every layout pass).
+            if (iconImage != null && iconImage.enabled && isFaceUp && Data != null && Data.IsImageCard)
+            {
+                ApplyIconLayout(true);
+            }
         }
 
         public void SetFaceUp(bool value)
@@ -446,7 +459,7 @@ namespace CardMesh
                     : new Color(0.26f, 0.2f, 0.16f, 1f);
                 EnsureTextFontSupports(titleLabel, Data.DisplayText);
                 bool shouldShowTitleText = showTitle && (!Data.IsImageCard || useRevealHistoryLayout || useDrawHistoryTitleLayout);
-                titleLabel.text = shouldShowTitleText ? Data.DisplayText : string.Empty;
+                titleLabel.text = shouldShowTitleText ? RussianHyphenation.Hyphenate(Data.DisplayText) : string.Empty;
             }
 
             if (footerLabel != null)
@@ -1727,7 +1740,7 @@ namespace CardMesh
                     : isGoldCard ? Mathf.Min(GoldTitleFontSizeMax, fontSizeMax) : isImageCard ? Mathf.Min(20f, fontSizeMax) : Mathf.Min(RegularTitleFontSizeMax, fontSizeMax);
                 titleLabel.fontSizeMin = useTopHistoryTitle
                     ? Mathf.Min(11f, fontSizeMin)
-                    : isGoldCard ? Mathf.Min(GoldTitleFontSizeMin, fontSizeMin) : isImageCard ? Mathf.Min(11f, fontSizeMin) : Mathf.Min(RegularTitleFontSizeMin, fontSizeMin);
+                    : isGoldCard ? GoldTitleFontSizeMin : isImageCard ? Mathf.Min(11f, fontSizeMin) : RegularTitleFontSizeMin;
                 titleLabel.textWrappingMode =
                     !useTopHistoryTitle && !isImageCard
                         ? TextWrappingModes.Normal
@@ -1779,14 +1792,29 @@ namespace CardMesh
             }
 
             RectTransform iconRoot = iconImage.rectTransform;
+            // Always draw the whole sprite rect as one quad: no sliced/tiled/filled modes and no tight sprite mesh,
+            // so nothing of the picture can be cut regardless of import settings.
+            iconImage.type = Image.Type.Simple;
+            iconImage.useSpriteMesh = false;
+            iconImage.preserveAspect = true;
+            // The fitted picture rect may extend past the card edge (only transparent padding does); it must never
+            // steal touches from neighbouring cards. The card background handles raycasts for the whole card.
+            iconImage.raycastTarget = false;
+
             if (useLargeImageLayout)
             {
-                iconRoot.anchorMin = new Vector2(0.1f, 0.12f);
-                iconRoot.anchorMax = new Vector2(0.9f, 0.88f);
                 iconRoot.pivot = new Vector2(0.5f, 0.5f);
+                iconRoot.localScale = Vector3.one;
+                iconRoot.localRotation = Quaternion.identity;
+                if (!TryApplyContentFittedImageLayout(iconRoot, iconImage.sprite))
+                {
+                    // Fallback (content bounds unavailable): previous fixed layout.
+                    iconRoot.anchorMin = new Vector2(0.1f, 0.12f);
+                    iconRoot.anchorMax = new Vector2(0.9f, 0.88f);
+                }
+
                 iconRoot.offsetMin = Vector2.zero;
                 iconRoot.offsetMax = Vector2.zero;
-                iconImage.preserveAspect = true;
                 return;
             }
 
@@ -1796,6 +1824,78 @@ namespace CardMesh
             iconRoot.sizeDelta = new Vector2(40f, 40f);
             iconRoot.anchoredPosition = new Vector2(-12f, -12f);
             iconImage.preserveAspect = true;
+        }
+
+        // Fits the visible content (alpha bounding box) of an image-card sprite into the card instead of the raw
+        // 240x240 canvas, so every picture gets the same visual size and is centred by its content, independent of
+        // how much transparent padding the PNG has. The whole sprite is still drawn (no crop, no mask), aspect kept.
+        // The rect is expressed in card-relative anchors, so it stays correct when the card is scaled uniformly.
+        private bool TryApplyContentFittedImageLayout(RectTransform iconRoot, Sprite sprite)
+        {
+            if (iconRoot == null || sprite == null || !ImageCardContentBounds.TryGet(sprite, out Rect contentRect))
+            {
+                return false;
+            }
+
+            Vector2 cardSize = GetCurrentCardSize();
+            Vector2 spriteSize = sprite.rect.size;
+            if (cardSize.x <= 1f || cardSize.y <= 1f || spriteSize.x <= 0f || spriteSize.y <= 0f)
+            {
+                return false;
+            }
+
+            float contentWidth = Mathf.Max(1f, contentRect.width);
+            float contentHeight = Mathf.Max(1f, contentRect.height);
+            float scale = Mathf.Min(
+                cardSize.x * ImageCardContentMaxWidthRatio / contentWidth,
+                Mathf.Min(
+                    cardSize.y * ImageCardContentMaxHeightRatio / contentHeight,
+                    cardSize.x * ImageCardContentVisualSizeRatio / Mathf.Sqrt(contentWidth * contentHeight)));
+            // Never magnify the art beyond 1 sprite pixel per canvas unit (1:1 on a 1080-wide screen): small
+            // objects stay a bit smaller instead of turning blurry.
+            scale = Mathf.Min(scale, ImageCardMaxCanvasUnitsPerSpritePixel);
+            if (float.IsNaN(scale) || float.IsInfinity(scale) || scale <= 0f)
+            {
+                return false;
+            }
+
+            Vector2 displaySize = spriteSize * scale;
+            // Content centre relative to the sprite centre (sprite space, y up), in card units.
+            Vector2 contentOffset = (contentRect.center - (spriteSize * 0.5f)) * scale;
+            // Place the sprite so that its content centre lands on the card centre.
+            Vector2 rectCenter = (cardSize * 0.5f) - contentOffset;
+            Vector2 anchorCenter = new(rectCenter.x / cardSize.x, rectCenter.y / cardSize.y);
+            Vector2 anchorHalfSize = new(displaySize.x / cardSize.x * 0.5f, displaySize.y / cardSize.y * 0.5f);
+            iconRoot.anchorMin = anchorCenter - anchorHalfSize;
+            iconRoot.anchorMax = anchorCenter + anchorHalfSize;
+            return true;
+        }
+
+        private Vector2 GetCurrentCardSize()
+        {
+            if (RectTransform == null)
+            {
+                RectTransform = (RectTransform)transform;
+            }
+
+            Vector2 rectSize = RectTransform.rect.size;
+            if (rectSize.x > 1f && rectSize.y > 1f)
+            {
+                return rectSize;
+            }
+
+            Vector2 sizeDelta = RectTransform.sizeDelta;
+            if (sizeDelta.x > 1f && sizeDelta.y > 1f)
+            {
+                return sizeDelta;
+            }
+
+            if (layoutElement != null && layoutElement.preferredWidth > 1f && layoutElement.preferredHeight > 1f)
+            {
+                return new Vector2(layoutElement.preferredWidth, layoutElement.preferredHeight);
+            }
+
+            return new Vector2(256f, 374f);
         }
 
         private void SetFooterBadgeVisible(bool isVisible)
@@ -2075,6 +2175,187 @@ namespace CardMesh
 
             RectTransform.anchoredPosition = originalPosition;
             feedbackCoroutine = null;
+        }
+    }
+
+    // Measures (once per sprite) the alpha bounding box of an image-card sprite. Image-card textures are imported
+    // non-readable, so the pixels are read back through a temporary RenderTexture (works on Android and WebGL).
+    internal static class ImageCardContentBounds
+    {
+        // Pixels at or below this alpha (~9%) are treated as empty: faint halos/dust must not shift the fit.
+        private const byte AlphaThreshold = 24;
+        private const float MinContentFraction = 0.04f;
+
+        private static readonly Dictionary<Sprite, Rect> contentRectsBySprite = new();
+        private static readonly HashSet<Sprite> unmeasurableSprites = new();
+
+        // contentRect is in sprite pixels, relative to sprite.rect's bottom-left corner (y up).
+        public static bool TryGet(Sprite sprite, out Rect contentRect)
+        {
+            contentRect = default;
+            if (sprite == null)
+            {
+                return false;
+            }
+
+            if (contentRectsBySprite.TryGetValue(sprite, out contentRect))
+            {
+                return true;
+            }
+
+            if (unmeasurableSprites.Contains(sprite))
+            {
+                return false;
+            }
+
+            if (TryMeasure(sprite, out contentRect))
+            {
+                contentRectsBySprite[sprite] = contentRect;
+                return true;
+            }
+
+            unmeasurableSprites.Add(sprite);
+            contentRect = default;
+            return false;
+        }
+
+        private static bool TryMeasure(Sprite sprite, out Rect contentRect)
+        {
+            contentRect = default;
+            Texture2D texture = sprite.texture;
+            if (texture == null || sprite.packed)
+            {
+                return false;
+            }
+
+            int textureWidth = texture.width;
+            int textureHeight = texture.height;
+            Rect spriteRect = sprite.rect;
+            int xMin = Mathf.Clamp(Mathf.FloorToInt(spriteRect.xMin), 0, textureWidth);
+            int yMin = Mathf.Clamp(Mathf.FloorToInt(spriteRect.yMin), 0, textureHeight);
+            int xMax = Mathf.Clamp(Mathf.CeilToInt(spriteRect.xMax), 0, textureWidth);
+            int yMax = Mathf.Clamp(Mathf.CeilToInt(spriteRect.yMax), 0, textureHeight);
+            if (xMax - xMin < 4 || yMax - yMin < 4)
+            {
+                return false;
+            }
+
+            Color32[] pixels = ReadTexturePixels(texture);
+            if (pixels == null || pixels.Length < textureWidth * textureHeight)
+            {
+                return false;
+            }
+
+            int minX = int.MaxValue;
+            int minY = int.MaxValue;
+            int maxX = int.MinValue;
+            int maxY = int.MinValue;
+            for (int y = yMin; y < yMax; y++)
+            {
+                int row = y * textureWidth;
+                for (int x = xMin; x < xMax; x++)
+                {
+                    if (pixels[row + x].a <= AlphaThreshold)
+                    {
+                        continue;
+                    }
+
+                    if (x < minX)
+                    {
+                        minX = x;
+                    }
+
+                    if (x > maxX)
+                    {
+                        maxX = x;
+                    }
+
+                    if (y < minY)
+                    {
+                        minY = y;
+                    }
+
+                    if (y > maxY)
+                    {
+                        maxY = y;
+                    }
+                }
+            }
+
+            if (maxX < minX || maxY < minY)
+            {
+                return false;
+            }
+
+            float contentWidth = maxX - minX + 1;
+            float contentHeight = maxY - minY + 1;
+            if (contentWidth < (xMax - xMin) * MinContentFraction || contentHeight < (yMax - yMin) * MinContentFraction)
+            {
+                return false;
+            }
+
+            contentRect = new Rect(minX - spriteRect.xMin, minY - spriteRect.yMin, contentWidth, contentHeight);
+            return true;
+        }
+
+        private static Color32[] ReadTexturePixels(Texture2D texture)
+        {
+            if (texture.isReadable)
+            {
+                try
+                {
+                    return texture.GetPixels32();
+                }
+                catch (System.Exception)
+                {
+                    // Fall through to the GPU read-back path.
+                }
+            }
+
+            if (SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Null)
+            {
+                return null;
+            }
+
+            int width = texture.width;
+            int height = texture.height;
+            RenderTexture previousActive = RenderTexture.active;
+            RenderTexture renderTexture = null;
+            Texture2D readback = null;
+            try
+            {
+                renderTexture = RenderTexture.GetTemporary(width, height, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Linear);
+                Graphics.Blit(texture, renderTexture);
+                RenderTexture.active = renderTexture;
+                readback = new Texture2D(width, height, TextureFormat.RGBA32, false, true);
+                readback.ReadPixels(new Rect(0f, 0f, width, height), 0, 0, false);
+                return readback.GetPixels32();
+            }
+            catch (System.Exception exception)
+            {
+                Debug.LogWarning($"CardView: could not measure image card '{texture.name}': {exception.Message}");
+                return null;
+            }
+            finally
+            {
+                RenderTexture.active = previousActive;
+                if (renderTexture != null)
+                {
+                    RenderTexture.ReleaseTemporary(renderTexture);
+                }
+
+                if (readback != null)
+                {
+                    if (Application.isPlaying)
+                    {
+                        UnityEngine.Object.Destroy(readback);
+                    }
+                    else
+                    {
+                        UnityEngine.Object.DestroyImmediate(readback);
+                    }
+                }
+            }
         }
     }
 }

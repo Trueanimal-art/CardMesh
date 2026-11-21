@@ -85,6 +85,7 @@ namespace CardMesh
 
             isShowing = true;
             gameObject.SetActive(true);
+            ApplyMobileLayout();
 
             if (showRoutine != null)
             {
@@ -97,6 +98,81 @@ namespace CardMesh
             }
 
             showRoutine = StartCoroutine(ShowAnimated());
+        }
+
+        // The scene-authored window was shorter than its content: "В меню" hung below the frame
+        // and the title touched the top border. Lay the window out explicitly (reference 1080x1920).
+        private void ApplyMobileLayout()
+        {
+            RectTransform box = titleText != null ? titleText.rectTransform.parent as RectTransform : null;
+            if (box == null)
+            {
+                return;
+            }
+
+            // Same geometry as the authored "Начать заново?" popup, which uses the same frame
+            // sprite: the sprite has wide transparent margins, so the rect is 920x900 while the
+            // visible frame is much smaller. Title / body / two buttons sit where that popup has them.
+            box.anchorMin = new Vector2(0.5f, 0.5f);
+            box.anchorMax = new Vector2(0.5f, 0.5f);
+            box.pivot = new Vector2(0.5f, 0.5f);
+            box.sizeDelta = new Vector2(920f, 900f);
+            box.anchoredPosition = Vector2.zero;
+
+            PlaceCentered(titleText.rectTransform, new Vector2(0f, 202f), new Vector2(788f, 76f));
+            StyleText(titleText, 52f, 44f);
+            if (subtitleText != null)
+            {
+                PlaceCentered(subtitleText.rectTransform, new Vector2(0f, 50f), new Vector2(770f, 72f));
+                StyleText(subtitleText, 38f, 32f);
+            }
+
+            PlaceCenteredButton(retryButton, new Vector2(0f, -50f));
+            PlaceCenteredButton(menuButton, new Vector2(0f, -150f));
+        }
+
+        private static void PlaceCentered(RectTransform rect, Vector2 center, Vector2 size)
+        {
+            rect.anchorMin = new Vector2(0.5f, 0.5f);
+            rect.anchorMax = new Vector2(0.5f, 0.5f);
+            rect.pivot = new Vector2(0.5f, 0.5f);
+            rect.sizeDelta = size;
+            rect.anchoredPosition = center;
+        }
+
+        private static void PlaceCenteredButton(Button button, Vector2 center)
+        {
+            if (button == null || button.transform is not RectTransform rect)
+            {
+                return;
+            }
+
+            PlaceCentered(rect, center, new Vector2(560f, 96f));
+            foreach (TextMeshProUGUI label in button.GetComponentsInChildren<TextMeshProUGUI>(true))
+            {
+                RectTransform labelRect = label.rectTransform;
+                labelRect.anchorMin = Vector2.zero;
+                labelRect.anchorMax = Vector2.one;
+                labelRect.pivot = new Vector2(0.5f, 0.5f);
+                labelRect.offsetMin = new Vector2(24f, 6f);
+                labelRect.offsetMax = new Vector2(-24f, -6f);
+                StyleText(label, 36f, 30f);
+            }
+        }
+
+        private static void StyleText(TMP_Text text, float max, float min)
+        {
+            if (text == null)
+            {
+                return;
+            }
+
+            text.enableAutoSizing = true;
+            text.fontSizeMax = max;
+            text.fontSizeMin = min;
+            text.alignment = TextAlignmentOptions.Center;
+            text.textWrappingMode = TextWrappingModes.NoWrap;
+            text.overflowMode = TextOverflowModes.Overflow;
         }
 
         public void HideInstant()

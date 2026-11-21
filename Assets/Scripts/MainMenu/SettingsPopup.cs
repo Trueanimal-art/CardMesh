@@ -20,7 +20,40 @@ namespace CardMesh
         private const float DefaultMusicVolume = 0.7f;
         private const float DefaultSfxVolume = 0.8f;
         private const float FadeDuration = 0.18f;
-        private static readonly Vector2 PolishedTitleOffset = new(0f, -22f);
+        // Medium shell title sits at y = -98; -58 more puts its centre at -156,
+        // clear of the frame's top rail (inner edge ~90) and centre jewel (~100).
+        private static readonly Vector2 PolishedTitleOffset = new(0f, -58f);
+        private static readonly Vector2 PolishedTitlePosition = new(0f, -156f);
+        private static readonly Vector2 PolishedTitleSize = new(640f, 76f);
+        private const float PolishedTitleFontSize = 54f;
+
+        // Runtime layout of the settings content (reference units, ContentRoot space).
+        // ContentRoot = panel inset 72 / 72 / 176 / 72; the frame's inner edge is ~92
+        // from the panel side, so a 60 row inset keeps labels ~40 inside the frame.
+        private const float LayoutContentSideInset = 72f;
+        private const float LayoutContentTopInset = 176f;
+        private const float LayoutContentBottomInset = 72f;
+        private const float LayoutRowSideInset = 60f;
+        private const float LayoutRowHeight = 72f;
+        private const float LayoutRowPitch = 80f;
+        private const float LayoutFirstRowTop = -36f;
+        private const float LayoutRowLabelWidth = 210f;
+        private const float LayoutRowValueWidth = 104f;
+        private const float LayoutRowColumnGap = 28f;
+        private const float LayoutToggleWidth = 172f;
+        private const float LayoutToggleHeight = 64f;
+        private const float LayoutButtonWidth = 560f;
+        private const float LayoutButtonHeight = 68f;
+        private const float LayoutButtonPitch = 78f;
+        private const float LayoutFirstButtonTop = -288f;
+        private const float LayoutHelpHeaderTop = -536f;
+        private const float LayoutHelpHeaderHeight = 44f;
+        private const float LayoutFirstHelpButtonTop = -588f;
+        private const float LayoutRowLabelFontSize = 34f;
+        private const float LayoutRowValueFontSize = 32f;
+        private const float LayoutButtonLabelFontSize = 36f;
+        private const float LayoutSectionHeaderFontSize = 36f;
+        private const string HelpHeaderLabel = "ПОМОЩЬ";
         private static readonly Vector2 PanelSize = new(920f, 780f);
         private static readonly Vector2 TitleOffset = new(0f, -90f);
         private static readonly Vector2 TitleSize = new(-160f, 76f);
@@ -144,6 +177,9 @@ namespace CardMesh
             CloseModal();
             LoadSavedValues();
             gameObject.SetActive(true);
+            // Awake (first activation) re-runs the shell layout and the font
+            // provider, which resets wrapping; apply the final layout last.
+            ApplyPolishedContentLayout();
             transform.SetAsLastSibling();
             MainMenuNavigationVisibility.SetBottomNavigationVisible(this, false);
             PlayAnimation(true, null);
@@ -356,6 +392,7 @@ namespace CardMesh
 
             if (Application.isPlaying)
             {
+                ApplyPolishedContentLayout();
                 return;
             }
 
@@ -387,12 +424,238 @@ namespace CardMesh
 
             panel = shell.PanelRoot != null ? shell.PanelRoot : panel;
             contentRoot = shell.ContentRoot != null ? shell.ContentRoot : contentRoot;
-            StretchToFill(contentRoot, 72f, 72f, 176f, 72f);
-            RectTransform helpHeader = contentRoot != null ? contentRoot.Find("HelpHeader") as RectTransform : null;
-            if (helpHeader != null)
+            ApplyPolishedContentLayout();
+        }
+
+        /// <summary>
+        /// Final geometry and font sizes for the authored settings content. Runs after
+        /// every PopupShell.EnsureHierarchy pass (which resets the title and content
+        /// root), in play mode and in the editor, so the prefab preview matches.
+        /// </summary>
+        private void ApplyPolishedContentLayout()
+        {
+            if (shell != null && shell.TitleText != null)
             {
-                helpHeader.anchoredPosition = new Vector2(-16f, helpHeader.anchoredPosition.y);
+                TextMeshProUGUI title = shell.TitleText;
+                SetAnchored(
+                    title.rectTransform,
+                    new Vector2(0.5f, 1f),
+                    new Vector2(0.5f, 1f),
+                    new Vector2(0.5f, 0.5f),
+                    PolishedTitleSize,
+                    PolishedTitlePosition);
+                title.alignment = TextAlignmentOptions.Center;
+                ApplyFixedFont(title, PolishedTitleFontSize);
             }
+
+            if (contentRoot == null)
+            {
+                return;
+            }
+
+            StretchToFill(contentRoot, LayoutContentSideInset, LayoutContentSideInset, LayoutContentTopInset, LayoutContentBottomInset);
+
+            float rowTop = LayoutFirstRowTop;
+            LayoutSliderRow(contentRoot.Find("MusicRow") as RectTransform, rowTop, musicSlider, musicValueText);
+            rowTop -= LayoutRowPitch;
+            LayoutSliderRow(contentRoot.Find("SfxRow") as RectTransform, rowTop, sfxSlider, sfxValueText);
+            rowTop -= LayoutRowPitch;
+            LayoutHintsRow(contentRoot.Find("HintsRow") as RectTransform, rowTop);
+
+            float buttonTop = LayoutFirstButtonTop;
+            LayoutSettingsButton(howToButton, buttonTop);
+            buttonTop -= LayoutButtonPitch;
+            LayoutSettingsButton(resetButton, buttonTop);
+            buttonTop -= LayoutButtonPitch;
+            LayoutSettingsButton(privacyButton, buttonTop);
+
+            LayoutHelpHeader(contentRoot.Find("HelpHeader") as RectTransform);
+
+            buttonTop = LayoutFirstHelpButtonTop;
+            LayoutSettingsButton(supportButton, buttonTop);
+            buttonTop -= LayoutButtonPitch;
+            LayoutSettingsButton(rateUsButton, buttonTop);
+        }
+
+        private static void LayoutRowContainer(RectTransform row, float topY)
+        {
+            SetAnchored(
+                row,
+                new Vector2(0f, 1f),
+                new Vector2(1f, 1f),
+                new Vector2(0.5f, 1f),
+                new Vector2(-LayoutRowSideInset * 2f, LayoutRowHeight),
+                new Vector2(0f, topY));
+        }
+
+        private static void LayoutRowLabel(RectTransform row)
+        {
+            Transform labelTransform = row != null ? row.Find("Label") : null;
+            TextMeshProUGUI label = labelTransform != null ? labelTransform.GetComponent<TextMeshProUGUI>() : null;
+            if (label == null)
+            {
+                return;
+            }
+
+            SetAnchored(
+                label.rectTransform,
+                new Vector2(0f, 0.5f),
+                new Vector2(0f, 0.5f),
+                new Vector2(0f, 0.5f),
+                new Vector2(LayoutRowLabelWidth, 48f),
+                Vector2.zero);
+            label.horizontalAlignment = HorizontalAlignmentOptions.Left;
+            label.verticalAlignment = VerticalAlignmentOptions.Middle;
+            ApplyFixedFont(label, LayoutRowLabelFontSize);
+        }
+
+        private static void LayoutSliderRow(RectTransform row, float topY, Slider slider, TextMeshProUGUI valueText)
+        {
+            if (row == null)
+            {
+                return;
+            }
+
+            LayoutRowContainer(row, topY);
+            LayoutRowLabel(row);
+
+            if (valueText != null && valueText.transform.parent == row)
+            {
+                SetAnchored(
+                    valueText.rectTransform,
+                    new Vector2(1f, 0.5f),
+                    new Vector2(1f, 0.5f),
+                    new Vector2(1f, 0.5f),
+                    new Vector2(LayoutRowValueWidth, 44f),
+                    Vector2.zero);
+                valueText.horizontalAlignment = HorizontalAlignmentOptions.Right;
+                valueText.verticalAlignment = VerticalAlignmentOptions.Middle;
+                ApplyFixedFont(valueText, LayoutRowValueFontSize);
+            }
+
+            RectTransform sliderRect = slider != null && slider.transform.parent == row
+                ? slider.transform as RectTransform
+                : null;
+            if (sliderRect != null)
+            {
+                // Slider spans between the label column and the value column.
+                float left = LayoutRowLabelWidth + LayoutRowColumnGap;
+                float right = LayoutRowValueWidth + LayoutRowColumnGap;
+                SetAnchored(
+                    sliderRect,
+                    new Vector2(0f, 0.5f),
+                    new Vector2(1f, 0.5f),
+                    new Vector2(0.5f, 0.5f),
+                    new Vector2(-(left + right), LayoutRowHeight),
+                    new Vector2((left - right) * 0.5f, 0f));
+            }
+        }
+
+        private void LayoutHintsRow(RectTransform row, float topY)
+        {
+            if (row == null)
+            {
+                return;
+            }
+
+            LayoutRowContainer(row, topY);
+            LayoutRowLabel(row);
+
+            RectTransform toggleRect = hintsToggleButton != null && hintsToggleButton.transform.parent == row
+                ? hintsToggleButton.transform as RectTransform
+                : null;
+            if (toggleRect != null)
+            {
+                // Right-aligned with the "70%" value column above it.
+                SetAnchored(
+                    toggleRect,
+                    new Vector2(1f, 0.5f),
+                    new Vector2(1f, 0.5f),
+                    new Vector2(1f, 0.5f),
+                    new Vector2(LayoutToggleWidth, LayoutToggleHeight),
+                    Vector2.zero);
+            }
+
+            if (hintsValueText != null)
+            {
+                StretchToFill(hintsValueText.rectTransform, 18f, 18f, 0f, 2f);
+                hintsValueText.horizontalAlignment = HorizontalAlignmentOptions.Center;
+                hintsValueText.verticalAlignment = VerticalAlignmentOptions.Middle;
+                ApplyFixedFont(hintsValueText, LayoutButtonLabelFontSize);
+            }
+        }
+
+        private static void LayoutSettingsButton(Button button, float topY)
+        {
+            RectTransform rect = button != null ? button.transform as RectTransform : null;
+            if (rect == null)
+            {
+                return;
+            }
+
+            SetAnchored(
+                rect,
+                new Vector2(0.5f, 1f),
+                new Vector2(0.5f, 1f),
+                new Vector2(0.5f, 1f),
+                new Vector2(LayoutButtonWidth, LayoutButtonHeight),
+                new Vector2(0f, topY));
+
+            Transform labelTransform = rect.Find("Label");
+            TextMeshProUGUI label = labelTransform != null ? labelTransform.GetComponent<TextMeshProUGUI>() : null;
+            if (label != null)
+            {
+                StretchToFill(label.rectTransform, 24f, 24f, 0f, 2f);
+                label.horizontalAlignment = HorizontalAlignmentOptions.Center;
+                label.verticalAlignment = VerticalAlignmentOptions.Middle;
+                ApplyFixedFont(label, LayoutButtonLabelFontSize);
+            }
+        }
+
+        private void LayoutHelpHeader(RectTransform headerRect)
+        {
+            TextMeshProUGUI header = headerRect != null ? headerRect.GetComponent<TextMeshProUGUI>() : null;
+            if (header == null)
+            {
+                return;
+            }
+
+            // Centred over the help buttons, same gold/bold/outlined style as the title.
+            SetAnchored(
+                headerRect,
+                new Vector2(0.5f, 1f),
+                new Vector2(0.5f, 1f),
+                new Vector2(0.5f, 1f),
+                new Vector2(LayoutButtonWidth, LayoutHelpHeaderHeight),
+                new Vector2(0f, LayoutHelpHeaderTop));
+            if (header.text != HelpHeaderLabel)
+            {
+                header.text = HelpHeaderLabel;
+            }
+
+            header.horizontalAlignment = HorizontalAlignmentOptions.Center;
+            header.verticalAlignment = VerticalAlignmentOptions.Middle;
+            header.fontStyle = FontStyles.Bold;
+            header.characterSpacing = 4f;
+            header.color = textGold;
+            AddTextOutline(header, new Color(0.12f, 0.055f, 0.012f, 0.62f), new Vector2(1f, -1f));
+            ApplyFixedFont(header, LayoutSectionHeaderFontSize);
+        }
+
+        private static void ApplyFixedFont(TMP_Text text, float size)
+        {
+            if (text == null)
+            {
+                return;
+            }
+
+            // Fixed sizes: autosize used to shrink these below the readable minimum.
+            text.enableAutoSizing = false;
+            text.fontSizeMin = size;
+            text.fontSizeMax = size;
+            text.fontSize = size;
+            text.textWrappingMode = TextWrappingModes.NoWrap;
+            text.overflowMode = TextOverflowModes.Overflow;
         }
 
         private void BuildUi()
@@ -971,7 +1234,71 @@ namespace CardMesh
                 new Vector2(138f, -138f),
                 secondary.HasValue);
 
+            ApplyModalLayout(body, secondary.HasValue);
             modalLayer.gameObject.SetActive(true);
+        }
+
+        // The modal template (prefab-authored, 680x440) was too small for its texts: title 44,
+        // body 27 and button labels 30 reference units. Size it to its content.
+        private void ApplyModalLayout(string body, bool twoButtons)
+        {
+            if (modalPanel == null)
+            {
+                return;
+            }
+
+            bool longBody = !string.IsNullOrEmpty(body) && body.Length > 90;
+            Vector2 panelSize = new(840f, longBody ? 860f : 640f);
+            SetAnchored(modalPanel, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), panelSize, new Vector2(0f, 40f));
+
+            if (modalTitleText != null)
+            {
+                SetAnchored(modalTitleText.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 0.5f), new Vector2(-260f, 76f), new Vector2(0f, -176f));
+                FixFontSize(modalTitleText, 52f);
+            }
+
+            if (modalCloseButton != null)
+            {
+                SetAnchored(modalCloseButton.transform as RectTransform, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 0.5f), new Vector2(56f, 56f), new Vector2(-70f, -78f));
+            }
+
+            if (modalBodyText != null)
+            {
+                float bodyHeight = panelSize.y - 232f - 230f;
+                SetAnchored(modalBodyText.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(640f, bodyHeight), new Vector2(0f, -232f));
+                FixFontSize(modalBodyText, 34f);
+                modalBodyText.textWrappingMode = TextWrappingModes.Normal;
+                modalBodyText.alignment = TextAlignmentOptions.Center;
+            }
+
+            Vector2 buttonSize = twoButtons ? new Vector2(270f, 84f) : new Vector2(340f, 84f);
+            PlaceModalButton(modalPrimaryButton, modalPrimaryText, buttonSize, new Vector2(twoButtons ? -155f : 0f, 150f));
+            PlaceModalButton(modalSecondaryButton, modalSecondaryText, buttonSize, new Vector2(155f, 150f));
+        }
+
+        private static void PlaceModalButton(Button button, TextMeshProUGUI label, Vector2 size, Vector2 bottomCenter)
+        {
+            if (button == null)
+            {
+                return;
+            }
+
+            SetAnchored(button.transform as RectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0.5f), size, bottomCenter);
+            if (label != null)
+            {
+                StretchToFill(label.rectTransform, 18f, 18f, 4f, 4f);
+                FixFontSize(label, 36f);
+                label.alignment = TextAlignmentOptions.Center;
+            }
+        }
+
+        private static void FixFontSize(TMP_Text text, float size)
+        {
+            text.enableAutoSizing = false;
+            text.fontSize = size;
+            text.fontSizeMin = size;
+            text.fontSizeMax = size;
+            text.overflowMode = TextOverflowModes.Overflow;
         }
 
         private bool EnsureModalTemplateReady()

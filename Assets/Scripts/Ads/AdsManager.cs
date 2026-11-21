@@ -347,7 +347,8 @@ public class AdsManager : MonoBehaviour
     {
 #if UNITY_ANDROID && !UNITY_EDITOR
         return new GoogleMobileAdsProvider();
-#elif UNITY_EDITOR
+#elif UNITY_EDITOR || CARDMESH_WEB_PREVIEW
+        // Browser preview has no ad SDK: rewarded "ads" grant the reward at once.
         return new MockAdsProvider(() => mockRewardedShouldFail, () => mockInterstitialShouldFail);
 #else
         return new UnavailableAdsProvider();

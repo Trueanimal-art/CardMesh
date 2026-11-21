@@ -340,9 +340,9 @@ namespace CardMesh
             text.enabled = true;
             text.canvasRenderer.SetAlpha(1f);
             text.enableAutoSizing = true;
-            text.fontSize = 14f;
-            text.fontSizeMin = 11f;
-            text.fontSizeMax = 14f;
+            text.fontSize = 26f;
+            text.fontSizeMin = 21f;
+            text.fontSizeMax = 26f;
             text.fontStyle = FontStyles.Bold;
             text.fontWeight = FontWeight.Bold;
             text.textWrappingMode = TextWrappingModes.NoWrap;

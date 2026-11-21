@@ -42,8 +42,23 @@ namespace CardMesh
         private const float RuntimeStatsGap = 34f;
         private const float RuntimeTitleNudgeDown = 6f;
         private const float RuntimeStatsNudgeDown = 12f;
-        private const float GeneratedListHeaderGap = 44f;
+        private const float GeneratedListHeaderGap = 16f;
         private const int MaxGeneratedListAdditionalTopPadding = 96;
+
+        // Polished runtime layout for the Compact (920x700) pause-window frame. That
+        // sprite has a baked horizontal divider ~258 units below the panel top (diamond
+        // 243..273), top inner rail ~135, bottom inner rail ~550, side inner rails ~110.
+        // Title sits above the divider, the subtitle and the list below it.
+        private static readonly Vector2 PolishedTitleSize = new(-132f, 84f);
+        private static readonly Vector2 PolishedTitlePosition = new(0f, -150f);
+        private static readonly Vector2 PolishedStatsSize = new(-232f, 44f);
+        private static readonly Vector2 PolishedStatsPosition = new(0f, -284f);
+        private static readonly Vector2 PolishedScrollSize = new(640f, 200f);
+        private static readonly Vector2 PolishedScrollPosition = new(0f, -336f);
+        private const float PolishedTitleFontSize = 54f;
+        private const float PolishedStatsFontSize = 32f;
+        private const float LevelLabelFontSize = 36f;
+        private const float PolishedScrollbarVerticalInset = 24f;
 
         private readonly Color textGold = new(1f, 0.83f, 0.34f, 1f);
         private readonly Color textDark = new(0.16f, 0.09f, 0.02f, 1f);
@@ -71,6 +86,7 @@ namespace CardMesh
         private bool hasCapturedShownPanelScale;
         private bool hasCapturedRuntimeTextPositions;
         private bool hasCapturedAuthoredPlayModeLayout;
+        private bool listReservesScrollbar;
         private bool isBusy;
 
         public static LevelSelectionPopup SceneInstance =>
@@ -349,7 +365,11 @@ namespace CardMesh
 
             for (int index = contentRoot.childCount - 1; index >= 0; index--)
             {
-                Destroy(contentRoot.GetChild(index).gameObject);
+                // Destroy is deferred to the end of the frame; deactivate first so the
+                // old rows are ignored by the layout group and the row counters below.
+                GameObject oldRow = contentRoot.GetChild(index).gameObject;
+                oldRow.SetActive(false);
+                Destroy(oldRow);
             }
 
             int completedLevels = progressionManager.MaxCompletedLevel;
@@ -379,11 +399,13 @@ namespace CardMesh
 
         private void CreateLevelButton(int level)
         {
-            bool isCompleted = level <= progressionManager.MaxCompletedLevel;
+            // Every unlocked level (completed ones plus the current playable one) is
+            // selectable; LevelProgressionManager.SelectLevel accepts 1..MaxUnlockedLevel.
+            bool isUnlocked = level <= progressionManager.MaxUnlockedLevel;
             bool isSelected = level == progressionManager.LastSelectedLevel;
 
             Button button = CreateImageButton(contentRoot, $"Level_{level}", GetLevelButtonSprite(), Color.white);
-            button.interactable = isCompleted;
+            button.interactable = isUnlocked;
 
             RectTransform rectTransform = button.transform as RectTransform;
             rectTransform.sizeDelta = new Vector2(0f, LevelButtonHeight);
@@ -396,26 +418,27 @@ namespace CardMesh
             image.type = image.sprite != null ? Image.Type.Sliced : Image.Type.Simple;
             image.color = isSelected
                 ? Color.white
-                : isCompleted
+                : isUnlocked
                     ? new Color(0.96f, 0.96f, 0.9f, 1f)
                     : new Color(0.68f, 0.72f, 0.58f, 0.72f);
 
             CanvasGroup rowGroup = button.gameObject.AddComponent<CanvasGroup>();
-            rowGroup.alpha = isCompleted ? 1f : 0.62f;
+            rowGroup.alpha = isUnlocked ? 1f : 0.62f;
 
-            string labelText = isCompleted ? $"Уровень {level}" : "...";
-            Color labelColor = isCompleted ? textGold : new Color(0.9f, 0.82f, 0.55f, 0.72f);
-            TextMeshProUGUI label = CreateText(rectTransform, "Label", labelText, 36f, labelColor, TextAlignmentOptions.Center);
+            string labelText = $"Уровень {level}";
+            Color labelColor = isUnlocked ? textGold : new Color(0.9f, 0.82f, 0.55f, 0.72f);
+            TextMeshProUGUI label = CreateText(rectTransform, "Label", labelText, LevelLabelFontSize, labelColor, TextAlignmentOptions.Center);
             StretchToFill(label.rectTransform, 28f, 28f, 0f, 0f);
             label.fontStyle = FontStyles.Bold;
-            AddTextOutline(label, new Color(0.12f, 0.055f, 0.012f, isCompleted ? 0.62f : 0.34f), new Vector2(1f, -1f));
+            ApplyFixedFont(label, LevelLabelFontSize);
+            AddTextOutline(label, new Color(0.12f, 0.055f, 0.012f, isUnlocked ? 0.62f : 0.34f), new Vector2(1f, -1f));
 
             if (isSelected)
             {
                 AddOutline(button.gameObject, new Color(1f, 0.95f, 0.46f, 0.9f), new Vector2(2f, -2f));
             }
 
-            if (isCompleted)
+            if (isUnlocked)
             {
                 int selectedLevel = level;
                 button.onClick.AddListener(() => SelectLevel(selectedLevel));
@@ -810,6 +833,12 @@ namespace CardMesh
                 return;
             }
 
+            if (!useRuntimeSafeLayout)
+            {
+                // Measure against the final list geometry, not the authored one.
+                ApplyPolishedHeaderAndListLayout(false);
+            }
+
             Canvas.ForceUpdateCanvases();
             LayoutRebuilder.ForceRebuildLayoutImmediate(contentRoot);
             float contentHeight = CalculateLevelListContentHeight();
@@ -820,6 +849,11 @@ namespace CardMesh
             if (useRuntimeSafeLayout)
             {
                 ApplyViewportLayout(levelsScrollRect.viewport, shouldShow);
+            }
+            else
+            {
+                listReservesScrollbar = shouldShow;
+                ApplyPolishedHeaderAndListLayout(shouldShow);
             }
 
             LayoutRebuilder.ForceRebuildLayoutImmediate(contentRoot);
@@ -1112,7 +1146,103 @@ namespace CardMesh
                 pair.Value.Apply(pair.Key);
             }
 
+            ApplyPolishedHeaderAndListLayout(listReservesScrollbar);
             KeepGeneratedRowsBelowAuthoredHeader();
+        }
+
+        /// <summary>
+        /// Final play-mode geometry for the title, subtitle and level list. The
+        /// Compact frame sprite has a decorative divider baked in at ~37% of its
+        /// height; the subtitle used to sit right on it. Runs after every authored
+        /// layout restore so the captured prefab/scene values cannot win.
+        /// </summary>
+        private void ApplyPolishedHeaderAndListLayout(bool reserveScrollbar)
+        {
+            if (!Application.isPlaying || useRuntimeSafeLayout || panel == null)
+            {
+                return;
+            }
+
+            TextMeshProUGUI title = FindChildRecursive<TextMeshProUGUI>(panel, "Title");
+            if (title != null)
+            {
+                SetAnchored(title.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), PolishedTitleSize, PolishedTitlePosition);
+                title.alignment = TextAlignmentOptions.Center;
+                ApplyFixedFont(title, PolishedTitleFontSize);
+            }
+
+            if (statsText != null)
+            {
+                SetAnchored(statsText.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), PolishedStatsSize, PolishedStatsPosition);
+                statsText.alignment = TextAlignmentOptions.Center;
+                ApplyFixedFont(statsText, PolishedStatsFontSize);
+            }
+
+            RectTransform scrollRoot = levelsScrollRect != null
+                ? levelsScrollRect.transform as RectTransform
+                : panel.Find("LevelsScroll") as RectTransform;
+            if (scrollRoot == null)
+            {
+                return;
+            }
+
+            // List lives strictly between the subtitle and the frame's bottom rail.
+            SetAnchored(scrollRoot, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), PolishedScrollSize, PolishedScrollPosition);
+            scrollRoot.localScale = Vector3.one;
+
+            float rightInset = ScrollViewportHorizontalInset + (reserveScrollbar ? ScrollbarReservedWidth : 0f);
+            RectTransform viewport = levelsScrollRect != null && levelsScrollRect.viewport != null
+                ? levelsScrollRect.viewport
+                : scrollRoot.Find("Viewport") as RectTransform;
+            StretchToFill(viewport, ScrollViewportHorizontalInset, rightInset, 0f, 0f);
+
+            if (levelsScrollbar != null)
+            {
+                SetAnchored(
+                    levelsScrollbar.transform as RectTransform,
+                    new Vector2(1f, 0f),
+                    new Vector2(1f, 1f),
+                    new Vector2(0.5f, 0.5f),
+                    new Vector2(34f, -PolishedScrollbarVerticalInset * 2f),
+                    new Vector2(-34f, 0f));
+            }
+
+            for (int index = 0; index < scrollRoot.childCount; index++)
+            {
+                RectTransform child = scrollRoot.GetChild(index) as RectTransform;
+                if (child == null)
+                {
+                    continue;
+                }
+
+                bool isTop = child.name == FadeTopName;
+                if (!isTop && child.name != FadeBottomName)
+                {
+                    continue;
+                }
+
+                child.anchorMin = new Vector2(0f, isTop ? 1f : 0f);
+                child.anchorMax = new Vector2(1f, isTop ? 1f : 0f);
+                child.pivot = new Vector2(0.5f, isTop ? 1f : 0f);
+                child.offsetMin = new Vector2(ScrollViewportHorizontalInset, isTop ? -EdgeFadeHeight : 0f);
+                child.offsetMax = new Vector2(-ScrollViewportHorizontalInset - ScrollbarReservedWidth, isTop ? 0f : EdgeFadeHeight);
+                child.localScale = Vector3.one;
+            }
+        }
+
+        private static void ApplyFixedFont(TMP_Text text, float size)
+        {
+            if (text == null)
+            {
+                return;
+            }
+
+            text.enableAutoSizing = false;
+            text.fontSizeMin = size;
+            text.fontSizeMax = size;
+            text.fontSize = size;
+            text.textWrappingMode = TextWrappingModes.NoWrap;
+            text.overflowMode = TextOverflowModes.Overflow;
         }
 
         private bool IsInsideContentRoot(RectTransform rectTransform)

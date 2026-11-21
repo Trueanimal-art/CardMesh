@@ -1,4 +1,5 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,6 +8,27 @@ namespace CardMesh
     public sealed class RateUsPopupController : MonoBehaviour
     {
         private const string RatingPrefsKey = "CardMesh.Player.Rating";
+
+        // Runtime layout (reference units, Panel-centre space). The panel uses the
+        // pause-window frame sprite stretched (Image.Type.Simple). At 900x820 its
+        // inner rails sit ~158 below the top / ~175 above the bottom, the baked
+        // divider at +108 (diamond +90..+126), the bottom jewel tip at -215 and
+        // the side inner rails ~107 from each side.
+        private const string SubtitleText = "Понравилась игра?\nПоддержите нас оценкой!";
+        private static readonly Vector2 PanelSize = new(900f, 820f);
+        private static readonly Vector2 TitleSize = new(640f, 76f);
+        private static readonly Vector2 TitlePosition = new(0f, 185f);
+        private static readonly Vector2 SubtitleSize = new(600f, 84f);
+        private static readonly Vector2 SubtitlePosition = new(0f, 34f);
+        private const float StarRowY = -70f;
+        private const float StarSpacing = 116f;
+        private static readonly Vector2 ActionButtonSize = new(270f, 66f);
+        private const float ActionButtonX = 160f;
+        private const float ActionButtonY = -168f;
+        private const float ActionLabelHorizontalPadding = 24f;
+        private const float TitleFontSize = 54f;
+        private const float SubtitleFontSize = 32f;
+        private const float ActionLabelFontSize = 36f;
 
         [SerializeField] private GameObject popupRoot;
         [SerializeField] private Button submitButton;
@@ -29,6 +51,7 @@ namespace CardMesh
         private void OnEnable()
         {
             popupRoot ??= gameObject;
+            ApplyPolishedLayout();
             selectedRating = 0;
             previewRating = 0;
             submitReadyRoutine = null;
@@ -51,6 +74,117 @@ namespace CardMesh
             GameObject root = popupRoot != null ? popupRoot : gameObject;
             root.SetActive(true);
             root.transform.SetAsLastSibling();
+            ApplyPolishedLayout();
+        }
+
+        /// <summary>
+        /// Final geometry and font sizes. The prefab and MainMenu.unity overrides put
+        /// the action buttons on the frame's bottom rail and used a 21-unit subtitle;
+        /// this runs on every open so the serialized values cannot win.
+        /// </summary>
+        private void ApplyPolishedLayout()
+        {
+            Transform root = popupRoot != null ? popupRoot.transform : transform;
+            RectTransform panel = root.Find("Panel") as RectTransform;
+            if (panel == null)
+            {
+                return;
+            }
+
+            panel.sizeDelta = PanelSize;
+
+            TextMeshProUGUI title = FindDirectText(panel, "Title");
+            if (title != null)
+            {
+                SetCentered(title.rectTransform, TitleSize, TitlePosition);
+                title.alignment = TextAlignmentOptions.Center;
+                ApplyFixedFont(title, TitleFontSize, false);
+            }
+
+            TextMeshProUGUI subtitle = FindDirectText(panel, "Subtitle");
+            if (subtitle != null)
+            {
+                SetCentered(subtitle.rectTransform, SubtitleSize, SubtitlePosition);
+                subtitle.text = SubtitleText;
+                subtitle.alignment = TextAlignmentOptions.Center;
+                ApplyFixedFont(subtitle, SubtitleFontSize, true);
+            }
+
+            for (int i = 0; i < 5; i++)
+            {
+                RectTransform star = panel.Find($"StarButton{i + 1}") as RectTransform;
+                if (star != null)
+                {
+                    star.anchoredPosition = new Vector2((i - 2) * StarSpacing, StarRowY);
+                }
+            }
+
+            RectTransform sparkles = panel.Find("RatingSparkles") as RectTransform;
+            if (sparkles != null)
+            {
+                sparkles.anchoredPosition = new Vector2(0f, StarRowY);
+            }
+
+            LayoutActionButton(panel.Find("CancelButton") as RectTransform, -ActionButtonX);
+            LayoutActionButton(panel.Find("SubmitButton") as RectTransform, ActionButtonX);
+        }
+
+        private static void LayoutActionButton(RectTransform button, float x)
+        {
+            if (button == null)
+            {
+                return;
+            }
+
+            SetCentered(button, ActionButtonSize, new Vector2(x, ActionButtonY));
+
+            RectTransform glow = button.Find("SelectionGlow") as RectTransform;
+            if (glow != null)
+            {
+                glow.sizeDelta = ActionButtonSize + new Vector2(12f, 8f);
+                glow.anchoredPosition = Vector2.zero;
+            }
+
+            TextMeshProUGUI label = FindDirectText(button, "Label");
+            if (label != null)
+            {
+                SetCentered(
+                    label.rectTransform,
+                    new Vector2(ActionButtonSize.x - ActionLabelHorizontalPadding * 2f, 50f),
+                    Vector2.zero);
+                label.alignment = TextAlignmentOptions.Center;
+                ApplyFixedFont(label, ActionLabelFontSize, false);
+            }
+        }
+
+        private static TextMeshProUGUI FindDirectText(Transform parent, string childName)
+        {
+            Transform child = parent != null ? parent.Find(childName) : null;
+            return child != null ? child.GetComponent<TextMeshProUGUI>() : null;
+        }
+
+        private static void SetCentered(RectTransform rect, Vector2 size, Vector2 position)
+        {
+            if (rect == null)
+            {
+                return;
+            }
+
+            rect.anchorMin = new Vector2(0.5f, 0.5f);
+            rect.anchorMax = new Vector2(0.5f, 0.5f);
+            rect.pivot = new Vector2(0.5f, 0.5f);
+            rect.sizeDelta = size;
+            rect.anchoredPosition = position;
+        }
+
+        private static void ApplyFixedFont(TMP_Text text, float size, bool allowWrap)
+        {
+            text.enableAutoSizing = false;
+            text.fontSizeMin = size;
+            text.fontSizeMax = size;
+            text.fontSize = size;
+            text.textWrappingMode = allowWrap ? TextWrappingModes.Normal : TextWrappingModes.NoWrap;
+            text.overflowMode = TextOverflowModes.Overflow;
         }
 
         public void Submit()

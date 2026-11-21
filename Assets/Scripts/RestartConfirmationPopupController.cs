@@ -49,6 +49,8 @@ namespace CardMesh
             popupRoot ??= gameObject;
             popupRoot.SetActive(true);
             popupRoot.transform.SetAsLastSibling();
+            GameplayModalPolish.Apply(popupRoot);
+            GameplayModalPolish.SetButtonLabel(popupRoot, "ConfirmButton", "Начать заново");
 
             if (popupRoot.transform is RectTransform rect)
             {

@@ -61,6 +61,7 @@ namespace CardMesh
             popupRoot ??= gameObject;
             popupRoot.SetActive(true);
             popupRoot.transform.SetAsLastSibling();
+            GameplayModalPolish.Apply(popupRoot);
 
             if (popupRoot.transform is RectTransform rect)
             {

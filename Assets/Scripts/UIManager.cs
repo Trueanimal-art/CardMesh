@@ -521,6 +521,7 @@ namespace CardMesh
                     onClose: () => HideModal(livesEmptyPopup),
                     onCoinsChanged: UpdateCoins);
                 ShowModalImmediate(livesEmptyPopup);
+                livesEmptyPopup.transform.SetAsLastSibling();
                 Time.timeScale = 0f;
             }
         }
@@ -2368,16 +2369,46 @@ namespace CardMesh
         {
             if (levelFailedPopup == null)
             {
-                levelFailedPopup = CreateModalRoot("LevelFailedPopup", out RectTransform panel, new Vector2(430f, 286f));
-                CreateModalTitle(panel, "Уровень не пройден", new Vector2(-44f, 72f), new Vector2(0f, -30f), 33f);
+                // Build it as a copy of the authored "Начать заново?" window, so frame, canvas
+                // scale and paddings are identical to the other gameplay popups.
+                GameObject restartTemplate = FindAuthoredModal("RestartConfirmationPopup");
+                if (restartTemplate != null)
+                {
+                    levelFailedPopup = CreateLevelFailedFromTemplate(restartTemplate);
+                }
+            }
 
-                TextMeshProUGUI body = CreateText("Body", panel, "Попробуйте еще раз", 27f, new Color(0.38f, 0.25f, 0.12f, 1f));
-                body.fontStyle = FontStyles.Bold;
-                SetAnchored(body.rectTransform, new Vector2(0f, 0.5f), new Vector2(1f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-58f, 48f), new Vector2(0f, 12f));
+            if (levelFailedPopup == null)
+            {
+                // Same window size/art as the authored "Начать заново?" popup so all gameplay modals match.
+                Vector2 panelSize = ResolveAuthoredModalPanelSize("RestartConfirmationPopup", new Vector2(760f, 580f));
+                levelFailedPopup = CreateModalRoot("LevelFailedPopup", out RectTransform panel, panelSize);
+                RectTransform modalParent = sceneRefs != null ? sceneRefs.SafeAreaRoot : null;
+                if (modalParent != null && levelFailedPopup.transform.parent != modalParent)
+                {
+                    levelFailedPopup.transform.SetParent(modalParent, false);
+                    StretchToFill(levelFailedPopup.transform as RectTransform, 0f, 0f, 0f, 0f);
+                }
+
+                float sidePadding = Mathf.Round(panelSize.x * 0.12f);
+                TextMeshProUGUI title = CreateModalTitle(panel, "Уровень не пройден", new Vector2(-sidePadding * 2f, 76f), new Vector2(0f, -Mathf.Round(panelSize.y * 0.12f)), 52f);
+                ConfigureText(title, 52f, 44f, TextAlignmentOptions.Center, new Color(0.98f, 0.86f, 0.52f, 1f));
+                title.fontStyle = FontStyles.Bold;
+
+                TextMeshProUGUI body = CreateText("Body", panel, "Ходы закончились.\nПопробуйте ещё раз!", 36f, new Color(0.95f, 0.88f, 0.7f, 1f));
+                ConfigureText(body, 36f, 32f, TextAlignmentOptions.Center, new Color(0.95f, 0.88f, 0.7f, 1f));
+                body.textWrappingMode = TextWrappingModes.Normal;
+                SetAnchored(body.rectTransform, new Vector2(0f, 0.5f), new Vector2(1f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-sidePadding * 2f, 110f), new Vector2(0f, Mathf.Round(panelSize.y * 0.04f)));
 
                 Button retryButton = CreateButton("RetryButton", panel, "Попробовать снова");
-                SetAnchored(retryButton.GetComponent<RectTransform>(), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(320f, 64f), new Vector2(0f, 34f));
+                SetAnchored(retryButton.GetComponent<RectTransform>(), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(Mathf.Round(panelSize.x * 0.74f), 96f), new Vector2(0f, Mathf.Round(panelSize.y * 0.13f)));
                 ConfigureModalButton(retryButton, true);
+                foreach (TMP_Text label in retryButton.GetComponentsInChildren<TMP_Text>(true))
+                {
+                    ConfigureText(label, 38f, 32f, TextAlignmentOptions.Center, new Color(0.98f, 0.73f, 0.2f, 1f));
+                    label.fontStyle = FontStyles.Bold;
+                    StretchToFill(label.rectTransform, 24f, 24f, 6f, 6f);
+                }
             }
 
             Button retry = FindChildRecursive<Button>(levelFailedPopup.transform, "RetryButton");
@@ -2393,6 +2424,93 @@ namespace CardMesh
                     }
                 });
             }
+        }
+
+        private static GameObject CreateLevelFailedFromTemplate(GameObject template)
+        {
+            bool wasActive = template.activeSelf;
+            template.SetActive(false);
+            GameObject clone = Instantiate(template, template.transform.parent);
+            template.SetActive(wasActive);
+            clone.name = "LevelFailedPopup";
+            if (clone.transform is RectTransform cloneRect)
+            {
+                cloneRect.anchorMin = Vector2.zero;
+                cloneRect.anchorMax = Vector2.one;
+                cloneRect.pivot = new Vector2(0.5f, 0.5f);
+                cloneRect.offsetMin = Vector2.zero;
+                cloneRect.offsetMax = Vector2.zero;
+                cloneRect.localScale = Vector3.one;
+            }
+            foreach (RestartConfirmationPopupController controller in clone.GetComponentsInChildren<RestartConfirmationPopupController>(true))
+            {
+                Destroy(controller);
+            }
+
+            RectTransform panel = FindChildRecursive<RectTransform>(clone.transform, "Panel");
+            if (panel == null)
+            {
+                Destroy(clone);
+                return null;
+            }
+
+            TextMeshProUGUI title = FindChildRecursive<TextMeshProUGUI>(panel, "Title");
+            if (title != null)
+            {
+                title.text = "Уровень не пройден";
+            }
+
+            TextMeshProUGUI body = FindChildRecursive<TextMeshProUGUI>(panel, "Body");
+            if (body != null)
+            {
+                body.text = "Ходы закончились.\nПопробуйте ещё раз!";
+                body.enableAutoSizing = true;
+                body.fontSizeMax = 34f;
+                body.fontSizeMin = 30f;
+                body.textWrappingMode = TextWrappingModes.Normal;
+                body.rectTransform.sizeDelta = new Vector2(body.rectTransform.sizeDelta.x, 96f);
+            }
+
+            Button confirm = FindChildRecursive<Button>(panel, "ConfirmButton");
+            Button cancel = FindChildRecursive<Button>(panel, "CancelButton");
+            if (confirm != null)
+            {
+                confirm.name = "RetryButton";
+                confirm.onClick.RemoveAllListeners();
+                TMP_Text label = confirm.GetComponentInChildren<TMP_Text>(true);
+                if (label != null)
+                {
+                    label.text = "Попробовать снова";
+                }
+
+                if (cancel != null && confirm.transform is RectTransform confirmRect && cancel.transform is RectTransform cancelRect)
+                {
+                    confirmRect.anchoredPosition = (confirmRect.anchoredPosition + cancelRect.anchoredPosition) * 0.5f - new Vector2(0f, 10f);
+                }
+            }
+
+            if (cancel != null)
+            {
+                cancel.gameObject.SetActive(false);
+            }
+
+            GameplayModalPolish.Apply(clone);
+            clone.SetActive(false);
+            return clone;
+        }
+
+        private Vector2 ResolveAuthoredModalPanelSize(string modalName, Vector2 fallback)
+        {
+            RectTransform root = sceneRefs != null ? sceneRefs.SafeAreaRoot : safeAreaRoot;
+            RectTransform modal = root != null ? FindChildRecursive<RectTransform>(root, modalName) : null;
+            RectTransform panel = modal != null ? FindChildRecursive<RectTransform>(modal, "Panel") : null;
+            if (panel == null)
+            {
+                return fallback;
+            }
+
+            Vector2 size = panel.rect.size;
+            return size.x >= 400f && size.y >= 300f ? size : fallback;
         }
 
         private void EnsureLivesEmptyPopup()
