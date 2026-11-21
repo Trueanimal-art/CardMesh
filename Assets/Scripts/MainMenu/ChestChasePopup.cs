@@ -9,8 +9,10 @@ namespace CardMesh
 {
     public sealed class ChestChasePopup : MonoBehaviour
     {
-        private static readonly Color ActiveMilestone = new(0.78f, 1f, 0.62f, 1f);
-        private static readonly Color InactiveMilestone = Color.white;
+        private static readonly Color ActiveMilestone = Color.white;
+        private static readonly Color InactiveMilestone = new(0.52f, 0.76f, 0.56f, 0.88f);
+        private static readonly Vector2 ActiveMilestoneSize = new(88f, 88f);
+        private static readonly Vector2 InactiveMilestoneSize = new(20f, 20f);
 
         private ChestChaseManager manager;
         private CanvasGroup canvasGroup;
@@ -26,10 +28,8 @@ namespace CardMesh
 
         private sealed class StageBinding
         {
-            public Image CardFrame;
-            public Image ActiveGlow;
+            public Image CardSurface;
             public Image Milestone;
-            public Image MilestoneGlow;
             public TMP_Text CoinValue;
             public TMP_Text HintValue;
             public TMP_Text UndoValue;
@@ -149,10 +149,8 @@ namespace CardMesh
                 Transform milestone = window.Find($"RoyalContent/MilestoneTrack/Milestone_{i + 1}");
                 stages.Add(new StageBinding
                 {
-                    CardFrame = stage?.GetComponent<Image>(),
-                    ActiveGlow = stage?.Find("ActiveGlow")?.GetComponent<Image>(),
+                    CardSurface = stage?.Find("CardFill")?.GetComponent<Image>(),
                     Milestone = milestone?.GetComponent<Image>(),
-                    MilestoneGlow = milestone?.Find("ActiveGlow")?.GetComponent<Image>(),
                     CoinValue = stage?.Find("RewardRow_1/Value")?.GetComponent<TMP_Text>(),
                     HintValue = stage?.Find("RewardRow_2/Value")?.GetComponent<TMP_Text>(),
                     UndoValue = stage?.Find("RewardRow_3/Value")?.GetComponent<TMP_Text>()
@@ -238,24 +236,26 @@ namespace CardMesh
                 SetText(stage.UndoValue, tier != null ? tier.Undos.ToString() : "-");
 
                 bool active = i == manager.CurrentStage;
-                if (stage.ActiveGlow != null)
+                if (stage.CardSurface != null)
                 {
-                    stage.ActiveGlow.gameObject.SetActive(active);
-                }
-
-                if (stage.CardFrame != null)
-                {
-                    stage.CardFrame.color = active ? Color.white : new Color(0.9f, 0.9f, 0.9f, 1f);
+                    Sprite cardSprite = active
+                        ? CleanRoyalPopupSprites.RoyalStageActive
+                        : CleanRoyalPopupSprites.RoyalStageIdle;
+                    if (cardSprite != null)
+                    {
+                        stage.CardSurface.sprite = cardSprite;
+                    }
+                    stage.CardSurface.color = active
+                        ? Color.white
+                        : new Color(0.82f, 0.9f, 0.84f, 1f);
                 }
 
                 if (stage.Milestone != null)
                 {
                     stage.Milestone.color = active ? ActiveMilestone : InactiveMilestone;
-                }
-
-                if (stage.MilestoneGlow != null)
-                {
-                    stage.MilestoneGlow.gameObject.SetActive(active);
+                    stage.Milestone.rectTransform.sizeDelta = active
+                        ? ActiveMilestoneSize
+                        : InactiveMilestoneSize;
                 }
             }
         }

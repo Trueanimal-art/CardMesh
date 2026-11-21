@@ -60,7 +60,6 @@ namespace CardMesh
         private void Awake()
         {
             BindSceneReferences();
-            ApplyFontsToAllTexts();
             WireButtons();
 
             if (Application.isPlaying && !hasShownRuntime)
@@ -81,7 +80,6 @@ namespace CardMesh
             if (Application.isPlaying)
             {
                 BindSceneReferences();
-                ApplyFontsToAllTexts();
                 WireButtons();
                 Refresh();
             }
@@ -118,7 +116,6 @@ namespace CardMesh
             transform.SetAsLastSibling();
             MainMenuNavigationVisibility.SetBottomNavigationVisible(this, true);
             BindSceneReferences();
-            ApplyFontsToAllTexts();
             WireButtons();
             Refresh();
             if (premiumMotion != null)
@@ -155,14 +152,8 @@ namespace CardMesh
 
         private void ShowRules()
         {
-            if (nextRewardText == null || manager == null)
-            {
-                return;
-            }
-
-            nextRewardText.text =
-                $"Обычная категория +{manager.NormalCategoryPoints}, категория с картинками +{manager.ImageCategoryPoints}, без подсказки +{manager.NoHintBonusPoints}, без отмены +{manager.NoUndoBonusPoints}.";
-            RuntimeCyrillicFontProvider.Apply(nextRewardText, nextRewardText.text);
+            // Rules are permanently authored in ScoreRules. The info button
+            // must not restyle or replace the progress copy at runtime.
         }
 
         private void Refresh()
@@ -180,9 +171,7 @@ namespace CardMesh
             int span = Mathf.Max(1, target - previous);
             int localProgress = Mathf.Clamp(manager.CurrentPoints - previous, 0, span);
 
-            SetText(titleText, "КНИГА КОЛЛЕКЦИЙ");
-            SetText(subtitleText, "Собирай категории, пополняй книгу и получай ценные награды!");
-            SetText(progressValueText, next != null ? $"{manager.CurrentPoints} / {target}" : $"{manager.CurrentPoints}");
+            SetText(progressValueText, next != null ? $"{localProgress} / {span}" : $"{manager.CurrentPoints}");
             SetText(nextRewardText, next != null ? $"Следующая награда: {next.Title}" : "Все текущие награды получены");
             SetText(levelTitleText, manager.GetLevelTitle().ToUpperInvariant());
             SetText(levelProgressText, next != null ? $"{localProgress} / {span} ОЧКОВ" : $"{manager.CurrentPoints} ОЧКОВ");
@@ -190,7 +179,7 @@ namespace CardMesh
                 ? $"До следующего уровня: {Mathf.Max(0, span - localProgress)} очков"
                 : "Все уровни пройдены");
 
-            float targetProgress = next != null ? Mathf.Clamp01((float)manager.CurrentPoints / target) : 1f;
+            float targetProgress = next != null ? Mathf.Clamp01((float)localProgress / span) : 1f;
             if (progressFill != null)
             {
                 bool canAnimate = premiumMotion != null
@@ -217,7 +206,6 @@ namespace CardMesh
             }
 
             RefreshRewardCards();
-            RefreshRewardProgressMarker();
             premiumMotion?.SetActiveReward(manager.ClaimedRewardsCount);
             lastRenderedProgress = targetProgress;
             lastClaimedRewards = manager.ClaimedRewardsCount;
@@ -283,14 +271,44 @@ namespace CardMesh
             }
         }
 
+        private static string CompactRewardLabel(string title)
+        {
+            if (string.IsNullOrWhiteSpace(title)) return string.Empty;
+            string lower = title.ToLowerInvariant();
+            if (lower.Contains("монет"))
+            {
+                foreach (string token in title.Split(' '))
+                {
+                    if (int.TryParse(token.TrimStart('+', 'x', '×'), out int coins)) return $"×{coins}";
+                }
+            }
+
+            foreach (string token in title.Split(' '))
+            {
+                if (int.TryParse(token.TrimStart('+', 'x', '×'), out int amount)) return $"×{amount}";
+            }
+            return title;
+        }
+
+        private static void SetRewardState(Transform card, string childName, bool active)
+        {
+            Transform state = card?.Find(childName);
+            if (state != null && state.gameObject.activeSelf != active)
+            {
+                state.gameObject.SetActive(active);
+            }
+        }
+
         private void RefreshRewardProgressMarker()
         {
             if (!ShouldShowRewardProgressMarker())
             {
-                Transform marker = rewardCardsRoot != null ? rewardCardsRoot.Find("CurrentProgressMarker") : null;
-                Transform line = rewardCardsRoot != null ? rewardCardsRoot.Find("CurrentProgressLine") : null;
-                if (marker != null) marker.gameObject.SetActive(false);
-                if (line != null) line.gameObject.SetActive(false);
+                SetInactiveRecursive(
+                    transform,
+                    "MilestoneLine",
+                    "DividerStrip",
+                    "CurrentProgressMarker",
+                    "CurrentProgressLine");
                 return;
             }
 
@@ -420,24 +438,22 @@ namespace CardMesh
 
         private void BindSceneReferences()
         {
-            canvasGroup = GetComponent<CanvasGroup>();
-            panel = FindRect("Panel");
-            titleText = FindTMP("Panel/Header/Title");
-            subtitleText = FindTMP("Panel/Header/Subtitle");
-            progressValueText = FindTMP("Panel/ProgressBlock/ProgressValue");
-            nextRewardText = FindTMP("Panel/ProgressBlock/NextReward");
-            levelTitleText = FindTMP("Panel/LevelBlock/LevelTitle");
-            levelProgressText = FindTMP("Panel/LevelBlock/LevelProgress");
-            levelRemainingText = FindTMP("Panel/LevelBlock/LevelRemaining");
-            progressFill = transform.Find("Panel/ProgressBlock/ProgressTrack/ProgressFill")?.GetComponent<Image>();
-            levelProgressFill = transform.Find("Panel/LevelBlock/LevelProgressTrack/LevelProgressFill")?.GetComponent<Image>();
-            ConfigureProgressFill(progressFill);
-            ConfigureProgressFill(levelProgressFill);
-            closeButton = transform.Find("Panel/CloseButton")?.GetComponent<Button>();
-            infoButton = transform.Find("Panel/InfoButton")?.GetComponent<Button>();
-            rewardCardsRoot = FindRect("Panel/RewardStages");
-            scoreRowsRoot = FindRect("Panel/ScoreRules");
-            premiumMotion = GetComponent<CollectionBookPremiumMotion>();
+            canvasGroup ??= GetComponent<CanvasGroup>();
+            panel ??= FindRect("Panel");
+            titleText ??= FindTMP("Panel/Header/Title");
+            subtitleText ??= FindTMP("Panel/Header/Subtitle");
+            progressValueText ??= FindTMP("Panel/ProgressBlock/ProgressValue");
+            nextRewardText ??= FindTMP("Panel/ProgressBlock/NextReward");
+            levelTitleText ??= FindTMP("Panel/LevelBlock/LevelTitle");
+            levelProgressText ??= FindTMP("Panel/LevelBlock/LevelProgress");
+            levelRemainingText ??= FindTMP("Panel/LevelBlock/LevelRemaining");
+            progressFill ??= transform.Find("Panel/ProgressBlock/ProgressTrack/ProgressFill")?.GetComponent<Image>();
+            levelProgressFill ??= transform.Find("Panel/LevelBlock/LevelProgressTrack/LevelProgressFill")?.GetComponent<Image>();
+            closeButton ??= transform.Find("Panel/CloseButton")?.GetComponent<Button>();
+            infoButton ??= transform.Find("Panel/InfoButton")?.GetComponent<Button>();
+            rewardCardsRoot ??= FindRect("Panel/RewardStages");
+            scoreRowsRoot ??= FindRect("Panel/ScoreRules");
+            premiumMotion ??= GetComponent<CollectionBookPremiumMotion>();
         }
 
         private static void ConfigureProgressFill(Image fill)
@@ -488,13 +504,7 @@ namespace CardMesh
 
         private TMP_Text FindTMP(string path)
         {
-            TMP_Text text = transform.Find(path)?.GetComponent<TMP_Text>();
-            if (text != null)
-            {
-                RuntimeCyrillicFontProvider.Apply(text, text.text);
-            }
-
-            return text;
+            return transform.Find(path)?.GetComponent<TMP_Text>();
         }
 
         private void ApplyFontsToAllTexts()
@@ -514,7 +524,6 @@ namespace CardMesh
             }
 
             text.text = value;
-            RuntimeCyrillicFontProvider.Apply(text, value);
         }
 
         private static void SetRewardCardText(TMP_Text text, string value)
@@ -637,6 +646,117 @@ namespace CardMesh
             {
                 return;
             }
+
+            // The Royal Codex owns only its explicitly materialized interior.
+            // Generic legacy polishers must never restyle it or touch the
+            // approved shared outer chrome.
+            if (transform.Find("Panel/RoyalCodexInterior") != null)
+            {
+                BindSceneReferences();
+                RefreshEditorPreview();
+                return;
+            }
+
+            BindSceneReferences();
+            UpgradeAuthoringLayout();
+            EnsureProgressVisuals();
+            ApplyPortraitLayout();
+            EnsurePremiumMotion();
+            BindSceneReferences();
+            ApplyFontsToAllTexts();
+            RefreshEditorPreview();
+        }
+
+        public void RestoreClassicAuthoringLayout()
+        {
+            if (Application.isPlaying)
+            {
+                return;
+            }
+
+            RectTransform panelRect = transform.Find("Panel") as RectTransform;
+            if (panelRect == null)
+            {
+                return;
+            }
+
+            foreach (string childName in new[]
+                     {
+                         "RoyalCodexInterior", "ProgressBlock", "RewardStages", "CodexBottom",
+                         "ScoreRules", "LevelBlock", "BookHero", "RewardTitle", "OpenBookButton",
+                         "MilestoneLine", "DividerStrip"
+                     })
+            {
+                Transform child = panelRect.Find(childName);
+                if (child != null)
+                {
+                    UnityEngine.Object.DestroyImmediate(child.gameObject);
+                }
+            }
+
+            RectTransform progressBlock = CreateRect(panelRect, "ProgressBlock",
+                new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 0.5f),
+                new Vector2(760f, 220f), new Vector2(0f, -475f));
+            Image progressPanelImage = progressBlock.gameObject.AddComponent<Image>();
+            progressPanelImage.sprite = CleanRoyalPopupSprites.CollectionProgress;
+            progressPanelImage.type = Image.Type.Sliced;
+            progressPanelImage.color = Color.white;
+            CreateText(progressBlock, "ProgressTitle", "ТЕКУЩИЙ ПРОГРЕСС", 24f,
+                new Color(1f, 0.78f, 0.26f, 1f), FontStyles.Bold, new Vector2(0f, 48f), new Vector2(630f, 28f));
+            progressValueText = CreateText(progressBlock, "ProgressValue", "0 / 10", 48f,
+                new Color(1f, 0.91f, 0.68f, 1f), FontStyles.Bold, new Vector2(0f, 7f), new Vector2(630f, 46f));
+            RectTransform track = CreateRect(progressBlock, "ProgressTrack",
+                new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
+                new Vector2(540f, 16f), new Vector2(0f, -31f));
+            Image trackImage = track.gameObject.AddComponent<Image>();
+            trackImage.color = new Color(0.018f, 0.13f, 0.075f, 1f);
+            progressFill = CreateImage(track, "ProgressFill", RoyalEventSprites.ProgressFill, Color.white,
+                Vector2.zero, Vector2.zero, Image.Type.Filled);
+            progressFill.fillMethod = Image.FillMethod.Horizontal;
+            progressFill.fillOrigin = (int)Image.OriginHorizontal.Left;
+            progressFill.rectTransform.anchorMin = Vector2.zero;
+            progressFill.rectTransform.anchorMax = Vector2.one;
+            progressFill.rectTransform.sizeDelta = Vector2.zero;
+            nextRewardText = CreateText(progressBlock, "NextReward", "Следующая награда: +1 Отмена", 18f,
+                new Color(1f, 0.9f, 0.66f, 1f), FontStyles.Bold, new Vector2(0f, -55f), new Vector2(630f, 26f));
+
+            rewardCardsRoot = CreateRect(panelRect, "RewardStages",
+                new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 0.5f),
+                new Vector2(880f, 510f), new Vector2(0f, -845f));
+            for (int index = 0; index < 6; index++)
+            {
+                CreateRewardCard(rewardCardsRoot, index);
+            }
+
+            scoreRowsRoot = CreateRect(panelRect, "ScoreRules",
+                new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 0.5f),
+                new Vector2(760f, 230f), new Vector2(0f, -1215f));
+            Image scoreImage = scoreRowsRoot.gameObject.AddComponent<Image>();
+            scoreImage.sprite = CleanRoyalPopupSprites.CollectionInfo;
+            scoreImage.type = Image.Type.Sliced;
+            scoreImage.color = Color.white;
+            CreateText(scoreRowsRoot, "Title", "КАК ПОЛУЧАТЬ ОЧКИ?", 22f,
+                new Color(1f, 0.78f, 0.23f, 1f), FontStyles.Bold, new Vector2(0f, 44f), new Vector2(680f, 34f));
+            CreateText(scoreRowsRoot, "Rows",
+                "Обычная категория  +1 очко\nКатегория с картинками  +2 очка\nБез подсказок  +1 бонус\nБез отмены  +1 бонус",
+                18f, new Color(1f, 0.9f, 0.68f, 1f), FontStyles.Bold,
+                new Vector2(0f, -18f), new Vector2(620f, 104f));
+
+            RectTransform levelBlock = CreateRect(panelRect, "LevelBlock",
+                new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 0.5f),
+                new Vector2(760f, 230f), new Vector2(0f, -1450f));
+            Image levelImage = levelBlock.gameObject.AddComponent<Image>();
+            levelImage.sprite = CleanRoyalPopupSprites.CollectionInfo;
+            levelImage.type = Image.Type.Sliced;
+            levelImage.color = Color.white;
+            CreateText(levelBlock, "Title", "УРОВЕНЬ КОЛЛЕКЦИИ", 22f,
+                new Color(1f, 0.78f, 0.23f, 1f), FontStyles.Bold, new Vector2(0f, 45f), new Vector2(680f, 32f));
+            levelTitleText = CreateText(levelBlock, "LevelTitle", "КОЛЛЕКЦИОНЕР I", 25f,
+                new Color(1f, 0.83f, 0.35f, 1f), FontStyles.Bold, new Vector2(0f, 10f), new Vector2(640f, 38f));
+            levelProgressText = CreateText(levelBlock, "LevelProgress", "0 / 10 ОЧКОВ", 18f,
+                new Color(1f, 0.88f, 0.62f, 1f), FontStyles.Bold, new Vector2(0f, -26f), new Vector2(600f, 26f));
+            levelRemainingText = CreateText(levelBlock, "LevelRemaining", "До следующего уровня: 10 очков", 16f,
+                new Color(1f, 0.9f, 0.7f, 1f), FontStyles.Bold, new Vector2(0f, -56f), new Vector2(640f, 24f));
 
             BindSceneReferences();
             UpgradeAuthoringLayout();
@@ -839,7 +959,7 @@ namespace CardMesh
                 new Vector2(0.5f, 1f),
                 new Vector2(0.5f, 0.5f),
                 new Vector2(840f, 58f),
-                new Vector2(0f, -285f));
+                new Vector2(0f, -290f));
             SetAnchored(
                 header?.Find("Subtitle") as RectTransform,
                 new Vector2(0.5f, 1f),
@@ -865,16 +985,19 @@ namespace CardMesh
                 new Vector2(0.5f, 1f),
                 new Vector2(0.5f, 1f),
                 new Vector2(0.5f, 0.5f),
-                new Vector2(760f, 150f),
+                new Vector2(760f, 220f),
                 new Vector2(0f, -475f));
             SetActiveIfExists(progress, "ProgressFrame", false);
             SetActiveIfExists(progress, "InnerHighlight", false);
             SetActiveIfExists(progress, "ProgressFillPanel", false);
-            ConfigureFlatPanel(progress, new Color(0.008f, 0.105f, 0.045f, 0.98f));
-            SetTextRect(progress?.Find("ProgressTitle") as RectTransform, new Vector2(0f, 45f), new Vector2(630f, 26f));
-            SetTextRect(progress?.Find("ProgressValue") as RectTransform, new Vector2(0f, 12f), new Vector2(630f, 42f));
-            SetTextRect(progress?.Find("ProgressTrack") as RectTransform, new Vector2(0f, -35f), new Vector2(540f, 16f));
-            SetTextRect(progress?.Find("NextReward") as RectTransform, new Vector2(0f, -62f), new Vector2(630f, 26f));
+            ConfigureAuthoredPanel(progress, CleanRoyalPopupSprites.CollectionProgress);
+            SetTextRect(progress?.Find("ProgressTitle") as RectTransform, new Vector2(0f, 48f), new Vector2(630f, 28f));
+            SetTextRect(progress?.Find("ProgressValue") as RectTransform, new Vector2(0f, 7f), new Vector2(630f, 46f));
+            SetTextRect(progress?.Find("ProgressTrack") as RectTransform, new Vector2(0f, -31f), new Vector2(540f, 16f));
+            SetTextRect(progress?.Find("NextReward") as RectTransform, new Vector2(0f, -55f), new Vector2(630f, 26f));
+            CenterText(progress?.Find("ProgressTitle")?.GetComponent<TMP_Text>());
+            CenterText(progress?.Find("ProgressValue")?.GetComponent<TMP_Text>());
+            CenterText(progress?.Find("NextReward")?.GetComponent<TMP_Text>());
 
             RectTransform rewards = panelRect.Find("RewardStages") as RectTransform;
             SetAnchored(
@@ -886,6 +1009,7 @@ namespace CardMesh
                 new Vector2(0f, -845f));
 
             int rewardIndex = 0;
+            System.Collections.Generic.List<GameObject> obsoleteMilestoneDiamonds = new();
             foreach (RectTransform child in rewards != null
                          ? rewards.GetComponentsInChildren<RectTransform>(true)
                          : System.Array.Empty<RectTransform>())
@@ -905,22 +1029,67 @@ namespace CardMesh
                     new Vector2(228f, 222f),
                     new Vector2((column - 1) * 275f, row == 0 ? 125f : -125f));
                 SetTextRect(child.Find("Points") as RectTransform, new Vector2(0f, 88f), new Vector2(192f, 28f));
-                SetTextRect(child.Find("MilestoneDiamond") as RectTransform, new Vector2(0f, 64f), new Vector2(30f, 34f));
+                Transform milestoneDiamond = child.Find("MilestoneDiamond");
+                if (milestoneDiamond != null)
+                {
+                    obsoleteMilestoneDiamonds.Add(milestoneDiamond.gameObject);
+                }
                 SetTextRect(child.Find("RewardIcon") as RectTransform, new Vector2(0f, 12f), new Vector2(62f, 62f));
+                Image rewardIcon = child.Find("RewardIcon")?.GetComponent<Image>();
+                if (rewardIcon != null)
+                {
+                    rewardIcon.sprite = GetCollectionRewardIcon(rewardIndex);
+                    rewardIcon.preserveAspect = true;
+                    rewardIcon.color = Color.white;
+                    // Counter the opposite baked tilts in the gameplay sprites.
+                    // Coins/moves are already optically upright.
+                    rewardIcon.rectTransform.localRotation = Quaternion.Euler(
+                        0f,
+                        0f,
+                        rewardIndex is 0 or 3 ? 6f : rewardIndex is 1 or 4 ? -8f : 0f);
+                }
                 SetTextRect(child.Find("Reward") as RectTransform, new Vector2(0f, -55f), new Vector2(196f, 64f));
                 SetTextRect(child.Find("ActiveGlow") as RectTransform, Vector2.zero, new Vector2(234f, 228f));
                 SetActiveIfExists(child, "ActiveGlow", false);
+                ConfigureAuthoredPanel(child, CleanRoyalPopupSprites.CollectionReward);
+                foreach (Outline cardOutline in child.GetComponentsInChildren<Outline>(true))
+                {
+                    cardOutline.enabled = false;
+                }
                 rewardIndex++;
+            }
+
+            foreach (GameObject obsoleteMilestoneDiamond in obsoleteMilestoneDiamonds)
+            {
+                UnityEngine.Object.DestroyImmediate(obsoleteMilestoneDiamond);
             }
 
             SetActiveIfExists(panelRect, "MilestoneLine", false);
             // Legacy daily-reward ornament: it draws an unrelated horizontal
             // divider with a large centre diamond above the collection cards.
             SetActiveIfExists(panelRect, "DividerStrip", false);
+            SetInactiveRecursive(
+                panelRect,
+                "MilestoneLine",
+                "MilestoneGlow",
+                "DividerStrip",
+                "CurrentProgressLine",
+                "CurrentProgressMarker");
             if (rewards != null)
             {
                 SetActiveIfExists(rewards, "CurrentProgressLine", false);
                 SetActiveIfExists(rewards, "CurrentProgressMarker", false);
+                SetInactiveRecursive(rewards, "CurrentProgressLine", "CurrentProgressMarker", "MilestoneGlow");
+                // Only authored reward cards belong directly in this container.
+                // Old progress-guide ornaments are deliberately excluded.
+                for (int index = rewards.childCount - 1; index >= 0; index--)
+                {
+                    Transform child = rewards.GetChild(index);
+                    if (!child.name.StartsWith("RewardStage_"))
+                    {
+                        child.gameObject.SetActive(false);
+                    }
+                }
             }
 
             RectTransform score = panelRect.Find("ScoreRules") as RectTransform;
@@ -929,22 +1098,24 @@ namespace CardMesh
                 new Vector2(0.5f, 1f),
                 new Vector2(0.5f, 1f),
                 new Vector2(0.5f, 0.5f),
-                new Vector2(760f, 210f),
+                new Vector2(760f, 230f),
                 new Vector2(0f, -1215f));
             SetActiveIfExists(score, "InfoFrame", false);
             SetActiveIfExists(score, "InfoFill", false);
-            ConfigureFlatPanel(score, new Color(0.009f, 0.12f, 0.052f, 0.98f));
-            SetTextRect(score?.Find("Title") as RectTransform, new Vector2(0f, 72f), new Vector2(680f, 34f));
-            SetTextRect(score?.Find("Rows") as RectTransform, new Vector2(0f, -10f), new Vector2(620f, 124f));
+            ConfigureAuthoredPanel(score, CleanRoyalPopupSprites.CollectionInfo);
+            SetTextRect(score?.Find("Title") as RectTransform, new Vector2(0f, 44f), new Vector2(680f, 34f));
+            SetTextRect(score?.Find("Rows") as RectTransform, new Vector2(0f, -18f), new Vector2(620f, 104f));
             TMP_Text scoreRows = score?.Find("Rows")?.GetComponent<TMP_Text>();
             if (scoreRows != null)
             {
                 scoreRows.margin = new Vector4(18f, 8f, 18f, 8f);
                 scoreRows.alignment = TextAlignmentOptions.Center;
+                scoreRows.text = scoreRows.text.Replace("• ", string.Empty);
                 scoreRows.lineSpacing = 1f;
                 scoreRows.overflowMode = TextOverflowModes.Overflow;
                 TuneText(scoreRows, 18f, 16f, true);
             }
+            CenterText(score?.Find("Title")?.GetComponent<TMP_Text>());
 
             RectTransform level = panelRect.Find("LevelBlock") as RectTransform;
             SetAnchored(
@@ -952,15 +1123,15 @@ namespace CardMesh
                 new Vector2(0.5f, 1f),
                 new Vector2(0.5f, 1f),
                 new Vector2(0.5f, 0.5f),
-                new Vector2(760f, 210f),
+                new Vector2(760f, 230f),
                 new Vector2(0f, -1450f));
             SetActiveIfExists(level, "InfoFrame", false);
             SetActiveIfExists(level, "InfoFill", false);
-            ConfigureFlatPanel(level, new Color(0.009f, 0.12f, 0.052f, 0.98f));
-            SetTextRect(level?.Find("Title") as RectTransform, new Vector2(0f, 72f), new Vector2(680f, 32f));
-            SetTextRect(level?.Find("LevelTitle") as RectTransform, new Vector2(0f, 29f), new Vector2(640f, 38f));
-            SetTextRect(level?.Find("LevelProgress") as RectTransform, new Vector2(0f, -11f), new Vector2(600f, 26f));
-            SetTextRect(level?.Find("LevelRemaining") as RectTransform, new Vector2(0f, -53f), new Vector2(640f, 24f));
+            ConfigureAuthoredPanel(level, CleanRoyalPopupSprites.CollectionInfo);
+            SetTextRect(level?.Find("Title") as RectTransform, new Vector2(0f, 45f), new Vector2(680f, 32f));
+            SetTextRect(level?.Find("LevelTitle") as RectTransform, new Vector2(0f, 10f), new Vector2(640f, 38f));
+            SetTextRect(level?.Find("LevelProgress") as RectTransform, new Vector2(0f, -26f), new Vector2(600f, 26f));
+            SetTextRect(level?.Find("LevelRemaining") as RectTransform, new Vector2(0f, -56f), new Vector2(640f, 24f));
             SetActiveIfExists(level, "LevelProgressTrack", false);
             SetActiveIfExists(level, "Medal", false);
 
@@ -1048,32 +1219,9 @@ namespace CardMesh
                 return;
             }
 
-            if (root.Find("CurrentProgressLine") == null)
-            {
-                Image line = CreateImage(
-                    root,
-                    "CurrentProgressLine",
-                    null,
-                    new Color(0.58f, 0.88f, 0.2f, 0.94f),
-                    Vector2.zero,
-                    new Vector2(1f, 5f),
-                    Image.Type.Simple);
-                line.rectTransform.SetAsLastSibling();
-            }
-
-            if (root.Find("CurrentProgressMarker") == null)
-            {
-                Image marker = CreateImage(
-                    root,
-                    "CurrentProgressMarker",
-                    firstMilestone.sprite,
-                    new Color(0.52f, 1f, 0.45f, 1f),
-                    Vector2.zero,
-                    new Vector2(40f, 44f),
-                    Image.Type.Simple);
-                marker.preserveAspect = true;
-                marker.rectTransform.SetAsLastSibling();
-            }
+            // The floating green marker/line were legacy runtime decorations.
+            // The approved authored prefab intentionally has neither of them.
+            SetInactiveRecursive(root, "CurrentProgressLine", "CurrentProgressMarker", "MilestoneGlow");
         }
 
         private void EnsurePremiumMotion()
@@ -1384,10 +1532,10 @@ namespace CardMesh
                 SetTextRect(
                     milestone.rectTransform,
                     new Vector2(0f, 109f),
-                    i == 0 ? new Vector2(38f, 42f) : new Vector2(30f, 34f));
-                milestone.color = i == 0
-                    ? new Color(0.62f, 1f, 0.48f, 1f)
-                    : new Color(1f, 0.88f, 0.46f, 0.94f);
+                    new Vector2(30f, 34f));
+                // Every milestone uses the same restrained gold diamond.
+                // The legacy first-card green/oversized marker is deliberately gone.
+                milestone.color = new Color(1f, 0.88f, 0.46f, 0.94f);
 
                 Image icon = card.Find("RewardIcon")?.GetComponent<Image>();
                 if (icon == null)
@@ -1576,6 +1724,36 @@ namespace CardMesh
             EnsurePanelBorder(rect, "BorderRight", new Vector2(rect.rect.width * 0.5f - 1f, 0f), new Vector2(2f, rect.rect.height), border);
         }
 
+        private static void ConfigureAuthoredPanel(RectTransform rect, Sprite sprite)
+        {
+            if (rect == null || sprite == null)
+            {
+                return;
+            }
+
+            Image image = rect.GetComponent<Image>() ?? rect.gameObject.AddComponent<Image>();
+            image.enabled = true;
+            image.sprite = sprite;
+            image.type = Image.Type.Sliced;
+            image.color = Color.white;
+            image.material = null;
+            image.raycastTarget = false;
+
+            foreach (Outline outline in rect.GetComponents<Outline>())
+            {
+                outline.enabled = false;
+            }
+
+            foreach (string name in new[] { "BorderTop", "BorderBottom", "BorderLeft", "BorderRight", "ProgressFrame", "InfoFrame", "InfoFill" })
+            {
+                Transform child = rect.Find(name);
+                if (child != null)
+                {
+                    child.gameObject.SetActive(false);
+                }
+            }
+        }
+
         private static void EnsurePanelBorder(RectTransform parent, string name, Vector2 position, Vector2 size, Color color)
         {
             RectTransform border = parent.Find(name) as RectTransform;
@@ -1659,6 +1837,10 @@ namespace CardMesh
 
         private static void SetActiveIfExists(Transform parent, string childName, bool active)
         {
+            if (parent == null)
+            {
+                return;
+            }
             Transform child = parent.Find(childName);
             if (child != null)
             {
@@ -1666,15 +1848,35 @@ namespace CardMesh
             }
         }
 
+        private static void SetInactiveRecursive(Transform root, params string[] names)
+        {
+            if (root == null || names == null || names.Length == 0)
+            {
+                return;
+            }
+
+            foreach (Transform child in root.GetComponentsInChildren<Transform>(true))
+            {
+                foreach (string name in names)
+                {
+                    if (child.name == name)
+                    {
+                        child.gameObject.SetActive(false);
+                        break;
+                    }
+                }
+            }
+        }
+
         private static Sprite GetCollectionRewardIcon(int index)
         {
             return index switch
             {
-                0 or 3 => PremiumUISprites.UndoIcon,
-                1 => PremiumUISprites.HintBulbIcon,
+                0 or 3 => CleanRoyalPopupSprites.GameplayUndo != null ? CleanRoyalPopupSprites.GameplayUndo : PremiumUISprites.UndoIcon,
+                1 => CleanRoyalPopupSprites.GameplayHint != null ? CleanRoyalPopupSprites.GameplayHint : PremiumUISprites.HintBulbIcon,
                 2 => RoyalEventSprites.CoinIcon,
-                4 => PremiumUISprites.HintBulbIcon,
-                _ => PremiumUISprites.BoosterRocketIcon
+                4 => CleanRoyalPopupSprites.GameplayHint != null ? CleanRoyalPopupSprites.GameplayHint : PremiumUISprites.HintBulbIcon,
+                _ => CleanRoyalPopupSprites.GameplayMoves != null ? CleanRoyalPopupSprites.GameplayMoves : PremiumUISprites.BoosterRocketIcon
             };
         }
 

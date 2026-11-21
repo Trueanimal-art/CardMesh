@@ -57,8 +57,19 @@ namespace CardMesh
 
         private void Start()
         {
-            // Start runs after Unity's hierarchy consistency pass, so creating the
-            // runtime chrome does not trigger OnTransformChildrenChanged warnings.
+            if (Application.isPlaying)
+            {
+                // Geometry and chrome are authored in the prefab/scene. Runtime is
+                // deliberately limited to viewport adaptation so manual RectTransform
+                // edits are never overwritten when a popup opens.
+                if (transform is RectTransform panel)
+                {
+                    ApplyViewportScale(panel);
+                }
+                return;
+            }
+
+            // In edit mode the component can still materialize the shared chrome.
             RefreshChrome();
         }
 

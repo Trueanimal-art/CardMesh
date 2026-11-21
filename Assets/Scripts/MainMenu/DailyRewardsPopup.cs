@@ -22,14 +22,13 @@ namespace CardMesh
         private static readonly Vector2 ContentSize = new(840f, 1370f);
         private static readonly Vector2 ContentPosition = new(0f, -10f);
         private static readonly Vector2 RewardsColumnSize = new(840f, 760f);
-        private static readonly Vector2 RewardsColumnPosition = new(0f, 185f);
-        private static readonly Vector2 RewardDetailsPanelSize = new(790f, 270f);
-        private static readonly Vector2 RewardDetailsPanelPosition = new(0f, -400f);
+        private static readonly Vector2 RewardsColumnPosition = new(0f, 170f);
+        private static readonly Vector2 RewardDetailsPanelSize = new(790f, 350f);
+        private static readonly Vector2 RewardDetailsPanelPosition = new(0f, -415f);
         private static readonly Vector2 RewardRowSize = new(840f, 280f);
-        private static readonly Vector2 StandardRewardCardSize = new(185f, 250f);
-        // Day seven has a two-line reward label (coins + hint). Give that card a
-        // little more width so both the reward and status stay inside the frame.
-        private static readonly Vector2 FinalRewardCardSize = new(205f, 250f);
+        // Four cards at 195px plus three 20px gaps fit the 840px row exactly.
+        // Keeping one shared size prevents Day 7 from drifting into a bespoke card.
+        private static readonly Vector2 StandardRewardCardSize = new(195f, 250f);
         // The source icon contains transparent breathing room. A larger rect lets the
         // gift itself fill the frame's top medallion instead of looking like a second,
         // undersized medallion nested inside it.
@@ -86,15 +85,6 @@ namespace CardMesh
             }
 #endif
             BindSceneReferences();
-        }
-
-        private static void SetActiveIfExists(Transform parent, string childName, bool active)
-        {
-            Transform child = parent != null ? parent.Find(childName) : null;
-            if (child != null)
-            {
-                child.gameObject.SetActive(active);
-            }
         }
 
         private void Awake()
@@ -166,8 +156,6 @@ namespace CardMesh
             WireButtons();
             Refresh();
             DisableExternalGlow(transform);
-            StyleCurrentRewardPanelRuntime();
-            ApplyDailyRewardsBadgeLayout();
             StartOpenAnimation();
         }
 
@@ -259,21 +247,20 @@ namespace CardMesh
                 Image image = card.GetComponent<Image>();
                 if (image != null)
                 {
-                    image.sprite = GetRewardCardVisualSprite(current || selected);
+                    image.sprite = current || selected
+                            ? CleanRoyalPopupSprites.DailyCardAvailable
+                            : CleanRoyalPopupSprites.DailyCard;
                     image.type = Image.Type.Sliced;
-                    image.color = locked && !claimed ? new Color(0.68f, 0.68f, 0.68f, 0.76f) : Color.white;
+                    image.color = locked && !claimed ? new Color(0.62f, 0.68f, 0.64f, 0.9f) : Color.white;
                     image.material = null;
                 }
 
                 Image cardFill = FindRewardCardPart(card, "CardFill")?.GetComponent<Image>();
                 if (cardFill != null)
                 {
-                    cardFill.color = locked && !claimed
-                        ? new Color(0.52f, 0.67f, 0.56f, 0.94f)
-                        : new Color(0.88f, 1f, 0.94f, 1f);
+                    cardFill.gameObject.SetActive(false);
                 }
 
-                SetText(FindRewardCardPart(card, "DayBadge", "Day")?.GetComponent<TMP_Text>(), $"ДЕНЬ\n{day}");
                 SetText(FindRewardCardPart(card, "RewardAmount", "Amount")?.GetComponent<TMP_Text>(), BuildAmount(reward));
                 SetText(FindRewardCardPart(card, "RewardType", "Label")?.GetComponent<TMP_Text>(), BuildLabel(reward));
                 TMP_Text statusText = FindRewardCardPart(card, "Status")?.GetComponent<TMP_Text>();
@@ -313,7 +300,7 @@ namespace CardMesh
                             : new Color(1f, 0.82f, 0.18f, 0f);
                     }
 
-                    glow.gameObject.SetActive(current && !claimed);
+                    glow.gameObject.SetActive(false);
                 }
 
                 Transform check = FindRewardCardPart(card, "Check");
@@ -324,7 +311,31 @@ namespace CardMesh
 #endif
                     check.gameObject.SetActive(claimed);
                 }
+                NormalizeClaimCheck(card, claimed);
             }
+        }
+
+        private static void NormalizeClaimCheck(Transform card, bool visible)
+        {
+            if (card == null) return;
+
+            RectTransform preferred = null;
+            foreach (RectTransform candidate in card.GetComponentsInChildren<RectTransform>(true))
+            {
+                if (candidate.name != "Check") continue;
+                bool insideStatus = candidate.parent != null && candidate.parent.name == "StatusArea";
+                if (insideStatus && preferred == null) preferred = candidate;
+                candidate.gameObject.SetActive(false);
+            }
+
+            preferred ??= FindRewardCardPart(card, "Check") as RectTransform;
+            if (preferred == null) return;
+            preferred.anchorMin = preferred.anchorMax = preferred.pivot = new Vector2(0.5f, 0.5f);
+            // Keep the tick immediately before the centred status word without
+            // touching either the glyphs or the left card rim.
+            preferred.anchoredPosition = new Vector2(-51f, 0f);
+            preferred.sizeDelta = new Vector2(23f, 18f);
+            preferred.gameObject.SetActive(visible);
         }
 
         private void RefreshSelectedReward()
@@ -399,7 +410,7 @@ namespace CardMesh
             TMP_Text label = rect.Find("Label")?.GetComponent<TMP_Text>();
             if (label != null)
             {
-                label.rectTransform.anchoredPosition = state == RewardViewState.Claimed ? new Vector2(14f, 0f) : Vector2.zero;
+                label.rectTransform.anchoredPosition = state == RewardViewState.Claimed ? new Vector2(8f, 0f) : Vector2.zero;
                 label.rectTransform.sizeDelta = rect.sizeDelta - new Vector2(state == RewardViewState.Claimed ? 82f : 48f, 22f);
                 label.color = state switch
                 {
@@ -417,7 +428,7 @@ namespace CardMesh
                 RectTransform checkRect = check as RectTransform;
                 if (checkRect != null)
                 {
-                    checkRect.anchoredPosition = new Vector2(state == RewardViewState.Claimed ? -84f : -96f, 0f);
+                    checkRect.anchoredPosition = new Vector2(state == RewardViewState.Claimed ? -34f : -96f, 0f);
                     checkRect.sizeDelta = new Vector2(28f, 22f);
                 }
 #if UNITY_EDITOR
@@ -641,8 +652,8 @@ namespace CardMesh
 
             return reward.RewardType switch
             {
-                DailyRewardType.Hint => PremiumUISprites.HintBulbIcon,
-                DailyRewardType.ExtraMoves => PremiumUISprites.BoosterRocketIcon != null ? PremiumUISprites.BoosterRocketIcon : PremiumUISprites.UndoIcon,
+                DailyRewardType.Hint => CleanRoyalPopupSprites.GameplayHint != null ? CleanRoyalPopupSprites.GameplayHint : PremiumUISprites.HintBulbIcon,
+                DailyRewardType.ExtraMoves => CleanRoyalPopupSprites.GameplayMoves != null ? CleanRoyalPopupSprites.GameplayMoves : PremiumUISprites.BoosterRocketIcon,
                 _ => RoyalEventSprites.CoinIcon
             };
         }
@@ -708,7 +719,6 @@ namespace CardMesh
             }
 
             StyleHeaderRuntime();
-            PopupShell.EnsureIconCloseButton(panel, "CloseButton");
             Transform info = transform.Find("WindowRoot/InfoButton");
             if (info != null)
             {
@@ -987,16 +997,12 @@ namespace CardMesh
             Vector2 cardSize = GetRewardCardSize(day);
             SetCenteredRect(FindRewardCardPart(card, "CardFill") as RectTransform, cardSize - new Vector2(22f, 22f), new Vector2(0f, -1f));
             SetCenteredRect(FindRewardCardPart(card, "ActiveGlow") as RectTransform, cardSize + new Vector2(18f, 22f), Vector2.zero);
-            SetCenteredRect(FindRewardCardPart(card, "DayBadge", "Day") as RectTransform, new Vector2(112f, 54f), new Vector2(0f, 114f));
             SetCenteredRect(FindRewardCardPart(card, "RewardIcon") as RectTransform, new Vector2(78f, 78f), GetRewardIconPosition(day));
             SetCenteredRect(FindRewardCardPart(card, "RewardAmount", "Amount") as RectTransform, new Vector2(cardSize.x - 34f, 46f), GetRewardAmountPosition(day));
             SetCenteredRect(FindRewardCardPart(card, "RewardType", "Label") as RectTransform, new Vector2(day == 7 ? cardSize.x - 20f : cardSize.x - 34f, day == 7 ? 38f : 34f), GetRewardLabelPosition(day));
             SetCenteredRect(FindRewardCardPart(card, "StatusArea", "StatusBacking") as RectTransform, new Vector2(cardSize.x - 34f, day == 7 ? 24f : 29f), GetRewardStatusPosition(day));
             SetCenteredRect(FindRewardCardPart(card, "Status") as RectTransform, new Vector2(cardSize.x - 34f, day == 7 ? 24f : 29f), Vector2.zero);
-            SetCenteredRect(FindRewardCardPart(card, "Check") as RectTransform, new Vector2(23f, 18f), new Vector2(-68f, 0f));
-
-            TMP_Text dayText = FindRewardCardPart(card, "DayBadge", "Day")?.GetComponent<TMP_Text>();
-            StyleText(dayText, 23f, 16f, TextCream, false, -10f);
+            SetCenteredRect(FindRewardCardPart(card, "Check") as RectTransform, new Vector2(23f, 18f), new Vector2(-51f, 0f));
 
             TMP_Text amountText = FindRewardCardPart(card, "RewardAmount", "Amount")?.GetComponent<TMP_Text>();
             StyleText(amountText, day == 7 ? 32f : 35f, 19f, TextCream, true, day == 7 ? -8f : 0f);
@@ -1057,9 +1063,9 @@ namespace CardMesh
             Image image = rect.GetComponent<Image>();
             if (image != null)
             {
-                Sprite cleanPanel = Resources.Load<Sprite>("UI/Premium/settings_inner_panel");
+                Sprite cleanPanel = CleanRoyalPopupSprites.DailyHero;
                 image.sprite = cleanPanel != null ? cleanPanel : PremiumUISprites.CategorySlotEmerald != null ? PremiumUISprites.CategorySlotEmerald : PremiumUISprites.EmeraldPanel;
-                image.type = cleanPanel != null ? Image.Type.Simple : Image.Type.Sliced;
+                image.type = Image.Type.Sliced;
                 image.color = Color.white;
                 image.raycastTarget = false;
                 image.material = null;
@@ -1075,12 +1081,12 @@ namespace CardMesh
             }
 
             DisableLegacyDetailsDecorations(rect);
-            SetCenteredRect(rect.Find("Title") as RectTransform, new Vector2(620f, 38f), new Vector2(0f, 101f));
+            SetCenteredRect(rect.Find("Title") as RectTransform, new Vector2(620f, 38f), new Vector2(0f, 96f));
             SetCenteredRect(rect.Find("RewardIconFrame") as RectTransform, new Vector2(124f, 124f), new Vector2(-220f, -5f));
-            SetCenteredRect(rect.Find("RewardName") as RectTransform, new Vector2(400f, 44f), new Vector2(100f, 43f));
-            SetCenteredRect(rect.Find("Description") as RectTransform, new Vector2(400f, 58f), new Vector2(100f, -3f));
-            SetCenteredRect(rect.Find("Status") as RectTransform, new Vector2(280f, 56f), new Vector2(100f, -65f));
-            SetCenteredRect(rect.Find("Footnote") as RectTransform, new Vector2(400f, 22f), new Vector2(100f, -112f));
+            SetCenteredRect(rect.Find("RewardName") as RectTransform, new Vector2(400f, 44f), new Vector2(100f, 32f));
+            SetCenteredRect(rect.Find("Description") as RectTransform, new Vector2(400f, 54f), new Vector2(100f, -10f));
+            SetCenteredRect(rect.Find("Status") as RectTransform, new Vector2(280f, 52f), new Vector2(100f, -64f));
+            SetCenteredRect(rect.Find("Footnote") as RectTransform, new Vector2(400f, 24f), new Vector2(100f, -108f));
 
             TMP_Text title = rect.Find("Title")?.GetComponent<TMP_Text>();
             StyleText(title, 25f, 17f, TextGold, false, 0f);
@@ -1755,21 +1761,22 @@ namespace CardMesh
         private static void StyleCardText(Transform card, int day)
         {
             Vector2 size = GetRewardCardSize(day);
-            SetTextRect(FindRewardCardPart(card, "DayBadge", "Day") as RectTransform, new Vector2(0f, 114f), new Vector2(112f, 54f));
+            SetTextRect(FindRewardCardPart(card, "DayBadge", "Day") as RectTransform, new Vector2(0f, 143f), new Vector2(150f, 32f));
             SetTextRect(FindRewardCardPart(card, "RewardAmount", "Amount") as RectTransform, GetRewardAmountPosition(day), new Vector2(size.x - 34f, 46f));
             SetTextRect(FindRewardCardPart(card, "RewardType", "Label") as RectTransform, GetRewardLabelPosition(day), new Vector2(day == 7 ? size.x - 20f : size.x - 34f, day == 7 ? 38f : 34f));
             SetTextRect(FindRewardCardPart(card, "StatusArea", "StatusBacking") as RectTransform, GetRewardStatusPosition(day), new Vector2(size.x - 34f, day == 7 ? 24f : 29f));
             SetCenteredRect(FindRewardCardPart(card, "Status") as RectTransform, new Vector2(size.x - 34f, day == 7 ? 24f : 29f), Vector2.zero);
             RectTransform checkRect = FindRewardCardPart(card, "Check") as RectTransform;
-            SetTextRect(checkRect, new Vector2(-68f, 0f), new Vector2(23f, 18f));
+            SetTextRect(checkRect, new Vector2(-34f, 0f), new Vector2(23f, 18f));
             StyleCheckIcon(checkRect);
 
             TMP_Text dayText = FindRewardCardPart(card, "DayBadge", "Day")?.GetComponent<TMP_Text>();
             if (dayText != null)
             {
-                dayText.fontSizeMax = 23f;
-                dayText.fontSizeMin = 16f;
-                dayText.lineSpacing = -10f;
+                SetText(dayText, $"ДЕНЬ {day}");
+                dayText.fontSizeMax = 22f;
+                dayText.fontSizeMin = 18f;
+                dayText.lineSpacing = 0f;
                 dayText.color = TextCream;
             }
 
@@ -1965,6 +1972,15 @@ namespace CardMesh
             SetTextRect(rect.Find("Label") as RectTransform, Vector2.zero, new Vector2(252f, 42f));
         }
 
+        private static void SetActiveIfExists(Transform parent, string childName, bool active)
+        {
+            Transform child = parent != null ? parent.Find(childName) : null;
+            if (child != null)
+            {
+                child.gameObject.SetActive(active);
+            }
+        }
+
         private static void CreateRewardRows(RectTransform root)
         {
             EnsureRewardRow(root, "RewardsRowTop", TopRewardRowY, TopRowSpacing);
@@ -2105,14 +2121,14 @@ namespace CardMesh
             Image glow = CreateImage(card, "ActiveGlow", GetRewardCardVisualSprite(false), new Color(1f, 0.78f, 0.1f, 0f), Vector2.zero, size + new Vector2(24f, 28f), Image.Type.Sliced);
             glow.gameObject.SetActive(false);
 
-            CreateText(card, "DayBadge", $"ДЕНЬ\n{day}", 22f, TextCream, FontStyles.Bold, new Vector2(0f, 90f), new Vector2(104f, 52f));
+            CreateText(card, "DayBadge", $"ДЕНЬ {day}", 22f, TextCream, FontStyles.Bold, new Vector2(0f, 143f), new Vector2(150f, 32f));
             TMP_Text oldIcon = CreateText(card, "Icon", string.Empty, day == 7 ? 52f : 48f, TextGold, FontStyles.Bold, GetRewardIconPosition(day), new Vector2(size.x - 34f, 66f));
             oldIcon.gameObject.SetActive(false);
             RectTransform statusArea = CreateImage(card, "StatusArea", PremiumUISprites.SecondaryButton, new Color(0.05f, 0.28f, 0.1f, 0.74f), GetRewardStatusPosition(day), new Vector2(size.x - 34f, day == 7 ? 24f : 29f), Image.Type.Sliced).rectTransform;
             CreateText(card, "RewardAmount", day switch { 1 => "50", 2 => "75", 3 => "1", 4 => "100", 5 => "+5", 6 => "150", _ => "300" }, day == 7 ? 30f : 33f, TextCream, FontStyles.Bold, GetRewardAmountPosition(day), new Vector2(size.x - 34f, 46f));
             CreateText(card, "RewardType", day switch { 3 => "ПОДСКАЗКА", 5 => "ХОДОВ", 7 => "МОНЕТ\n+1 ПОДСКАЗКА", _ => "МОНЕТ" }, day == 7 ? 15f : 18f, TextCream, FontStyles.Bold, GetRewardLabelPosition(day), new Vector2(day == 7 ? size.x - 20f : size.x - 34f, day == 7 ? 38f : 34f));
             CreateText(statusArea, "Status", day <= 2 ? "ПОЛУЧЕНО" : day == 3 ? "ДОСТУПНО" : "ЗАБЛОКИРОВАНО", 14f, day <= 3 ? TextGreen : TextGold, FontStyles.Bold, Vector2.zero, new Vector2(size.x - 34f, day == 7 ? 24f : 31f));
-            CreateCheckIcon(statusArea, new Vector2(-64f, 0f), new Vector2(25f, 20f));
+            CreateCheckIcon(statusArea, new Vector2(-34f, 0f), new Vector2(25f, 20f));
             StyleCardText(card, day);
         }
 
@@ -2134,7 +2150,7 @@ namespace CardMesh
 
         private static Vector2 GetRewardCardSize(int day)
         {
-            return day == 7 ? FinalRewardCardSize : StandardRewardCardSize;
+            return StandardRewardCardSize;
         }
 
         private static Vector2 GetRewardIconPosition(int day)
@@ -2539,11 +2555,10 @@ namespace CardMesh
 
         private static Sprite GetRewardCardVisualSprite(bool active)
         {
-            return PremiumUISprites.CategorySlot != null
+            Sprite clean = active ? CleanRoyalPopupSprites.DailyCardAvailable : CleanRoyalPopupSprites.DailyCard;
+            return clean != null ? clean : PremiumUISprites.CategorySlot != null
                 ? PremiumUISprites.CategorySlot
-                : active
-                    ? RoyalEventSprites.RewardCardActive
-                    : RoyalEventSprites.RewardCard;
+                : active ? RoyalEventSprites.RewardCardActive : RoyalEventSprites.RewardCard;
         }
 
         private static void ConfigureDropShadow(GameObject target, Color color, Vector2 distance)

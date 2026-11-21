@@ -311,19 +311,16 @@ namespace CardMesh.EditorTools
             RectTransform track = CreateRect(parent, "MilestoneTrack", Center, Center, Center, new Vector2(840f, 100f), new Vector2(0f, 120f));
             Image line = CreateImage(track, "Line", null, Image.Type.Simple, new Vector2(0f, -3f), new Vector2(640f, 3f)).GetComponent<Image>();
             line.color = new Color(1f, 0.84f, 0.26f, 1f);
-            Sprite jewel = LoadSprite($"{DailyRewardsAssetRoot}/DailyRewardsTopFrameJewel.asset");
-            Material jewelMaterial = AssetDatabase.LoadAssetAtPath<Material>($"{DailyRewardsAssetRoot}/DailyRewardsTopFrameJewel.mat");
+            // Use a dedicated standalone jewel so the milestone marker has no
+            // side flourishes from the larger frame ornament.
+            Sprite jewel = LoadSprite("Assets/Resources/UI/CleanRoyal/royal_milestone_diamond.png");
             string[] roman = { "I", "II", "III", "IV", "V" };
             for (int i = 0; i < 5; i++)
             {
                 float x = -320f + i * 160f;
-                RectTransform milestone = CreateImage(track, $"Milestone_{i + 1}", jewel, Image.Type.Simple, new Vector2(x, -3f), new Vector2(42f, 46f));
-                milestone.GetComponent<Image>().material = jewelMaterial;
-                Image glow = CreateImage(milestone, "ActiveGlow", jewel, Image.Type.Simple, Vector2.zero, new Vector2(58f, 64f)).GetComponent<Image>();
-                glow.material = jewelMaterial;
-                glow.color = new Color(0.4f, 1f, 0.35f, 0.36f);
-                glow.gameObject.SetActive(i == 0);
-                glow.transform.SetAsFirstSibling();
+                RectTransform milestone = CreateImage(track, $"Milestone_{i + 1}", jewel, Image.Type.Simple, new Vector2(x, -3f), new Vector2(28f, 28f));
+                milestone.GetComponent<Image>().material = null;
+                milestone.GetComponent<Image>().preserveAspect = true;
                 CreateText(milestone, "Roman", template, roman[i], 32f, Gold, new Vector2(0f, 47f), new Vector2(90f, 40f));
             }
         }

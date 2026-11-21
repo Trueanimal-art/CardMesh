@@ -15,7 +15,7 @@ namespace CardMesh.Editor
             CollectionBookPopup popup = Object.FindFirstObjectByType<CollectionBookPopup>(FindObjectsInactive.Include);
             if (popup != null)
             {
-                popup.MaterializeAuthoringLayout();
+                popup.RestoreClassicAuthoringLayout();
                 EditorUtility.SetDirty(popup);
                 EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
                 EditorSceneManager.SaveOpenScenes();
@@ -27,7 +27,7 @@ namespace CardMesh.Editor
 
             PolishPrefab();
             AssetDatabase.SaveAssets();
-            Debug.Log("Collection Book polish: scene and prefab layout updated.");
+            Debug.Log("Collection Book polish: classic scene and prefab layout restored.");
         }
 
         // Batch-mode entry point used by CI and isolated authoring runs. Opening
@@ -52,7 +52,7 @@ namespace CardMesh.Editor
                     return;
                 }
 
-                popup.MaterializeAuthoringLayout();
+                popup.RestoreClassicAuthoringLayout();
                 EditorUtility.SetDirty(popup);
                 PrefabUtility.SaveAsPrefabAsset(prefabRoot, PopupPrefabPath);
             }
